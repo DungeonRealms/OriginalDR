@@ -719,7 +719,7 @@ public class RealmMechanics extends JavaPlugin implements Listener {
 		for(File f : files){
 			String name = f.getName().replace(".dat", "");
 			if(f.isDirectory()){
-				if(name.equalsIgnoreCase("plugins") || name.contains("DungeonRealms") || name.contains("players_backup") || name.contains("plugins.old") || name.contains("realms") 
+				if(name.equalsIgnoreCase("logs") || name.equalsIgnoreCase("plugins") || name.contains("DungeonRealms") || name.contains("players_backup") || name.contains("plugins.old") || name.contains("realms") 
 						|| name.equalsIgnoreCase("template") || name.equalsIgnoreCase("key")){
 					continue; 
 					// Don't delete these.
@@ -2144,7 +2144,7 @@ public class RealmMechanics extends JavaPlugin implements Listener {
 			pl.sendMessage("");
 			pl.sendMessage(ChatColor.GREEN + "Your realm will now be a " + ChatColor.BOLD + "SAFE ZONE" + ChatColor.GREEN + " for 1 hour(s), or until logout.");
 			pl.sendMessage(ChatColor.GRAY + "All damage in your realm will be disabled for this time period.");
-			pl.getWorld().playEffect(pl.getLocation(), Effect.ENDER_SIGNAL, 40, 5);
+			pl.getWorld().playEffect(pl.getLocation(), Effect.ENDER_SIGNAL, 10);
 			try{
 				ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, pl.getWorld().getSpawnLocation().add(0.5, 1.5, 0.5), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.05F, 20);
 			} catch(Exception err){err.printStackTrace();}
@@ -2500,7 +2500,7 @@ public class RealmMechanics extends JavaPlugin implements Listener {
 				portal_map.remove(l);
 			}
 
-			p.getWorld().playEffect(portal_location, Effect.ENDER_SIGNAL, 20, 5);
+			p.getWorld().playEffect(portal_location, Effect.ENDER_SIGNAL, 10);
 			p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 5F, 1.25F);
 			has_portal.put(p.getName(), true);
 			p.setItemInHand(makeTeleportRune(p));
@@ -3129,7 +3129,19 @@ public class RealmMechanics extends JavaPlugin implements Listener {
 
 
 	public static boolean isItemTradeable(ItemStack i){
-		try{
+
+		if(i != null && i.hasItemMeta() && i.getItemMeta().hasLore()){
+			List<String> lore = i.getItemMeta().getLore();
+			for(String s : lore){
+				if(ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("untradeable") || ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("permanent untradeable")){
+					return false;
+				}
+			}
+		}
+		
+		return true;
+		
+		/*try{
 			if(i.hasItemMeta() && i.getItemMeta().hasLore()){
 				for(String s : i.getItemMeta().getLore()){
 					if(ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("untradeable") || ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("permanent untradeable")){
@@ -3147,7 +3159,7 @@ public class RealmMechanics extends JavaPlugin implements Listener {
 		} catch (Exception e) {
 			return true;
 		}
-		return true;
+		return true;*/
 	}
 
 	public static void disableAllEffects(Player player, final LivingEntity entity){

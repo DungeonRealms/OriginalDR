@@ -47,6 +47,7 @@ import net.minecraft.server.v1_7_R1.NBTTagList;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -185,14 +186,22 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 	
 	Thread store_backup;
 
+	static ShopMechanics sm = null;
+	
 	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
-		npc_manager = RemoteEntities.createManager(this);
-
+		sm = this;
+		
 		store_backup = new BackupStoreData();
 		store_backup.start();
 
+		this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+			public void run(){
+				npc_manager = RemoteEntities.createManager(sm);
+			}
+		}, 2 * 20L);
+		
 		this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
 			public void run() {
 				ConnectionPool.refresh = true;
@@ -208,7 +217,7 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 						continue;
 					}
 					
-					re.despawn(DespawnReason.CUSTOM);
+					re.getBukkitEntity().remove();
 					npc_to_remove.remove(re);
 				}
 			}
@@ -287,12 +296,13 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 	public void cleanupNullNPC(){
 		List<RemoteEntity> to_remove = new ArrayList<RemoteEntity>();
 		for(RemoteEntity re : npc_manager.getAllEntities()){
-			if(re.getBukkitEntity().getLocation().getBlock().getType() != Material.CHEST){
+			if(re.getBukkitEntity().getLocation().add(0, 1, 0).getBlock().getType() != Material.CHEST){
 				to_remove.add(re);
 			}
 		}
 		for(RemoteEntity re : to_remove){
-			re.despawn(DespawnReason.CUSTOM);
+			re.getBukkitEntity().remove();
+			Hive.npc_manager.removeEntity(re.getID(), true);
 		}
 	}
 
@@ -694,7 +704,7 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 			pst = ConnectionPool.getConneciton().prepareStatement( 
 					"INSERT INTO shop_database (p_name, collection_bin)"
 							+ " VALUES"
-							+ "('"+ p_name + "', '" + collection_bin_s + "') ON DUPLICATE KEY UPDATE collection_bin='" + collection_bin_s + "'");
+							+ "('"+ p_name + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "'");
 
 			pst.executeUpdate();
 
@@ -764,7 +774,7 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 			pst = ConnectionPool.getConneciton().prepareStatement( 
 					"INSERT INTO shop_database (p_name, level, server_num, collection_bin)"
 							+ " VALUES"
-							+ "('"+ p_name + "', '"+ lshop_level +"', '" + server_num + "', '" + collection_bin_s + "') ON DUPLICATE KEY UPDATE level = '" + lshop_level + "', server_num='" + server_num + "', collection_bin='" + collection_bin_s + "'");
+							+ "('"+ p_name + "', '"+ lshop_level +"', '" + server_num + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE level = '" + lshop_level + "', server_num='" + server_num + "', collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "'");
 
 			pst.executeUpdate();
 
@@ -1128,7 +1138,22 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 	}
 
 	public static int getPrice(ItemStack i) {
-		try {
+		
+		if(i != null && i.hasItemMeta() && i.getItemMeta().hasLore()){
+			List<String> lore = i.getItemMeta().getLore();
+			for(String s : lore){
+				if(s.contains("Price:")){
+					return Integer.parseInt((s.substring(
+									s.lastIndexOf(":") + 2,
+									s.length() - 1)).replaceAll(
+											ChatColor.WHITE.toString(), ""));
+				}
+			}
+		}
+		
+		return -1;
+		
+		/*try {
 			NBTTagList description = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getList("Lore", 0);
 			int x = 0;
 			while (description.size() > x) {
@@ -1147,7 +1172,7 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 		} catch (NullPointerException e) {
 			return -1;
 		}
-		return -1;
+		return -1;*/
 
 	}
 
@@ -2156,7 +2181,8 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 
 					if(shop_nameplates.containsKey(chest)){
 						RemoteEntity re = shop_nameplates.get(chest);
-						re.despawn(DespawnReason.CUSTOM);
+						re.getBukkitEntity().remove();
+						Hive.npc_manager.removeEntity(re.getID(), true);
 						/*NPC n = shop_nameplates.get(chest);
 						n.removeFromWorld();*/
 					}
@@ -2238,7 +2264,7 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onEntityDamagEvent(EntityDamageEvent e) {
-		if (e.getEntity() instanceof LivingEntity && npc_manager.isRemoteEntity((LivingEntity)e.getEntity())) {
+		if (e.getEntity() != null && e.getEntity() instanceof LivingEntity && npc_manager.isRemoteEntity((LivingEntity)e.getEntity())) {
 			e.setCancelled(true);
 			e.setDamage(0);
 		}
@@ -2276,7 +2302,8 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 
 			RemoteEntity re = shop_nameplates.get(b);
 			try{
-				re.despawn(DespawnReason.CUSTOM);
+				re.getBukkitEntity().remove();
+				Hive.npc_manager.removeEntity(re.getID(), true);
 			} catch(Exception err){
 				err.printStackTrace();
 				npc_to_remove.add(re);
@@ -2591,7 +2618,8 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 
 				if(shop_nameplates.containsKey(chest)){
 					RemoteEntity re = shop_nameplates.get(chest);
-					re.despawn(DespawnReason.CUSTOM);
+					re.getBukkitEntity().remove();
+					Hive.npc_manager.removeEntity(re.getID(), true);
 					/*NPC n = shop_nameplates.get(chest);
 					n.removeFromWorld();*/
 				}
@@ -2809,7 +2837,8 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 
 				if(shop_nameplates.containsKey(b)){
 					RemoteEntity re = shop_nameplates.get(b);
-					re.despawn(DespawnReason.CUSTOM);
+					re.getBukkitEntity().remove();
+					Hive.npc_manager.removeEntity(re.getID(), true);
 					/*NPC n = shop_nameplates.get(chest);
 					n.removeFromWorld();*/
 				}
@@ -3045,8 +3074,9 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 			/*NPC n = shop_nameplates.get(b1);
 			n.removeFromWorld();*/
 			RemoteEntity re = shop_nameplates.get(b1);
-			re.despawn(DespawnReason.CUSTOM);
-
+			re.getBukkitEntity().remove();
+			Hive.npc_manager.removeEntity(re.getID(), true);
+			
 			shop_nameplates.remove(b1);
 			shop_name_list.remove(ChatColor.stripColor(shop_names.get(b1).substring(shop_names.get(b1).indexOf(" ") + 1, shop_names.get(b1).length())));
 			shop_names.remove(b1);
@@ -3084,8 +3114,7 @@ public class ShopMechanics extends JavaPlugin implements Listener {
 		}
 	}
 
-	public static void assignShopNameplate(String p_name, Location chest_loc1,
-			Location chest_loc2) {
+	public static void assignShopNameplate(String p_name, Location chest_loc1, Location chest_loc2) {
 		String name = "[S] " + p_name;
 
 		if (name.length() > 16) {

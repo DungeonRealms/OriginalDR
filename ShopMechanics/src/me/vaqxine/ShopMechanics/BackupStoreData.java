@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.MoneyMechanics.ConnectionPool;
 
@@ -44,7 +46,7 @@ public class BackupStoreData extends Thread {
 	    					pst = ConnectionPool.getConneciton().prepareStatement( 
 	    							"INSERT INTO shop_database (p_name, shop_backup, collection_bin)"
 	    									+ " VALUES"
-	    									+ "('"+ shop_owner + "', '"+ shop_contents +"', '" + collection_bin_s + "') ON DUPLICATE KEY UPDATE shop_backup = '" + shop_contents + "', collection_bin='" + collection_bin_s + "'");
+	    									+ "('"+ shop_owner + "', '"+ StringEscapeUtils.escapeSql(shop_contents) +"', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE shop_backup = '" + StringEscapeUtils.escapeSql(shop_contents) + "', collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "'");
 
 	    					pst.executeUpdate();
 

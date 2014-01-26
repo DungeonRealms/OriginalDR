@@ -11,7 +11,7 @@
 	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/CommunityMechanics.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/InstanceMechanics.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/TutorialMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/spigot-1.6.1-R0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/AchievmentMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Dropbox/java/bin/spigot-1.7.2-R0.3-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

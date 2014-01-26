@@ -6097,15 +6097,16 @@ public class MonsterMechanics extends JavaPlugin implements Listener {
 
 		total_armor_dmg = total_armor_dmg / 100.0D;
 
-		NBTTagList description = CraftItemStack.asNMSCopy(weapon).getTag().getCompound("display").getList("Lore", 0);
+		List<Integer> tdmg_range = ItemMechanics.getDmgRangeOfWeapon(weapon);
+		/*NBTTagList description = CraftItemStack.asNMSCopy(weapon).getTag().getCompound("display").getList("Lore", 9);
 		String raw_dmg_data = description.get(0).toString();
 		raw_dmg_data = raw_dmg_data.replaceAll(ChatColor.RED.toString() + "DMG: ", "");
 		raw_dmg_data = raw_dmg_data.replaceAll(" ", "");
 
-		String[] dmg_data = raw_dmg_data.split("-");
+		String[] dmg_data = raw_dmg_data.split("-");*/
 
-		double min_dmg = Integer.parseInt(dmg_data[0]);
-		double max_dmg = Integer.parseInt(dmg_data[1]);
+		double min_dmg = tdmg_range.get(0);
+		double max_dmg = tdmg_range.get(1);
 
 		if (min_dmg < 1) {
 			min_dmg = 1;
@@ -6436,17 +6437,17 @@ public class MonsterMechanics extends JavaPlugin implements Listener {
 		}
 
 		total_armor_dmg = total_armor_dmg / 100.0D;
-
-		NBTTagList description = CraftItemStack.asNMSCopy(is_weapon).getTag()
-				.getCompound("display").getList("Lore", 0);
+		
+		List<Integer> tdmg_range = ItemMechanics.getDmgRangeOfWeapon(is_weapon);
+		/*NBTTagList description = CraftItemStack.asNMSCopy(is_weapon).getTag().getCompound("display").getList("Lore", 9);
 		String raw_dmg_data = description.get(0).toString();
 		raw_dmg_data = raw_dmg_data.replaceAll(ChatColor.RED.toString() + "DMG: ", "");
 		raw_dmg_data = raw_dmg_data.replaceAll(" ", "");
 
-		String[] dmg_data = raw_dmg_data.split("-");
+		String[] dmg_data = raw_dmg_data.split("-");*/
 
-		double min_dmg = Integer.parseInt(dmg_data[0]);
-		double max_dmg = Integer.parseInt(dmg_data[1]);
+		double min_dmg = tdmg_range.get(0);
+		double max_dmg = tdmg_range.get(1);
 
 		if (tier == 1) {
 			if (elite == false) {

@@ -680,8 +680,8 @@ public class MoneyMechanics extends JavaPlugin implements Listener {
 			pst = ConnectionPool.getConneciton().prepareStatement( 
 					"INSERT INTO bank_database (p_name, content, money, level)"
 							+ " VALUES"
-							+ "('"+ p_name + "', '"+ final_bank_content +"', '" + final_bank_net + "', '" + final_bank_level + "') ON DUPLICATE KEY UPDATE content = '" 
-							+ final_bank_content + "', money='" + final_bank_net + "', level='" + final_bank_level + "'");
+							+ "('"+ p_name + "', '"+ StringEscapeUtils.escapeSql(final_bank_content) +"', '" + final_bank_net + "', '" + final_bank_level + "') ON DUPLICATE KEY UPDATE content = '" 
+							+ StringEscapeUtils.escapeSql(final_bank_content) + "', money='" + final_bank_net + "', level='" + final_bank_level + "'");
 
 			pst.executeUpdate();
 			
@@ -808,7 +808,19 @@ public class MoneyMechanics extends JavaPlugin implements Listener {
 
 	public boolean isSplitting(ItemStack i){
 
-		NBTTagList description = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getList("Lore", 0);
+		if(i != null && i.hasItemMeta() && i.getItemMeta().hasLore()){
+			List<String> lore = i.getItemMeta().getLore();
+			for(String s : lore){
+				s = ChatColor.stripColor(s);
+				if(s.contains("<SPLIT>")){
+					return true;
+				}
+			}
+		}
+		
+		return false;
+		
+		/*NBTTagList description = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getList("Lore", 9);
 		int x = 0;
 		while(description.size() > x){
 			if(description.get(x).toString().contains("<SPLIT>")){
@@ -816,7 +828,7 @@ public class MoneyMechanics extends JavaPlugin implements Listener {
 			}
 			x++;
 		}
-		return false;
+		return false;*/
 	}
 
 	public static boolean isItemUnbankable(ItemStack is){
@@ -928,14 +940,27 @@ public class MoneyMechanics extends JavaPlugin implements Listener {
 	}
 
 	public static int getBankNoteValue(ItemStack i){
-		if(!(i instanceof CraftItemStack)){
+		if(i != null && i.hasItemMeta() && i.getItemMeta().hasLore()){
+			List<String> lore = i.getItemMeta().getLore();
+			for(String s : lore){
+				s = ChatColor.stripColor(s);
+				if(s.startsWith("Value:")){
+					int value = Integer.parseInt(s.substring(s.indexOf(" ") + 1, s.lastIndexOf(" ")));
+					return value;
+				}
+			}
+		}
+		
+		return 0;
+		
+		/*if(!(i instanceof CraftItemStack)){
 			return 0;
 		}
 		CraftItemStack css = (CraftItemStack)i;
 		try{
 			try{
 				try{
-					NBTTagList description = CraftItemStack.asNMSCopy(css).getTag().getCompound("display").getList("Lore", 0);
+					NBTTagList description = CraftItemStack.asNMSCopy(css).getTag().getCompound("display").getList("Lore", 9);
 					String value_string = description.get(0).toString();
 
 					int value = Integer.parseInt(value_string.substring(value_string.indexOf(" ") + 1, value_string.lastIndexOf(" ")));
@@ -950,7 +975,7 @@ public class MoneyMechanics extends JavaPlugin implements Listener {
 			}
 		} catch(NullPointerException e){
 			return 0;
-		}
+		}*/
 	}
 
 

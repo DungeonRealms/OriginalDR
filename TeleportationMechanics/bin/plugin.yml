@@ -1,8 +1,8 @@
 name: TeleportationMechanics
 main: me.vaqxine.TeleportationMechanics.TeleportationMechanics
 version: 1.0
-loadafter: [ItemMechanics]
+softdepend: [ItemMechanics]
 commands:
   drtp:
-    description: Root command.
+    description: Root teleport command.
     usage: /<command>

@@ -193,28 +193,28 @@ public class CommunityMechanics extends JavaPlugin implements Listener {
 		TipMechanics.loadTips();
 		
 		green = HealthMechanics.board.registerNewTeam("green");
-		green.setPrefix("Â§a");
+		green.setPrefix("§a");
 
 		dark_green = HealthMechanics.board.registerNewTeam("dark_green");
-		dark_green.setPrefix("Â§2");
+		dark_green.setPrefix("§2");
 
 		yellow = HealthMechanics.board.registerNewTeam("yellow");
-		yellow.setPrefix("Â§e");
+		yellow.setPrefix("§e");
 
 		red = HealthMechanics.board.registerNewTeam("red");
-		red.setPrefix("Â§c");
+		red.setPrefix("§c");
 
 		dark_red = HealthMechanics.board.registerNewTeam("dark_red");
-		dark_red.setPrefix("Â§4");
+		dark_red.setPrefix("§4");
 
 		purple = HealthMechanics.board.registerNewTeam("purple");
-		purple.setPrefix("Â§d");
+		purple.setPrefix("§d");
 
 		white = HealthMechanics.board.registerNewTeam("white");
-		white.setPrefix("Â§f");
+		white.setPrefix("§f");
 
 		aqua = HealthMechanics.board.registerNewTeam("aqua");
-		aqua.setPrefix("Â§b" + ChatColor.BOLD.toString() + "GM" + ChatColor.AQUA.toString() + " ");
+		aqua.setPrefix("§b" + ChatColor.BOLD.toString() + "GM" + ChatColor.AQUA.toString() + " ");
 		
 		// SQL Connection Pool Refresh
 		this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
@@ -2366,7 +2366,7 @@ public class CommunityMechanics extends JavaPlugin implements Listener {
 		}
 	}*/
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
 	public void onPlayerCommandPreProcess(PlayerCommandPreprocessEvent e){
 		String root_cmd = e.getMessage().split(" ")[0];
 		Player p = e.getPlayer();
@@ -2856,7 +2856,7 @@ public class CommunityMechanics extends JavaPlugin implements Listener {
 						}
 					}
 
-					PartyMechanics.inviteToParty(new_bud, p);
+					//PartyMechanics.inviteToParty(new_bud, p);
 				}
 
 				if(new_bud == null && !(p.isSneaking())){

@@ -519,7 +519,7 @@ public class RestrictionMechanics extends JavaPlugin implements Listener {
 
 		if(e.getInventory().getName().equalsIgnoreCase("container.crafting")){
 			ItemStack is = e.getCurrentItem();
-			if(is != null && (DuelMechanics.isArmorIcon(is) || DuelMechanics.isWeaponIcon(is) || is.getType() == Material.PUMPKIN_STEM || is.getType() == Material.MELON_STEM)){
+			if(is != null && (DuelMechanics.isArmorIcon(is) || DuelMechanics.isWeaponIcon(is) || is.getType() == Material.THIN_GLASS || is.getType() == Material.MELON_STEM)){
 				e.setCurrentItem(new ItemStack(Material.AIR));
 				((Player)e.getWhoClicked()).updateInventory();
 			}
@@ -691,7 +691,7 @@ public class RestrictionMechanics extends JavaPlugin implements Listener {
 			if(is == null || is.getType() == Material.AIR){
 				continue;
 			}
-			if(InstanceMechanics.isDungeonItem(is) || isVanillaArmor(is) || DuelMechanics.isArmorIcon(is) || DuelMechanics.isWeaponIcon(is) || is.getType() == Material.GOLDEN_APPLE || (is.getType() == Material.GOLD_BLOCK && !(is.hasItemMeta() && is.getItemMeta().hasDisplayName())) || is.getType() == Material.PUMPKIN_STEM || is.getType() == Material.MELON_STEM || (is.getType() == Material.INK_SACK && is.getDurability() == (short)8) || (is.getType() == Material.INK_SACK && is.getDurability() == (short)10)){
+			if(InstanceMechanics.isDungeonItem(is) || isVanillaArmor(is) || DuelMechanics.isArmorIcon(is) || DuelMechanics.isWeaponIcon(is) || is.getType() == Material.GOLDEN_APPLE || (is.getType() == Material.GOLD_BLOCK && !(is.hasItemMeta() && is.getItemMeta().hasDisplayName())) || is.getType() == Material.THIN_GLASS || is.getType() == Material.MELON_STEM || (is.getType() == Material.INK_SACK && is.getDurability() == (short)8) || (is.getType() == Material.INK_SACK && is.getDurability() == (short)10)){
 				inv.setItem(index, new ItemStack(Material.AIR));
 			}
 			if(is.getType() == Material.INK_SACK && (!is.hasItemMeta() || !is.getItemMeta().hasDisplayName())){

@@ -54,7 +54,7 @@ public class MerchantMechanics extends JavaPlugin implements Listener {
 
 	public static List<String> in_npc_shop = new ArrayList<String>();
 
-	ItemStack divider = new ItemStack(Material.PUMPKIN_STEM, 1);
+	ItemStack divider = new ItemStack(Material.THIN_GLASS, 1);
 
 	public static ItemStack T1_scrap = ItemMechanics.signNewCustomItem(Material.LEATHER, (short)0, ChatColor.WHITE.toString() + "Leather Armor Scrap", ChatColor.GRAY.toString() + "Recovers 3% Durability of " 
 			+ ChatColor.WHITE.toString() + "Leather Equipment");
@@ -898,7 +898,7 @@ public class MerchantMechanics extends JavaPlugin implements Listener {
 			if(!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Item Vendor"))){return;} // Only 'Trader' should do anything.
 			e.setCancelled(true);
 
-			final Inventory TradeWindow = Bukkit.createInventory(null, 9, generateTitle(p.getName(), "Item Vendor"));
+			final Inventory TradeWindow = Bukkit.createInventory(null, 9, "Item Vendor");
 			TradeWindow.setItem(0, ShopMechanics.setPrice(CraftItemStack.asCraftCopy(ItemMechanics.orb_of_peace), 400));
 			TradeWindow.setItem(1, ShopMechanics.setPrice(CraftItemStack.asCraftCopy(ItemMechanics.orb_of_flight), 1000));
 			TradeWindow.setItem(2, ShopMechanics.setPrice(CraftItemStack.asCraftCopy(GuildMechanics.guild_dye), 1000));
@@ -919,7 +919,7 @@ public class MerchantMechanics extends JavaPlugin implements Listener {
 			if(!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Skill Trainer"))){return;} // Only 'Trader' should do anything.
 			e.setCancelled(true);
 
-			final Inventory TradeWindow = Bukkit.createInventory(null, 9, generateTitle(p.getName(), "Skill Trainer"));
+			final Inventory TradeWindow = Bukkit.createInventory(null, 9, "Skill Trainer");
 			TradeWindow.setItem(0, ShopMechanics.setPrice(CraftItemStack.asCraftCopy(ProfessionMechanics.t1_pickaxe), 100));
 			TradeWindow.setItem(1, ShopMechanics.setPrice(CraftItemStack.asCraftCopy(ProfessionMechanics.t1_fishing), 100));
 			//TradeWindow.setItem(2, CraftItemStack.asCraftCopy(ProfessionMechanics.hoe_example));
@@ -1578,7 +1578,7 @@ public class MerchantMechanics extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onSkillTrainerInvClick(InventoryClickEvent e){
 		final Player pl = (Player)e.getWhoClicked();
-		if(!(e.getInventory().getName().contains("Skill Trainer")) || !(in_npc_shop.contains(pl.getName()))){
+		if(!(e.getInventory().getName().equalsIgnoreCase("Skill Trainer"))){
 			return;
 		}
 
@@ -1615,7 +1615,7 @@ public class MerchantMechanics extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onInventoryClickEvent(InventoryClickEvent e){
 		final Player pl = (Player)e.getWhoClicked();
-		if(!(e.getInventory().getName().contains("Item Vendor")) || !(in_npc_shop.contains(pl.getName()))){
+		if(!(e.getInventory().getName().equalsIgnoreCase("Item Vendor"))){
 			return;
 		}
 
@@ -1704,7 +1704,8 @@ public class MerchantMechanics extends JavaPlugin implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onMerchantEvent(InventoryClickEvent e){
-		if(!(e.getInventory().getName().contains("Merchant")) || !(in_npc_shop.contains(((Player)e.getWhoClicked()).getName()))){
+		// || !(in_npc_shop.contains(((Player)e.getWhoClicked()).getName()))
+		if(!(e.getInventory().getName().contains("Merchant"))){
 			return;
 		}
 
@@ -1905,7 +1906,7 @@ public class MerchantMechanics extends JavaPlugin implements Listener {
 						continue;
 					}
 					ItemStack i = tradeWin.getItem(slot_var);
-					if(i == null || i.getType() == Material.AIR || isTradeButton(i) || i.getType() == Material.PUMPKIN_STEM){
+					if(i == null || i.getType() == Material.AIR || isTradeButton(i) || i.getType() == Material.THIN_GLASS){
 						continue;
 					}
 
@@ -1931,7 +1932,7 @@ public class MerchantMechanics extends JavaPlugin implements Listener {
 						continue;
 					}
 					ItemStack i = tradeWin.getItem(slot_var);
-					if(i == null || i.getType() == Material.AIR || isTradeButton(i) || i.getType() == Material.PUMPKIN_STEM){
+					if(i == null || i.getType() == Material.AIR || isTradeButton(i) || i.getType() == Material.THIN_GLASS){
 						continue;
 					}
 					if(i.getType() == Material.EMERALD){
@@ -1977,7 +1978,7 @@ public class MerchantMechanics extends JavaPlugin implements Listener {
 					continue;
 				}
 				ItemStack i = tradeInv.getItem(slot_var);
-				if(i == null || i.getType() == Material.AIR || isTradeButton(i) || i.getType() == Material.PUMPKIN_STEM){
+				if(i == null || i.getType() == Material.AIR || isTradeButton(i) || i.getType() == Material.THIN_GLASS){
 					continue;
 				}
 
@@ -2013,7 +2014,7 @@ public class MerchantMechanics extends JavaPlugin implements Listener {
 					continue;
 				}
 				ItemStack i = tradeInv.getItem(slot_var);
-				if(i == null || i.getType() == Material.AIR || isTradeButton(i) || i.getType() == Material.PUMPKIN_STEM){
+				if(i == null || i.getType() == Material.AIR || isTradeButton(i) || i.getType() == Material.THIN_GLASS){
 					continue;
 				}
 

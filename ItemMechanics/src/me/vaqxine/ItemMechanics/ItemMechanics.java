@@ -946,8 +946,9 @@ public class ItemMechanics extends JavaPlugin implements Listener {
 		try{
 			try{
 				try{
-					NBTTagList description = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getList("Lore", 0);
-
+					//NBTTagList description = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getList("Lore", 0);
+					List<String> lore = i.getItemMeta().getLore();
+					
 					int x = 0;
 
 					boolean elemental_dmg = false;
@@ -982,59 +983,59 @@ public class ItemMechanics extends JavaPlugin implements Listener {
 
 					List<String> all_attributes = new ArrayList<String>();
 
-					while(description.size() > x){
-						if(!(description.get(x).toString()).startsWith(ChatColor.RED.toString())){
+					for(String s : lore){
+						if(!(s).startsWith(ChatColor.RED.toString())){
 							x++;
 							continue;
 						}
 
-						all_attributes.add(description.get(x).toString());
-						if(description.get(x).toString().contains("DMG: +")){
+						all_attributes.add(s);
+						if(s.contains("DMG: +")){
 							elemental_dmg = true;
-							elemental_data = description.get(x).toString();
+							elemental_data = s;
 						}
-						if(description.get(x).toString().contains("STR:")){
+						if(s.contains("STR:")){
 							str = true;
-							String str_string = description.get(x).toString();
+							String str_string = s;
 							str_atr = Integer.parseInt(str_string.substring(str_string.indexOf(":") + 3, str_string.length()));
 						}
-						if(description.get(x).toString().contains("DEX:")){
+						if(s.contains("DEX:")){
 							dex = true;
-							String dex_string = description.get(x).toString();
+							String dex_string = s;
 							dex_atr = Integer.parseInt(dex_string.substring(dex_string.indexOf(":") + 3, dex_string.length()));
 						}
-						if(description.get(x).toString().contains("VIT:")){
+						if(s.contains("VIT:")){
 							vit = true;
-							String vit_string = description.get(x).toString();
+							String vit_string = s;
 							vit_atr = Integer.parseInt(vit_string.substring(vit_string.indexOf(":") + 3, vit_string.length()));
 						}
-						if(description.get(x).toString().contains("INT:")){
+						if(s.contains("INT:")){
 							intel = true;
-							String int_string = description.get(x).toString();
+							String int_string = s;
 							int_atr = Integer.parseInt(int_string.substring(int_string.indexOf(":") + 3, int_string.length()));
 						}
-						if(description.get(x).toString().contains("PURE DMG:")){
+						if(s.contains("PURE DMG:")){
 							pure_dmg = true;
-							String pure_dmg_string = description.get(x).toString();
+							String pure_dmg_string = s;
 							pure_dmg_val = Integer.parseInt(pure_dmg_string.substring(pure_dmg_string.indexOf(":") + 3, pure_dmg_string.length()));
 						}
-						if(description.get(x).toString().contains("ACCURACY:")){
+						if(s.contains("ACCURACY:")){
 							accuracy = true;
-							String accuracy_string = description.get(x).toString();
+							String accuracy_string = s;
 							accuracy_val = Integer.parseInt(accuracy_string.substring(accuracy_string.indexOf(":") + 2, accuracy_string.indexOf("%")));
 						}
-						if(description.get(x).toString().contains("ARMOR PENETRATION:")){
+						if(s.contains("ARMOR PENETRATION:")){
 							armor_pen = true;
-							String armor_pen_string = description.get(x).toString();
+							String armor_pen_string = s;
 							armor_pen_val = Integer.parseInt(armor_pen_string.substring(armor_pen_string.indexOf(":") + 2, armor_pen_string.indexOf("%")));
 						}
-						if(description.get(x).toString().contains("CRITICAL HIT")
+						if(s.contains("CRITICAL HIT")
 								|| (i.getType() == Material.WOOD_AXE || i.getType() == Material.STONE_AXE || i.getType() == Material.IRON_AXE || i.getType() == Material.DIAMOND_AXE || i.getType() == Material.GOLD_AXE)){
 
 							int crit_chance = 0;
 
-							if(description.get(x).toString().contains("CRITICAL HIT")){
-								String crit_data = description.get(x).toString();
+							if(s.contains("CRITICAL HIT")){
+								String crit_data = s;
 								crit_chance = Integer.parseInt(crit_data.substring(crit_data.indexOf(":") + 1, crit_data.indexOf("%")).replaceAll(" ", ""));
 							}
 
@@ -1050,34 +1051,34 @@ public class ItemMechanics extends JavaPlugin implements Listener {
 								crit_dmg = true;
 							}
 						}
-						if(description.get(x).toString().contains("LIFE STEAL")){
-							String leech_data = description.get(x).toString();
+						if(s.contains("LIFE STEAL")){
+							String leech_data = s;
 							leech = true;
 							leech_percent = leech_data.substring(leech_data.indexOf(":") + 1, leech_data.indexOf("%")).replaceAll(" ", "");
 						}
-						if(description.get(x).toString().contains("KNOCKBACK")){
-							String kb_data = description.get(x).toString();
+						if(s.contains("KNOCKBACK")){
+							String kb_data = s;
 
 							int kb_chance = Integer.parseInt(kb_data.substring(kb_data.indexOf(":") + 1, kb_data.indexOf("%")).replaceAll(" ", ""));
 							if(kb_chance >= new Random().nextInt(100)){
 								knockback = true;
 							}
 						}
-						if(description.get(x).toString().contains("BLIND")){
-							String blind_data = description.get(x).toString();
+						if(s.contains("BLIND")){
+							String blind_data = s;
 
 							int blind_chance = Integer.parseInt(blind_data.substring(blind_data.indexOf(":") + 1, blind_data.indexOf("%")).replaceAll(" ", ""));
 							if(blind_chance >= new Random().nextInt(100)){
 								blind = true;
 							}
 						}
-						if(description.get(x).toString().contains("vs. PLAYERS")){
-							String vs_data = description.get(x).toString();
+						if(s.contains("vs. PLAYERS")){
+							String vs_data = s;
 							vs_modifier = Integer.parseInt(vs_data.substring(vs_data.indexOf("+") + 1, vs_data.indexOf("%")).replaceAll(" ", ""));
 							vs_players = true;
 						}
-						if(description.get(x).toString().contains("vs. MONSTERS")){
-							String vs_data = description.get(x).toString();
+						if(s.contains("vs. MONSTERS")){
+							String vs_data = s;
 							vs_modifier = Integer.parseInt(vs_data.substring(vs_data.indexOf("+") + 1, vs_data.indexOf("%")).replaceAll(" ", ""));
 							vs_monsters = true;
 						}
@@ -1259,7 +1260,8 @@ public class ItemMechanics extends JavaPlugin implements Listener {
 		try{
 			try{
 				try{
-					NBTTagList description = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getList("Lore", 0);
+					List<String> lore = i.getItemMeta().getLore();
+					//NBTTagList description = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getList("Lore", 0);
 
 					int x = 0;
 
@@ -1271,109 +1273,109 @@ public class ItemMechanics extends JavaPlugin implements Listener {
 
 					List<String> all_attributes = new ArrayList<String>();
 
-					while(description.size() > x){
-						if(!(description.get(x).toString()).startsWith(ChatColor.RED.toString())){
+					for(String s : lore){
+						if(!(s).startsWith(ChatColor.RED.toString())){
 							x++;
 							continue;
 						}
 
-						all_attributes.add(description.get(x).toString());
-						if(description.get(x).toString().contains("HP REGEN")){
+						all_attributes.add(s);
+						if(s.contains("HP REGEN")){
 							hp_regen = true;
-							String hp_regen_data = description.get(x).toString();
+							String hp_regen_data = s;
 							hp_regen_amount = Integer.parseInt(hp_regen_data.substring(hp_regen_data.indexOf(":") + 3, hp_regen_data.lastIndexOf(" ")).replaceAll(" ", ""));
 						}
 
-						if(description.get(x).toString().contains("ENERGY REGEN")){
+						if(s.contains("ENERGY REGEN")){
 							energy_regen = true;
-							String energy_regen_data = description.get(x).toString();
+							String energy_regen_data = s;
 							energy_regen_amount = Integer.parseInt(energy_regen_data.substring(energy_regen_data.indexOf(":") + 3, energy_regen_data.indexOf("%")).replaceAll(" ", ""));
 						}
 
-						if(description.get(x).toString().contains("FIRE RESISTANCE")){
+						if(s.contains("FIRE RESISTANCE")){
 							fire_res = true;
-							String fire_res_data = description.get(x).toString();
+							String fire_res_data = s;
 							val_fire_res = Integer.parseInt(fire_res_data.substring(fire_res_data.indexOf(":") + 2, fire_res_data.indexOf("%")).replaceAll(" ", ""));
 						}
 
-						if(description.get(x).toString().contains("ICE RESISTANCE")){
+						if(s.contains("ICE RESISTANCE")){
 							ice_res = true;
-							String ice_res_data = description.get(x).toString();
+							String ice_res_data = s;
 							val_ice_res = Integer.parseInt(ice_res_data.substring(ice_res_data.indexOf(":") + 2, ice_res_data.indexOf("%")).replaceAll(" ", ""));
 						}
 
-						if(description.get(x).toString().contains("POISON RESISTANCE")){
+						if(s.contains("POISON RESISTANCE")){
 							poison_res = true;
-							String poison_res_data = description.get(x).toString();
+							String poison_res_data = s;
 							val_poison_res = Integer.parseInt(poison_res_data.substring(poison_res_data.indexOf(":") + 2, poison_res_data.indexOf("%")).replaceAll(" ", ""));
 						}
 
-						if(description.get(x).toString().contains("STR")){
+						if(s.contains("STR")){
 							str = true;
-							String stat_data = description.get(x).toString();
+							String stat_data = s;
 							str_atr = Integer.parseInt(stat_data.substring(stat_data.indexOf(":") + 3, stat_data.length()).replaceAll(" ", ""));
 						}
 
-						if(description.get(x).toString().contains("DEX")){
+						if(s.contains("DEX")){
 							dex = true;
-							String stat_data = description.get(x).toString();
+							String stat_data = s;
 							dex_atr = Integer.parseInt(stat_data.substring(stat_data.indexOf(":") + 3, stat_data.length()).replaceAll(" ", ""));
 						}
 
-						if(description.get(x).toString().contains("VIT")){
+						if(s.contains("VIT")){
 							vit = true;
-							String stat_data = description.get(x).toString();
+							String stat_data = s;
 							vit_atr = Integer.parseInt(stat_data.substring(stat_data.indexOf(":") + 3, stat_data.length()).replaceAll(" ", ""));
 						}
 
-						if(description.get(x).toString().contains("INT")){
+						if(s.contains("INT")){
 							intel = true;
-							String int_string = description.get(x).toString();
+							String int_string = s;
 							int_atr = Integer.parseInt(int_string.substring(int_string.indexOf(":") + 3, int_string.length()));
 						}
 
-						if(description.get(x).toString().contains("SPEED BOOST")){
+						if(s.contains("SPEED BOOST")){
 							speed_boost = true;
-							String speed_boost_data = description.get(x).toString();
+							String speed_boost_data = s;
 							speed_mod = Float.parseFloat(speed_boost_data.substring(speed_boost_data.indexOf(":") + 3, speed_boost_data.indexOf("X")).replaceAll(" ", ""));
 						}
 
-						if(description.get(x).toString().contains("DODGE")){
-							String dodge_data = description.get(x).toString();
+						if(s.contains("DODGE")){
+							String dodge_data = s;
 
 							dodge_chance = Integer.parseInt(dodge_data.substring(dodge_data.indexOf(":") + 1, dodge_data.indexOf("%")).replaceAll(" ", ""));
 							dodge = true;
 						}
 
-						if(description.get(x).toString().contains("BLOCK")){
-							String block_data = description.get(x).toString();
+						if(s.contains("BLOCK")){
+							String block_data = s;
 
 							block_chance = Integer.parseInt(block_data.substring(block_data.indexOf(":") + 1, block_data.indexOf("%")).replaceAll(" ", ""));
 							block = true;
 						}
 
-						if(description.get(x).toString().contains("THORNS")){
+						if(s.contains("THORNS")){
 							thorns = true;
-							String thorns_data = description.get(x).toString();
+							String thorns_data = s;
 							thorns_amount = Integer.parseInt(thorns_data.substring(thorns_data.indexOf(":") + 1, thorns_data.indexOf("%")).replaceAll(" ", ""));
 						}
 
-						if(description.get(x).toString().contains("REFLECTION")){
-							String reflection_data = description.get(x).toString();
+						if(s.contains("REFLECTION")){
+							String reflection_data = s;
 
 							reflection_chance = Integer.parseInt(reflection_data.substring(reflection_data.indexOf(":") + 1, reflection_data.indexOf("%")).replaceAll(" ", ""));
 							reflection = true;
 						}
 
-						if(description.get(x).toString().contains("ITEM FIND")){
+						if(s.contains("ITEM FIND")){
 							item_find = true;
-							String item_find_data = description.get(x).toString();
+							String item_find_data = s;
 							item_find_amount = Integer.parseInt(item_find_data.substring(item_find_data.indexOf(":") + 1, item_find_data.indexOf("%")).replaceAll(" ", ""));
 						}
 
-						if(description.get(x).toString().contains("GEM FIND") || description.get(x).toString().contains("GOLD FIND")){
+						if(s.contains("GEM FIND") || s.contains("GOLD FIND")){
 							gold_find = true;
-							String gold_find_data = description.get(x).toString();
+							String gold_find_data = s;
 							gold_find_amount = Integer.parseInt(gold_find_data.substring(gold_find_data.indexOf(":") + 1, gold_find_data.indexOf("%")).replaceAll(" ", ""));
 						}
 
@@ -2621,6 +2623,26 @@ public class ItemMechanics extends JavaPlugin implements Listener {
 
 	public static List<Integer> getDmgRangeOfWeapon(ItemStack is){
 		List<Integer> dmg_range = new ArrayList<Integer>();
+		if(is != null && is.hasItemMeta() && is.getItemMeta().hasLore()){
+			List<String> lore = is.getItemMeta().getLore();
+			for(String s : lore){
+				if(s.startsWith(red.toString() + "DMG:")){
+					s = s.replaceAll(red.toString() + "DMG: ", "");
+					s = s.replaceAll(" ", "");
+
+					int min_dmg = Integer.parseInt(s.split("-")[0]);
+					int max_dmg = Integer.parseInt(s.split("-")[1]);
+
+					dmg_range.add(min_dmg);
+					dmg_range.add(max_dmg);
+				}
+			}
+		}
+		
+		return dmg_range;
+		
+		
+		/*List<Integer> dmg_range = new ArrayList<Integer>();
 		NBTTagList description = CraftItemStack.asNMSCopy(is).getTag().getCompound("display").getList("Lore", 0);
 
 		String dmg_data = description.get(0).toString();
@@ -2633,7 +2655,7 @@ public class ItemMechanics extends JavaPlugin implements Listener {
 
 		dmg_range.add(min_dmg);
 		dmg_range.add(max_dmg);
-		return dmg_range;
+		return dmg_range;*/
 	}
 
 	@EventHandler

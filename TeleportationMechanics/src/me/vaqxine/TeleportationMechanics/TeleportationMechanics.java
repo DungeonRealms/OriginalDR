@@ -727,6 +727,7 @@ public class TeleportationMechanics extends JavaPlugin implements Listener {
 			if(!(p.isOp())){
 				return true;
 			}
+			
 			p.getInventory().addItem(CraftItemStack.asCraftCopy(makeUnstackable(Cyrennica_scroll)));
 			p.getInventory().addItem(CraftItemStack.asCraftCopy(makeUnstackable(Dark_Oak_Tavern_scroll)));
 			p.getInventory().addItem(CraftItemStack.asCraftCopy(makeUnstackable(Harrison_scroll)));

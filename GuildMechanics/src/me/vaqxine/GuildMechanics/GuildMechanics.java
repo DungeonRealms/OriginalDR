@@ -753,7 +753,7 @@ public class GuildMechanics extends JavaPlugin implements Listener {
 					color_inv.setItem(19, new ItemStack(Material.INK_SACK, 1, (short)15));
 
 					color_inv.setItem(3, new ItemStack(Material.AIR));
-					color_inv.setItem(4, new ItemStack(Material.PUMPKIN_STEM));
+					color_inv.setItem(4, new ItemStack(Material.THIN_GLASS));
 					color_inv.setItem(5, new ItemStack(Material.AIR));
 
 					color_inv.setItem(0, CraftItemStack.asCraftCopy(gray_button));

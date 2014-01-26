@@ -28,6 +28,7 @@ import net.minecraft.server.v1_7_R1.PacketPlayOutNamedEntitySpawn;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -47,13 +48,15 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import yt.codebukkit.scoreboardapi.Scoreboard;
-import yt.codebukkit.scoreboardapi.ScoreboardAPI;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 public class PartyMechanics extends JavaPlugin implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
-	static ScoreboardAPI api = ScoreboardAPI.getInstance();
+	public static ScoreboardManager manager;
 
 	public static HashMap<String, String> party_invite = new HashMap<String, String>();
 	// Player_name, Party_title
@@ -85,7 +88,8 @@ public class PartyMechanics extends JavaPlugin implements Listener {
 	@SuppressWarnings("deprecation")
 	public void onEnable(){
 		getServer().getPluginManager().registerEvents(this, this);
-
+		manager = Bukkit.getScoreboardManager();
+		
 		this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
 			public void run() {
 				for(Player pl : getServer().getOnlinePlayers()){
@@ -97,16 +101,16 @@ public class PartyMechanics extends JavaPlugin implements Listener {
 		this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
 			public void run() {
 				for(String party_name : party_map.keySet()){
-					Scoreboard sb = api.getScoreboard(getPartyTitle(party_name));
+					Scoreboard sb = Bukkit.getPlayer(party_name).getScoreboard();
 					if(sb == null){
 						continue;
 					}
 					/*if(!(party_map.containsKey(sb.getName()))){
 						continue;
 					}*/
-					for(Player pl : sb.getAddedPlayers()){
+					for(OfflinePlayer pl : sb.getPlayers()){
 						if(!(player_hp.containsKey(pl.getName()))){
-							sb.removeItem(pl.getName());
+							sb.resetScores(pl);
 							continue;
 						}
 						String special_char = "";
@@ -123,7 +127,12 @@ public class PartyMechanics extends JavaPlugin implements Listener {
 						}
 
 						try{
-							sb.setItem(special_char + ChatColor.stripColor(pl_name), player_hp.get(pl.getName()), false);
+							Objective obj = sb.getObjective(DisplaySlot.SIDEBAR);
+	
+							Score hp = obj.getScore(Bukkit.getOfflinePlayer(special_char + ChatColor.stripColor(pl_name))); 
+							hp.setScore(player_hp.get(pl.getName()));
+							//sb.setItem(special_char + ChatColor.stripColor(pl_name), player_hp.get(pl.getName()), false);
+							
 						} catch(NullPointerException npe){
 							continue;
 						}
@@ -408,9 +417,14 @@ public class PartyMechanics extends JavaPlugin implements Listener {
 			p_name = p_name.substring(0, 14);
 		}
 
-		Scoreboard party_ui = api.getScoreboard(getPartyTitle(party_title));
-		party_ui.setItem(ChatColor.stripColor(p_name), HealthMechanics.getPlayerHP(pl.getName()), false);
-		party_ui.showToPlayer(pl);
+		Scoreboard party_ui = Bukkit.getPlayer(party_title).getScoreboard();
+		Objective obj = party_ui.getObjective(DisplaySlot.SIDEBAR);
+		
+		Score hp = obj.getScore(Bukkit.getOfflinePlayer(ChatColor.stripColor(p_name))); 
+		hp.setScore(HealthMechanics.getPlayerHP(pl.getName()));
+		pl.setScoreboard(party_ui);
+		/*party_ui.setItem(ChatColor.stripColor(p_name), HealthMechanics.getPlayerHP(pl.getName()), false);
+		party_ui.showToPlayer(pl);*/
 
 		int party_count = getPartyCount(party_title);
 
@@ -462,10 +476,15 @@ public class PartyMechanics extends JavaPlugin implements Listener {
 		party_only.remove(pl.getName());
 		KarmaMechanics.sendAlignColor(pl, pl);
 
-		Scoreboard party_ui = api.getScoreboard(getPartyTitle(party_name));
+		Scoreboard party_ui = Bukkit.getPlayer(party_name).getScoreboard();
+		Objective obj = party_ui.getObjective(DisplaySlot.SIDEBAR);
+		Score hp = obj.getScore(Bukkit.getOfflinePlayer(pl.getName()));
+		hp.setScore(0);
+		
+		/*Scoreboard party_ui = api.getScoreboard(getPartyTitle(party_name));
 		party_ui.removeItem(pl.getName());
 		party_ui.removeItem(ChatColor.BOLD.toString() + pl.getName());
-		party_ui.showToPlayer(pl, false);
+		party_ui.showToPlayer(pl, false);*/
 
 		InstanceMechanics.teleport_on_load.remove(pl.getName());
 
@@ -495,27 +514,33 @@ public class PartyMechanics extends JavaPlugin implements Listener {
 			party_map.remove(pl.getName());
 
 			try{
-				for(Player mem : api.getScoreboard(getPartyTitle(pl.getName())).getAddedPlayers()){
-					api.getScoreboard(getPartyTitle(pl.getName())).showToPlayer(mem, false);
+				for(OfflinePlayer mem : pl.getScoreboard().getPlayers()){
+					if(mem.isOnline()){
+						Bukkit.getPlayer(mem.getName()).setScoreboard(manager.getNewScoreboard());
+					}
+					//api.getScoreboard(getPartyTitle(pl.getName())).showToPlayer(mem, false);
 				}
 
-				api.getScoreboard(getPartyTitle(pl.getName())).stopShowingAllPlayers();
+				//api.getScoreboard(getPartyTitle(pl.getName())).stopShowingAllPlayers();
 			} catch(Exception err){
 				err.printStackTrace();
-				api.getScoreboard(getPartyTitle(pl.getName())).stopShowingAllPlayers();
+				//api.getScoreboard(getPartyTitle(pl.getName())).stopShowingAllPlayers();
 			}
-			api.getScoreboards().remove(api.getScoreboard(getPartyTitle(pl.getName())));
+			//api.getScoreboards().remove(api.getScoreboard(getPartyTitle(pl.getName())));
 
 			createParty(new_leader, Bukkit.getPlayer(new_leader), remaining_members);
-			Scoreboard new_ui = api.getScoreboard(getPartyTitle(new_leader));
+			Scoreboard new_ui = Bukkit.getPlayer(new_leader).getScoreboard();
 
 			for(String s : remaining_members){ 
 				inv_party_map.put(s, new_leader);
 				if(Bukkit.getPlayer(s) != null){
 					Player pty_mem = Bukkit.getPlayer(s);
-					if(!new_ui.hasPlayerAdded(pty_mem)){
-						new_ui.showToPlayer(pty_mem);
+					if(!(pty_mem.getScoreboard().getPlayers().contains(Bukkit.getOfflinePlayer(s)))){
+						pty_mem.setScoreboard(Bukkit.getPlayer(s).getScoreboard());
 					}
+					/*if(!new_ui.hasPlayerAdded(pty_mem)){
+						new_ui.showToPlayer(pty_mem);
+					}*/
 					pty_mem.sendMessage(ChatColor.LIGHT_PURPLE.toString() + "<" + ChatColor.BOLD + "P" + ChatColor.LIGHT_PURPLE + ">" + ChatColor.GRAY + " " + pl.getName() + ChatColor.GRAY.toString() + " has " + ChatColor.LIGHT_PURPLE + ChatColor.UNDERLINE + "left" + ChatColor.GRAY.toString() + " your party.");
 					pty_mem.sendMessage(ChatColor.LIGHT_PURPLE.toString() + "<" + ChatColor.BOLD + "P" + ChatColor.LIGHT_PURPLE + "> " + ChatColor.GRAY + ChatColor.LIGHT_PURPLE.toString() + new_leader + ChatColor.GRAY.toString() + " has been promoted to " + ChatColor.UNDERLINE + "Party Leader");
 				}
@@ -547,6 +572,11 @@ public class PartyMechanics extends JavaPlugin implements Listener {
 	}
 
 	public static void createParty(String party_title, Player p_owner, List<String> existing_members){
+		if(!p_owner.getName().equalsIgnoreCase("Notch")){
+			p_owner.sendMessage(ChatColor.RED + "Parties are temporarily disabled due to a 1.7.2 conflict.");
+			return;
+		}
+		
 		int incr = 0;
 
 		String p_owner_name = p_owner.getName();
@@ -562,12 +592,20 @@ public class PartyMechanics extends JavaPlugin implements Listener {
 		party_name_incr.put(p_owner_name, incr);
 		party_title = p_owner_name + "." + incr;
 
-		Scoreboard party_ui = api.createScoreboard(party_title, 2);
-		party_ui.setType(Scoreboard.Type.SIDEBAR);
-		party_ui.setScoreboardName(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Party");
+		Scoreboard party_ui = manager.getNewScoreboard();
+		Objective obj = party_ui.getObjective("player_data");
+		obj.setDisplayName(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Party");
+		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+		
+		/*party_ui.setType(Scoreboard.Type.SIDEBAR);
+		party_ui.setScoreboardName(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Party");*/
 
-		party_ui.setItem(ChatColor.BOLD + p_owner_name, HealthMechanics.getPlayerHP(p_owner.getName()), false);
-		party_ui.showToPlayer(p_owner);
+		Score hp = obj.getScore(Bukkit.getOfflinePlayer(ChatColor.BOLD + p_owner_name));
+		hp.setScore(HealthMechanics.getPlayerHP(p_owner.getName()));
+		//party_ui.setItem(ChatColor.BOLD + p_owner_name, HealthMechanics.getPlayerHP(p_owner.getName()), false);
+		//party_ui.showToPlayer(p_owner);
+		p_owner.setScoreboard(party_ui);
+		
 		if(existing_members == null){
 			party_map.put(p_owner.getName(), new ArrayList<String>(Arrays.asList(p_owner.getName())));
 			party_loot.put(p_owner.getName(), "random");
@@ -586,7 +624,10 @@ public class PartyMechanics extends JavaPlugin implements Listener {
 					if(p_name.length() > 14){
 						p_name = p_name.substring(0, 14);
 					}
-					party_ui.setItem(p_name, HealthMechanics.getPlayerHP(pl.getName()), false);
+					
+					hp = obj.getScore(Bukkit.getOfflinePlayer(p_name));
+					hp.setScore(HealthMechanics.getPlayerHP(p_owner.getName()));
+					//party_ui.setItem(p_name, HealthMechanics.getPlayerHP(pl.getName()), false);
 				}
 			}
 
@@ -921,21 +962,27 @@ public class PartyMechanics extends JavaPlugin implements Listener {
 			party_map.put(new_leader, remaining_members);
 
 			//api.getScoreboard(p.getName()).stopShowingAllPlayers();
-			for(Player mem : api.getScoreboard(getPartyTitle(p.getName())).getAddedPlayers()){
-				api.getScoreboard(getPartyTitle(p.getName())).showToPlayer(mem, false);
+			for(OfflinePlayer mem : p.getScoreboard().getPlayers()){
+				//api.getScoreboard(getPartyTitle(p.getName())).showToPlayer(mem, false);
+				if(Bukkit.getPlayer(mem.getName()) != null){
+					Bukkit.getPlayer(mem.getName()).setScoreboard(manager.getNewScoreboard());
+				}
 			}
-			api.getScoreboard(getPartyTitle(p.getName())).stopShowingAllPlayers();
-			api.getScoreboards().remove(api.getScoreboard(getPartyTitle(p.getName())));
+			
+			//api.getScoreboard(getPartyTitle(p.getName())).stopShowingAllPlayers();
+			//api.getScoreboards().remove(api.getScoreboard(getPartyTitle(p.getName())));
 
 			createParty(new_leader, Bukkit.getPlayer(new_leader), remaining_members);
-			Scoreboard new_ui = api.getScoreboard(getPartyTitle(new_leader));
+			Scoreboard new_ui = manager.getNewScoreboard();
+			//Scoreboard new_ui = api.getScoreboard(getPartyTitle(new_leader));
 
 			for(String s : remaining_members){
 				inv_party_map.put(s, new_leader);
 				if(Bukkit.getPlayer(s) != null){
 					Player pty_mem = Bukkit.getPlayer(s);
-					if(!new_ui.hasPlayerAdded(pty_mem)){
-						new_ui.showToPlayer(pty_mem);
+					if(!new_ui.getPlayers().contains(pty_mem.getName())){
+						pty_mem.setScoreboard(new_ui);
+						//new_ui.showToPlayer(pty_mem);
 					}
 					pty_mem.sendMessage(ChatColor.LIGHT_PURPLE.toString() + "<" + ChatColor.BOLD + "P" + ChatColor.LIGHT_PURPLE + "> " + ChatColor.GRAY + ChatColor.LIGHT_PURPLE.toString() + new_leader + ChatColor.GRAY.toString() + " has been promoted to " + ChatColor.UNDERLINE + "Party Leader");
 				}
@@ -957,7 +1004,7 @@ public class PartyMechanics extends JavaPlugin implements Listener {
 
 			String party_name = party_invite.get(p.getName());
 
-			if(api.getScoreboard(getPartyTitle(party_name)) == null){
+			if(Bukkit.getPlayer(party_name) == null){
 				p.sendMessage(ChatColor.RED + "This party invite is no longer available.");
 				party_invite.remove(p.getName());
 				party_invite_time.remove(p.getName());

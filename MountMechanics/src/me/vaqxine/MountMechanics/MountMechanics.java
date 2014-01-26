@@ -135,7 +135,7 @@ public class MountMechanics extends JavaPlugin implements Listener {
 	public static ItemStack t4_horse_armor = ItemMechanics.signCustomItem(Material.getMaterial(419), (short)1, ChatColor.LIGHT_PURPLE.toString() + "Diamond Horse Armor", ChatColor.RED.toString() + "Speed: 160%" + "," + ChatColor.RED.toString() + "Jump: +110%" + "," + ChatColor.RED.toString() + ChatColor.BOLD.toString() + "REQ:" + ChatColor.AQUA + " Traveler's Horse Mount" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Powerful brilliant diamond horse armor.");
 	public static ItemStack t5_horse_armor = ItemMechanics.signCustomItem(Material.getMaterial(418), (short)1, ChatColor.YELLOW.toString() + "Gold Horse Armor", ChatColor.RED.toString() + "Speed: +200%" + "," + ChatColor.RED.toString() + "Jump: +120%" + "," + ChatColor.RED.toString() + ChatColor.BOLD.toString() + "REQ:" + ChatColor.LIGHT_PURPLE.toString() + " Knight's Horse Mount" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "A legendary forged intricate golden armour piece.");
 
-	ItemStack divider = new ItemStack(Material.PUMPKIN_STEM, 1);
+	ItemStack divider = new ItemStack(Material.THIN_GLASS, 1);
 
 	public static HashMap<String, Integer> mount_being_bought = new HashMap<String, Integer>();
 	// Used for Animal Tamer shop.
@@ -581,8 +581,21 @@ public class MountMechanics extends JavaPlugin implements Listener {
 		return i;
 	}
 
-	public static double getShardPrice(ItemStack is){
-		try {
+	public static double getShardPrice(ItemStack i){
+		if(i != null && i.hasItemMeta() && i.getItemMeta().hasLore()){
+			List<String> lore = i.getItemMeta().getLore();
+			for(String s : lore){
+				s = ChatColor.stripColor(s);
+				if(s.contains("Portal Key Shards")){
+					return Double.parseDouble(ChatColor.stripColor((s.substring(0, s.indexOf(" ")))));
+				}
+			}
+		}
+		
+		return 0;
+		
+		
+		/*try {
 			NBTTagList description = CraftItemStack.asNMSCopy(is).getTag().getCompound("display").getList("Lore", 0);
 			int x = 0;
 			while (description.size() > x) {
@@ -596,11 +609,37 @@ public class MountMechanics extends JavaPlugin implements Listener {
 		} catch (NullPointerException e) {
 			return 0;
 		}
-		return 0;
+		return 0;*/
 	}
 
 	public static double getShardPriceTier(ItemStack is){
-		try {
+		
+		if(is != null && is.hasItemMeta() && is.getItemMeta().hasLore()){
+			List<String> lore = is.getItemMeta().getLore();
+			for(String s : lore){
+				if(s.contains(ChatColor.YELLOW.toString())){
+					return 5;
+				}
+				if(s.contains(ChatColor.LIGHT_PURPLE.toString())){
+					return 4;
+				}
+				if(s.contains(ChatColor.AQUA.toString())){
+					return 3;
+				}
+				if(s.contains(ChatColor.GREEN.toString())){
+					return 2;
+				}
+				if(s.contains(ChatColor.WHITE.toString())){
+					return 1;
+				}
+				
+				return 1;
+			}
+		}
+		
+		return 0;
+		
+		/*try {
 			NBTTagList description = CraftItemStack.asNMSCopy(is).getTag().getCompound("display").getList("Lore", 0);
 			int x = 0;
 			while (description.size() > x) {
@@ -631,7 +670,7 @@ public class MountMechanics extends JavaPlugin implements Listener {
 		} catch (NullPointerException e) {
 			return 0;
 		}
-		return 0;
+		return 0;*/
 	}
 
 	public static void dismount(Player p_rider){
