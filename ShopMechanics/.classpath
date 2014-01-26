@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/MoneyMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/RealmMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/ItemMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/CommunityMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/HealthMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/HiveClient.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/PetMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/DuelMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/MerchantMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/TradeMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/ChatMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/LootMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/MonsterMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/KarmaMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/RepairMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/ProfessionMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/TutorialMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/spigot-1.6.2-R0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/AchievmentMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/InstanceMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Dropbox/java/bin/remoteentities-1.8-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/Citizens.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

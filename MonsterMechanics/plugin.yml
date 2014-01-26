@@ -1,0 +1,16 @@
+name: MonsterMechanics
+main: me.vaqxine.MonsterMechanics.MonsterMechanics
+version: 1.0
+commands:
+  showms:
+    description: Show mob spawners visually.
+    usage: /<command>
+  hidems:
+    description: Hide visual mob spawners
+    usage: /<command>
+  mon:
+    description: Root command.
+    usage: /<command>
+  monspawn:
+    description: Spawn custom mob.
+    usage: /<command>

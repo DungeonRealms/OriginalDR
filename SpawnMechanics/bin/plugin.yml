@@ -1,0 +1,16 @@
+name: SpawnMechanics
+main: me.vaqxine.SpawnMechanics.SpawnMechanics
+version: 1.0
+commands:
+  addspawn:
+    description: Registers a new spawn point.
+    usage: /<command>
+  spawn:
+    description: Go to designated spawn point.
+    usage: /<command>
+  setvspawn:
+    description: Go to designated spawn point.
+    usage: /<command>
+  tppos:
+    description: Teleport to position.
+    usage: /<command>

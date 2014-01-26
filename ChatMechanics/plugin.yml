@@ -1,0 +1,12 @@
+name: ChatMechanics
+main: me.vaqxine.ChatMechanics.ChatMechanics
+version: 1.0
+commands:
+  gl:
+    description: Send a message globally.
+    usage: /<command>
+    aliases: [global, all]
+  l:
+    description: Send a message locally
+    usage: /<command>
+    aliases: [local]

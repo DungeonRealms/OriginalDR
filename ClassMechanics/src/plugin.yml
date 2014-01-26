@@ -1,0 +1,7 @@
+name: ClassMechanics
+main: me.vaqxine.ClassMechanics.ClassMechanics
+version: 1.0
+commands:
+  class:
+    description: Root command... for now.
+    usage: /<command>

@@ -1,0 +1,7 @@
+name: PowerupMechanics
+main: me.vaqxine.PowerupMechanics.PowerupMechanics
+version: 1.0
+commands:
+  powerup:
+    description: Root command.
+    usage: /<command>

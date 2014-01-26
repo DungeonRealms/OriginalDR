@@ -1,0 +1,10 @@
+name: KarmaMechanics
+main: me.vaqxine.KarmaMechanics.KarmaMechanics
+version: 1.0
+commands:
+  karma:
+    description: Root command.
+    usage: /<command>
+  check:
+    description: Displays status of current zone.
+    usage: /<command>

@@ -1,0 +1,7 @@
+name: CloudMechanics
+main: me.vaqxine.CloudMechanics.CloudMechanics
+version: 1.0
+commands:
+  cloud:
+    description: Root cmd.
+    usage: /<command>

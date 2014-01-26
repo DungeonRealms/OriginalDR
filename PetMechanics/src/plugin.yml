@@ -1,0 +1,10 @@
+name: PetMechanics
+main: me.vaqxine.PetMechanics.PetMechanics
+version: 1.0
+commands:
+  pet:
+    description: Root command.
+    usage: /<command>
+  addpet:
+    description: Console command to add pet to player.
+    usage: /<command>

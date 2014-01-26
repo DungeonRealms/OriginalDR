@@ -1,0 +1,8 @@
+name: ItemMechanics
+main: me.vaqxine.ItemMechanics.ItemMechanics
+version: 1.0
+loadbefore: [MerchantMechanics, TeleportationMechanics, EnchantMechanics, MountMechanics, ProfessionMechanics, GuildMechanics, RealmMechanics, RestrictionMechanics]
+commands:
+  addweapon:
+    description: Adds custom weapon to inventory.
+    usage: /<command>

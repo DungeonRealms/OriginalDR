@@ -1,0 +1,4 @@
+name: HealthMechanics
+main: me.vaqxine.HealthMechanics.HealthMechanics
+version: 1.0
+loadbefore: [GuildMechanics, CommunityMechanics, DuelMechanics, TutorialMechanics]

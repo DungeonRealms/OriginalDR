@@ -1,0 +1,33 @@
+name: PartyMechanics
+main: me.vaqxine.PartyMechanics.PartyMechanics
+version: 1.0
+softdepend: [ScoreboardAPI]
+commands:
+  party:
+    description: Root command.
+    usage: /<command>
+  pinvite:
+    description: Invite player to party.
+    usage: /<command>
+  pquit:
+    description: Quit party.
+    usage: /<command>
+  pkick:
+    description: Kick player from party.
+    usage: /<command>
+  p:
+    description: Party chat.
+    usage: /<command>
+    aliases: [pchat, pc]
+  paccept:
+    description: Quit party.
+    usage: /<command>
+  pdecline:
+    description: Quit party.
+    usage: /<command>
+  ppromote:
+    description: Promote player to party leader.
+    usage: /<command>
+  ploot:
+    description: Change loot distribution type.
+    usage: /<command>

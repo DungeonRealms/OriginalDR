@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/CommunityMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/HealthMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/ScoreboardAPI.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/ChatMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/KarmaMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/MountMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/HiveClient.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/DuelMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/MonsterMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/InstanceMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/spigot-1.6.2-R0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/AchievmentMechanics.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

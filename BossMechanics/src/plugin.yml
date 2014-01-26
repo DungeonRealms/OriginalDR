@@ -1,0 +1,10 @@
+name: BossMechanics
+main: me.vaqxine.BossMechanics.BossMechanics
+version: 1.0
+commands:
+  boss:
+    description: Root cmd.
+    usage: /<command>
+  spawnboss:
+    description: Spawns a boss mob.
+    usage: /<command>

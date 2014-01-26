@@ -1,0 +1,7 @@
+name: FatigueMechanics
+main: me.vaqxine.FatigueMechanics.FatigueMechanics
+version: 1.0
+commands:
+  fat:
+    description: Root command.
+    usage: /<command>

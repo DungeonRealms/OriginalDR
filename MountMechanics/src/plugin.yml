@@ -1,0 +1,10 @@
+name: MountMechanics
+main: me.vaqxine.MountMechanics.MountMechanics
+version: 1.0
+commands:
+  mount:
+    description: Root command.
+    usage: /<command>
+  addmount:
+    description: Console command to add Mount to player.
+    usage: /<command>

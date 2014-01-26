@@ -1,0 +1,7 @@
+name: MerchantMechanics
+main: me.vaqxine.MerchantMechanics.MerchantMechanics
+version: 1.0.0
+commands:
+  merchant:
+    description: Root command for merchant mechanics.
+    usage: /<command>

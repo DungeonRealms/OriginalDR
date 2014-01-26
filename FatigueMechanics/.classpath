@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/ItemMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/DuelMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/ProfessionMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/InstanceMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/TutorialMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/spigot-1.6.2-R0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/RepairMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/MonsterMechanics.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/HiveClient.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

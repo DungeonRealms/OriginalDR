@@ -1,0 +1,8 @@
+name: MoneyMechanics
+main: me.vaqxine.MoneyMechanics.MoneyMechanics
+version: 1.0.0
+commands:
+  mnote:
+    description: Root command.
+    usage: /<command>
+softdepend: [ItemMechanics]
