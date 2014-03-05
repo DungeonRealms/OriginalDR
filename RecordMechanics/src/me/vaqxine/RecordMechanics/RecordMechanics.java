@@ -1,7 +1,6 @@
 package me.vaqxine.RecordMechanics;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,19 +12,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
-import me.vaqxine.Hive.Hive;
-import me.vaqxine.MoneyMechanics.MoneyMechanics;
 
-import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class RecordMechanics extends JavaPlugin implements Listener {

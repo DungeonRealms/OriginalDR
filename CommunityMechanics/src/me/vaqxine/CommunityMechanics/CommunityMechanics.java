@@ -1,18 +1,10 @@
 package me.vaqxine.CommunityMechanics;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ConnectException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,19 +15,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.RunnableFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.vaqxine.ChatMechanics.ChatMechanics;
-import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.FatigueMechanics.FatigueMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
@@ -43,12 +31,7 @@ import me.vaqxine.Hive.Hive;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
-import me.vaqxine.ModerationMechanics.ModerationMechanics;
-import me.vaqxine.MoneyMechanics.MoneyMechanics;
-import me.vaqxine.MountMechanics.MountMechanics;
-import me.vaqxine.PartyMechanics.PartyMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
-import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 import net.minecraft.server.v1_7_R1.Packet;
@@ -56,10 +39,8 @@ import net.minecraft.server.v1_7_R1.PacketPlayOutEntityEquipment;
 import net.minecraft.server.v1_7_R1.PacketPlayOutNamedEntitySpawn;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.net.util.Base64;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -77,34 +58,21 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
-import org.fusesource.jansi.Ansi;
 
 public class CommunityMechanics extends JavaPlugin implements Listener {
 	public static Logger log = Logger.getLogger("Minecraft");
@@ -193,28 +161,28 @@ public class CommunityMechanics extends JavaPlugin implements Listener {
 		TipMechanics.loadTips();
 		
 		green = HealthMechanics.board.registerNewTeam("green");
-		green.setPrefix("§a");
+		green.setPrefix("ï¿½a");
 
 		dark_green = HealthMechanics.board.registerNewTeam("dark_green");
-		dark_green.setPrefix("§2");
+		dark_green.setPrefix("ï¿½2");
 
 		yellow = HealthMechanics.board.registerNewTeam("yellow");
-		yellow.setPrefix("§e");
+		yellow.setPrefix("ï¿½e");
 
 		red = HealthMechanics.board.registerNewTeam("red");
-		red.setPrefix("§c");
+		red.setPrefix("ï¿½c");
 
 		dark_red = HealthMechanics.board.registerNewTeam("dark_red");
-		dark_red.setPrefix("§4");
+		dark_red.setPrefix("ï¿½4");
 
 		purple = HealthMechanics.board.registerNewTeam("purple");
-		purple.setPrefix("§d");
+		purple.setPrefix("ï¿½d");
 
 		white = HealthMechanics.board.registerNewTeam("white");
-		white.setPrefix("§f");
+		white.setPrefix("ï¿½f");
 
 		aqua = HealthMechanics.board.registerNewTeam("aqua");
-		aqua.setPrefix("§b" + ChatColor.BOLD.toString() + "GM" + ChatColor.AQUA.toString() + " ");
+		aqua.setPrefix("ï¿½b" + ChatColor.BOLD.toString() + "GM" + ChatColor.AQUA.toString() + " ");
 		
 		// SQL Connection Pool Refresh
 		this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {

@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/HealthMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/WorldGuard.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/worldedit-5.3-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/TradeMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/CommunityMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/KarmaMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/DungeonBukkit-1.4.7-R0.2-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/MoneyMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/RealmMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/pet"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/PetMechanics.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

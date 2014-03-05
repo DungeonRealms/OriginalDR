@@ -2,6 +2,12 @@ package me.vaqxine.ItemMechanics;
 
 import java.util.Random;
 
+import me.vaqxine.EnchantMechanics.EnchantMechanics;
+import me.vaqxine.MerchantMechanics.MerchantMechanics;
+import me.vaqxine.PowerupMechanics.PowerupMechanics;
+import me.vaqxine.RealmMechanics.RealmMechanics;
+import me.vaqxine.RepairMechanics.RepairMechanics;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -17,12 +23,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
-
-import me.vaqxine.EnchantMechanics.EnchantMechanics;
-import me.vaqxine.MerchantMechanics.MerchantMechanics;
-import me.vaqxine.PowerupMechanics.PowerupMechanics;
-import me.vaqxine.RepairMechanics.RepairMechanics;
-import me.vaqxine.RealmMechanics.RealmMechanics;
 
 public class Halloween implements Listener {
 

@@ -3,12 +3,11 @@ package me.vaqxine.ShopMechanics;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.logging.Level;
-
-import org.apache.commons.lang.StringEscapeUtils;
 
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.MoneyMechanics.ConnectionPool;
+
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class BackupStoreData extends Thread {
 	  public void run() {

@@ -2,10 +2,8 @@ package me.vaqxine.ItemMechanics;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -13,11 +11,8 @@ import java.util.logging.Logger;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 

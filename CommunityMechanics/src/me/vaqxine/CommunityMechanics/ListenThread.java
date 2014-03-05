@@ -1,19 +1,13 @@
 package me.vaqxine.CommunityMechanics;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URL;
+
+import me.vaqxine.Hive.Hive;
 
 import org.bukkit.Bukkit;
-
-import me.vaqxine.CommunityMechanics.CommunityMechanics;
-import me.vaqxine.CommunityMechanics.ConnectProtocol;
-import me.vaqxine.Hive.Hive;
 
 public class ListenThread extends Thread {
 	InetAddress lAddress;

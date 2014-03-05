@@ -1,11 +1,9 @@
 package me.vaqxine.AchievmentMechanics;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
@@ -15,7 +13,6 @@ import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 
-import org.bukkit.Achievement;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

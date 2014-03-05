@@ -16,12 +16,10 @@ import me.vaqxine.ItemMechanics.ItemGenerators;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.WeatherType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.BlockCommandSender;
@@ -30,18 +28,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
@@ -211,6 +206,7 @@ public class BossMechanics extends JavaPlugin implements Listener {
 		return return_list;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onBossDeath(EntityDeathEvent e){
 		final Entity ent = e.getEntity();
@@ -529,6 +525,7 @@ public class BossMechanics extends JavaPlugin implements Listener {
 	}
 }
 
+@SuppressWarnings("deprecation")
 public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 
 	if(cmd.getName().equalsIgnoreCase("boss")){

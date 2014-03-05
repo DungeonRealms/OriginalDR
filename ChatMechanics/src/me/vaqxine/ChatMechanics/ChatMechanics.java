@@ -9,10 +9,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -53,13 +51,11 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatTabCompleteEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.fusesource.jansi.Ansi;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ChatMechanics extends JavaPlugin implements Listener {
 	public static Logger log = Logger.getLogger("Minecraft");
@@ -235,7 +231,7 @@ public class ChatMechanics extends JavaPlugin implements Listener {
 				}
 				a = a.charAt(0) + a.substring(1).toLowerCase();
 			}else{
-				a = a;
+				//a = a; TODO Wtf?
 			}
 
 			new_msg += a + " ";
@@ -659,11 +655,12 @@ public class ChatMechanics extends JavaPlugin implements Listener {
 
 				p.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
 				p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "No one heard you.");
-				this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+				new BukkitRunnable(){
+					@Override
 					public void run() {
 						sending_message.remove(p.getName());
 					}
-				}, 2L);
+				}.runTaskLaterAsynchronously(this, 2L);
 			}
 
 			for(Player pl : to_send){
@@ -720,11 +717,12 @@ public class ChatMechanics extends JavaPlugin implements Listener {
 
 			p.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
 			log.info(ChatColor.stripColor("" + p.getName() + ": " + msg));
-			this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					sending_message.remove(p.getName());
 				}
-			}, 2L);
+			}.runTaskLaterAsynchronously(this, 2L);
 
 		}
 
@@ -836,6 +834,7 @@ public class ChatMechanics extends JavaPlugin implements Listener {
 		recent_death.remove(e.getPlayer().getName());
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerDeath(PlayerDeathEvent e){
 		e.setDeathMessage("");
@@ -866,7 +865,7 @@ public class ChatMechanics extends JavaPlugin implements Listener {
 				EntityDamageByEntityEvent event = (EntityDamageByEntityEvent)dead.getLastDamageCause();
 				if(event.getDamager() instanceof Projectile){
 					Projectile proj = (Projectile)event.getDamager();
-					LivingEntity shooter = proj.getShooter();
+					LivingEntity shooter = (LivingEntity) proj.getShooter();
 					if(proj instanceof Arrow){
 						death_reason = " was shot to death with an arrow";
 					}

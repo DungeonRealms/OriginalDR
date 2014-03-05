@@ -6,19 +6,15 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import me.vaqxine.ChatMechanics.ChatMechanics;
 import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
-import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
@@ -33,7 +29,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.fusesource.jansi.Ansi;
 
 public class ConnectProtocol implements Runnable {
 	private Socket clientSocket;

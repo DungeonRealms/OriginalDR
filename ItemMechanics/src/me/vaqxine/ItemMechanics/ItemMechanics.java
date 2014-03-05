@@ -1,29 +1,24 @@
 package me.vaqxine.ItemMechanics;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
+import javax.swing.text.Utilities;
+
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
-import me.vaqxine.DuelMechanics.DuelMechanics;
-import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.FatigueMechanics.FatigueMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
-import me.vaqxine.ItemMechanics.Attributes.Attribute;
-import me.vaqxine.ItemMechanics.Attributes.AttributeType;
-import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.MerchantMechanics.MerchantMechanics;
 import me.vaqxine.ModerationMechanics.ModerationMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
@@ -34,12 +29,8 @@ import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
 import net.minecraft.server.v1_7_R1.EntityLiving;
-import net.minecraft.server.v1_7_R1.EntityPotion;
-import net.minecraft.server.v1_7_R1.EntityProjectile;
-import net.minecraft.server.v1_7_R1.EntityWitherSkull;
 import net.minecraft.server.v1_7_R1.NBTTagCompound;
 import net.minecraft.server.v1_7_R1.NBTTagList;
-import net.minecraft.server.v1_7_R1.NBTTagString;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
 
@@ -54,7 +45,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
@@ -88,7 +78,6 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -102,17 +91,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 import org.bukkit.util.Vector;
-
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 public class ItemMechanics extends JavaPlugin implements Listener {
 
