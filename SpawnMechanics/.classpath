@@ -6,7 +6,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/DungeonBukkit-1.4.7-R0.2-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/HiveClient.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
