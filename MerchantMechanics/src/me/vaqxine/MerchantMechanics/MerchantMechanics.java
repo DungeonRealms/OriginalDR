@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.DonationMechanics.DonationMechanics;
-import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;

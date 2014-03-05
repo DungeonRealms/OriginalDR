@@ -6,21 +6,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/DuelMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/RealmMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/SpawnMechanics.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/HiveClient.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/ShopMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/TradeMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/ProfessionMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/InstanceMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/ItemMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/MoneyMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/CommunityMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/PetMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/EcashMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/MountMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/spigot-1.6.2-R0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>

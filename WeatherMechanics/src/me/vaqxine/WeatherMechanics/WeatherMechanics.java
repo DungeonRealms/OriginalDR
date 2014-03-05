@@ -3,8 +3,6 @@ package me.vaqxine.WeatherMechanics;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import me.vaqxine.DuelMechanics.DuelMechanics;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.WeatherType;

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
-import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;

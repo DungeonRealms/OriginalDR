@@ -12,7 +12,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
-import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
@@ -74,7 +73,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.spigotmc.event.entity.EntityDismountEvent;
 
 // .TODO: Code death mechanics for dropping items of mule
 // .TODO: Code upgrade mechanics

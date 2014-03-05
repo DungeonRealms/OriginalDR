@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
-import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.ParticleEffect;

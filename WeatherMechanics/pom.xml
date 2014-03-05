@@ -31,6 +31,12 @@
 			<version>1.7.2-R0.4-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>DuelMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

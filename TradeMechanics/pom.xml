@@ -31,6 +31,60 @@
 			<version>1.7.2-R0.4-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
+				<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>CommunityMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>HealthMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>MerchantMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>ModerationMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>MoneyMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>PetMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>RealmMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>RestrictionMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>ShopMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

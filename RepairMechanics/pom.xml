@@ -31,6 +31,54 @@
 			<version>1.7.2-R0.4-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
+				<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>CommunityMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>DuelMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>EnchantMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>HealthMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>InstanceMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>ItemMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>ProfessionMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.vaqxine</groupId>
+			<artifactId>RealmMechanics</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

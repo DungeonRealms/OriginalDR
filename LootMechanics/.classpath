@@ -6,16 +6,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/ItemMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/MoneyMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/HealthMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/PowerupMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/ShopMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/MonsterMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/TeleportationMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/EnchantMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/InstanceMechanics.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/TutorialMechanics.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Vaqxine/Dropbox/public/Updates/spigot-1.6.1-R0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
