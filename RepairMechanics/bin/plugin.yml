@@ -1,7 +1,0 @@
-name: RepairMechanics
-main: me.vaqxine.RepairMechanics.RepairMechanics
-version: 1.0
-commands:
-  repair:
-    description: Root command.
-    usage: /<command>
