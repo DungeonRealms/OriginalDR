@@ -8,3 +8,4 @@ commands:
   toggleduel:
     description: Toggle accepting duel requests.
     usage: /<command>
+    aliases: [toggleduels, duel]
