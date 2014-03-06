@@ -1,0 +1,11 @@
+name: DuelMechanics
+main: me.vaqxine.DuelMechanics.DuelMechanics
+version: 1.0
+commands:
+  duel:
+    description: Root command... for now.
+    usage: /<command>
+  toggleduel:
+    description: Toggle accepting duel requests.
+    usage: /<command>
+    aliases: [toggleduels, duel]
