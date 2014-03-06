@@ -127,7 +127,7 @@ public class ModerationMechanics implements Listener {
 		Main.plugin.getCommand("banksee").setExecutor(new CommandBankSee());
 		Main.plugin.getCommand("drtppos").setExecutor(new CommandDRTPPos());
 		Main.plugin.getCommand("armorsee").setExecutor(new CommandArmorSee());
-		Main.plugin.getCommand("realmlone").setExecutor(new CommandRealmClone());
+		Main.plugin.getCommand("realmclone").setExecutor(new CommandRealmClone());
 		Main.plugin.getCommand("playerclone").setExecutor(new CommandPlayerClone());
 		Main.plugin.getCommand("drvanish").setExecutor(new CommandDRVanish());
 	}

@@ -46,7 +46,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class MerchantMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");

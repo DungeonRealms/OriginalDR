@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 import me.vaqxine.Main;
 
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class SubscriberMechanics implements Listener {
 	Logger log = Logger.getLogger("Minecraft");

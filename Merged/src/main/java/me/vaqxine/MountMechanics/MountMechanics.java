@@ -75,7 +75,6 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 // .TODO: Code death mechanics for dropping items of mule
 // .TODO: Code upgrade mechanics

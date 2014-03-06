@@ -122,6 +122,7 @@ public class Main extends JavaPlugin {
 		achievmentMechanics.onEnable();
 		bossMechanics.onEnable();
 		chatMechanics.onEnable();
+		healthMechanics.onEnable();
 		communityMechanics.onEnable();
 		donationMechanics.onEnable();
 		duelMechanics.onEnable();
@@ -129,7 +130,6 @@ public class Main extends JavaPlugin {
 		enchantMechanics.onEnable();
 		fatigueMechanics.onEnable();
 		guildMechanics.onEnable();
-		healthMechanics.onEnable();
 		instanceMechanics.onEnable();
 		itemMechanics.onEnable();
 		karmaMechanics.onEnable();

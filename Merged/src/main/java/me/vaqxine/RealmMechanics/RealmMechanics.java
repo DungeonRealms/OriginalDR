@@ -1164,7 +1164,8 @@ public class RealmMechanics implements Listener {
 		File jarFile = null;
 		try {jarFile = new File(codeSource.getLocation().toURI().getPath());} catch (URISyntaxException e1) {}
 		rootDir = jarFile.getParentFile().getPath();
-		rootDir = rootDir.substring(0, rootDir.indexOf("/plugins"));
+		int rep = rootDir.contains("/plugins") ? rootDir.indexOf("/plugins") : rootDir.indexOf("\\plugins");
+		rootDir = rootDir.substring(0, rep);
 	}
 
 

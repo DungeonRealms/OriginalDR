@@ -16,8 +16,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.EntityManager;
-
 import me.vaqxine.Main;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.ChatMechanics.ChatMechanics;
@@ -81,9 +79,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Score;
 
+import de.kumpelblase2.remoteentities.EntityManager;
 import de.kumpelblase2.remoteentities.RemoteEntities;
 import de.kumpelblase2.remoteentities.api.DespawnReason;
 import de.kumpelblase2.remoteentities.api.RemoteEntity;
@@ -182,7 +180,7 @@ public class ShopMechanics implements Listener {
 
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable(){
 			public void run(){
-				npc_manager = (EntityManager) RemoteEntities.createManager(Main.plugin);
+				npc_manager = RemoteEntities.createManager(Main.plugin);
 			}
 		}, 2 * 20L);
 		
@@ -2248,7 +2246,7 @@ public class ShopMechanics implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onEntityDamagEvent(EntityDamageEvent e) {
-		if (e.getEntity() != null && e.getEntity() instanceof LivingEntity && ((RemoteEntities) npc_manager).isRemoteEntity((LivingEntity)e.getEntity())) {
+		if (e.getEntity() != null && e.getEntity() instanceof LivingEntity && npc_manager.isRemoteEntity((LivingEntity)e.getEntity())) {
 			e.setCancelled(true);
 			e.setDamage(0);
 		}

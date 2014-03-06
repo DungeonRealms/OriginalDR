@@ -90,7 +90,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class RestrictionMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
