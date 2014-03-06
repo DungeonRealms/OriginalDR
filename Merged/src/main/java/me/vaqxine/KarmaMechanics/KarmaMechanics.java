@@ -511,14 +511,14 @@ public class KarmaMechanics implements Listener {
 			if(impossible_kill == false && MountMechanics.mule_inventory.containsKey(p.getName())){
 				// Check if drops contain the mule, if so, drop the loot.
 				boolean has_mule = false;
-				ItemStack mule = null;
+				//ItemStack mule = null;
 				for(ItemStack is : e.getDrops()){
 					if(is == null){
 						continue;
 					}
 					if(is.getType() == Material.LEASH){ // MountMechanics.isMule(is)
 						has_mule = true;
-						mule = is;
+						//mule = is;
 					}
 					break;
 				}
@@ -529,7 +529,7 @@ public class KarmaMechanics implements Listener {
 						e.getDrops().add(is);
 					}
 
-					final ItemStack f_mule = mule;
+					//final ItemStack f_mule = mule;
 					Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 						public void run() {
 							if(Main.plugin.getServer().getPlayer(p.getName()) != null){

@@ -885,12 +885,13 @@ public class InstanceMechanics implements Listener {
 	}
 
 	// So this (I assume) untracks the player and retracks them for entities within 32x32x32...
+	@SuppressWarnings("unchecked")
 	private static void updateEntities(Player player){
 		WorldServer ws = ((CraftWorld)player.getWorld()).getHandle();
 		EntityTracker tracker = ws.tracker;
 		for (Entity ent : player.getNearbyEntities(32.0D, 32.0D, 32.0D)) {
 			EntityTrackerEntry entry = (EntityTrackerEntry)tracker.trackedEntities.get(ent.getEntityId());
-			List nms = new ArrayList();
+			List<EntityPlayer> nms = new ArrayList<EntityPlayer>();
 			nms.add(((CraftPlayer)player).getHandle());
 			entry.trackedPlayers.removeAll(nms);
 			entry.scanPlayers(nms);
@@ -1055,7 +1056,7 @@ public class InstanceMechanics implements Listener {
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
-		boolean tick_set = false;
+		//boolean tick_set = false; // TODO - UNUSED
 
 		if(!(p.getWorld().getName().contains("fireydungeon"))){
 			return;
@@ -1068,7 +1069,7 @@ public class InstanceMechanics implements Listener {
 					Block b2 = b.getLocation().add(0.0D, 1.0D, 0.0D).getBlock();
 					if (b2.getType() == Material.FIRE) {
 						b = b2;
-						tick_set = true;
+						//tick_set = true;
 					}
 					else if (b2.getType() != Material.FIRE) {
 						return;
@@ -1119,6 +1120,7 @@ public class InstanceMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void removeFromInstanceParty(String p_name){
 		if(!(player_instance.containsKey(p_name))){
 			return; // They're not in an instance.
@@ -1220,7 +1222,7 @@ public class InstanceMechanics implements Listener {
 
 				WorldCreator wc = new WorldCreator(instance);
 				wc.generateStructures(false);
-				World w = Main.plugin.getServer().createWorld(wc);
+				Main.plugin.getServer().createWorld(wc);
 				// Load the world.
 
 				/*CraftWorld cw = (CraftWorld)w;
@@ -1433,6 +1435,7 @@ public class InstanceMechanics implements Listener {
 		return return_list;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		Player p = null;
 
@@ -1512,7 +1515,7 @@ public class InstanceMechanics implements Listener {
 				z = Double.parseDouble(args[2]);
 
 				Location loc = new Location(cb.getBlock().getWorld(), x, y, z);
-				EnderCrystal enderCrystal = (EnderCrystal)loc.getWorld().spawn(loc, EnderCrystal.class);
+				loc.getWorld().spawn(loc, EnderCrystal.class);
 			}
 			else if(sender instanceof Player){
 				double x;
@@ -1524,7 +1527,7 @@ public class InstanceMechanics implements Listener {
 				z = Double.parseDouble(args[2]);
 
 				Location loc = new Location(p.getWorld(), x, y, z);
-				EnderCrystal enderCrystal = (EnderCrystal)loc.getWorld().spawn(loc, EnderCrystal.class);
+				loc.getWorld().spawn(loc, EnderCrystal.class);
 			}
 		}
 
@@ -1788,7 +1791,8 @@ public class InstanceMechanics implements Listener {
 	public static void unzipArchive(File archive, File outputDir) {
 		try {
 			ZipFile zipfile = new ZipFile(archive);
-			for (Enumeration e = zipfile.entries(); e.hasMoreElements(); ) {
+			for (@SuppressWarnings("rawtypes")
+			Enumeration e = zipfile.entries(); e.hasMoreElements(); ) {
 				ZipEntry entry = (ZipEntry) e.nextElement();
 				unzipEntry(zipfile, entry, outputDir);
 			}

@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class RecordMechanics implements Listener {
 	  static Logger log = Logger.getLogger("Minecraft");
@@ -36,11 +37,12 @@ public class RecordMechanics implements Listener {
 	  public void onEnable(){
 		  Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		
-		  Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
-	            public void run() {
-	            	ConnectionPool.refresh = true;
-	            }
-		 }, 180 * 20L, 180 * 20L);
+		  new BukkitRunnable(){
+				@Override
+				public void run() {
+					ConnectionPool.refresh = true;
+				}
+			}.runTaskTimerAsynchronously(Main.plugin, 180 * 20L, 180 * 20L);
 		
 	    log.info("[RecordMechanics] has been ENABLED. LOGGING DATA!");
 	  }
@@ -49,17 +51,18 @@ public class RecordMechanics implements Listener {
 	    log.info("[RecordMechanics] has been disabled.");
 	  }
 	  
-	  public static void updateStatisticData(String pname, int nmoney, int npdeaths, int nunlawful_kills, int nlawful_kills, int nmob_kills, int nduel_wins, int nduel_lose){
+	  @SuppressWarnings("resource")
+	public static void updateStatisticData(String pname, int nmoney, int npdeaths, int nunlawful_kills, int nlawful_kills, int nmob_kills, int nduel_wins, int nduel_lose){
 	        Connection con = null;
 	        PreparedStatement pst = null;
 
- 	    	int tmoney = 0;
- 		  	int tlawful_kills = 0;
- 		  	int tunlawful_kills = 0;
- 		  	int tmob_kills = 0;
- 		  	int tdeaths = 0;
-	        int tduel_wins = 0;
-	        int tduel_lose = 0;
+ 	    	//int tmoney = 0;
+ 		  	//int tlawful_kills = 0;
+ 		  	//int tunlawful_kills = 0;
+ 		  	//int tmob_kills = 0;
+ 		  	//int tdeaths = 0;
+	        //int tduel_wins = 0;
+	        //int tduel_lose = 0;
  		  	
  	    	int money = 0;
  		  	int lawful_kills = 0;
@@ -101,13 +104,13 @@ public class RecordMechanics implements Listener {
 	 		  rs = pst.getResultSet();
 
 	 	      if(rs.next()){
-	 	    	tmoney = rs.getInt("money");
-	 		  	tlawful_kills = rs.getInt("lawful_kills");
-	 		  	tunlawful_kills = rs.getInt("unlawful_kills");
-	 		  	tmob_kills = rs.getInt("mob_kills");
-	 		  	tdeaths = rs.getInt("deaths");
-	 		  	tduel_wins = rs.getInt("duel_wins");
-	 		  	tduel_lose = rs.getInt("duel_lose");
+	 	    	//tmoney = rs.getInt("money");
+	 		  	//tlawful_kills = rs.getInt("lawful_kills");
+	 		  	//tunlawful_kills = rs.getInt("unlawful_kills");
+	 		  	//tmob_kills = rs.getInt("mob_kills");
+	 		  	//tdeaths = rs.getInt("deaths");
+	 		  	//tduel_wins = rs.getInt("duel_wins");
+	 		  	//tduel_lose = rs.getInt("duel_lose");
 	 	      }
 	 		  
 	          pst = ConnectionPool.getConneciton().prepareStatement( 

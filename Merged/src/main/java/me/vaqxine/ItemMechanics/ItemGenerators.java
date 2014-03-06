@@ -26,6 +26,7 @@ public class ItemGenerators {
 		plugin = instance;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static ItemStack customGenerator(String template_name){
 		File template = new File("plugins/ItemMechanics/custom_items/" + template_name + ".item");
 		if(!(template.exists())){
@@ -142,7 +143,7 @@ public class ItemGenerators {
 	public static ItemStack LeggingsGenerator(int tier, boolean reroll, ItemStack original){
 		Random r = new Random();
 		Material m = null;
-		boolean hp_regen = false, hp_increase = false, energy_regen = false, block = false, dodge = false, thorns = false, reflection = false, gem_find = false, item_find = false;
+		boolean hp_regen = false, /*hp_increase = false, */ energy_regen = false, block = false, dodge = false, thorns = false, reflection = false, gem_find = false, item_find = false;
 		int hp_regen_percent = 0;
 		int hp_increase_amount = 0;
 		int energy_regen_percent = 0;
@@ -153,9 +154,9 @@ public class ItemGenerators {
 		int gem_find_percent = 0;
 		int item_find_percent = 0;
 
-		int hp_regen_chance = 0;
+		/* int hp_regen_chance = 0;
 		int hp_increase_chance = 0;
-		int energy_regen_chance = 0;
+		int energy_regen_chance = 0; */
 		int block_chance = 0;
 		int dodge_chance = 0;
 		int thorns_chance = 0;
@@ -164,7 +165,7 @@ public class ItemGenerators {
 		int item_find_chance = 0;
 
 		int hp_regen_min = 0;
-		int hp_increase_min = 0;
+		//int hp_increase_min = 0;
 		int energy_regen_min = 0;
 		int block_min = 0;
 		int dodge_min = 0;
@@ -174,7 +175,7 @@ public class ItemGenerators {
 		int item_find_min = 0;
 
 		int hp_regen_max = 0;
-		int hp_increase_max = 0;
+		//int hp_increase_max = 0;
 		int energy_regen_max = 0;
 		int block_max = 0;
 		int dodge_max = 0;
@@ -183,8 +184,8 @@ public class ItemGenerators {
 		int gem_find_max = 0;
 		int item_find_max = 0;
 
-		int element_dmg_amount = 0;
-		String element_dmg_type = "";
+		//int element_dmg_amount = 0;
+		//String element_dmg_type = "";
 
 		String armor_name = "";
 		String armor_description = "";
@@ -196,8 +197,8 @@ public class ItemGenerators {
 			tag = ChatColor.WHITE;
 			m = Material.LEATHER_LEGGINGS;
 
-			hp_regen_chance = 10;
-			energy_regen_chance = 10;
+			//hp_regen_chance = 10;
+			//energy_regen_chance = 10;
 			block_chance = 5;
 			dodge_chance = 5;
 			thorns_chance = 3;
@@ -229,8 +230,8 @@ public class ItemGenerators {
 			tag = ChatColor.GREEN;
 			m = Material.CHAINMAIL_LEGGINGS;
 
-			hp_regen_chance = 20;
-			energy_regen_chance = 15;
+			//hp_regen_chance = 20;
+			//energy_regen_chance = 15;
 			block_chance = 9;
 			dodge_chance = 9;
 			thorns_chance = 5;
@@ -261,8 +262,8 @@ public class ItemGenerators {
 			tag = ChatColor.AQUA;
 			m = Material.IRON_LEGGINGS;
 
-			hp_regen_chance = 40;
-			energy_regen_chance = 19;
+			//hp_regen_chance = 40;
+			//energy_regen_chance = 19;
 			block_chance = 15;
 			dodge_chance = 15;
 			thorns_chance = 10;
@@ -293,8 +294,8 @@ public class ItemGenerators {
 			tag = ChatColor.LIGHT_PURPLE;
 			m = Material.DIAMOND_LEGGINGS;
 
-			hp_regen_chance = 55;
-			energy_regen_chance = 24;
+			//hp_regen_chance = 55;
+			//energy_regen_chance = 24;
 			block_chance = 25;
 			dodge_chance = 25;
 			thorns_chance = 13;
@@ -325,8 +326,8 @@ public class ItemGenerators {
 			tag = ChatColor.YELLOW;
 			m = Material.GOLD_LEGGINGS;
 
-			hp_regen_chance = 70;
-			energy_regen_chance = 30;
+			//hp_regen_chance = 70;
+			//energy_regen_chance = 30;
 			block_chance = 30;
 			dodge_chance = 30;
 			thorns_chance = 20;
@@ -361,8 +362,8 @@ public class ItemGenerators {
 		if(armor_range_check <= 80){ 
 			rarity = ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Common";
 			if(tier == 1){
-				int min_num = 1 + 1;
-				int max_num = 2 + 1;
+				//int min_num = 1 + 1;
+				//int max_num = 2 + 1;
 
 				min_armor = 1;
 				max_armor = 1;
@@ -697,6 +698,7 @@ public class ItemGenerators {
 
 		int armor_type = new Random().nextInt(2); // 0 or 1.
 
+		@SuppressWarnings("unused")
 		String armor_data = "";
 		int enchant_count = 0;
 		if(reroll == true && original != null){
@@ -1277,7 +1279,7 @@ public class ItemGenerators {
 	public static ItemStack ChestPlateGenerator(int tier, boolean reroll, ItemStack original){
 		Random r = new Random();
 		Material m = null;
-		boolean hp_regen = false, hp_increase = false, energy_regen = false, block = false, dodge = false, thorns = false, reflection = false, gem_find = false, item_find = false;
+		boolean hp_regen = false, /* hp_increase = false, */ energy_regen = false, block = false, dodge = false, thorns = false, reflection = false, gem_find = false, item_find = false;
 		int hp_regen_percent = 0;
 		int hp_increase_amount = 0;
 		int energy_regen_percent = 0;
@@ -1288,9 +1290,9 @@ public class ItemGenerators {
 		int gem_find_percent = 0;
 		int item_find_percent = 0;
 
-		int hp_regen_chance = 0;
-		int hp_increase_chance = 0;
-		int energy_regen_chance = 0;
+		//int hp_regen_chance = 0;
+		//int hp_increase_chance = 0;
+		//int energy_regen_chance = 0;
 		int block_chance = 0;
 		int dodge_chance = 0;
 		int thorns_chance = 0;
@@ -1299,7 +1301,7 @@ public class ItemGenerators {
 		int item_find_chance = 0;
 
 		int hp_regen_min = 0;
-		int hp_increase_min = 0;
+		//int hp_increase_min = 0;
 		int energy_regen_min = 0;
 		int block_min = 0;
 		int dodge_min = 0;
@@ -1309,7 +1311,7 @@ public class ItemGenerators {
 		int item_find_min = 0;
 
 		int hp_regen_max = 0;
-		int hp_increase_max = 0;
+		//int hp_increase_max = 0;
 		int energy_regen_max = 0;
 		int block_max = 0;
 		int dodge_max = 0;
@@ -1318,8 +1320,8 @@ public class ItemGenerators {
 		int gem_find_max = 0;
 		int item_find_max = 0;
 
-		int element_dmg_amount = 0;
-		String element_dmg_type = "";
+		//int element_dmg_amount = 0;
+		//String element_dmg_type = "";
 
 		String armor_name = "";
 		String armor_description = "";
@@ -1331,8 +1333,8 @@ public class ItemGenerators {
 			tag = ChatColor.WHITE;
 			m = Material.LEATHER_CHESTPLATE;
 
-			hp_regen_chance = 10;
-			energy_regen_chance = 10;
+			//hp_regen_chance = 10;
+			//energy_regen_chance = 10;
 			block_chance = 5;
 			dodge_chance = 5;
 			thorns_chance = 3;
@@ -1364,8 +1366,8 @@ public class ItemGenerators {
 			tag = ChatColor.GREEN;
 			m = Material.CHAINMAIL_CHESTPLATE;
 
-			hp_regen_chance = 20;
-			energy_regen_chance = 15;
+			//hp_regen_chance = 20;
+			//energy_regen_chance = 15;
 			block_chance = 9;
 			dodge_chance = 9;
 			thorns_chance = 5;
@@ -1396,8 +1398,8 @@ public class ItemGenerators {
 			tag = ChatColor.AQUA;
 			m = Material.IRON_CHESTPLATE;
 
-			hp_regen_chance = 40;
-			energy_regen_chance = 19;
+			//hp_regen_chance = 40;
+			//energy_regen_chance = 19;
 			block_chance = 15;
 			dodge_chance = 15;
 			thorns_chance = 10;
@@ -1428,8 +1430,8 @@ public class ItemGenerators {
 			tag = ChatColor.LIGHT_PURPLE;
 			m = Material.DIAMOND_CHESTPLATE;
 
-			hp_regen_chance = 55;
-			energy_regen_chance = 24;
+			//hp_regen_chance = 55;
+			//energy_regen_chance = 24;
 			block_chance = 25;
 			dodge_chance = 25;
 			thorns_chance = 13;
@@ -1460,8 +1462,8 @@ public class ItemGenerators {
 			tag = ChatColor.YELLOW;
 			m = Material.GOLD_CHESTPLATE;
 
-			hp_regen_chance = 70;
-			energy_regen_chance = 30;
+			//hp_regen_chance = 70;
+			//energy_regen_chance = 30;
 			block_chance = 30;
 			dodge_chance = 30;
 			thorns_chance = 20;
@@ -1495,8 +1497,8 @@ public class ItemGenerators {
 		if(armor_range_check <= 80){ 
 			rarity = ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Common";
 			if(tier == 1){
-				int min_num = 1 + 1;
-				int max_num = 2 + 1;
+				//int min_num = 1 + 1;
+				//int max_num = 2 + 1;
 
 				min_armor = 1;
 				max_armor = 1;
@@ -1831,6 +1833,7 @@ public class ItemGenerators {
 		// x = durability
 		int armor_type = new Random().nextInt(2); // 0 or 1.
 
+		@SuppressWarnings("unused")
 		String armor_data = "";
 		int enchant_count = 0;
 		if(reroll == true && original != null){
@@ -2410,7 +2413,7 @@ public class ItemGenerators {
 	public static ItemStack BootGenerator(int tier, boolean reroll, ItemStack original){
 		Random r = new Random();
 		Material m = null;
-		boolean hp_regen = false, hp_increase = false, energy_regen = false, block = false, dodge = false, thorns = false, reflection = false, gem_find = false, item_find = false, speed_boost = false;
+		boolean hp_regen = false, /* hp_increase = false, */ energy_regen = false, block = false, dodge = false, thorns = false, reflection = false, gem_find = false, item_find = false, speed_boost = false;
 		int hp_regen_percent = 0;
 		int hp_increase_amount = 0;
 		int energy_regen_percent = 0;
@@ -2422,19 +2425,19 @@ public class ItemGenerators {
 		int item_find_percent = 0;
 		float speed_level = 0;
 
-		int hp_regen_chance = 0;
-		int hp_increase_chance = 0;
-		int energy_regen_chance = 0;
+		//int hp_regen_chance = 0;
+		//int hp_increase_chance = 0;
+		//int energy_regen_chance = 0;
 		int block_chance = 0;
 		int dodge_chance = 0;
 		int thorns_chance = 0;
 		int reflection_chance = 0;
 		int gem_find_chance = 0;
 		int item_find_chance = 0;
-		int speed_boost_chance = 0;
+		//int speed_boost_chance = 0;
 
 		int hp_regen_min = 0;
-		int hp_increase_min = 0;
+		//int hp_increase_min = 0;
 		int energy_regen_min = 0;
 		int block_min = 0;
 		int dodge_min = 0;
@@ -2444,7 +2447,7 @@ public class ItemGenerators {
 		int item_find_min = 0;
 
 		int hp_regen_max = 0;
-		int hp_increase_max = 0;
+		//int hp_increase_max = 0;
 		int energy_regen_max = 0;
 		int block_max = 0;
 		int dodge_max = 0;
@@ -2453,8 +2456,8 @@ public class ItemGenerators {
 		int gem_find_max = 0;
 		int item_find_max = 0;
 
-		int element_dmg_amount = 0;
-		String element_dmg_type = "";
+		//int element_dmg_amount = 0;
+		//String element_dmg_type = "";
 
 		String armor_name = "";
 		String armor_description = "";
@@ -2466,8 +2469,8 @@ public class ItemGenerators {
 			tag = ChatColor.WHITE;
 			m = Material.LEATHER_BOOTS;
 
-			hp_regen_chance = 10;
-			energy_regen_chance = 10;
+			//hp_regen_chance = 10;
+			//energy_regen_chance = 10;
 			block_chance = 5;
 			dodge_chance = 5;
 			thorns_chance = 3;
@@ -2499,8 +2502,8 @@ public class ItemGenerators {
 			tag = ChatColor.GREEN;
 			m = Material.CHAINMAIL_BOOTS;
 
-			hp_regen_chance = 20;
-			energy_regen_chance = 15;
+			//hp_regen_chance = 20;
+			//energy_regen_chance = 15;
 			block_chance = 9;
 			dodge_chance = 9;
 			thorns_chance = 5;
@@ -2531,8 +2534,8 @@ public class ItemGenerators {
 			tag = ChatColor.AQUA;
 			m = Material.IRON_BOOTS;
 
-			hp_regen_chance = 40;
-			energy_regen_chance = 19;
+			//hp_regen_chance = 40;
+			//energy_regen_chance = 19;
 			block_chance = 15;
 			dodge_chance = 15;
 			thorns_chance = 10;
@@ -2563,8 +2566,8 @@ public class ItemGenerators {
 			tag = ChatColor.LIGHT_PURPLE;
 			m = Material.DIAMOND_BOOTS;
 
-			hp_regen_chance = 55;
-			energy_regen_chance = 24;
+			//hp_regen_chance = 55;
+			//energy_regen_chance = 24;
 			block_chance = 25;
 			dodge_chance = 25;
 			thorns_chance = 13;
@@ -2595,8 +2598,8 @@ public class ItemGenerators {
 			tag = ChatColor.YELLOW;
 			m = Material.GOLD_BOOTS;
 
-			hp_regen_chance = 70;
-			energy_regen_chance = 30;
+			//hp_regen_chance = 70;
+			//energy_regen_chance = 30;
 			block_chance = 30;
 			dodge_chance = 30;
 			thorns_chance = 20;
@@ -2631,8 +2634,8 @@ public class ItemGenerators {
 		if(armor_range_check <= 80){ 
 			rarity = ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Common";
 			if(tier == 1){
-				int min_num = 1 + 1;
-				int max_num = 2 + 1;
+				//int min_num = 1 + 1;
+				//int max_num = 2 + 1;
 
 				min_armor = 1;
 				max_armor = 1;
@@ -2972,6 +2975,7 @@ public class ItemGenerators {
 		// x = durability
 		int armor_type = new Random().nextInt(2); // 0 or 1.
 
+		@SuppressWarnings("unused")
 		String armor_data = "";
 		int enchant_count = 0;
 		if(reroll == true && original != null){
@@ -3558,7 +3562,7 @@ public class ItemGenerators {
 	public static ItemStack HelmetGenerator(int tier, boolean reroll, ItemStack original){
 		Random r = new Random();
 		Material m = null;
-		boolean hp_regen = false, hp_increase = false, energy_regen = false, block = false, dodge = false, thorns = false, reflection = false, gem_find = false, item_find = false;
+		boolean hp_regen = false, /* hp_increase = false, */ energy_regen = false, block = false, dodge = false, thorns = false, reflection = false, gem_find = false, item_find = false;
 		int hp_regen_percent = 0;
 		int hp_increase_amount = 0;
 		int energy_regen_percent = 0;
@@ -3569,9 +3573,9 @@ public class ItemGenerators {
 		int gem_find_percent = 0;
 		int item_find_percent = 0;
 
-		int hp_regen_chance = 0;
-		int hp_increase_chance = 0;
-		int energy_regen_chance = 0;
+		//int hp_regen_chance = 0;
+		//int hp_increase_chance = 0;
+		//int energy_regen_chance = 0;
 		int block_chance = 0;
 		int dodge_chance = 0;
 		int thorns_chance = 0;
@@ -3580,17 +3584,17 @@ public class ItemGenerators {
 		int item_find_chance = 0;
 
 		int hp_regen_min = 0;
-		int hp_increase_min = 0;
+		//int hp_increase_min = 0;
 		int energy_regen_min = 0;
-		int block_min = 0;
-		int dodge_min = 0;
-		int thorns_min = 0;
-		int reflection_min = 0;
-		int gem_find_min = 0;
-		int item_find_min = 0;
+		//int block_min = 0;
+		//int dodge_min = 0;
+		//int thorns_min = 0;
+		//int reflection_min = 0;
+		//int gem_find_min = 0;
+		//int item_find_min = 0;
 
 		int hp_regen_max = 0;
-		int hp_increase_max = 0;
+		//int hp_increase_max = 0;
 		int energy_regen_max = 0;
 		int block_max = 0;
 		int dodge_max = 0;
@@ -3599,8 +3603,8 @@ public class ItemGenerators {
 		int gem_find_max = 0;
 		int item_find_max = 0;
 
-		int element_dmg_amount = 0;
-		String element_dmg_type = "";
+		//int element_dmg_amount = 0;
+		//String element_dmg_type = "";
 
 		String armor_name = "";
 		String armor_description = "";
@@ -3612,8 +3616,8 @@ public class ItemGenerators {
 			tag = ChatColor.WHITE;
 			m = Material.LEATHER_HELMET;
 
-			hp_regen_chance = 10;
-			energy_regen_chance = 10;
+			//hp_regen_chance = 10;
+			//energy_regen_chance = 10;
 			block_chance = 5;
 			dodge_chance = 5;
 			thorns_chance = 3;
@@ -3623,12 +3627,12 @@ public class ItemGenerators {
 
 			hp_regen_min = 5; 
 			energy_regen_min = 1;
-			block_min = 1;
-			dodge_min = 1;
-			thorns_min = 1; // 0.1%
-			reflection_min = 1; // 0.1%
-			gem_find_min = 1; // 0.1%
-			item_find_min = 1; // 0.1%
+			//block_min = 1;
+			//dodge_min = 1;
+			//thorns_min = 1; // 0.1%
+			//reflection_min = 1; // 0.1%
+			//gem_find_min = 1; // 0.1%
+			//item_find_min = 1; // 0.1%
 
 			hp_regen_max = 15;
 			energy_regen_max = 5;
@@ -3645,8 +3649,8 @@ public class ItemGenerators {
 			tag = ChatColor.GREEN;
 			m = Material.CHAINMAIL_HELMET;
 
-			hp_regen_chance = 20;
-			energy_regen_chance = 15;
+			//hp_regen_chance = 20;
+			//energy_regen_chance = 15;
 			block_chance = 9;
 			dodge_chance = 9;
 			thorns_chance = 5;
@@ -3656,12 +3660,12 @@ public class ItemGenerators {
 
 			hp_regen_min = 10;
 			energy_regen_min = 3;
-			block_min = 1;
-			dodge_min = 1;
-			thorns_min = 1; 
-			reflection_min = 1; 
-			gem_find_min = 1; 
-			item_find_min = 1; // 0.1%
+			//block_min = 1;
+			//dodge_min = 1;
+			//thorns_min = 1; 
+			//reflection_min = 1; 
+			//gem_find_min = 1; 
+			//item_find_min = 1; // 0.1%
 
 			hp_regen_max = 25; 
 			energy_regen_max = 7;
@@ -3677,8 +3681,8 @@ public class ItemGenerators {
 			tag = ChatColor.AQUA;
 			m = Material.IRON_HELMET;
 
-			hp_regen_chance = 40;
-			energy_regen_chance = 19;
+			//hp_regen_chance = 40;
+			//energy_regen_chance = 19;
 			block_chance = 15;
 			dodge_chance = 15;
 			thorns_chance = 10;
@@ -3688,12 +3692,12 @@ public class ItemGenerators {
 
 			hp_regen_min = 35;
 			energy_regen_min = 5;
-			block_min = 1;
-			dodge_min = 1;
-			thorns_min = 1; 
-			reflection_min = 1; 
-			gem_find_min = 3; 
-			item_find_min = 1; // 0.1%
+			//block_min = 1;
+			//dodge_min = 1;
+			//thorns_min = 1; 
+			//reflection_min = 1; 
+			//gem_find_min = 3; 
+			//item_find_min = 1; // 0.1%
 
 			hp_regen_max = 55;
 			energy_regen_max = 9;
@@ -3709,8 +3713,8 @@ public class ItemGenerators {
 			tag = ChatColor.LIGHT_PURPLE;
 			m = Material.DIAMOND_HELMET;
 
-			hp_regen_chance = 55;
-			energy_regen_chance = 24;
+			//hp_regen_chance = 55;
+			//energy_regen_chance = 24;
 			block_chance = 25;
 			dodge_chance = 25;
 			thorns_chance = 13;
@@ -3720,12 +3724,12 @@ public class ItemGenerators {
 
 			hp_regen_min = 60;
 			energy_regen_min = 7;
-			block_min = 1;
-			dodge_min = 1;
-			thorns_min = 2; 
-			reflection_min = 2; 
-			gem_find_min = 5; 
-			item_find_min = 1; // 0.1%
+			//block_min = 1;
+			//dodge_min = 1;
+			//thorns_min = 2; 
+			//reflection_min = 2; 
+			//gem_find_min = 5; 
+			//item_find_min = 1; // 0.1%
 
 			hp_regen_max = 75;
 			energy_regen_max = 12;
@@ -3741,8 +3745,8 @@ public class ItemGenerators {
 			tag = ChatColor.YELLOW;
 			m = Material.GOLD_HELMET;
 
-			hp_regen_chance = 70;
-			energy_regen_chance = 30;
+			//hp_regen_chance = 70;
+			//energy_regen_chance = 30;
 			block_chance = 30;
 			dodge_chance = 30;
 			thorns_chance = 20;
@@ -3752,12 +3756,12 @@ public class ItemGenerators {
 
 			hp_regen_min = 80;
 			energy_regen_min = 7;
-			block_min = 1;
-			dodge_min = 1;
-			thorns_min = 2; 
-			reflection_min = 2; 
-			gem_find_min = 5; 
-			item_find_min = 1; // 0.1%
+			//block_min = 1;
+			//dodge_min = 1;
+			//thorns_min = 2; 
+			//reflection_min = 2; 
+			//gem_find_min = 5; 
+			//item_find_min = 1; // 0.1%
 
 			hp_regen_max = 120;
 			energy_regen_max = 12;
@@ -3776,8 +3780,8 @@ public class ItemGenerators {
 		if(armor_range_check <= 80){ 
 			rarity = ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Common";
 			if(tier == 1){
-				int min_num = 1 + 1;
-				int max_num = 2 + 1;
+				//int min_num = 1 + 1;
+				//int max_num = 2 + 1;
 
 				min_armor = 1;
 				max_armor = 1;
@@ -4115,6 +4119,7 @@ public class ItemGenerators {
 
 		int armor_type = new Random().nextInt(2); // 0 or 1.
 
+		@SuppressWarnings("unused")
 		String armor_data = "";
 		int enchant_count = 0;
 		if(reroll == true && original != null){
@@ -4694,7 +4699,7 @@ public class ItemGenerators {
 
 	public static ItemStack BowGenorator(int tier, boolean reroll, ItemStack original){
 		Random r = new Random();
-		boolean life_steal = false, elemental_dmg = false, slow = false, crit_hit = false, blind = false, specific_dmg = false;
+		boolean life_steal = false, elemental_dmg = false, slow = false, crit_hit = false, blind = false/*, specific_dmg = false*/;
 		int life_steal_percent = 0;
 		int slow_percent = 0;
 		int crit_hit_percent = 0;
@@ -4717,10 +4722,10 @@ public class ItemGenerators {
 		int vs_modifier_amount = 0;
 		String vs_modifier_type = "";
 		
-		int accuracy_chance = 0;
-		int accuracy_max = 0;
-		int accuracy_val = 0;
-		boolean accuracy = false;
+		//int accuracy_chance = 0;
+		//int accuracy_max = 0;
+		//int accuracy_val = 0;
+		//boolean accuracy = false;
 		
 		int element_dmg_amount = 0;
 		String element_dmg_type = "";
@@ -4743,8 +4748,8 @@ public class ItemGenerators {
 			vs_modifier_chance = 6;
 			vs_modifier_max = 10;
 			
-			accuracy_chance = 8;
-			accuracy_max = 10;
+			//accuracy_chance = 8;
+			//accuracy_max = 10;
 			
 			life_steal_max = 30;
 			slow_max = 3;
@@ -4765,8 +4770,8 @@ public class ItemGenerators {
 			vs_modifier_chance = 9;
 			vs_modifier_max = 12;
 			
-			accuracy_chance = 12;
-			accuracy_max = 12;
+			//accuracy_chance = 12;
+			//accuracy_max = 12;
 
 			life_steal_max = 15;
 			slow_max = 4;
@@ -4787,8 +4792,8 @@ public class ItemGenerators {
 			vs_modifier_chance = 10;
 			vs_modifier_max = 15;
 			
-			accuracy_chance = 15;
-			accuracy_max = 25;
+			//accuracy_chance = 15;
+			//accuracy_max = 25;
 			
 			life_steal_max = 12;
 			slow_max = 5;
@@ -4809,8 +4814,8 @@ public class ItemGenerators {
 			vs_modifier_chance = 12;
 			vs_modifier_max = 20;
 
-			accuracy_chance = 20;
-			accuracy_max = 28;
+			//accuracy_chance = 20;
+			//accuracy_max = 28;
 			
 			life_steal_max = 10;
 			slow_max = 7;
@@ -4832,8 +4837,8 @@ public class ItemGenerators {
 			vs_modifier_chance = 15;
 			vs_modifier_max = 15;
 
-			accuracy_chance = 15;
-			accuracy_max = 35;
+			//accuracy_chance = 15;
+			//accuracy_max = 35;
 			
 			life_steal_max = 8;
 			slow_max = 10;
@@ -5103,6 +5108,7 @@ public class ItemGenerators {
 			min_dmg = dmg_values.get(0);
 			max_dmg = dmg_values.get(1);
 		}
+		@SuppressWarnings("unused")
 		String weapon_data = "BOW" + "#" + min_dmg + "-" + max_dmg + ":";
 		wep_description += red.toString() + "DMG: " + (int)min_dmg + " - " + (int)max_dmg + ",";
 		// wood_bow,1|23-25:ls=3:edmg=fire,2:slow=3
@@ -5549,8 +5555,8 @@ public class ItemGenerators {
 
 	public static ItemStack AxeGenorator(Material m, boolean reroll, ItemStack original){
 		Random r = new Random();
-		boolean life_steal = false, elemental_dmg = false, knockback = false, crit_hit = false, blind = false, specific_dmg = false, pure_dmg = false, armor_pen = false;
-		int axe_modifier = 0;
+		boolean life_steal = false, elemental_dmg = false, knockback = false, crit_hit = false, blind = false, /*specific_dmg = false,*/ pure_dmg = false, armor_pen = false;
+		//int axe_modifier = 0;
 
 		int life_steal_percent = 0;
 		int knockback_percent = 0;
@@ -5568,7 +5574,7 @@ public class ItemGenerators {
 		int crit_hit_max = 0;
 		int blind_max = 0;
 		int edmg_max = 0;
-		int energy_cost = 0;
+		//int energy_cost = 0;
 		
 		int vs_modifier_max = 0;
 		int vs_modifier_chance = 0;
@@ -5579,8 +5585,8 @@ public class ItemGenerators {
 		int pure_dmg_max = 0;
 		int pure_dmg_val = 0;
 
-		int accuracy_chance = 0;
-		int accuracy_max = 0;
+		//int accuracy_chance = 0;
+		//int accuracy_max = 0;
 		int accuracy_val = 0;
 		boolean accuracy = false;
 		
@@ -5601,7 +5607,7 @@ public class ItemGenerators {
 		if(m == Material.WOOD_AXE){
 			wep_name = "Hatchet";
 			tag = ChatColor.WHITE;
-			energy_cost = 12;
+			//energy_cost = 12;
 			tier = 1;
 
 			life_steal_chance = 2;
@@ -5613,8 +5619,8 @@ public class ItemGenerators {
 			vs_modifier_chance = 6;
 			vs_modifier_max = 10;
 			
-			accuracy_chance = 8;
-			accuracy_max = 10;
+			//accuracy_chance = 8;
+			//accuracy_max = 10;
 			
 			pure_dmg_chance = 6;
 			armor_pen_chance = 20;
@@ -5631,7 +5637,7 @@ public class ItemGenerators {
 		if(m == Material.STONE_AXE){
 			wep_name = "Great Axe";
 			tag = ChatColor.GREEN;
-			energy_cost = 14;
+			//energy_cost = 14;
 			tier = 2;
 
 			life_steal_chance = 4;
@@ -5643,8 +5649,8 @@ public class ItemGenerators {
 			vs_modifier_chance = 9;
 			vs_modifier_max = 12;
 			
-			accuracy_chance = 12;
-			accuracy_max = 12;
+			//accuracy_chance = 12;
+			//accuracy_max = 12;
 			
 			pure_dmg_chance = 9;
 			armor_pen_chance = 20;
@@ -5661,7 +5667,7 @@ public class ItemGenerators {
 		if(m == Material.IRON_AXE){
 			wep_name = "War Axe";
 			tag = ChatColor.AQUA;
-			energy_cost = 16;
+			//energy_cost = 16;
 			tier = 3;
 
 			life_steal_chance = 5;
@@ -5673,8 +5679,8 @@ public class ItemGenerators {
 			vs_modifier_chance = 10;
 			vs_modifier_max = 15;
 			
-			accuracy_chance = 15;
-			accuracy_max = 25;
+			//accuracy_chance = 15;
+			//accuracy_max = 25;
 			
 			pure_dmg_chance = 5;
 			armor_pen_chance = 25;
@@ -5690,7 +5696,7 @@ public class ItemGenerators {
 		if(m == Material.DIAMOND_AXE){
 			wep_name = "Ancient Axe";
 			tag = ChatColor.LIGHT_PURPLE;
-			energy_cost = 20;
+			//energy_cost = 20;
 			tier = 4;
 
 			life_steal_chance = 7;
@@ -5702,8 +5708,8 @@ public class ItemGenerators {
 			vs_modifier_chance = 12;
 			vs_modifier_max = 20;
 			
-			accuracy_chance = 20;
-			accuracy_max = 28;
+			//accuracy_chance = 20;
+			//accuracy_max = 28;
 			
 			pure_dmg_chance = 5;
 			armor_pen_chance = 20;
@@ -5720,7 +5726,7 @@ public class ItemGenerators {
 		if(m == Material.GOLD_AXE){
 			wep_name = "Legendary Axe";
 			tag = ChatColor.YELLOW;
-			energy_cost = 25;
+			//energy_cost = 25;
 			tier = 5;
 
 			life_steal_chance = 8;
@@ -5732,8 +5738,8 @@ public class ItemGenerators {
 			vs_modifier_chance = 15;
 			vs_modifier_max = 15;
 			
-			accuracy_chance = 15;
-			accuracy_max = 35;
+			//accuracy_chance = 15;
+			//accuracy_max = 35;
 			
 			pure_dmg_chance = 10;
 			armor_pen_chance = 15;
@@ -6018,6 +6024,7 @@ public class ItemGenerators {
 			min_dmg = dmg_values.get(0);
 			max_dmg = dmg_values.get(1);
 		}
+		@SuppressWarnings("unused")
 		String weapon_data = m.name().toUpperCase() + "#" + min_dmg + "-" + max_dmg + ":";
 		wep_description += red.toString() + "DMG: " + min_dmg + " - " + max_dmg + ",";
 		// wood_axe,1|23-25:ls=3:edmg=fire,2:kb=3
@@ -6486,7 +6493,7 @@ public class ItemGenerators {
 
 	public static ItemStack SwordGenorator(Material m, boolean reroll, ItemStack original){
 		Random r = new Random();
-		boolean life_steal = false, elemental_dmg = false, knockback = false, crit_hit = false, pure_dmg = false, armor_pen = false, blind = false, specific_dmg = false;
+		boolean life_steal = false, elemental_dmg = false, knockback = false, crit_hit = false, pure_dmg = false, armor_pen = false, blind = false/*, specific_dmg = false*/;
 		int life_steal_percent = 0;
 		int knockback_percent = 0;
 		int crit_hit_percent = 0;
@@ -6509,8 +6516,8 @@ public class ItemGenerators {
 		int vs_modifier_amount = 0;
 		String vs_modifier_type = "";
 		
-		int pure_dmg_chance = 0;
-		int pure_dmg_max = 0;
+		//int pure_dmg_chance = 0;
+		//int pure_dmg_max = 0;
 		int pure_dmg_val = 0;
 
 		int accuracy_chance = 0;
@@ -6518,11 +6525,11 @@ public class ItemGenerators {
 		int accuracy_val = 0;
 		boolean accuracy = false;
 		
-		int armor_pen_chance = 0;
-		int armor_pen_max = 0;
+		//int armor_pen_chance = 0;
+		//int armor_pen_max = 0;
 		int armor_pen_val = 0;
 		
-		int energy_cost = 0;
+		//int energy_cost = 0;
 		int tier = 1;
 		
 		int element_dmg_amount = 0;
@@ -6536,7 +6543,7 @@ public class ItemGenerators {
 		if(m == Material.WOOD_SWORD){
 			wep_name = "Shortsword";
 			tag = ChatColor.WHITE;
-			energy_cost = 12;
+			//energy_cost = 12;
 			tier = 1;
 
 			life_steal_chance = 2;
@@ -6551,10 +6558,10 @@ public class ItemGenerators {
 			accuracy_chance = 8;
 			accuracy_max = 10;
 			
-			pure_dmg_chance = 6;
-			armor_pen_chance = 20;
-			pure_dmg_max = 5;
-			armor_pen_max = 1;
+			//pure_dmg_chance = 6;
+			//armor_pen_chance = 20;
+			//pure_dmg_max = 5;
+			//armor_pen_max = 1;
 
 			life_steal_max = 30;
 			knockback_max = 3;
@@ -6565,7 +6572,7 @@ public class ItemGenerators {
 		if(m == Material.STONE_SWORD){
 			wep_name = "Broadsword";
 			tag = ChatColor.GREEN;
-			energy_cost = 14;
+			//energy_cost = 14;
 			tier = 2;
 
 			life_steal_chance = 4;
@@ -6580,10 +6587,10 @@ public class ItemGenerators {
 			accuracy_chance = 12;
 			accuracy_max = 12;
 			
-			pure_dmg_chance = 9;
-			armor_pen_chance = 20;
-			pure_dmg_max = 8;
-			armor_pen_max = 3;
+			//pure_dmg_chance = 9;
+			//armor_pen_chance = 20;
+			//pure_dmg_max = 8;
+			//armor_pen_max = 3;
 
 			life_steal_max = 15;
 			knockback_max = 6;
@@ -6594,7 +6601,7 @@ public class ItemGenerators {
 		if(m == Material.IRON_SWORD){
 			wep_name = "Magic Sword";
 			tag = ChatColor.AQUA;
-			energy_cost = 16;
+			//energy_cost = 16;
 			tier = 3;
 
 			life_steal_chance = 5;
@@ -6609,10 +6616,10 @@ public class ItemGenerators {
 			accuracy_chance = 15;
 			accuracy_max = 25;
 
-			pure_dmg_chance = 5;
-			armor_pen_chance = 25;
-			pure_dmg_max = 15;
-			armor_pen_max = 5;
+			//pure_dmg_chance = 5;
+			//armor_pen_chance = 25;
+			//pure_dmg_max = 15;
+			//armor_pen_max = 5;
 
 			life_steal_max = 12;
 			knockback_max = 12;
@@ -6623,7 +6630,7 @@ public class ItemGenerators {
 		if(m == Material.DIAMOND_SWORD){
 			wep_name = "Ancient Sword";
 			tag = ChatColor.LIGHT_PURPLE;
-			energy_cost = 20;
+			//energy_cost = 20;
 			tier = 4;
 
 			life_steal_chance = 10;
@@ -6638,10 +6645,10 @@ public class ItemGenerators {
 			accuracy_chance = 20;
 			accuracy_max = 28;
 
-			pure_dmg_chance = 5;
-			armor_pen_chance = 20;
-			pure_dmg_max = 25;
-			armor_pen_max = 8;
+			//pure_dmg_chance = 5;
+			//armor_pen_chance = 20;
+			//pure_dmg_max = 25;
+			//armor_pen_max = 8;
 
 			life_steal_max = 7;
 			knockback_max = 15;
@@ -6653,7 +6660,7 @@ public class ItemGenerators {
 		if(m == Material.GOLD_SWORD){
 			wep_name = "Legendary Sword";
 			tag = ChatColor.YELLOW;
-			energy_cost = 25;
+			//energy_cost = 25;
 			tier = 5;
 
 			life_steal_chance = 8;
@@ -6668,10 +6675,10 @@ public class ItemGenerators {
 			accuracy_chance = 15;
 			accuracy_max = 35;
 			
-			pure_dmg_chance = 10;
-			armor_pen_chance = 15;
-			pure_dmg_max = 45;
-			armor_pen_max = 10;
+			//pure_dmg_chance = 10;
+			//armor_pen_chance = 15;
+			//pure_dmg_max = 45;
+			//armor_pen_max = 10;
 
 			life_steal_max = 8;
 			knockback_max = 20;
@@ -6943,6 +6950,7 @@ public class ItemGenerators {
 			max_dmg = dmg_values.get(1);
 		}
 
+		@SuppressWarnings("unused")
 		String weapon_data = m.name().toUpperCase() + "#" + min_dmg + "-" + max_dmg + ":";
 		wep_description += red.toString() + "DMG: " + min_dmg + " - " + max_dmg + ",";
 		// wood_sword,1|23-25:ls=3:edmg=fire,2:kb=3
@@ -7410,7 +7418,7 @@ public class ItemGenerators {
 	
 	public static ItemStack PolearmGenorator(Material m, boolean reroll, ItemStack original){
 		Random r = new Random();
-		boolean life_steal = false, elemental_dmg = false, knockback = false, crit_hit = false, pure_dmg = false, armor_pen = false, blind = false, specific_dmg = false;
+		boolean life_steal = false, elemental_dmg = false, knockback = false, crit_hit = false, pure_dmg = false, armor_pen = false, blind = false/*, specific_dmg = false*/;
 		int life_steal_percent = 0;
 		int knockback_percent = 0;
 		int crit_hit_percent = 0;
@@ -7433,20 +7441,20 @@ public class ItemGenerators {
 		int vs_modifier_amount = 0;
 		String vs_modifier_type = "";
 		
-		int pure_dmg_chance = 0;
-		int pure_dmg_max = 0;
+		//int pure_dmg_chance = 0;
+		//int pure_dmg_max = 0;
 		int pure_dmg_val = 0;
 
-		int accuracy_chance = 0;
-		int accuracy_max = 0;
+		//int accuracy_chance = 0;
+		//int accuracy_max = 0;
 		int accuracy_val = 0;
 		boolean accuracy = false;
 		
-		int armor_pen_chance = 0;
-		int armor_pen_max = 0;
+		//int armor_pen_chance = 0;
+		//int armor_pen_max = 0;
 		int armor_pen_val = 0;
 
-		int energy_cost = 0;
+		//int energy_cost = 0;
 		int tier = 1;
 
 		int element_dmg_amount = 0;
@@ -7460,7 +7468,7 @@ public class ItemGenerators {
 		if(m == Material.WOOD_SPADE){
 			wep_name = "Spear";
 			tag = ChatColor.WHITE;
-			energy_cost = 12;
+			//energy_cost = 12;
 			tier = 1;
 
 			life_steal_chance = 2;
@@ -7472,13 +7480,13 @@ public class ItemGenerators {
 			vs_modifier_chance = 6;
 			vs_modifier_max = 10;
 			
-			accuracy_chance = 8;
-			accuracy_max = 10;
+			//accuracy_chance = 8;
+			//accuracy_max = 10;
 			
-			pure_dmg_chance = 6;
-			armor_pen_chance = 20;
-			pure_dmg_max = 5;
-			armor_pen_max = 1;
+			//pure_dmg_chance = 6;
+			//armor_pen_chance = 20;
+			//pure_dmg_max = 5;
+			//armor_pen_max = 1;
 
 			life_steal_max = 30;
 			knockback_max = 3;
@@ -7489,7 +7497,7 @@ public class ItemGenerators {
 		if(m == Material.STONE_SPADE){
 			wep_name = "Halberd";
 			tag = ChatColor.GREEN;
-			energy_cost = 14;
+			//energy_cost = 14;
 			tier = 2;
 
 			life_steal_chance = 4;
@@ -7501,13 +7509,13 @@ public class ItemGenerators {
 			vs_modifier_chance = 9;
 			vs_modifier_max = 12;
 			
-			accuracy_chance = 12;
-			accuracy_max = 12;
+			//accuracy_chance = 12;
+			//accuracy_max = 12;
 
-			pure_dmg_chance = 9;
-			armor_pen_chance = 20;
-			pure_dmg_max = 8;
-			armor_pen_max = 3;
+			//pure_dmg_chance = 9;
+			//armor_pen_chance = 20;
+			//pure_dmg_max = 8;
+			//armor_pen_max = 3;
 
 			life_steal_max = 15;
 			knockback_max = 6;
@@ -7518,7 +7526,7 @@ public class ItemGenerators {
 		if(m == Material.IRON_SPADE){
 			wep_name = "Magic Polearm";
 			tag = ChatColor.AQUA;
-			energy_cost = 16;
+			//energy_cost = 16;
 			tier = 3;
 
 			life_steal_chance = 5;
@@ -7530,13 +7538,13 @@ public class ItemGenerators {
 			vs_modifier_chance = 10;
 			vs_modifier_max = 15;
 			
-			accuracy_chance = 15;
-			accuracy_max = 25;
+			//accuracy_chance = 15;
+			//accuracy_max = 25;
 			
-			pure_dmg_chance = 5;
-			armor_pen_chance = 25;
-			pure_dmg_max = 15;
-			armor_pen_max = 5;
+			//pure_dmg_chance = 5;
+			//armor_pen_chance = 25;
+			//pure_dmg_max = 15;
+			//armor_pen_max = 5;
 
 			life_steal_max = 12;
 			knockback_max = 12;
@@ -7547,7 +7555,7 @@ public class ItemGenerators {
 		if(m == Material.DIAMOND_SPADE){
 			wep_name = "Ancient Polearm";
 			tag = ChatColor.LIGHT_PURPLE;
-			energy_cost = 20;
+			//energy_cost = 20;
 			tier = 4;
 
 			life_steal_chance = 10;
@@ -7559,13 +7567,13 @@ public class ItemGenerators {
 			vs_modifier_chance = 12;
 			vs_modifier_max = 20;
 			
-			accuracy_chance = 20;
-			accuracy_max = 28;
+			//accuracy_chance = 20;
+			//accuracy_max = 28;
 			
-			pure_dmg_chance = 5;
-			armor_pen_chance = 20;
-			pure_dmg_max = 25;
-			armor_pen_max = 8;
+			//pure_dmg_chance = 5;
+			//armor_pen_chance = 20;
+			//pure_dmg_max = 25;
+			//armor_pen_max = 8;
 
 			life_steal_max = 7;
 			knockback_max = 15;
@@ -7577,7 +7585,7 @@ public class ItemGenerators {
 		if(m == Material.GOLD_SPADE){
 			wep_name = "Legendary Polearm";
 			tag = ChatColor.YELLOW;
-			energy_cost = 25;
+			//energy_cost = 25;
 			tier = 5;
 
 			life_steal_chance = 8;
@@ -7589,13 +7597,13 @@ public class ItemGenerators {
 			vs_modifier_chance = 15;
 			vs_modifier_max = 15;
 			
-			accuracy_chance = 15;
-			accuracy_max = 35;
+			//accuracy_chance = 15;
+			//accuracy_max = 35;
 			
-			pure_dmg_chance = 10;
-			armor_pen_chance = 15;
-			pure_dmg_max = 45;
-			armor_pen_max = 10;
+			//pure_dmg_chance = 10;
+			//armor_pen_chance = 15;
+			//pure_dmg_max = 45;
+			//armor_pen_max = 10;
 
 			life_steal_max = 8;
 			knockback_max = 20;
@@ -7865,6 +7873,7 @@ public class ItemGenerators {
 			max_dmg = dmg_values.get(1);
 		}
 
+		@SuppressWarnings("unused")
 		String weapon_data = m.name().toUpperCase() + "#" + min_dmg + "-" + max_dmg + ":";
 		wep_description += red.toString() + "DMG: " + min_dmg + " - " + max_dmg + ",";
 		// wood_SPADE,1|23-25:ls=3:edmg=fire,2:kb=3
@@ -8332,7 +8341,7 @@ public class ItemGenerators {
 
 	public static ItemStack StaffGenorator(Material m, boolean reroll, ItemStack original){
 		Random r = new Random();
-		boolean life_steal = false, elemental_dmg = false, knockback = false, crit_hit = false, pure_dmg = false, armor_pen = false, blind = false, specific_dmg = false;
+		boolean life_steal = false, elemental_dmg = false, knockback = false, crit_hit = false, pure_dmg = false, armor_pen = false, blind = false/*, specific_dmg = false*/;
 		int life_steal_percent = 0;
 		int knockback_percent = 0;
 		int crit_hit_percent = 0;
@@ -8355,20 +8364,20 @@ public class ItemGenerators {
 		int vs_modifier_amount = 0;
 		String vs_modifier_type = "";
 		
-		int pure_dmg_chance = 0;
-		int pure_dmg_max = 0;
+		//int pure_dmg_chance = 0;
+		//int pure_dmg_max = 0;
 		int pure_dmg_val = 0;
 
-		int accuracy_chance = 0;
-		int accuracy_max = 0;
+		//int accuracy_chance = 0;
+		//int accuracy_max = 0;
 		int accuracy_val = 0;
 		boolean accuracy = false;
 		
-		int armor_pen_chance = 0;
-		int armor_pen_max = 0;
+		//int armor_pen_chance = 0;
+		//int armor_pen_max = 0;
 		int armor_pen_val = 0;
 
-		int energy_cost = 0;
+		//int energy_cost = 0;
 		int tier = 1;
 
 		int element_dmg_amount = 0;
@@ -8382,7 +8391,7 @@ public class ItemGenerators {
 		if(m == Material.WOOD_HOE){
 			wep_name = "Staff";
 			tag = ChatColor.WHITE;
-			energy_cost = 12;
+			//energy_cost = 12;
 			tier = 1;
 
 			life_steal_chance = 2;
@@ -8394,13 +8403,13 @@ public class ItemGenerators {
 			vs_modifier_chance = 6;
 			vs_modifier_max = 10;
 			
-			accuracy_chance = 8;
-			accuracy_max = 10;
+			//accuracy_chance = 8;
+			//accuracy_max = 10;
 			
-			pure_dmg_chance = 6;
-			armor_pen_chance = 20;
-			pure_dmg_max = 5;
-			armor_pen_max = 1;
+			//pure_dmg_chance = 6;
+			//armor_pen_chance = 20;
+			//pure_dmg_max = 5;
+			//armor_pen_max = 1;
 
 			life_steal_max = 30;
 			knockback_max = 3;
@@ -8411,7 +8420,7 @@ public class ItemGenerators {
 		if(m == Material.STONE_HOE){
 			wep_name = "Battlestaff";
 			tag = ChatColor.GREEN;
-			energy_cost = 14;
+			//energy_cost = 14;
 			tier = 2;
 
 			life_steal_chance = 4;
@@ -8423,13 +8432,13 @@ public class ItemGenerators {
 			vs_modifier_chance = 9;
 			vs_modifier_max = 12;
 			
-			accuracy_chance = 12;
-			accuracy_max = 12;
+			//accuracy_chance = 12;
+			//accuracy_max = 12;
 			
-			pure_dmg_chance = 9;
-			armor_pen_chance = 20;
-			pure_dmg_max = 8;
-			armor_pen_max = 3;
+			//pure_dmg_chance = 9;
+			//armor_pen_chance = 20;
+			//pure_dmg_max = 8;
+			//armor_pen_max = 3;
 
 			life_steal_max = 15;
 			knockback_max = 6;
@@ -8440,7 +8449,7 @@ public class ItemGenerators {
 		if(m == Material.IRON_HOE){
 			wep_name = "Wizard Staff";
 			tag = ChatColor.AQUA;
-			energy_cost = 16;
+			//energy_cost = 16;
 			tier = 3;
 
 			life_steal_chance = 5;
@@ -8452,13 +8461,13 @@ public class ItemGenerators {
 			vs_modifier_chance = 10;
 			vs_modifier_max = 15;
 			
-			accuracy_chance = 15;
-			accuracy_max = 25;
+			//accuracy_chance = 15;
+			//accuracy_max = 25;
 			
-			pure_dmg_chance = 5;
-			armor_pen_chance = 25;
-			pure_dmg_max = 15;
-			armor_pen_max = 5;
+			//pure_dmg_chance = 5;
+			//armor_pen_chance = 25;
+			//pure_dmg_max = 15;
+			//armor_pen_max = 5;
 
 			life_steal_max = 12;
 			knockback_max = 12;
@@ -8469,7 +8478,7 @@ public class ItemGenerators {
 		if(m == Material.DIAMOND_HOE){
 			wep_name = "Ancient Staff";
 			tag = ChatColor.LIGHT_PURPLE;
-			energy_cost = 20;
+			//energy_cost = 20;
 			tier = 4;
 
 			life_steal_chance = 10;
@@ -8481,13 +8490,13 @@ public class ItemGenerators {
 			vs_modifier_chance = 12;
 			vs_modifier_max = 20;
 
-			accuracy_chance = 20;
-			accuracy_max = 28;
+			//accuracy_chance = 20;
+			//accuracy_max = 28;
 			
-			pure_dmg_chance = 5;
-			armor_pen_chance = 20;
-			pure_dmg_max = 25;
-			armor_pen_max = 8;
+			//pure_dmg_chance = 5;
+			//armor_pen_chance = 20;
+			//pure_dmg_max = 25;
+			//armor_pen_max = 8;
 
 			life_steal_max = 7;
 			knockback_max = 15;
@@ -8499,7 +8508,7 @@ public class ItemGenerators {
 		if(m == Material.GOLD_HOE){
 			wep_name = "Legendary Staff";
 			tag = ChatColor.YELLOW;
-			energy_cost = 25;
+			//energy_cost = 25;
 			tier = 5;
 
 			life_steal_chance = 8;
@@ -8511,13 +8520,13 @@ public class ItemGenerators {
 			vs_modifier_chance = 15;
 			vs_modifier_max = 15;
 			
-			accuracy_chance = 15;
-			accuracy_max = 35;
+			//accuracy_chance = 15;
+			//accuracy_max = 35;
 			
-			pure_dmg_chance = 10;
-			armor_pen_chance = 15;
-			pure_dmg_max = 45;
-			armor_pen_max = 10;
+			//pure_dmg_chance = 10;
+			//armor_pen_chance = 15;
+			//pure_dmg_max = 45;
+			//armor_pen_max = 10;
 
 			life_steal_max = 8;
 			knockback_max = 20;
@@ -8787,6 +8796,7 @@ public class ItemGenerators {
 			max_dmg = dmg_values.get(1);
 		}
 
+		@SuppressWarnings("unused")
 		String weapon_data = m.name().toUpperCase() + "#" + min_dmg + "-" + max_dmg + ":";
 		wep_description += red.toString() + "DMG: " + min_dmg + " - " + max_dmg + ",";
 		// wood_HOE,1|23-25:ls=3:edmg=fire,2:kb=3

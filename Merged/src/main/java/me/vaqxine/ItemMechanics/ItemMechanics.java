@@ -168,6 +168,7 @@ public class ItemMechanics implements Listener {
 	public static ItemStack orb_of_peace = ItemMechanics.signNewCustomItem(Material.ENDER_PEARL, (short)1, ChatColor.GREEN.toString() + 
 			"" + "Orb of Peace", ChatColor.GRAY.toString() + "Set realm to " + ChatColor.UNDERLINE + "SAFE ZONE" + ChatColor.GRAY + " for 1 hour(s).");
 
+	@SuppressWarnings("deprecation")
 	public static ItemStack orb_of_flight = ItemMechanics.signNewCustomItem(Material.getMaterial(402), (short)1, ChatColor.AQUA.toString() + 
 			"" + "Orb of Flight", ChatColor.GRAY.toString() + "Enables " + ChatColor.UNDERLINE + "FLYING" + ChatColor.GRAY + " in realm for the owner " + "," + ChatColor.GRAY.toString() + "and all builders for 30 minute(s)."
 					+ "," + ChatColor.RED.toString() + ChatColor.BOLD.toString() + "REQ:" + ChatColor.RED.toString() + " Active Orb of Peace");
@@ -347,10 +348,10 @@ public class ItemMechanics implements Listener {
 						}
 					}
 
-					int old_min_armor = armor_data.get(p.getName()).get(0);
+					//int old_min_armor = armor_data.get(p.getName()).get(0);
 					int old_max_armor = armor_data.get(p.getName()).get(1);
 
-					int old_min_dmg = dmg_data.get(p.getName()).get(0);
+					//int old_min_dmg = dmg_data.get(p.getName()).get(0);
 					int old_max_dmg = dmg_data.get(p.getName()).get(1);
 
 					int old_thorns = thorn_data.get(p.getName());
@@ -663,10 +664,10 @@ public class ItemMechanics implements Listener {
 			}
 		}
 
-		int old_min_armor = armor_data.get(p.getName()).get(0);
+		//int old_min_armor = armor_data.get(p.getName()).get(0);
 		int old_max_armor = armor_data.get(p.getName()).get(1);
 
-		int old_min_dmg = dmg_data.get(p.getName()).get(0);
+		//int old_min_dmg = dmg_data.get(p.getName()).get(0);
 		int old_max_dmg = dmg_data.get(p.getName()).get(1);
 
 		int old_thorns = thorn_data.get(p.getName());
@@ -932,7 +933,7 @@ public class ItemMechanics implements Listener {
 					//NBTTagList description = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getList("Lore", 0);
 					List<String> lore = i.getItemMeta().getLore();
 					
-					int x = 0;
+					//int x = 0;
 
 					boolean elemental_dmg = false;
 					String elemental_data = "";
@@ -968,7 +969,7 @@ public class ItemMechanics implements Listener {
 
 					for(String s : lore){
 						if(!(s).startsWith(ChatColor.RED.toString())){
-							x++;
+							//x++;
 							continue;
 						}
 
@@ -1065,7 +1066,7 @@ public class ItemMechanics implements Listener {
 							vs_modifier = Integer.parseInt(vs_data.substring(vs_data.indexOf("+") + 1, vs_data.indexOf("%")).replaceAll(" ", ""));
 							vs_monsters = true;
 						}
-						x++;
+						//x++;
 					}
 
 					String dmg_data = all_attributes.get(0);
@@ -1246,9 +1247,9 @@ public class ItemMechanics implements Listener {
 					List<String> lore = i.getItemMeta().getLore();
 					//NBTTagList description = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getList("Lore", 0);
 
-					int x = 0;
+					//int x = 0;
 
-					boolean hp_regen = false, hp_increase = false, energy_regen = false, str=false,dex=false,vit=false,intel=false, block = false, dodge = false, thorns = false, reflection = false, gold_find = false, item_find = false, speed_boost = false;
+					boolean hp_regen = false,/* hp_increase = false,*/ energy_regen = false, str=false,dex=false,vit=false,intel=false, block = false, dodge = false, thorns = false, reflection = false, gold_find = false, item_find = false, speed_boost = false;
 					boolean fire_res = false, ice_res = false, poison_res = false;
 
 					int hp_regen_amount=0, energy_regen_amount=0, val_fire_res=0, val_ice_res=0, val_poison_res=0, dodge_chance=0, str_atr=0, dex_atr=0, vit_atr=0, int_atr=0, block_chance=0, thorns_amount=0, reflection_chance=0, item_find_amount=0, gold_find_amount=0;
@@ -1258,7 +1259,7 @@ public class ItemMechanics implements Listener {
 
 					for(String s : lore){
 						if(!(s).startsWith(ChatColor.RED.toString())){
-							x++;
+							//x++;
 							continue;
 						}
 
@@ -1362,7 +1363,7 @@ public class ItemMechanics implements Listener {
 							gold_find_amount = Integer.parseInt(gold_find_data.substring(gold_find_data.indexOf(":") + 1, gold_find_data.indexOf("%")).replaceAll(" ", ""));
 						}
 
-						x++;
+						//x++;
 					}
 
 					String return_string = "";
@@ -2368,9 +2369,9 @@ public class ItemMechanics implements Listener {
 	}
 
 	public static void addRarityToOldItems(Player pl){
-		int index = -1;
+		//int index = -1;
 		for(ItemStack is : pl.getInventory().getContents()){
-			index++;
+			//index++;
 			if(is == null){
 				continue;
 			}
@@ -2675,6 +2676,7 @@ public class ItemMechanics implements Listener {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerJoin(PlayerJoinEvent e){
 		Player p = e.getPlayer();
@@ -2771,6 +2773,7 @@ public class ItemMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerAttemptBowFire(PlayerInteractEvent e){
 		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK){
@@ -2834,6 +2837,7 @@ public class ItemMechanics implements Listener {
 		}, 1L);
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onOrbUse(InventoryClickEvent e){
 		Player p = (Player)e.getWhoClicked();
@@ -2925,7 +2929,7 @@ public class ItemMechanics implements Listener {
 				//p.getWorld().spawnParticle(p.getLocation().add(0, 8, 0), Particle.FIREWORKS_SPARK, 0.75F, 100);
 				Firework fw = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
 				FireworkMeta fwm = fw.getFireworkMeta();
-				Random r = new Random();   
+				//Random r = new Random();   // TODO - UNUSED
 				FireworkEffect effect = FireworkEffect.builder().flicker(false).withColor(Color.YELLOW).withFade(Color.YELLOW).with(Type.BURST).trail(true).build();
 				fwm.addEffect(effect);
 				fwm.setPower(0);
@@ -3388,6 +3392,7 @@ public class ItemMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean subtractArrow(Player pl, int tier){
 		for(ItemStack is : pl.getInventory().getContents()){
 			if(is == null || is.getType() != Material.ARROW){
@@ -3424,6 +3429,7 @@ public class ItemMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityShootBowEvent(EntityShootBowEvent e){
 		if(!(e.getEntity().getType() == EntityType.PLAYER)){return;}
@@ -3480,7 +3486,7 @@ public class ItemMechanics implements Listener {
 			return;
 		}
 
-		Player p = (Player) a.getShooter();
+		//Player p = (Player) a.getShooter();
 		if(!(arrow_shooter.containsKey(a))){
 			return;
 		}
@@ -3753,7 +3759,7 @@ public class ItemMechanics implements Listener {
 				if(e instanceof EntityDamageByEntityEvent){
 					EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent)e;
 					if(edbee.getDamager() instanceof Player){
-						Player pl = (Player)edbee.getDamager();
+						//Player pl = (Player)edbee.getDamager();
 						/*if(EcashMechanics.personal_clones.containsKey(pl.getName())){
 							String npc_name = npc.getName();
 							String pl_name = pl.getName();
@@ -3798,7 +3804,7 @@ public class ItemMechanics implements Listener {
 
 		Player p = (Player) a.getShooter();
 		HealthMechanics.in_combat.put(p.getName(), System.currentTimeMillis());
-		boolean is_player = false;
+		//boolean is_player = false;
 		Entity ent = e.getEntity();
 		LivingEntity le = (LivingEntity) ent;
 
@@ -3807,7 +3813,7 @@ public class ItemMechanics implements Listener {
 		}
 
 		if(le instanceof Player){
-			is_player = true;
+			//is_player = true;
 			Player p_shot = (Player)le;
 			if(DuelMechanics.isPvPDisabled(p_shot)){
 				if(!(DuelMechanics.duel_map.containsKey(p_shot.getName())) || !(DuelMechanics.duel_map.get(p_shot.getName()).equalsIgnoreCase(p.getName()))){
@@ -4144,11 +4150,11 @@ public class ItemMechanics implements Listener {
 		}
 
 		LivingEntity le = (LivingEntity) ent;
-		boolean is_player = false;
+		//boolean is_player = false;
 
 		if(le instanceof Player){
 
-			is_player = true;
+			//is_player = true;
 			Player p_hurt = (Player)le;
 			if(DuelMechanics.isPvPDisabled(p_hurt) || DuelMechanics.isPvPDisabled(p_attacker)){
 				if(!(DuelMechanics.duel_map.containsKey(p_attacker.getName())) || !(DuelMechanics.duel_map.get(p_attacker.getName()).equalsIgnoreCase(p_hurt.getName()))){
@@ -5253,6 +5259,7 @@ public class ItemMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onStaffProjectHit(ProjectileHitEvent e){
 		Projectile proj = e.getEntity();
@@ -5413,6 +5420,7 @@ public class ItemMechanics implements Listener {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerShootWand(PlayerInteractEvent e){
 		Player pl = e.getPlayer();
@@ -5606,6 +5614,7 @@ public class ItemMechanics implements Listener {
 		return iss;
 	}
 
+	@SuppressWarnings("static-access")
 	public static ItemStack generateRandomTierItem(int tier){
 		ItemStack i = null;
 		int r = new Random().nextInt(9);
@@ -5765,10 +5774,11 @@ public class ItemMechanics implements Listener {
 		return i;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		Player p = (Player)sender;
-		ChatColor red = ChatColor.RED;
-		ChatColor white = ChatColor.WHITE;
+		//ChatColor red = ChatColor.RED;
+		//ChatColor white = ChatColor.WHITE;
 		if(cmd.getName().equalsIgnoreCase("addweapon")){
 
 			if(!(p.isOp())){

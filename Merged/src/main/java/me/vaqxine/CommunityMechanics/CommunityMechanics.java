@@ -73,6 +73,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 
 public class CommunityMechanics implements Listener {
@@ -185,19 +186,19 @@ public class CommunityMechanics implements Listener {
 		aqua = HealthMechanics.board.registerNewTeam("aqua");
 		aqua.setPrefix("�b" + ChatColor.BOLD.toString() + "GM" + ChatColor.AQUA.toString() + " ");
 		
-		// SQL Connection Pool Refresh
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				ConnectionPool.refresh = true;
 			}
-		}, 240 * 20L, 240 * 20L);
-
-		// SQL Connection Pool Refresh
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		}.runTaskTimerAsynchronously(Main.plugin, 240 * 20L, 240 * 20L);
+		
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				processPM();
 			}
-		}, 5 * 20L, 2L);
+		}.runTaskTimerAsynchronously(Main.plugin, 5 * 20L, 2L);
 		
 		// Tip batch sender.
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
@@ -320,7 +321,7 @@ public class CommunityMechanics implements Listener {
 					continue;
 				}
 
-				int o_sent_to_server = sent_to_server_data;
+				//int o_sent_to_server = sent_to_server_data; // TODO - UNUSED!
 				String prefix = "US-";
 
 				if(sent_to_server_data > 1000 && sent_to_server_data < 2000){
@@ -555,6 +556,7 @@ public class CommunityMechanics implements Listener {
 	/*
 	 * Only updates the first few pages of the character journal, the pages with realtime, non-SQL/socket based information.
 	 * */
+	@SuppressWarnings("deprecation")
 	public static void updateCombatPage(Player p){
 		List<String> new_pages = new ArrayList<String>();
 		int slot = -1;
@@ -1155,6 +1157,7 @@ public class CommunityMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("resource")
 	public void upload_social_lists(Player p){
 		Connection con = null;
 		PreparedStatement pst = null;
@@ -2103,7 +2106,8 @@ public class CommunityMechanics implements Listener {
 
 			final OfflinePlayer op = Bukkit.getOfflinePlayer(to_add);
 
-			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					addBuddy(p, to_add);
 					updateCommBook(p);
@@ -2141,7 +2145,8 @@ public class CommunityMechanics implements Listener {
 						return; // They're not online.
 					}
 				}
-			}, 1);
+			}.runTaskLaterAsynchronously(Main.plugin, 1L);
+			
 			return true;
 		}
 
@@ -2164,14 +2169,15 @@ public class CommunityMechanics implements Listener {
 			}
 
 
-			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					addIgnore(p, to_add);
 					updateCommBook(p);
 					p.sendMessage(ChatColor.RED + "You've added " + ChatColor.BOLD + to_add + ChatColor.RED + " to your IGNORE list.");
 				}
-			}, 1L);
-
+			}.runTaskLaterAsynchronously(Main.plugin, 1L);
+			
 		}
 
 		if(cmd.getName().equalsIgnoreCase("delete")){
@@ -2182,12 +2188,14 @@ public class CommunityMechanics implements Listener {
 
 			final String to_remove = args[0];
 
-			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					deleteFromAllLists(p, to_remove);
 					updateCommBook(p);
 				}
-			}, 1L);
+			}.runTaskLaterAsynchronously(Main.plugin, 1L);
+			
 			//TODO: Send "X has logged out" to person who was deleted.
 		}
 		return true;
@@ -2261,10 +2269,11 @@ public class CommunityMechanics implements Listener {
 				out.println(packet_data);
 
 			} catch (IOException e) {
+
+			} finally {
 				if(out != null){
 					out.close();
 				}
-				return;
 			}
 
 			if(out != null){
@@ -2284,12 +2293,13 @@ public class CommunityMechanics implements Listener {
 				out = new PrintWriter(kkSocket.getOutputStream(), true);
 				
 				out.println(packet_data);
-
+				kkSocket.close();
 			} catch (IOException e) {
+				
+			} finally {
 				if(out != null){
 					out.close();
 				}
-				return;
 			}
 
 			if(out != null){
@@ -2534,10 +2544,10 @@ public class CommunityMechanics implements Listener {
 			public void run() {
 				//ChatColor c = ChatColor.WHITE;
 
-				CraftPlayer test = null;
-				EntityPlayer e_test = null;
+				//CraftPlayer test = null; TODO - UNUSED
+				//EntityPlayer e_test = null; TODO - UNUSED
 
-				test = (CraftPlayer)e_test.getBukkitEntity();
+				//test = (CraftPlayer)e_test.getBukkitEntity();
 
 				EntityPlayer ent_p_edited = ((CraftPlayer) p_edited).getHandle();
 				net.minecraft.server.v1_7_R1.ItemStack boots = null, legs = null, chest = null, head = null;
@@ -2582,8 +2592,8 @@ public class CommunityMechanics implements Listener {
 
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerJoin(PlayerJoinEvent e){
-		final Player p = e.getPlayer();
+	public void onPlayerJoin(final PlayerJoinEvent e){
+		Player p = e.getPlayer();
 
 		local_confirmed_buddies.put(p.getName(), new ArrayList<String>());
 		local_confirmed_ignores.put(p.getName(), new ArrayList<String>());
@@ -2591,7 +2601,11 @@ public class CommunityMechanics implements Listener {
 		Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {
 
-				if(p == null){return;}
+				Player p = e.getPlayer();
+				
+				if(p == null){
+					return;
+				}
 
 				if(toggle_list.containsKey(p.getName()) && toggle_list.get(p.getName()).size() > 0){ // They have something off/on.
 					
@@ -2707,6 +2721,7 @@ public class CommunityMechanics implements Listener {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void updateCommBook(Player p){
 		int slot = -1;
 		boolean book = false;
@@ -2742,7 +2757,8 @@ public class CommunityMechanics implements Listener {
 		if(buddy_list.containsKey(p.getName())){
 			final List<String> lbuddy_list = buddy_list.get(p.getName());
 
-			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					for(String s : lbuddy_list){
 						if(Bukkit.getPlayer(s) != null){
@@ -2770,8 +2786,8 @@ public class CommunityMechanics implements Listener {
 						}
 					}
 				}
-			}, 5L);
-
+			}.runTaskLaterAsynchronously(Main.plugin, 5L);
+			
 		}
 	}
 
@@ -2841,16 +2857,18 @@ public class CommunityMechanics implements Listener {
 	public void onPlayerRespawn(PlayerRespawnEvent e){
 		final Player p = e.getPlayer();
 
-		Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				if(!(Hive.server_swap.containsKey(p.getName())) && p != null){
 					updateCommBook(p);
 				}
 			}
-		}, 20L);
-
+		}.runTaskLaterAsynchronously(Main.plugin, 1L);
+		
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onToggleMenuClick(InventoryClickEvent e){
 		if(e.getInventory().getTitle().equalsIgnoreCase("Toggle Menu")){

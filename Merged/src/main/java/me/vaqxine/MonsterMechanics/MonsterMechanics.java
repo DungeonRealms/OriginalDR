@@ -43,7 +43,6 @@ import net.minecraft.server.v1_7_R1.DataWatcher;
 import net.minecraft.server.v1_7_R1.EntityCreature;
 import net.minecraft.server.v1_7_R1.EntityLiving;
 import net.minecraft.server.v1_7_R1.EntityPlayer;
-import net.minecraft.server.v1_7_R1.EntityZombie;
 import net.minecraft.server.v1_7_R1.NBTTagCompound;
 
 import org.bukkit.Bukkit;
@@ -818,6 +817,7 @@ public class MonsterMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static List<ItemStack> getCustomDrops(Entity ent, String custom_name){
 		if(ent != null){
 			LivingEntity le = (LivingEntity)ent;
@@ -2164,6 +2164,7 @@ public class MonsterMechanics implements Listener {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean isThereAPlayerNearLocation(Block b, int maxradius) {
 		// if(b.getType() != Material.CAULDRON){
 		// return false;
@@ -2429,7 +2430,7 @@ public class MonsterMechanics implements Listener {
 			boolean player_around = false;
 
 			Location loc = entry.getKey();
-			List<String> mob_list = entry.getValue();
+			//List<String> mob_list = entry.getValue();
 
 			if(InstanceMechanics.isInstance(loc.getWorld().getName())){
 				continue;
@@ -2524,6 +2525,7 @@ public class MonsterMechanics implements Listener {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	public void MobSpawnEvent() {
 		// @zombie:1-1,skeleton:1-2,skeleton:2-3@30#1-5$
 		List<Location> to_remove = new ArrayList<Location>();
@@ -2786,10 +2788,10 @@ public class MonsterMechanics implements Listener {
 						continue; // Don't spawn in damage disabled.
 					}
 
-					if(loc == null){
+					//if(loc == null){
 						// .get(0) is null occasionally on the mobs_being_spawned process list?
-						continue;
-					}
+					//	continue;
+					//}
 
 					ArrayList<Object> main_thread = new ArrayList<Object>();
 					main_thread.add(loc);
@@ -3152,9 +3154,9 @@ public class MonsterMechanics implements Listener {
 					p.sendMessage(ChatColor.RED + "No TIER defined for mob '" + s + "' in mob list.");
 					return;
 				}
-				String custom_name = "";
+				//String custom_name = "";
 				if(s.contains("(")){
-					custom_name = "(" + s.substring(s.indexOf("(") + 1, s.indexOf(")")) + ")";
+					//custom_name = "(" + s.substring(s.indexOf("(") + 1, s.indexOf(")")) + ")";
 				}
 
 				spawn_data += s + "-" + mob_num + ",";
@@ -4293,7 +4295,7 @@ public class MonsterMechanics implements Listener {
 		// if(e.getDamage() <= 0){return;} // ISSUE?
 
 		boolean is_elite = false;
-		int mob_tier = getMobTier(ent);
+		//int mob_tier = getMobTier(ent);
 		//List<ItemStack> ent_gear = mob_loot.get(ent);
 		ItemStack weapon = CraftItemStack.asBukkitCopy(((CraftEntity)ent).getHandle().getEquipment()[0]);
 		if (weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK)) {
@@ -4490,7 +4492,7 @@ public class MonsterMechanics implements Listener {
 		}
 
 
-		LivingEntity le = (LivingEntity)ent;
+		//LivingEntity le = (LivingEntity)ent;
 		ItemStack weapon = CraftItemStack.asBukkitCopy(((CraftEntity)ent).getHandle().getEquipment()[0]);
 		boolean is_elite = false;
 		if (weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK)) {
@@ -4893,6 +4895,7 @@ public class MonsterMechanics implements Listener {
 		}
 	}*/
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(ignoreCancelled = false)
 	public void onEntityDeathEvent(final EntityDeathEvent e) {
 		final Entity ent = e.getEntity();
@@ -6108,6 +6111,7 @@ public class MonsterMechanics implements Listener {
 		return e;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Entity spawnTierMob(Location l, EntityType et, int tier, int mob_num,
 			Location mob_spawner_loc, boolean elite, String meta_data, String custom_name, boolean return_entity) {
 
@@ -6635,7 +6639,7 @@ public class MonsterMechanics implements Listener {
 		}*/
 
 		if(e.getType() == EntityType.ZOMBIE){
-			EntityZombie ez = (EntityZombie)ent;
+			//EntityZombie ez = (EntityZombie)ent;
 			/*if(elite){ TODO
 				ez.bi = 0.32F;
 			}*/
@@ -7410,6 +7414,7 @@ public class MonsterMechanics implements Listener {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd,
 			String commandLabel, String[] args) {
 

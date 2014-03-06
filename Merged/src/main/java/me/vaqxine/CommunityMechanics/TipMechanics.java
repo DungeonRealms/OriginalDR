@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import me.vaqxine.Main;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -79,7 +81,7 @@ public class TipMechanics implements Listener {
 				}
 			}
 			reader.close();
-			plugin.log.info("[TipMechanics] " + count + " Gameplay Tips have been LOADED.");
+			Main.plugin.getLogger().info("[TipMechanics] " + count + " Gameplay Tips have been LOADED.");
 
 		} catch(Exception err){
 			err.printStackTrace();

@@ -28,6 +28,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class DonationMechanics implements Listener {
 
@@ -103,7 +104,8 @@ public class DonationMechanics implements Listener {
 		server_list.put(2001, "72.20.42.198"); // BR-1
 		log.info("" + Bukkit.getOnlinePlayers().length);
 		
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				tickSubscriberDays();
 				log.info("[DonationMechanics] Ticked all user's subscriber days forward by ONE.");
@@ -111,14 +113,15 @@ public class DonationMechanics implements Listener {
 				tickFreeEcash();
 				log.info("[DonationMechanics] Reset all 'Free E-cash' users, login for more e-cash!");
 			}
-		}, 24 * 3600 * 20L, 24 * 3600 * 20L);
+		}.runTaskTimerAsynchronously(Main.plugin, 24 * 3600 * 20L, 24 * 3600 * 20L);
 		
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				tickLifetimeSubEcash();
 				log.info("[DonationMechanics] 999 E-CASH has been given to all sub++ users.");
 			}
-		}, 30 * 24 * 3600 * 20L, 30 * 24 * 3600 * 20L);
+		}.runTaskTimerAsynchronously(Main.plugin, 30 * 24 * 3600 * 20L, 30 * 24 * 3600 * 20L);
 		
 		if(new File("plugins/Votifier.jar").exists()){
 			log.info("[DonationMechanics] Votifier.jar detected, registering listener.");
@@ -147,7 +150,7 @@ public class DonationMechanics implements Listener {
 				}
 				
 				final String rank = rs.getString("rank");
-				final String fp_name = p_name;
+				//final String fp_name = p_name; // TODO Unused
 				
 				if(rank == null || rank.equalsIgnoreCase("null")){
 					return "default";
@@ -498,7 +501,7 @@ public class DonationMechanics implements Listener {
 			out = new PrintWriter(kkSocket.getOutputStream(), true);
 			out.println(packet_data);
 			log.info("[DonationMechanics] Sent payload to proxy: " + packet_data);
-			
+			kkSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -510,7 +513,7 @@ public class DonationMechanics implements Listener {
 	}
 	
 	public static void sendPacketCrossServer(String packet_data, int server_num, boolean all_servers){
-		String local_ip = Bukkit.getIp();
+		//String local_ip = Bukkit.getIp(); // TODO - UNUSED
 
 		Socket kkSocket = null;
 		PrintWriter out = null;
@@ -554,10 +557,11 @@ public class DonationMechanics implements Listener {
 				out.println(packet_data);
 
 			} catch (IOException e) {
+				
+			} finally {
 				if(out != null){
 					out.close();
 				}
-				return;
 			}
 
 			if(out != null){
@@ -994,6 +998,7 @@ public class DonationMechanics implements Listener {
 		return -1;
 	}
 
+	@SuppressWarnings("resource")
 	public void setAsNormalBetaTester(int user_id){
 		Connection con = null;
 		PreparedStatement pst = null;
@@ -1041,6 +1046,7 @@ public class DonationMechanics implements Listener {
 
 	}
 
+	@SuppressWarnings("resource")
 	public void setAsBetaTester(int user_id){
 		Connection con = null;
 		PreparedStatement pst = null;
@@ -1087,6 +1093,7 @@ public class DonationMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public static void addForumGroup(int user_id, int group_id){
 		Connection con = null;
 		PreparedStatement pst = null;
@@ -1157,6 +1164,7 @@ public class DonationMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("resource")
 	public void setAsSubscriber(int user_id, boolean sub_plus){
 		Connection con = null;
 		PreparedStatement pst = null;
@@ -1233,6 +1241,7 @@ public class DonationMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public void removeSubscriber(int user_id, boolean sub_plus){
 		Connection con = null;
 		PreparedStatement pst = null;

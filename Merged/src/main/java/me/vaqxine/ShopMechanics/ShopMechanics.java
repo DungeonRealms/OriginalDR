@@ -79,6 +79,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Score;
 
 import de.kumpelblase2.remoteentities.EntityManager;
@@ -300,6 +301,7 @@ public class ShopMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void removeAllShops(){
 		for (Block b1 : inverse_shop_owners.values()){
 
@@ -470,6 +472,7 @@ public class ShopMechanics implements Listener {
 		return 0;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Inventory legacyShopStringToInventory(final String p_name, String collection_bin_string){
 		Inventory collection_bin_contents = Bukkit.createInventory(null, 63, "Collection Bin");
 		String collection_bin_content_data = collection_bin_string;
@@ -840,7 +843,7 @@ public class ShopMechanics implements Listener {
 			r_new_level = new_level;
 		}
 
-		final int f_new_level = r_new_level;
+		//final int f_new_level = r_new_level;
 
 		shop_level.put(p.getName(), r_new_level);
 
@@ -1173,6 +1176,7 @@ public class ShopMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerMoveEvent(PlayerMoveEvent e){
 		Player p = e.getPlayer(); // The person MOVING.
@@ -1233,6 +1237,7 @@ public class ShopMechanics implements Listener {
 		shop_upgrade_codes.put(p.getName(), tier + sb.toString());
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean isThereAShopNear(Block b, int maxradius) {
 		//if(b.getType() != Material.CAULDRON){
 		//return false;
@@ -1493,24 +1498,25 @@ public class ShopMechanics implements Listener {
 		chest_partners.put(b1, b2);
 		chest_partners.put(b2, b1);
 		//modifying_stock.add(p.getName());
-		String default_shop_name = " Shop";
+		//String default_shop_name = " Shop";
 
 		openning_shop.add(p.getName());
 		p.sendMessage(ChatColor.YELLOW + "Please enter a " + ChatColor.BOLD + "SHOP NAME." + ChatColor.YELLOW + " [max. 12 characters]");
 		p.playSound(p.getLocation(), Sound.WOOD_CLICK, 1F, 0.8F);
 
 		// TODO: Make sure this still works.
-		Main.plugin.getServer().getScheduler()
-		.scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				assignShopNameplate(p.getName(), b1.getLocation(), b2.getLocation());
 				setStoreColor(b1, ChatColor.RED);
 			}
-		}, 1L);
+		}.runTaskLaterAsynchronously(Main.plugin, 1L);
 
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void CollectionBinManager(InventoryClickEvent e){
 		if (!(e.getWhoClicked() instanceof Player)) {
@@ -1520,7 +1526,7 @@ public class ShopMechanics implements Listener {
 		Player p = (Player) e.getWhoClicked();
 
 		int slot = e.getRawSlot();
-		Inventory i = e.getInventory();
+		//Inventory i = e.getInventory();
 
 		if(!e.getInventory().getTitle().equalsIgnoreCase("Collection Bin")){
 			return;
@@ -1967,7 +1973,7 @@ public class ShopMechanics implements Listener {
 
 		else if(e.getInventory().getName().contains("@")){
 			// CUSTOMER BUYING
-			String inv_name = e.getInventory().getName();
+			//String inv_name = e.getInventory().getName();
 			Block shop_b1 = inverse_shop_owners.get(owner_name);
 
 			if(e.getRawSlot() > (e.getInventory().getSize() - 1)){ // They're touching an item that's in their inventory, don't let em even move it TBH.
@@ -2016,7 +2022,7 @@ public class ShopMechanics implements Listener {
 			e.setCancelled(true);
 
 			final ItemStack being_bought = e.getCurrentItem();
-			Inventory inv = e.getInventory();
+			//Inventory inv = e.getInventory();
 			int price = getPrice(being_bought);
 
 			/*		if (!RealmMechanics.doTheyHaveEnoughMoney(p, price)) {
@@ -2090,8 +2096,8 @@ public class ShopMechanics implements Listener {
 							if(online_global == true){
 								// They're online SOME server, so this is gonna be a pain in the ass.
 								// We need to notify them of their sold item AND update their information. We'll need a socket!
-								int server_num = Hive.getPlayerServer(owner_name, false);
-								String server_ip = CommunityMechanics.server_list.get(server_num);
+								//int server_num = Hive.getPlayerServer(owner_name, false);
+								//String server_ip = CommunityMechanics.server_list.get(server_num);
 								//  // @money@vaquxine,50.1:availer#epic sword#
 								List<Object> query = new ArrayList<Object>();
 								query.add("@money@" + owner_name + "," + total_price + "." + being_bought.getAmount() + ":" + p.getName() + "#" + f_i_name + "#");
@@ -2536,8 +2542,8 @@ public class ShopMechanics implements Listener {
 							// They're online SOME server, so this is gonna be a pain in the ass.
 							// We need to notify them of their sold item AND update their information. We'll need a socket!
 							// TODO: Socket
-							int server_num = Hive.getPlayerServer(shop_owner, false);
-							String server_ip = CommunityMechanics.server_list.get(server_num);
+							//int server_num = Hive.getPlayerServer(shop_owner, false);
+							//String server_ip = CommunityMechanics.server_list.get(server_num);
 
 							List<Object> query = new ArrayList<Object>();
 							query.add("@money@" + shop_owner + "," + total_price + "." + f_amount_to_buy + ":" + p.getName() + "#" + i_name + "#");
@@ -2748,6 +2754,7 @@ public class ShopMechanics implements Listener {
 		if(e.getInventory().getName().contains("@")){
 			p.playSound(p.getLocation(), Sound.CHEST_CLOSE, 1F, 1F);
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+				@SuppressWarnings("deprecation")
 				public void run() {
 					p.updateInventory();
 				}

@@ -105,7 +105,7 @@ public class TutorialMechanics implements Listener {
 				location = bedrock.getLocation();
 				location.setX(location.getX() + 0.5D);
 				location.setZ(location.getZ() + 0.5D);
-				EnderCrystal enderCrystal = (EnderCrystal)location.getWorld().spawn(location, EnderCrystal.class);
+				location.getWorld().spawn(location, EnderCrystal.class);
 			}
 		}, 20 * 20L);
 
@@ -185,6 +185,7 @@ public class TutorialMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent e){
 		final Player pl = e.getPlayer();
@@ -259,6 +260,7 @@ public class TutorialMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onItemDrop(PlayerDropItemEvent e){
 		Player pl = e.getPlayer();
@@ -268,6 +270,7 @@ public class TutorialMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled=true)
 	public void onMapDrop(PlayerDropItemEvent e){
 		Player pl = e.getPlayer();
@@ -289,6 +292,7 @@ public class TutorialMechanics implements Listener {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled=false)
 	public void onMapInteract(HangingBreakByEntityEvent e){
 		if(e.getRemover() instanceof Player && e.getEntity() instanceof ItemFrame){

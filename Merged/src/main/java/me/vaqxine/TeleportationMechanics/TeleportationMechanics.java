@@ -195,9 +195,9 @@ public class TeleportationMechanics implements Listener {
 						Player pl = Bukkit.getPlayer(p_name);
 						pl.sendMessage(ChatColor.WHITE + "" + ChatColor.BOLD + "CASTING" + ChatColor.WHITE + " ... " + seconds_left + ChatColor.BOLD + "s");
 
-						double x = pl.getLocation().getX(); //(pet.getLocation().getX() + partner.getLocation().getX()) / 2;
-						double y = pl.getLocation().getY(); //((pet.getLocation().getY() + partner.getLocation().getY()) / 2);
-						double z = pl.getLocation().getZ(); //(pet.getLocation().getZ() + partner.getLocation().getZ()) / 2;
+						//double x = pl.getLocation().getX(); //(pet.getLocation().getX() + partner.getLocation().getX()) / 2;
+						//double y = pl.getLocation().getY(); //((pet.getLocation().getY() + partner.getLocation().getY()) / 2);
+						//double z = pl.getLocation().getZ(); //(pet.getLocation().getZ() + partner.getLocation().getZ()) / 2;
 
 						if(seconds_left > 1){
 							try{
@@ -604,6 +604,7 @@ public class TeleportationMechanics implements Listener {
 		}
 	}*/
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
 	public void onPlayerInteract(PlayerInteractEvent e){
 		Player p = e.getPlayer();

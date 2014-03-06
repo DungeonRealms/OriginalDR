@@ -2319,6 +2319,7 @@ public class ProfessionMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerItemConsumeEvent(PlayerItemConsumeEvent e){
 		final ItemStack is = e.getItem();
@@ -2627,6 +2628,7 @@ public class ProfessionMechanics implements Listener {
 
 				pl.getWorld().playSound(pl.getLocation(), Sound.EAT, 1F, 1F);
 				Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+					@SuppressWarnings("deprecation")
 					public void run() {
 						// TODO: This could be abused with a macro.
 						if(isCustomFish(pl.getItemInHand())){
@@ -2917,6 +2919,7 @@ public class ProfessionMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
 	public void onPlayerCastRod(PlayerInteractEvent e){
 		// TODO: Prevent fishing in no-fish / too high of tier areas.
@@ -3332,6 +3335,7 @@ public class ProfessionMechanics implements Listener {
 		}*/
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerUseFire(PlayerInteractEvent e){
 		Player pl = e.getPlayer();
@@ -3388,13 +3392,14 @@ public class ProfessionMechanics implements Listener {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onScrollUse(InventoryClickEvent e){
 		if(e.getCursor() == null){return;}
 		if(e.getCurrentItem() == null){return;}
 		ItemStack cursor = e.getCursor();
 		ItemStack in_slot = e.getCurrentItem();
-		boolean win = true;
+		//boolean win = true;
 
 		if(!e.getInventory().getName().equalsIgnoreCase("container.crafting")){return;}
 		if(e.getInventory().getViewers().size() > 1){return;}
@@ -3422,7 +3427,7 @@ public class ProfessionMechanics implements Listener {
 			//p.getWorld().spawnParticle(p.getLocation().add(0, 8, 0), Particle.FIREWORKS_SPARK, 0.75F, 50);
 			Firework fw = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
 			FireworkMeta fwm = fw.getFireworkMeta();
-			Random r = new Random();   
+			//Random r = new Random();   
 			FireworkEffect effect = FireworkEffect.builder().flicker(false).withColor(Color.YELLOW).withFade(Color.YELLOW).with(Type.BURST).trail(true).build();
 			fwm.addEffect(effect);
 			fwm.setPower(0);
@@ -3430,6 +3435,7 @@ public class ProfessionMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerAnimation(PlayerAnimationEvent e){
 		Player pl = e.getPlayer();
@@ -3635,6 +3641,7 @@ public class ProfessionMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent e){
 		Player pl = e.getPlayer();

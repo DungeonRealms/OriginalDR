@@ -46,6 +46,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class MerchantMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
@@ -102,14 +103,18 @@ public class MerchantMechanics implements Listener {
 	public static ItemStack flaming_armor = ItemMechanics.signNewCustomItem(Material.INK_SACK, (short)1, ChatColor.GOLD.toString() + "Blazing Armor", ChatColor.GRAY.toString() + ChatColor.ITALIC + "Adds a firey effect around the player." + "," + ChatColor.GRAY + "Permanent Untradeable");
 	public static ItemStack flame_trail = ItemMechanics.signNewCustomItem(Material.BLAZE_POWDER, (short)1, ChatColor.GOLD.toString() + "Flame Trail", ChatColor.GRAY.toString() + ChatColor.ITALIC + "Leave a trail of fire everywhere you go." + "," + ChatColor.GRAY + "Permanent Untradeable");
 	public static ItemStack old_music_box = ItemMechanics.signNewCustomItem(Material.JUKEBOX, (short)1, ChatColor.GOLD.toString() + "Mobile Musicbox", ChatColor.GRAY.toString() + ChatColor.ITALIC + "Place this musicbox anywhere to play music for all!" + "," + ChatColor.GRAY + "Permanent Untradeable");
+	@SuppressWarnings("deprecation")
 	public static ItemStack musical_spirit = ItemMechanics.signNewCustomItem(Material.getMaterial(382), (short)1, ChatColor.GOLD.toString() + "Musical Spirit", ChatColor.GRAY.toString() + ChatColor.ITALIC + "Adds a musical particle trail to your character." + "," + ChatColor.GRAY + "Permanent Untradeable");
+	@SuppressWarnings("deprecation")
 	public static ItemStack global_microphone = ItemMechanics.signNewCustomItem(Material.getMaterial(401), (short)1, ChatColor.GOLD.toString() + "Global Messenger", ChatColor.GOLD.toString() + "Uses: " + ChatColor.GRAY.toString() + "1" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Sends a message to all players on " + ChatColor.UNDERLINE + "ALL SHARDS." + "," + ChatColor.GRAY + "Permanent Untradeable");
+	@SuppressWarnings("deprecation")
 	public static ItemStack global_delay_buff = ItemMechanics.signNewCustomItem(Material.getMaterial(368), (short)1, ChatColor.GOLD.toString() + "Global Chat Amplifier", ChatColor.GOLD + "Messages: " + ChatColor.GRAY + "500" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "50% Decreased Global Chat Delay for 500 messages." + "," + ChatColor.GRAY + "Permanent Untradeable");
 	public static ItemStack increased_drops = ItemMechanics.signNewCustomItem(Material.DIAMOND, (short)1, ChatColor.GOLD.toString() + "Global Loot Buff", ChatColor.GOLD.toString() + "Duration: " + ChatColor.GRAY + "30 minutes" + "," + ChatColor.GOLD.toString() + "Uses: " + ChatColor.GRAY + "1" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Increases all loot drop chances for everyone" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "by 20% across " + ChatColor.UNDERLINE + "ALL SHARDS." + "," + ChatColor.GRAY + "Permanent Untradeable");
 
 	public static ItemStack skeleton_horse = ItemMechanics.signNewCustomItem(Material.BONE, (short)3, ChatColor.GOLD.toString() + "Skeleton Horse Skin", ChatColor.GRAY.toString() + ChatColor.ITALIC + "Transforms your horse into a conjured skeletal beast." + "," + ChatColor.GRAY + "Permanent Untradeable");
 	public static ItemStack undead_horse = ItemMechanics.signNewCustomItem(Material.ROTTEN_FLESH, (short)3, ChatColor.GOLD.toString() + "Zombie Horse Skin", ChatColor.GRAY.toString() + ChatColor.ITALIC + "Transforms your horse into a demonic death charger." + "," + ChatColor.GRAY + "Permanent Untradeable");
 	public static ItemStack item_lore_tag = ItemMechanics.signNewCustomItem(Material.ENCHANTED_BOOK, (short)3, ChatColor.GOLD.toString() + "Item Lore Book", ChatColor.GOLD.toString() + "Uses: " + ChatColor.GRAY + "1" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Apply to any tradeable item to" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "add a custom line of lore text." + "," + ChatColor.GRAY + "Permanent Untradeable");
+	@SuppressWarnings("deprecation")
 	public static ItemStack item_ownership_tag = ItemMechanics.signNewCustomItem(Material.getMaterial(421), (short)3, ChatColor.GOLD.toString() + "Item Name Tag", ChatColor.GOLD.toString() + "Uses: " + ChatColor.GRAY + "1" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Apply to any weapon or armor piece" + "," +  ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "to give it a custom display name." + "," + ChatColor.GRAY + "Permanent Untradeable");
 	public static ItemStack profession_exp_boost = ItemMechanics.signNewCustomItem(Material.GOLDEN_CARROT, (short)3, ChatColor.GOLD.toString() + "Global Skill EXP Buff", ChatColor.GOLD.toString() + "Duration: " + ChatColor.GRAY + "30 minutes" + "," + ChatColor.GOLD.toString() + "Uses: " + ChatColor.GRAY + "1" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Increases ALL mining / fishing EXP for everyone" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "by 20% across " + ChatColor.UNDERLINE + "ALL SHARDS." + "," + ChatColor.GRAY + "Permanent Untradeable");
 
@@ -125,6 +130,7 @@ public class MerchantMechanics implements Listener {
 	public static ItemStack personal_clone = ItemMechanics.signNewCustomItem(Material.SPIDER_EYE, (short)1, ChatColor.GOLD.toString() + "Personal Clone", ChatColor.GOLD.toString() + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Creates a temporary clone of" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "yourself at your position." + "," + ChatColor.GRAY + "Permanent Untradeable");
 	// Spawns NPC of the player with their armor, disappears after X seconds in a puff of smoke, maybe have them say something cool?
 
+	@SuppressWarnings("deprecation")
 	public static ItemStack destruction_wand = ItemMechanics.signNewCustomItem(Material.getMaterial(76), (short)1, ChatColor.GOLD.toString() + "Destructo Wand", ChatColor.GOLD.toString() + ChatColor.GRAY.toString() + ChatColor.ITALIC + "The power of lightning and" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "explosions at the tip of your fingers." + "," + ChatColor.GRAY + "Permanent Untradeable");
 	// Fires lightning / fireballs, has a cooldown, they do no real damage.
 
@@ -226,10 +232,10 @@ public class MerchantMechanics implements Listener {
 		List<ItemStack> merchant_offer = new ArrayList<ItemStack>();
 		List<ItemStack> to_remove = new ArrayList<ItemStack>();
 		int t1_scraps = 0, t2_scraps = 0, t3_scraps = 0, t4_scraps = 0, t5_scraps = 0;
-		int t1_arrow = 0, t2_arrow = 0, t3_arrow = 0, t4_arrow = 0, t5_arrow = 0;
+		int t1_arrow = 0, t2_arrow = 0, t3_arrow = 0, t4_arrow = 0/*, t5_arrow = 0*/;
 		int t1_ore = 0, t2_ore = 0, t3_ore = 0, t4_ore = 0, t5_ore = 0;
-		int t1_pot = 0, t2_pot = 0, t3_pot = 0, t4_pot = 0, t5_pot = 0;
-		int t1_s_pot = 0, t2_s_pot = 0, t3_s_pot = 0, t4_s_pot = 0, t5_s_pot = 0;
+		int t1_pot = 0, t2_pot = 0, t3_pot = 0, t4_pot = 0/*, t5_pot = 0*/;
+		int t1_s_pot = 0, t2_s_pot = 0, t3_s_pot = 0, t4_s_pot = 0/*, t5_s_pot = 0*/;
 
 		for(ItemStack is : player_offer){
 			if(is == null || is.getType() == Material.AIR){continue;}
@@ -279,10 +285,10 @@ public class MerchantMechanics implements Listener {
 				}
 				if(tier == 5){
 					if(is.getDurability() < 1000){
-						t5_pot += is.getAmount();
+						//t5_pot += is.getAmount();
 					}
 					else if(is.getDurability() > 1000){
-						t5_s_pot += is.getAmount();
+						//t5_s_pot += is.getAmount();
 					}
 				}
 				to_remove.add(is);
@@ -352,7 +358,7 @@ public class MerchantMechanics implements Listener {
 					t4_arrow += is.getAmount();
 				}
 				if(tier == 5){
-					t5_arrow += is.getAmount();
+					//t5_arrow += is.getAmount();
 				}
 				to_remove.add(is);
 			}
@@ -360,7 +366,7 @@ public class MerchantMechanics implements Listener {
 
 		for(ItemStack is : to_remove){
 			player_offer.remove(is);
-			// Remove the item so it's not processed. We'll process scraps/arrows directly from above variables.
+			//  Remove the item so it's not processed. We'll process scraps/arrows directly from above variables.
 		}
 
 		for(ItemStack is : player_offer){
@@ -975,6 +981,7 @@ public class MerchantMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings({ "deprecation" })
 	@EventHandler
 	public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e){
 		Player pl = e.getPlayer();
@@ -1506,12 +1513,12 @@ public class MerchantMechanics implements Listener {
 		if(e.getRawSlot() <= 6 && e.getRawSlot() >= 0){
 			in_npc_shop.remove(pl.getName());
 
-			Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					pl.closeInventory();
 				}
-			}, 2L);
-
+			}.runTaskLaterAsynchronously(Main.plugin, 2L);
 
 			int price = (int)MountMechanics.getShardPrice(e.getCurrentItem());
 			int total_price = price * 64;
@@ -1547,12 +1554,12 @@ public class MerchantMechanics implements Listener {
 		if(e.getRawSlot() <= 17 && e.getRawSlot() >= 0){
 			in_npc_shop.remove(pl.getName());
 
-			Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					pl.closeInventory();
 				}
-			}, 2L);
-
+			}.runTaskLaterAsynchronously(Main.plugin, 2L);
 
 			int price = (int)Hive.getECASHPrice(e.getCurrentItem());
 			int total_price = price * 64;
@@ -1586,12 +1593,13 @@ public class MerchantMechanics implements Listener {
 
 			in_npc_shop.remove(pl.getName());
 
-			Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					pl.closeInventory();
 				}
-			}, 2L);
-
+			}.runTaskLaterAsynchronously(Main.plugin, 2L);
+			
 			int total_price = 100 * 64;
 			int price = 100;
 
@@ -1622,12 +1630,13 @@ public class MerchantMechanics implements Listener {
 		if(e.getRawSlot() == 1){
 			in_npc_shop.remove(pl.getName());
 
-			Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					pl.closeInventory();
 				}
-			}, 2L);
-
+			}.runTaskLaterAsynchronously(Main.plugin, 2L);
+			
 			int total_price = 1000 * 64;
 			int price = 1000;
 
@@ -1648,12 +1657,13 @@ public class MerchantMechanics implements Listener {
 		if(e.getRawSlot() == 2){
 			in_npc_shop.remove(pl.getName());
 
-			Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					pl.closeInventory();
 				}
-			}, 2L);
-
+			}.runTaskLaterAsynchronously(Main.plugin, 2L);
+			
 			int total_price = 200 * 64;
 			int price = 200;
 
@@ -1675,11 +1685,12 @@ public class MerchantMechanics implements Listener {
 		if(RealmMechanics.isOrbOfPeace(e.getCurrentItem()) && e.getRawSlot() == 0){
 			in_npc_shop.remove(pl.getName());
 
-			Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					pl.closeInventory();
 				}
-			}, 2L);
+			}.runTaskLaterAsynchronously(Main.plugin, 2L);
 
 			int total_price = 400 * 64;
 			int price = 400;
@@ -1700,6 +1711,7 @@ public class MerchantMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onMerchantEvent(InventoryClickEvent e){
 		// || !(in_npc_shop.contains(((Player)e.getWhoClicked()).getName()))
@@ -1789,7 +1801,7 @@ public class MerchantMechanics implements Listener {
 		if(e.isShiftClick() && slot_num >= 27 && !(e.isCancelled()) && !(e.getCurrentItem().getType() == Material.BOOK)){
 			e.setCancelled(true);
 			ItemStack to_move = e.getCurrentItem();
-			int to_move_slot = e.getRawSlot();
+			//int to_move_slot = e.getRawSlot();
 			int local_to_move_slot = e.getSlot();
 			int x = -1;
 			while(x < 26){
@@ -1842,10 +1854,10 @@ public class MerchantMechanics implements Listener {
 		}
 
 		x = -1;
-		boolean empty = false;
+		//boolean empty = false;
 		while(x < 26){
 			x++;
-			empty = true;
+			//empty = true;
 
 			if(new_offer.size() > 0){
 				if((x == 0 || x == 1 || x == 2 || x == 3 || x == 4 || x == 9 || x == 10 || x == 11 || x == 12 || x == 13 || x == 22 || x == 18 || x == 19 || x == 20 || x == 21)){
@@ -1856,7 +1868,7 @@ public class MerchantMechanics implements Listener {
 				ItemStack i = new_offer.get(index);
 				tradeWin.setItem(x, i);
 				new_offer.remove(index);
-				empty = false;
+				//empty = false;
 			}
 			/*if(empty == true){
 				 tradeWin.remove(x);
@@ -1960,6 +1972,7 @@ public class MerchantMechanics implements Listener {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerCloseInventory(InventoryCloseEvent e){
 		Player closer = (Player)e.getPlayer();
@@ -2000,6 +2013,7 @@ public class MerchantMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e){
 		Player closer = e.getPlayer();

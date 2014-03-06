@@ -30,7 +30,6 @@ import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
-import net.minecraft.server.v1_7_R1.EntityLightning;
 import net.minecraft.server.v1_7_R1.EntityLiving;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
@@ -489,6 +488,7 @@ public class EcashMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean isItemOwnershipTag(ItemStack is){
 		if(is != null && is.getType() == Material.getMaterial(421) && is.hasItemMeta() && is.getItemMeta().hasDisplayName() && (ChatColor.stripColor(is.getItemMeta().getDisplayName()).equalsIgnoreCase("Item Name Tag"))){
 			return true;
@@ -503,6 +503,7 @@ public class EcashMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean isItemLoreRemoval(ItemStack is){
 		if(is != null && is.getType() == Material.getMaterial(373) && is.hasItemMeta() && is.getItemMeta().hasDisplayName() && (ChatColor.stripColor(is.getItemMeta().getDisplayName()).equalsIgnoreCase("Item Lore Removal"))){
 			return true;
@@ -689,6 +690,7 @@ public class EcashMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void eatRollbackFood(PlayerInteractEvent e){
 		if((e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) && e.hasItem() && e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasLore() && e.getItem().getItemMeta().getLore().get(e.getItem().getItemMeta().getLore().size() - 1).equalsIgnoreCase(ChatColor.GREEN.toString() + "Rollback Appology")){
@@ -713,6 +715,7 @@ public class EcashMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onRollbackBackerClick(PlayerInteractEntityEvent e){
 		Player p = e.getPlayer();
@@ -730,6 +733,7 @@ public class EcashMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void controlEcashStorageContent(InventoryClickEvent e){
 		if(e.getInventory().getName().equalsIgnoreCase("E-Cash Storage")){
@@ -982,6 +986,7 @@ public class EcashMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerUseEnderPerl(PlayerInteractEvent e){
 		if(e.hasItem() && isGChatModifier(e.getItem())){
@@ -1066,6 +1071,7 @@ public class EcashMechanics implements Listener {
 		ent.pitch = (float) newPitch;
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onItemLoreEnter(AsyncPlayerChatEvent e){
 		Player pl = e.getPlayer();
@@ -1216,6 +1222,7 @@ public class EcashMechanics implements Listener {
 		item_name_change.remove(pl.getName());
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onItemLoreRemovalUse(InventoryClickEvent e){
 		final Player pl = (Player)e.getWhoClicked();
@@ -1279,6 +1286,7 @@ public class EcashMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onItemLoreUse(InventoryClickEvent e){
 		final Player pl = (Player)e.getWhoClicked();
@@ -1351,6 +1359,7 @@ public class EcashMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onItemNametagUse(InventoryClickEvent e){
 		final Player pl = (Player)e.getWhoClicked();
@@ -1414,6 +1423,7 @@ public class EcashMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onMusicSelect(InventoryClickEvent e){
 		final Player pl = (Player)e.getWhoClicked();
@@ -1453,6 +1463,7 @@ public class EcashMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
 	public void onMusicBoxPlace(BlockPlaceEvent e){
 		if(e.getBlock().getType() == Material.PORTAL){
@@ -1463,7 +1474,7 @@ public class EcashMechanics implements Listener {
 			e.setCancelled(true);
 			Player pl = e.getPlayer();
 			Block b = e.getBlock();
-			ItemStack mb = e.getItemInHand();
+			//ItemStack mb = e.getItemInHand(); // TODO - UNUSED
 
 			if(!DuelMechanics.isDamageDisabled(b.getLocation())){
 				pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " place the Mobile Jukebox outside of safe zones.");
@@ -1712,6 +1723,7 @@ public class EcashMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onFireworkWandUse(PlayerInteractEvent e){
 		if(e.hasItem()){
@@ -1836,7 +1848,7 @@ public class EcashMechanics implements Listener {
 
 				Firework fw = (Firework) pl.getWorld().spawnEntity(pl.getTargetBlock(null, 2).getLocation(), EntityType.FIREWORK);
 				FireworkMeta fwm = fw.getFireworkMeta();
-				Random r = new Random();   
+				//Random r = new Random();   // TODO - UNUSED
 				FireworkEffect effect = FireworkEffect.builder().flicker(true).withColor(c1).withFade(c2).with(t).trail(true).build();
 				fwm.addEffect(effect);
 				fwm.setPower(0);
@@ -1847,6 +1859,7 @@ public class EcashMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onDestructoWandUse(PlayerInteractEvent e){
 		if(e.hasItem()){
@@ -1897,8 +1910,8 @@ public class EcashMechanics implements Listener {
 				}
 				
 				if(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR){
-					Location target_loc = pl.getTargetBlock(null, 16).getLocation();
-					EntityLightning el = new EntityLightning(((CraftWorld) pl.getWorld()).getHandle(), target_loc.getX(), target_loc.getY(), target_loc.getZ(), true);
+					//Location target_loc = pl.getTargetBlock(null, 16).getLocation();
+					//EntityLightning el = new EntityLightning(((CraftWorld) pl.getWorld()).getHandle(), target_loc.getX(), target_loc.getY(), target_loc.getZ(), true);
 					// TODO: Fix fake lightning 1.7
 					/*Packet71Weather packet = new Packet71Weather(el);
 					((CraftPlayer) pl).getHandle().playerConnection.sendPacket(packet);

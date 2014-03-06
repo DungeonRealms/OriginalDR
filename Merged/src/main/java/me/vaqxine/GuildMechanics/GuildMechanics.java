@@ -755,7 +755,7 @@ public class GuildMechanics implements Listener {
 					String guild_handle = guild_data.get(1);
 					String color = guild_data.get(2);
 
-					Color c = Color.fromBGR(Integer.parseInt(color));
+					//Color c = Color.fromBGR(Integer.parseInt(color)); // TODO - UNUSED
 
 					pl.sendMessage(ChatColor.GRAY + "              *** " + ChatColor.DARK_AQUA + ChatColor.BOLD + "Guild Creation Confirmation" + ChatColor.GRAY + " ***");
 					pl.sendMessage(ChatColor.GRAY + "Guild Name: " + ChatColor.WHITE + guild_name);
@@ -778,6 +778,7 @@ public class GuildMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onItemDrop(PlayerDropItemEvent e){
 		Player pl = e.getPlayer();
@@ -787,6 +788,7 @@ public class GuildMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onColorPicker(InventoryClickEvent e){
 		if(!(e.getInventory().getName().equalsIgnoreCase("Guild Color Selector")) && !e.getWhoClicked().getOpenInventory().getTopInventory().getName().equalsIgnoreCase("Guild Color Selector")){
@@ -997,6 +999,7 @@ public class GuildMechanics implements Listener {
 		// TODO: Remind them what to do.
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e){
 		Player pl = (Player)e.getWhoClicked();
@@ -1362,11 +1365,7 @@ public class GuildMechanics implements Listener {
 	}
 
 	public static int getTotalOfficerCount(String g_name){
-		int count = 0;
-		for(String s : getGuildOfficers(g_name)){
-			count++;
-		}
-		return count;
+		return getGuildOfficers(g_name).size();
 	}
 	
 	/*public static int getAdjustedPlayerCount(){

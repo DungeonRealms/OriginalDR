@@ -55,6 +55,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 
 public class FatigueMechanics implements Listener {
@@ -79,19 +80,21 @@ public class FatigueMechanics implements Listener {
 		instance = this;
 		
 		// Nasty hack to prevent sprinting while starving.
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				blockSprinting();
 			}
-		}, 2 * 20L, 5L);
-
+		}.runTaskTimerAsynchronously(Main.plugin, 2 * 20L, 5L);
+		
 		// Handles energy regen event.
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				replenishEnergy();
 			}
-		}, 2 * 20L, 3L); 
-
+		}.runTaskTimerAsynchronously(Main.plugin, 2 * 20L, 3L);
+		
 		// Handles the 2 second 'delay' when you run out of energy.
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
@@ -100,7 +103,8 @@ public class FatigueMechanics implements Listener {
 		}, 2 * 20L, 25L); 
 
 		// Remove energy for sprinting. AND Handles starving player visual effects.
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				for(Player p : Bukkit.getOnlinePlayers()){
 					if(p.isSprinting()){
@@ -122,8 +126,8 @@ public class FatigueMechanics implements Listener {
 					//p.setFoodLevel(0);
 				}
 			}
-		}, 2 * 20L, 10L); 
-
+		}.runTaskTimerAsynchronously(Main.plugin, 2 * 20L, 10L);
+		
 		log.info("[FatigueMechanics] V1.0 has been enabled.");
 	}
 

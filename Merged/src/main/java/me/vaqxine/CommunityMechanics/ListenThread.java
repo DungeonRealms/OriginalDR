@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 public class ListenThread extends Thread {
 	InetAddress lAddress;
 
+	@SuppressWarnings("resource")
 	public void run() {
 		ServerSocket ss;
 		try {
@@ -20,7 +21,7 @@ public class ListenThread extends Thread {
 			ss = new ServerSocket(Hive.transfer_port, 200, lAddress);
 			CommunityMechanics.log.info("[CommunityMechanics] LISTENING on port " + Hive.transfer_port + " @ " + Bukkit.getIp() + " ...");
 
-
+			// TODO !!!!!!!!! INFINITE LOOP !!!!!!!!!!
 			while(true){
 				final Socket clientSocket = ss.accept();
 				String ip = clientSocket.getInetAddress().getHostAddress();
@@ -32,7 +33,6 @@ public class ListenThread extends Thread {
 				Thread process = new Thread(new ConnectProtocol(clientSocket));
 				process.start();
 			} 
-
 		} catch (IOException e) {
 			e.printStackTrace();
 			CommunityMechanics.log.info("Could not listen on port: " + Hive.transfer_port);

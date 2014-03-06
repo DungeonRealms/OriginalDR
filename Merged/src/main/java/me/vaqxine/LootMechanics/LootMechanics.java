@@ -60,6 +60,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class LootMechanics implements Listener {
 	static HashMap<String, List<String>> loot_templates = new HashMap<String, List<String>>();
@@ -110,18 +111,20 @@ public class LootMechanics implements Listener {
 			}
 		}, 14 * 20L, 2 * 20L);
 		
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				LootChestSpawnEvent();
 			}
-		}, 12 * 20L, 3 * 20L);
-
+		}.runTaskTimerAsynchronously(Main.plugin, 12 * 20L, 3 * 20L);
+		
 		if(Bukkit.getMotd().contains("US-0")){
-			Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					savelootSpawnerData();
 				}
-			}, 600 * 20L, 600 * 20L); // TODO: 600
+			}.runTaskTimerAsynchronously(Main.plugin, 600 * 20L, 600 * 20L);
 		}
 
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
@@ -201,6 +204,7 @@ public class LootMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void SpawnInstanceLootChests(String instance){ // TODO: Load loot chests / mobs in instances
 
 		if(!(InstanceMechanics.instance_loot.containsKey(instance))){ 
@@ -448,6 +452,7 @@ public class LootMechanics implements Listener {
 		// Store the data.
 	}
 
+	@SuppressWarnings("deprecation")
 	public void LootChestSpawnEvent(){
 		if(loot_chests_to_spawn.size() <= 0){return;}
 		String loot_template_s = "";
@@ -1045,6 +1050,7 @@ public class LootMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent e){
 		Player p = (Player)e.getPlayer();
@@ -1099,6 +1105,7 @@ public class LootMechanics implements Listener {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = false) // LOW == So shops don't say 'locked chest' on destruction.
 	public void onPlayerInteract(PlayerInteractEvent e){
 		if(e.hasBlock() && (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK)){

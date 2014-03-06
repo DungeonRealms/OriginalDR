@@ -360,14 +360,10 @@ public class PartyMechanics implements Listener {
 	}
 
 	public int getPartyCount(String party_name){
-		int count = 0;
 		if(!(party_map.containsKey(party_name))){
-			return count;
+			return 0;
 		}
-		for(String s : party_map.get(party_name)){
-			count++;
-		}
-		return count;
+		return party_map.get(party_name).size();
 	}
 
 	public static List<String> getPartyMembers(String player_name){
@@ -524,7 +520,7 @@ public class PartyMechanics implements Listener {
 			//api.getScoreboards().remove(api.getScoreboard(getPartyTitle(pl.getName())));
 
 			createParty(new_leader, Bukkit.getPlayer(new_leader), remaining_members);
-			Scoreboard new_ui = Bukkit.getPlayer(new_leader).getScoreboard();
+			//Scoreboard new_ui = Bukkit.getPlayer(new_leader).getScoreboard();
 
 			for(String s : remaining_members){ 
 				inv_party_map.put(s, new_leader);

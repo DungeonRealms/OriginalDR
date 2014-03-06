@@ -37,6 +37,7 @@ public class Halloween implements Listener {
 		halloween_candy = ItemGenerators.customGenerator("halloween_candy");
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPumpkinMaskRemove(InventoryClickEvent e){
 		if(e.isRightClick() && e.getCurrentItem() != null && (e.getCursor() == null || e.getCursor().getType() == Material.AIR)){
@@ -78,6 +79,7 @@ public class Halloween implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPumpkinMaskEquip(InventoryClickEvent e){
 		Player pl = (Player)e.getWhoClicked();
@@ -148,6 +150,7 @@ public class Halloween implements Listener {
 	}
 
 	//@EventHandler
+	@SuppressWarnings("deprecation")
 	public void onTrickOrTreat(PlayerInteractEntityEvent e){
 		if(e.getRightClicked() instanceof Player){
 			Player trader = (Player)e.getRightClicked();
@@ -274,6 +277,7 @@ public class Halloween implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onCandyEat(PlayerInteractEvent e){
 		Player pl = e.getPlayer();

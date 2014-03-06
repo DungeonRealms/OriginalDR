@@ -231,6 +231,7 @@ public class MoneyMechanics implements Listener {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Inventory legacyBankStringToInventory(final String p_name, String bank_string){
 		int bank_level = MoneyMechanics.bank_level.get(p_name);
 		int slots = getBankSlots(bank_level);
@@ -448,7 +449,7 @@ public class MoneyMechanics implements Listener {
 				}
 			}
 
-			Inventory inv = null;
+			//Inventory inv = null;
 			/*while(bank_content != null && bank_content.contains("@item@") && (bank_content.split("@item@").length > (getBankSlots(level) - 1)) && level < 5){
 				level++;
 			}*/
@@ -482,13 +483,13 @@ public class MoneyMechanics implements Listener {
 							if(page_slots == 63){
 								int start_slot = 54 - 1;
 								int end_slot = 63 - 1;
-								boolean empty = true;
+								//boolean empty = true;
 
 								start_slot--; // Offset by 1 since we add first.
 								while(start_slot < end_slot){
 									start_slot++;
 									if(page.getItem(start_slot) != null && page.getItem(start_slot).getType() != Material.AIR){
-										empty = false;
+										//empty = false;
 										break;
 									}
 								}
@@ -753,7 +754,7 @@ public class MoneyMechanics implements Listener {
 	}
 
 	public ItemStack markNotSplitting(ItemStack i){ // Mark the note being split as "Splitting" super annoying to do lol.
-		ItemStack iss = i;
+		//ItemStack iss = i;
 
 		List<String> new_lore = new ArrayList<String>();
 		for(String s : i.getItemMeta().getLore()){
@@ -971,13 +972,14 @@ public class MoneyMechanics implements Listener {
 		}
 	}
 
+	/*
 	private String insertCommas(String str)
 	{
 		if(str.length() < 4){
 			return str;
 		}
 		return insertCommas(str.substring(0, str.length() - 3)) + "," + str.substring(str.length() - 3, str.length());
-	}
+	} TODO - UNUSED */
 
 	public String getUpgradeAuthenticationCode(Player p){
 		if(bank_upgrade_codes.containsKey(p)){
@@ -1119,6 +1121,7 @@ public class MoneyMechanics implements Listener {
 		bank_contents.put(p.getName(), bank_pages);
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean giveGems(Player p, int Gems_worth){
 		if(Gems_worth > 64){
 			int space_needed = Math.round(Gems_worth / 64) + 1;
@@ -1734,6 +1737,7 @@ public class MoneyMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true) // false?
 	public void onPlayerPickupItemEvent(PlayerPickupItemEvent e){
 		Player p = e.getPlayer();
@@ -1771,6 +1775,7 @@ public class MoneyMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onGemPouchStack(InventoryClickEvent e){
 		Player pl = (Player)e.getWhoClicked();
@@ -1866,6 +1871,7 @@ public class MoneyMechanics implements Listener {
 		}
 	}*/
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onGemPouchWithdraw(InventoryClickEvent e){
 		Player pl = (Player)e.getWhoClicked();
@@ -1903,6 +1909,7 @@ public class MoneyMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onGemPouchDeposit(InventoryClickEvent e){
 		Player pl = (Player)e.getWhoClicked();
@@ -1948,6 +1955,7 @@ public class MoneyMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerClickBank(InventoryClickEvent e){
 		final Player p = (Player)e.getWhoClicked();
@@ -2113,6 +2121,7 @@ public class MoneyMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerClickInventory(InventoryClickEvent event){
 		if(!(event.getWhoClicked() instanceof Player)){
@@ -2290,7 +2299,7 @@ public class MoneyMechanics implements Listener {
 
 			for(Entry<Integer, ? extends ItemStack> data : p.getInventory().all(Material.INK_SACK).entrySet()){
 				ItemStack is = data.getValue();
-				int index = data.getKey();
+				//int index = data.getKey();
 
 				if(gems_left_to_give <= 0){
 					break;

@@ -114,6 +114,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 
 public class RealmMechanics implements Listener {
@@ -751,6 +752,7 @@ public class RealmMechanics implements Listener {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	public void loadMatShop(){
 		mat_shop_1.setItem(0, new ItemStack(Material.DIRT, 1));
 		mat_shop_1.setItem(1, new ItemStack(Material.SAND, 3));
@@ -1107,6 +1109,7 @@ public class RealmMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean isOrbOfFlight(ItemStack is){
 		//public static ItemStack orb_of_peace = ItemMechanics.signNewCustomItem(Material.ENDER_PEARL, (short)1, ChatColor.AQUA.toString() + 
 		//	"" + "Orb of Peace", ChatColor.GRAY.toString() + "Turns realm non-PVP for 1 hour(s).");
@@ -1354,7 +1357,7 @@ public class RealmMechanics implements Listener {
 
 		if(!(orig_w.getName().equalsIgnoreCase(main_world_name))){
 			if(saved_locations.containsKey(p.getName())){
-				final String pname = p.getName();
+				//final String pname = p.getName();
 				Location safe = saved_locations.get(p.getName());
 				p.teleport(safe);
 				saved_locations.remove(p.getName());
@@ -1545,6 +1548,7 @@ public class RealmMechanics implements Listener {
 		return;
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlaceEvent(BlockPlaceEvent e){
 		Player p = e.getPlayer();
@@ -1659,6 +1663,7 @@ public class RealmMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings({ "deprecation", "static-access" })
 	@EventHandler
 	public void onPlayerEnterAmount(AsyncPlayerChatEvent e){
 		if(!(current_item_being_bought.containsKey(e.getPlayer().getName()))){
@@ -1832,6 +1837,7 @@ public class RealmMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerCreativeBlockBreak(PlayerInteractEvent e){
 		Player p = e.getPlayer();
@@ -2013,6 +2019,7 @@ public class RealmMechanics implements Listener {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onOrbUse(PlayerInteractEvent e){
 		Player pl = e.getPlayer();
@@ -2113,6 +2120,7 @@ public class RealmMechanics implements Listener {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent e){
 		final Player p = e.getPlayer();
@@ -2587,6 +2595,7 @@ public class RealmMechanics implements Listener {
 		return ItemMechanics.signCustomItem(m, meta_data, name, desc);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void removePistonHeads(Player pl){
 		for(ItemStack is : pl.getInventory().getContents()){
 			if(is != null && is.getType() == Material.PISTON_MOVING_PIECE){
@@ -2596,6 +2605,7 @@ public class RealmMechanics implements Listener {
 		pl.updateInventory();
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR) // After location is loaded.
 	public void onPlayerJoin(PlayerJoinEvent e){
 		final Player p = e.getPlayer();
@@ -2865,6 +2875,7 @@ public class RealmMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void subtractMoney(Player p, int amount){
 		Inventory i = p.getInventory();
 		int paid_off = 0;
@@ -3148,17 +3159,19 @@ public class RealmMechanics implements Listener {
 		PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata(entity.getEntityId(), dw, false);
 		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 
-		Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				DataWatcher dwReal = ((CraftLivingEntity)entity).getHandle().getDataWatcher();
 				dw.watch(8, dwReal.getByte(8));
 				PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata(entity.getEntityId(), dw, false);
 				((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 			}
-		}, duration);
+		}.runTaskLaterAsynchronously(Main.plugin, duration);
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onItemDropFromInv(InventoryClickEvent e){
 		Player p = (Player)e.getWhoClicked();
@@ -3308,6 +3321,7 @@ public class RealmMechanics implements Listener {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void MaterialShopInventoryEvent(InventoryClickEvent e){
 		if(!(e.getWhoClicked() instanceof Player)){
@@ -3328,8 +3342,8 @@ public class RealmMechanics implements Listener {
 		if(e.getRawSlot() <= 53){
 			e.setCancelled(true);
 			if(e.getCurrentItem() != null){
-				Material m = e.getCurrentItem().getType();
-				String format_name = getFormalMatName(m, e.getCurrentItem().getDurability());
+				//Material m = e.getCurrentItem().getType();
+				//String format_name = getFormalMatName(m, e.getCurrentItem().getDurability());
 				double price = ShopMechanics.getPrice(e.getCurrentItem());
 				double ecash_price = Hive.getECASHPrice(e.getCurrentItem());
 
@@ -3437,6 +3451,7 @@ public class RealmMechanics implements Listener {
 		}		
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInventoryClickEvent(InventoryClickEvent e){
 		Player p = (Player)e.getWhoClicked();
@@ -3546,11 +3561,12 @@ public class RealmMechanics implements Listener {
 			p.sendMessage(ChatColor.LIGHT_PURPLE + "You have left " + ChatColor.BOLD + "YOUR" + ChatColor.LIGHT_PURPLE + " realm.");
 		}
 
-		Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				p.closeInventory();
 			}
-		}, 2L);
+		}.runTaskLaterAsynchronously(Main.plugin, 2L);
 		saved_locations.remove(p.getName());
 
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
@@ -3774,12 +3790,14 @@ public class RealmMechanics implements Listener {
 			in_realm.subtract(0, 1, 0).getBlock().setType(Material.PORTAL);
 			in_realm.add(0, 1, 0);
 
-			Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					p.closeInventory();
 				}
-			}, 2L);
-			final String f_realm_name = to_realm.getName();
+			}.runTaskLaterAsynchronously(Main.plugin, 2L);
+			
+			//final String f_realm_name = to_realm.getName();
 
 
 			if(!(p.getName().equalsIgnoreCase(to_realm.getName()))){
@@ -3821,11 +3839,12 @@ public class RealmMechanics implements Listener {
 				}
 
 				p.teleport(home);
-				Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+				new BukkitRunnable(){
+					@Override
 					public void run() {
 						p.closeInventory();
 					}
-				}, 2L);
+				}.runTaskLaterAsynchronously(Main.plugin, 2L);
 				current_item_being_bought.remove(p.getName());
 
 				e.setCancelled(true);
@@ -3864,7 +3883,7 @@ public class RealmMechanics implements Listener {
 
 
 	public void fixChunks(final World w){
-		int x = 0;
+		//int x = 0;
 
 		if(w == null){
 			return;
@@ -4000,6 +4019,7 @@ public class RealmMechanics implements Listener {
 		return 0;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void setRealmTier(final Player p, final int new_tier){
 		if(!(isWorldLoaded(p.getName()))){
 			p.sendMessage(ChatColor.RED + "Your realm must be loaded locally to modify its size.");
@@ -4106,6 +4126,7 @@ public class RealmMechanics implements Listener {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	public static boolean isThereAPortalNear(Block b, int maxradius) {
 		BlockFace[] faces = {BlockFace.UP, BlockFace.NORTH, BlockFace.EAST};
 		BlockFace[][] orth = {{BlockFace.NORTH, BlockFace.EAST}, {BlockFace.UP, BlockFace.EAST}, {BlockFace.NORTH, BlockFace.UP}};
@@ -4190,6 +4211,7 @@ public class RealmMechanics implements Listener {
 		t.start();
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void realmHandler(final Player p, String realm_name){
 		if(realm_name.contains("§")){
 			String color_code_to_remove = realm_name.substring(0, realm_name.indexOf("�") + 2);
@@ -4206,11 +4228,12 @@ public class RealmMechanics implements Listener {
 			}
 			final String safe_realm_name = realm_name;
 
-			Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					ready_worlds.add(safe_realm_name);
 				}
-			}, 100L);
+			}.runTaskLaterAsynchronously(Main.plugin, 100L);
 
 			return;
 		}
@@ -4309,12 +4332,13 @@ public class RealmMechanics implements Listener {
 
 			final String safe_realm_name = p.getName();
 
-			Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					ready_worlds.add(safe_realm_name);
 				}
-			}, 100L);
-
+			}.runTaskLaterAsynchronously(Main.plugin, 100L);
+			
 			return;
 		}
 
@@ -4333,11 +4357,12 @@ public class RealmMechanics implements Listener {
 
 			final String safe_realm_name = realm_name;
 
-			Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					ready_worlds.add(safe_realm_name);
 				}
-			}, 100L);
+			}.runTaskLaterAsynchronously(Main.plugin, 100L);
 
 			realm_tier.put(p.getName(), 1);
 
@@ -4587,6 +4612,7 @@ public class RealmMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static void unzipArchive(File archive, File outputDir) {
 		try {
 			ZipFile zipfile = new ZipFile(archive);
@@ -4644,6 +4670,7 @@ public class RealmMechanics implements Listener {
 
 
 
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 
 		if(cmd.getName().equalsIgnoreCase("realm")){

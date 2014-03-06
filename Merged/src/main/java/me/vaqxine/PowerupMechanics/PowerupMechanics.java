@@ -171,6 +171,7 @@ implements Listener
 				final Location final_l = l;
 
 				Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+					@SuppressWarnings("deprecation")
 					public void run() {
 
 						Location location = final_l;

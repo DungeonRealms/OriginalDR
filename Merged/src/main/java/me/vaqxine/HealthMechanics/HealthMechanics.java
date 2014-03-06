@@ -472,11 +472,11 @@ public class HealthMechanics implements Listener {
 	public void onPlayerDeathEvent(PlayerDeathEvent e){
 		//log.info("DEATH - " + e.getEntity().getLastDamageCause().getCause().name());
 		final Player p = (Player)e.getEntity();
-		ItemStack in_hand = Hive.player_item_in_hand.get(p.getName());
+		/*ItemStack in_hand = Hive.player_item_in_hand.get(p.getName());
 		String in_hand_data = null;
 		if(in_hand != null){
 			in_hand_data = ItemMechanics.getDamageData(in_hand);
-		}
+		} TODO - UNUSED*/ 
 
 		p.setExp(0.0F);
 		p.setLevel(0);
@@ -664,7 +664,7 @@ public class HealthMechanics implements Listener {
 	public static boolean hasCustomName(ItemStack i) {
 		try {
 			try {
-				CraftItemStack css = (CraftItemStack) i;
+				//CraftItemStack css = (CraftItemStack) i; // TODO UNUSED
 				String fake_var = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getString("Name");
 				// log.info(fake_var);
 				if (fake_var != null && fake_var.length() > 0) {
@@ -1038,6 +1038,7 @@ public class HealthMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerClickEntity(PlayerInteractEntityEvent e){
 		Player pl = e.getPlayer();
@@ -1057,6 +1058,7 @@ public class HealthMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerRightClickEquip(PlayerInteractEvent e){
 		if(e.hasItem() && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)){
@@ -1107,7 +1109,7 @@ public class HealthMechanics implements Listener {
 	}
 
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "deprecation" })
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onInventoryClickEvent(InventoryClickEvent e){
 		if(e.getSlotType() != SlotType.ARMOR && !(e.isShiftClick())){return;}

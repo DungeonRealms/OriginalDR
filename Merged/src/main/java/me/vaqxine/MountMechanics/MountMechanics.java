@@ -26,7 +26,6 @@ import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import net.minecraft.server.v1_7_R1.EntityHorse;
-import net.minecraft.server.v1_7_R1.EntityInsentient;
 import net.minecraft.server.v1_7_R1.GenericAttributes;
 
 import org.bukkit.Bukkit;
@@ -37,7 +36,6 @@ import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftHorse;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
@@ -75,6 +73,7 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 // .TODO: Code death mechanics for dropping items of mule
 // .TODO: Code upgrade mechanics
@@ -106,8 +105,11 @@ public class MountMechanics implements Listener {
 	public static ItemStack t4_horse_mount = ItemMechanics.signCustomItem(Material.SADDLE, (short)1, ChatColor.LIGHT_PURPLE.toString() + "Knight's Horse Mount", ChatColor.RED.toString() + "Speed: 160%" + "," + ChatColor.RED.toString() + "Jump: 110%" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "A fast well-bred horse." + "," + ChatColor.GRAY.toString() + "Permanent Untradeable");
 	public static ItemStack t5_horse_mount = ItemMechanics.signCustomItem(Material.SADDLE, (short)1, ChatColor.YELLOW.toString() + "War Stallion Mount", ChatColor.RED.toString() + "Speed: 200%" + "," + ChatColor.RED.toString() + "Jump: 120%" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "A trusty powerful steed." + "," + ChatColor.GRAY.toString() + "Permanent Untradeable");
 
+	@SuppressWarnings("deprecation")
 	public static ItemStack t3_horse_armor = ItemMechanics.signCustomItem(Material.getMaterial(417), (short)1, ChatColor.AQUA.toString() + "Iron Horse Armor", ChatColor.RED.toString() + "Speed: 140%" + "," + ChatColor.RED.toString() + "Jump: 105%" + "," + ChatColor.RED.toString() + ChatColor.BOLD + "REQ:" + ChatColor.GREEN.toString() + " Old Horse Mount" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "A well made Iron-plated armor piece for your mount.");
+	@SuppressWarnings("deprecation")
 	public static ItemStack t4_horse_armor = ItemMechanics.signCustomItem(Material.getMaterial(419), (short)1, ChatColor.LIGHT_PURPLE.toString() + "Diamond Horse Armor", ChatColor.RED.toString() + "Speed: 160%" + "," + ChatColor.RED.toString() + "Jump: +110%" + "," + ChatColor.RED.toString() + ChatColor.BOLD.toString() + "REQ:" + ChatColor.AQUA + " Traveler's Horse Mount" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Powerful brilliant diamond horse armor.");
+	@SuppressWarnings("deprecation")
 	public static ItemStack t5_horse_armor = ItemMechanics.signCustomItem(Material.getMaterial(418), (short)1, ChatColor.YELLOW.toString() + "Gold Horse Armor", ChatColor.RED.toString() + "Speed: +200%" + "," + ChatColor.RED.toString() + "Jump: +120%" + "," + ChatColor.RED.toString() + ChatColor.BOLD.toString() + "REQ:" + ChatColor.LIGHT_PURPLE.toString() + " Knight's Horse Mount" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "A legendary forged intricate golden armour piece.");
 
 	ItemStack divider = new ItemStack(Material.THIN_GLASS, 1);
@@ -196,6 +198,7 @@ public class MountMechanics implements Listener {
 		transparent.add((byte)156);
 
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
+			@SuppressWarnings("static-access")
 			public void run() {
 				for(Entry<String, Integer> data : summon_mount.entrySet()){
 					final String p_name = data.getKey();
@@ -700,6 +703,7 @@ public class MountMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean isMountArmor(ItemStack is){
 		if(is != null && (is.getTypeId() == 417 || is.getTypeId() == 418 || is.getTypeId() == 419) && is.hasItemMeta() && is.getItemMeta().hasDisplayName()){
 			return true;
@@ -774,10 +778,12 @@ public class MountMechanics implements Listener {
 		return mule_tier; // 0 = no mule.
 	}
 
+	/*
 	private boolean walkTo(LivingEntity livingEntity, double x, double y, double z, float speed) {
 		return ((EntityInsentient) ((CraftLivingEntity)livingEntity).getHandle()).getNavigation().a(x, y, z, 1.95F);
-	}
+	} TODO - UNUSED */
 
+	@SuppressWarnings("deprecation")
 	public void changeStickToSaddle(Player pl){
 		for(ItemStack is : pl.getInventory().getContents()){
 			if(is == null || is.getType() == Material.AIR){
@@ -791,6 +797,7 @@ public class MountMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public void changeSaddleToStick(Player pl){
 		for(ItemStack is : pl.getInventory().getContents()){
 			if(is == null || is.getType() == Material.AIR){
@@ -885,6 +892,7 @@ public class MountMechanics implements Listener {
 		}	
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent e){
 		final Player p = e.getPlayer();
@@ -1006,6 +1014,7 @@ public class MountMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e){
 		Player pl = (Player)e.getWhoClicked();
@@ -1100,13 +1109,14 @@ public class MountMechanics implements Listener {
 				}
 			}
 
-			Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable(){
+				@Override
 				public void run() {
 					pl.closeInventory();
 					in_shop.remove(pl.getName());
 				}
-			}, 2L);
-
+			}.runTaskLaterAsynchronously(Main.plugin, 2L);
+			
 			int price = ShopMechanics.getPrice(e.getCurrentItem());
 			String i_name = e.getCurrentItem().getItemMeta().getDisplayName();
 
@@ -1232,6 +1242,7 @@ public class MountMechanics implements Listener {
 			}
 	}*/
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e){
 		if(e.hasItem() && e.getItem().getType() == Material.CARROT_STICK){

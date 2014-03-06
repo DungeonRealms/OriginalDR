@@ -44,6 +44,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 
 //TODO: Add combat support, if you get hit, close window.
@@ -71,11 +72,12 @@ public class TradeMechanics implements Listener {
 		im.setDisplayName(" ");
 		divider.setItemMeta(im);
 
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				doOverheadEffect();
 			}
-		}, 2 * 20L, 20L);
+		}.runTaskTimerAsynchronously(Main.plugin, 2 * 20L, 20L);
 
 		//gray_button = setIinfo(gray_button, ChatColor.YELLOW.toString() + "Click to ACCEPT Trade", "");
 		//reen_button = setIinfo(green_button, ChatColor.GREEN.toString() + "Trade ACCEPTED.", ChatColor.GRAY.toString() + "Modify the trade to unaccept.");
@@ -436,6 +438,7 @@ public class TradeMechanics implements Listener {
 		return title += rPName;
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerDropItem(PlayerDropItemEvent e){
 		final Player trader = e.getPlayer();
@@ -625,9 +628,6 @@ public class TradeMechanics implements Listener {
 				}
 			}, 2 * 20L);
 		}
-		else if(tradie == null){
-			return;
-		}
 	}
 
 	@EventHandler
@@ -783,6 +783,7 @@ public class TradeMechanics implements Listener {
 		trade_partner.sendMessage(ChatColor.YELLOW + "Trade cancelled by " + ChatColor.BOLD.toString() + closer.getName() + ChatColor.YELLOW.toString() + ".");
 
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+			@SuppressWarnings("deprecation")
 			public void run() {
 				trade_partner.updateInventory();
 				closer.updateInventory();
@@ -833,6 +834,7 @@ public class TradeMechanics implements Listener {
 		return is;
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) // Was Normal / Low
 	public void onPlayerInventoryClick(InventoryClickEvent e){
 		if(!(e.getWhoClicked().getType() == EntityType.PLAYER)){return;}
@@ -973,7 +975,7 @@ public class TradeMechanics implements Listener {
 			if(to_move == null){
 				return;
 			}
-			int to_move_slot = e.getRawSlot();
+			//int to_move_slot = e.getRawSlot();
 			int local_to_move_slot = e.getSlot();
 			int x = -1;
 			if(left_side == true){

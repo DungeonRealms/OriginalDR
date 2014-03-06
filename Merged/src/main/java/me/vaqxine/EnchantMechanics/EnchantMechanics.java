@@ -391,6 +391,7 @@ public class EnchantMechanics implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(final PlayerJoinEvent e){
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+			@SuppressWarnings("deprecation")
 			public void run() {    	        	
 				//Inventory inv = e.getPlayer().getInventory();
 				List<ItemStack> to_glow = new ArrayList<ItemStack>();
@@ -466,6 +467,7 @@ public class EnchantMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onScrollUse(InventoryClickEvent e){
 		if(e.getCursor() == null){return;}
@@ -513,7 +515,7 @@ public class EnchantMechanics implements Listener {
 			
         	Firework fw = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
         	FireworkMeta fwm = fw.getFireworkMeta();
-        	Random r = new Random();   
+        	//Random r = new Random(); TODO - UNUSED
         	FireworkEffect effect = FireworkEffect.builder().flicker(false).withColor(Color.GREEN).withFade(Color.GREEN).with(Type.STAR).trail(true).build();
         	fwm.addEffect(effect);
         	fwm.setPower(0);
@@ -605,7 +607,7 @@ public class EnchantMechanics implements Listener {
 				//p.getWorld().spawnParticle(p.getLocation().add(0, 8, 0), Particle.FIREWORKS_SPARK, 0.75F, 50);
 	        	Firework fw = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
 	        	FireworkMeta fwm = fw.getFireworkMeta();
-	        	Random r = new Random();   
+	        	//Random r = new Random();   TODO - UNUSED
 	        	FireworkEffect effect = FireworkEffect.builder().flicker(false).withColor(Color.YELLOW).withFade(Color.YELLOW).with(Type.BURST).trail(true).build();
 	        	fwm.addEffect(effect);
             	fwm.setPower(0);
@@ -645,6 +647,7 @@ public class EnchantMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e){
 		Player p = e.getPlayer();

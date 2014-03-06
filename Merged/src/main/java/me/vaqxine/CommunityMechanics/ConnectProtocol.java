@@ -54,10 +54,11 @@ public class ConnectProtocol implements Runnable {
 			out.println(message);
 			out.close();
 		} catch (IOException e) {
+			
+		} finally {
 			if(out != null){
 				out.close();
 			}
-			return;
 		}
 	}
 
@@ -126,7 +127,7 @@ public class ConnectProtocol implements Runnable {
 						out = new PrintWriter(kkSocket.getOutputStream(), true);
 
 						out.println("[crash]" + Hive.MOTD.substring(0, Hive.MOTD.indexOf(" ")));
-
+						kkSocket.close();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -195,7 +196,7 @@ public class ConnectProtocol implements Runnable {
 						out = new PrintWriter(kkSocket.getOutputStream(), true);
 
 						out.println("[crash]" + Hive.MOTD.substring(0, Hive.MOTD.indexOf(" ")));
-
+						kkSocket.close();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -361,15 +362,8 @@ public class ConnectProtocol implements Runnable {
 				}
 				
 				if(inputLine.startsWith("[toggleshard]")){
-					// [globalmessage]player_string@from_server:msg
-					if(Hive.no_shard == true){
-						Hive.no_shard = false;
-						return;
-					}
-					if(Hive.no_shard == false){
-						Hive.no_shard = true;
-						return;
-					}
+					// [globalmessage]player_string@from_server:msg TODO Wtf?
+					Hive.no_shard = !Hive.no_shard;
 				}
 
 				if(inputLine.startsWith("[crash]")){
@@ -570,6 +564,7 @@ public class ConnectProtocol implements Runnable {
 					OfflinePlayer op = Bukkit.getServer().getOfflinePlayer(p_name);
 					
 					if(op.isOp()){
+						in.close();
 						return;
 					}
 					
@@ -594,6 +589,7 @@ public class ConnectProtocol implements Runnable {
 					OfflinePlayer op = Bukkit.getServer().getOfflinePlayer(p_name);
 					
 					if(op.isOp()){
+						in.close();
 						return;
 					}
 					
@@ -616,6 +612,7 @@ public class ConnectProtocol implements Runnable {
 					String g_name = inputLine.substring(inputLine.indexOf("]") + 1, inputLine.length());
 
 					if(!(GuildMechanics.guild_map.containsKey(g_name))){
+						in.close();
 						return; // Nothing to do here.
 					} 
 
@@ -641,6 +638,7 @@ public class ConnectProtocol implements Runnable {
 					String bio = inputLine.substring(inputLine.indexOf("$") + 1, inputLine.lastIndexOf("$"));
 
 					if(!(GuildMechanics.guild_map.containsKey(g_name))){
+						in.close();
 						return; // Nothing to do here.
 					}
 
@@ -653,6 +651,7 @@ public class ConnectProtocol implements Runnable {
 					String motd = inputLine.substring(inputLine.indexOf("$") + 1, inputLine.lastIndexOf("$"));
 
 					if(!(GuildMechanics.guild_map.containsKey(g_name))){
+						in.close();
 						return; // Nothing to do here.
 					}
 
@@ -666,6 +665,7 @@ public class ConnectProtocol implements Runnable {
 					String p_inviter = inputLine.substring(inputLine.indexOf(":") + 1, inputLine.length());
 
 					if(!(GuildMechanics.guild_map.containsKey(g_name))){
+						in.close();
 						return; // Nothing to do here.
 					}
 
@@ -687,6 +687,7 @@ public class ConnectProtocol implements Runnable {
 					int rank = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.length()));
 
 					if(!(GuildMechanics.guild_map.containsKey(g_name))){
+						in.close();
 						return; // Nothing to do here.
 					}
 
@@ -713,6 +714,7 @@ public class ConnectProtocol implements Runnable {
 					int rank = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.length()));
 
 					if(!(GuildMechanics.guild_map.containsKey(g_name))){
+						in.close();
 						return; // Nothing to do here.
 					}
 
@@ -738,6 +740,7 @@ public class ConnectProtocol implements Runnable {
 					String g_name = inputLine.substring(inputLine.indexOf(",") + 1, inputLine.length());
 
 					if(!(GuildMechanics.guild_map.containsKey(g_name))){
+						in.close();
 						return; // Nothing to do here.
 					}
 
@@ -759,6 +762,7 @@ public class ConnectProtocol implements Runnable {
 					String p_kicker = inputLine.substring(inputLine.indexOf(":") + 1, inputLine.length());
 
 					if(!(GuildMechanics.guild_map.containsKey(g_name))){
+						in.close();
 						return; // Nothing to do here.
 					}
 
@@ -782,6 +786,7 @@ public class ConnectProtocol implements Runnable {
 					GuildMechanics.guild_member_server.remove(p_name);
 
 					if(!(GuildMechanics.guild_map.containsKey(g_name))){
+						in.close();
 						return; // Nothing to do here.
 					}
 
@@ -821,6 +826,7 @@ public class ConnectProtocol implements Runnable {
 					// Set local data so that tab list will show them as online another server.
 
 					if(!(GuildMechanics.guild_map.containsKey(g_name))){
+						in.close();
 						return; // Nothing to do here.
 					}
 
@@ -853,6 +859,7 @@ public class ConnectProtocol implements Runnable {
 					String g_name = inputLine.substring(1, inputLine.indexOf("/"));
 
 					if(!(GuildMechanics.guild_map.containsKey(g_name))){
+						in.close();
 						return; // Nothing to do here.
 					}
 

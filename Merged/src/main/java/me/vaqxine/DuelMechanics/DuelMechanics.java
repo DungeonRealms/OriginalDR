@@ -59,6 +59,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 
 import com.sk89q.worldedit.BlockVector;
@@ -83,6 +84,7 @@ public class DuelMechanics implements Listener {
 	public static ItemStack gray_button = ItemMechanics.signNewCustomItem(Material.INK_SACK, (short)8, ChatColor.YELLOW.toString() + "Click to ACCEPT Duel Stake", "");
 	public static ItemStack green_button = ItemMechanics.signNewCustomItem(Material.INK_SACK, (short)10, ChatColor.GREEN.toString() + "Duel ACCEPTED.", ChatColor.GRAY.toString() + "Modify the stake to unaccept.");
 
+	@SuppressWarnings("deprecation")
 	public static ItemStack t0_armor_icon = ItemMechanics.signNewCustomItem(Material.getMaterial(111), (short)0, ChatColor.WHITE.toString() + "Armor Tier Limit", ChatColor.RED + "Tier 0 [NO ARMOR]" 
 			+ "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor in this duel.");
 	
@@ -102,6 +104,7 @@ public class DuelMechanics implements Listener {
 			+ "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor above " + ChatColor.YELLOW + ChatColor.UNDERLINE + "TIER 5");
 	
 	
+	@SuppressWarnings("deprecation")
 	public static ItemStack t0_weapon_icon = ItemMechanics.signNewCustomItem(Material.getMaterial(397), (short)3, ChatColor.WHITE.toString() + "Weapon Tier Limit", ChatColor.RED + "Tier 0 [FISTS]" 
 			+ "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapons in this duel.");
 	
@@ -153,13 +156,14 @@ public class DuelMechanics implements Listener {
 			}
 		}, 40L, 20L); 
 
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				warned_players.clear();
 				fakePlayerMoveEvent();
 			}
-		}, 5 * 20L, 30L);
-
+		}.runTaskTimerAsynchronously(Main.plugin, 5 * 20L, 30L);
+		
 		log.info("[DuelMechanics] has been enabled.");
 	}
 
@@ -482,6 +486,7 @@ public class DuelMechanics implements Listener {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public ItemStack cycleArmorIcon(ItemStack is){
 		// is = The previous armor icon.
 		int previous_tier = ItemMechanics.getItemTier(is);
@@ -506,6 +511,7 @@ public class DuelMechanics implements Listener {
 		return t0_armor_icon; // Default.
 	}
 
+	@SuppressWarnings("deprecation")
 	public ItemStack cycleWeaponIcon(ItemStack is){
 		// is = The previous armor icon.
 		int previous_tier = ItemMechanics.getItemTier(is);
@@ -738,6 +744,7 @@ public class DuelMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onSpoilersMenuCloseEvent(InventoryCloseEvent e){
 		if(!e.getInventory().getName().equalsIgnoreCase("Spoils")){return;}
@@ -758,6 +765,7 @@ public class DuelMechanics implements Listener {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInventoryCloseEvent(InventoryCloseEvent e){
 		Player closer = (Player) e.getPlayer();
@@ -945,6 +953,7 @@ public class DuelMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerInventoryClick(InventoryClickEvent e){
 		if(!(e.getWhoClicked().getType() == EntityType.PLAYER)){return;}
@@ -1288,7 +1297,7 @@ public class DuelMechanics implements Listener {
 		Player p = e.getPlayer();
 		if(!(duel_map.containsKey(p.getName()))){return;}
 		Location l = e.getTo();
-		Location safe_loc = e.getFrom();
+		//Location safe_loc = e.getFrom(); TODO - UNUSED
 		Location duel_start_area = duel_start_location.get(p.getName());
 
 		/*if(!isDamageDisabled(l)){
@@ -1444,6 +1453,7 @@ public class DuelMechanics implements Listener {
 
 		if(in_duel_window.contains(attacked.getName())){
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+				@SuppressWarnings("deprecation")
 				public void run() {
 					attacked.updateInventory();
 					attacked.closeInventory();
@@ -1469,6 +1479,7 @@ public class DuelMechanics implements Listener {
 				final Player p_partner = Bukkit.getPlayer(partner);
 				p_partner.sendMessage(ChatColor.RED + "Your opponent took damage before the duel was accepted - " + ChatColor.BOLD + "DUEL CANCELLED");
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+					@SuppressWarnings("deprecation")
 					public void run() {
 						p_partner.closeInventory();
 						p_partner.updateInventory();
@@ -1488,6 +1499,7 @@ public class DuelMechanics implements Listener {
 				String attacker_name = duel_map.get(attacked.getName());
 
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+					@SuppressWarnings("deprecation")
 					public void run() {
 						attacked.updateInventory();
 						attacked.closeInventory();
@@ -1747,9 +1759,10 @@ public class DuelMechanics implements Listener {
 	}
 
 	public static void setPvPOff(final World w) { 	
-		Bukkit.getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
-				int dimensions = RealmMechanics.getRealmSizeDimensions(RealmMechanics.getRealmTier(w.getName()));
+				//int dimensions = RealmMechanics.getRealmSizeDimensions(RealmMechanics.getRealmTier(w.getName())); // TODO - UNUSED
 				if(wg.getGlobalRegionManager().get(w).hasRegion(w.getName() + "-" + "realm")){
 					return;
 				}
@@ -1763,8 +1776,8 @@ public class DuelMechanics implements Listener {
 				pr.setFlag(DefaultFlag.BUILD, State.ALLOW);
 				wg.getGlobalRegionManager().get(w).addRegion(pr);
 			}
-		}, 1L);
-
+		}.runTaskLaterAsynchronously(Main.plugin, 1L);
+		
 	}
 
 	public static void setPvPOn(World w) {
@@ -1942,8 +1955,8 @@ public class DuelMechanics implements Listener {
 		if(TutorialMechanics.onTutorialIsland(attacker) || TutorialMechanics.onTutorialIsland(attacked)){
 			return; // No dueling on tutorial island!
 		}
-
-		if(attacker == null){
+		
+		if(((EntityDamageByEntityEvent) e).getDamager() == null){
 			return; 
 		}
 

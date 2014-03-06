@@ -216,6 +216,7 @@ public class RestrictionMechanics implements Listener {
 		e.setCancelled(true);
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onHangingEntityPlaceEvent(HangingPlaceEvent e){
 		if(!e.getPlayer().isOp() && e.getEntity().getType() == EntityType.ITEM_FRAME){
@@ -243,6 +244,7 @@ public class RestrictionMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onBlockDispenseEvent(BlockDispenseEvent e){
 		ItemStack is = e.getItem();
@@ -257,6 +259,7 @@ public class RestrictionMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e){
 		//removeHeads(e.getPlayer().getInventory());
@@ -264,6 +267,7 @@ public class RestrictionMechanics implements Listener {
 		e.getPlayer().updateInventory();
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onInventoryOpenEvent(InventoryOpenEvent e){
 		//removeHeads(e.getInventory());
@@ -448,7 +452,7 @@ public class RestrictionMechanics implements Listener {
 
 	@EventHandler
 	public void onPlayerEnterBed(PlayerBedEnterEvent e){
-		Player pl = e.getPlayer();
+		//Player pl = e.getPlayer();
 		e.setCancelled(true);
 	}
 
@@ -479,6 +483,7 @@ public class RestrictionMechanics implements Listener {
 	}*/
 
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onInventoryClickEvent(InventoryClickEvent e){
 		if(e.getInventory().getName().equalsIgnoreCase("container.furnace")){
@@ -533,6 +538,7 @@ public class RestrictionMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerAnimation(PlayerAnimationEvent e){
 		try{
@@ -676,6 +682,7 @@ public class RestrictionMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent e){
 		Player p = e.getPlayer();
@@ -712,6 +719,7 @@ public class RestrictionMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler // Prevents user from dropping an item when it's on their cursor and they close their inventory.
 	public void onInventoryClose(InventoryCloseEvent e){
 		Player pl =  (Player)e.getPlayer();
@@ -730,6 +738,7 @@ public class RestrictionMechanics implements Listener {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onItemDropEvent(PlayerDropItemEvent e){
 		ItemStack i = e.getItemDrop().getItemStack();
@@ -832,6 +841,7 @@ public class RestrictionMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockPlace(BlockPlaceEvent e){
 		final Player p = e.getPlayer();
@@ -1054,6 +1064,7 @@ public class RestrictionMechanics implements Listener {
 		Bukkit.addRecipe(sr);
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(ignoreCancelled = true)
 	public void onCraftItem(CraftItemEvent e){
 		ItemStack result = e.getRecipe().getResult();
@@ -1125,6 +1136,7 @@ public class RestrictionMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent e){
 		final Player p = e.getPlayer();
@@ -1241,6 +1253,7 @@ public class RestrictionMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true) // false
 	public void onPlayerPickupItemEvent(PlayerPickupItemEvent e){
 		Player p = e.getPlayer();
@@ -1270,6 +1283,7 @@ public class RestrictionMechanics implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInventoryDragEvent(InventoryDragEvent e){
 		String inv_name = e.getInventory().getName();
@@ -1281,6 +1295,7 @@ public class RestrictionMechanics implements Listener {
 		pl.updateInventory();
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void unstackableItemHandler(InventoryClickEvent e){
 		Player p = (Player)e.getWhoClicked();

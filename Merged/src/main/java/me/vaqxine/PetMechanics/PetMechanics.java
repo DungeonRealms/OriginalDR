@@ -205,7 +205,7 @@ public class PetMechanics implements Listener {
 
 							Firework fw = (Firework) ent.getWorld().spawnEntity(ent.getLocation().add(0, 1, 0), EntityType.FIREWORK);
 							FireworkMeta fwm = fw.getFireworkMeta();
-							Random r = new Random();   
+							//Random r = new Random();   
 							FireworkEffect effect = FireworkEffect.builder().flicker(false).withColor(c1).withFade(c2).with(t).trail(true).build();
 							fwm.addEffect(effect);
 							fwm.setPower(0);
@@ -275,7 +275,7 @@ public class PetMechanics implements Listener {
 			public void run() {
 				for(Entry<Entity, Entity> data : creeper_chase.entrySet()){
 					Entity creeper = data.getKey();
-					Entity player = data.getValue();
+					//Entity player = data.getValue();
 					LivingEntity le = (LivingEntity)creeper;
 					try {
 						ParticleEffect.sendToLocation(ParticleEffect.EXPLODE, le.getLocation().add(0, 1.5, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 1F, 20);
@@ -296,7 +296,7 @@ public class PetMechanics implements Listener {
 					if(Bukkit.getPlayer(p_name) == null){
 						continue;
 					}
-					Player p = Bukkit.getPlayer(p_name);
+					//Player p = Bukkit.getPlayer(p_name);
 					LivingEntity le = (LivingEntity)e;
 					String lptt = getPetType(e);			
 
@@ -358,8 +358,8 @@ public class PetMechanics implements Listener {
 
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
-				HashMap<Entity, String> to_update = new HashMap<Entity, String>();
-				List<Entity> to_remove = new ArrayList<Entity>();
+				//HashMap<Entity, String> to_update = new HashMap<Entity, String>();
+				//List<Entity> to_remove = new ArrayList<Entity>();
 				for(Entry<Entity, String> data : inv_pet_map.entrySet()){
 					Entity e = data.getKey();
 					String p_name = data.getValue();
@@ -577,6 +577,7 @@ public class PetMechanics implements Listener {
 						if(partner == null){continue;}
 
 
+						@SuppressWarnings("unused")
 						LivingEntity le = (LivingEntity)pet;
 
 						walkTo(le, partner.getLocation().getX(), partner.getLocation().getY(), partner.getLocation().getZ(), 1.20F);
@@ -1271,6 +1272,7 @@ public class PetMechanics implements Listener {
 		}
 
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+			@SuppressWarnings("deprecation")
 			public void run() {
 				if(!(player_pets.containsKey(p.getName()))){
 					// They may have logged out or d/c'd within these 10 ticks.

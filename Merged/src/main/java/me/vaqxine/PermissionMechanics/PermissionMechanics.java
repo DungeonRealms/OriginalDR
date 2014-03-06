@@ -28,6 +28,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class PermissionMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
@@ -48,12 +49,13 @@ public class PermissionMechanics implements Listener {
 		rank_forumgroup.put("gm", 72);
 		rank_forumgroup.put("wd", 72);
 
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable(){
+			@Override
 			public void run() {
 				ConnectionPool.refresh = true;
 			}
-		}, 120 * 20L, 120 * 20L);
-
+		}.runTaskTimerAsynchronously(Main.plugin, 120 * 20L, 120 * 20L);
+		
 		log.info("[PermissionMechanics] has been enabled.");
 	}
 
@@ -185,7 +187,7 @@ public class PermissionMechanics implements Listener {
 						out = new PrintWriter(kkSocket.getOutputStream(), true);
 
 						out.println("[rank]" + fp_name + "@" + frank);
-
+						kkSocket.close();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
