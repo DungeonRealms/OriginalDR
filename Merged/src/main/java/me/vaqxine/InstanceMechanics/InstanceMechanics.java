@@ -40,9 +40,9 @@ import net.minecraft.server.v1_7_R1.EntityTracker;
 import net.minecraft.server.v1_7_R1.EntityTrackerEntry;
 import net.minecraft.server.v1_7_R1.PacketPlayOutRespawn;
 import net.minecraft.server.v1_7_R1.WorldServer;
+import net.minecraft.util.org.apache.commons.io.FileUtils;
+import net.minecraft.util.org.apache.commons.io.IOUtils;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -79,7 +79,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 

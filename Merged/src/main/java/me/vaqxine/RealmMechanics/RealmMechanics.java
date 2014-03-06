@@ -1,9 +1,8 @@
 package me.vaqxine.RealmMechanics;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,7 +57,6 @@ import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
 
-import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -116,7 +114,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.BlockIterator;
 
 public class RealmMechanics implements Listener {
@@ -4614,14 +4611,28 @@ public class RealmMechanics implements Listener {
 		}
 
 		//log.info("Extracting: " + entry);
-		BufferedInputStream inputStream = new BufferedInputStream(zipfile.getInputStream(entry));
-		BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outputFile));
+		InputStream inputStream = zipfile.getInputStream(entry);
+		FileOutputStream outputStream = new FileOutputStream(outputFile);
 
 		try {
-			IOUtils.copy(inputStream, outputStream);
+			byte[] buf = new byte[2048];
+			int r = inputStream.read(buf);
+			while(r != -1) {
+				outputStream.write(buf, 0, r);
+				r = inputStream.read(buf);
+			}
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+		} catch(IOException e) {
+			e.printStackTrace();
 		} finally {
-			outputStream.close();
-			inputStream.close();
+			if(outputStream != null) {
+				try {
+					outputStream.close();
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
