@@ -1,7 +1,0 @@
-name: EnchantMechanics
-main: me.vaqxine.EnchantMechanics.EnchantMechanics
-version: 1.0
-commands:
-  drenchant:
-    description: Root command.
-    usage: /<command>

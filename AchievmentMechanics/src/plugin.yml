@@ -1,7 +1,0 @@
-name: AchievmentMechanics
-main: me.vaqxine.AchievmentMechanics.AchievmentMechanics
-version: 1.0
-commands:
-  achievment:
-    description: Root command.
-    usage: /<command>

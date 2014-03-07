@@ -1,7 +1,0 @@
-name: TradeMechanics
-main: me.vaqxine.TradeMechanics.TradeMechanics
-version: 1.0
-commands:
-  toggletrade:
-    description: Toggles trading.
-    usage: /<command>

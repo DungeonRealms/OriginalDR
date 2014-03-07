@@ -1,7 +1,0 @@
-name: ShopMechanics
-main: me.vaqxine.ShopMechanics.ShopMechanics
-version: 1.0
-commands:
-  shop:
-    description: Root command.
-    usage: /<command>

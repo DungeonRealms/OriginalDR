@@ -1,7 +1,0 @@
-name: WeatherMechanics
-main: me.vaqxine.WeatherMechanics.WeatherMechanics
-version: 1.0
-commands:
-  drweather:
-    description: Root command.
-    usage: /<command>
