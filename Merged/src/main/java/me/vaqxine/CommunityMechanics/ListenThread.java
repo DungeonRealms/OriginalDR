@@ -21,7 +21,6 @@ public class ListenThread extends Thread {
 			ss = new ServerSocket(Hive.transfer_port, 200, lAddress);
 			CommunityMechanics.log.info("[CommunityMechanics] LISTENING on port " + Hive.transfer_port + " @ " + Bukkit.getIp() + " ...");
 
-			// TODO !!!!!!!!! INFINITE LOOP !!!!!!!!!!
 			while(true){
 				final Socket clientSocket = ss.accept();
 				String ip = clientSocket.getInetAddress().getHostAddress();

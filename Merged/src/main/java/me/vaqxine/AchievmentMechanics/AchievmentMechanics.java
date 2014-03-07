@@ -26,6 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class AchievmentMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
@@ -142,8 +143,13 @@ public class AchievmentMechanics implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent e){
-		Player pl = e.getPlayer();
-		processLoginAchievments(pl.getName());
+		final Player pl = e.getPlayer();
+		new BukkitRunnable(){
+			@Override
+			public void run() {
+				processLoginAchievments(pl.getName());
+			}
+		}.runTaskLater(Main.plugin, 20L);
 	}
 
 	@EventHandler
