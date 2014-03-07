@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import me.vaqxine.Main;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 
 import org.bukkit.Bukkit;
@@ -72,7 +73,7 @@ public enum ParticleEffect {
 				
 				for (String s : MonsterMechanics.player_locations.keySet()) {
 					if(Bukkit.getPlayerExact(s) != null){
-						Player pl = Hive.instance.getServer().getPlayer(s);
+						Player pl = Main.plugin.getServer().getPlayer(s);
 						if(pl.getWorld().getName().equalsIgnoreCase(location.getWorld().getName()) && pl.getLocation().distanceSquared(location) <= Math.pow(radius, 2)){
 							try {sendPacket(pl, packet);} catch (Exception e) {e.printStackTrace();}
 						}

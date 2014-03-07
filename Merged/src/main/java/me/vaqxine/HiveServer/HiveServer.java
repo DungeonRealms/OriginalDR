@@ -27,10 +27,9 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.fusesource.jansi.Ansi;
 
-public class HiveServer extends JavaPlugin {
+public class HiveServer {
 
 	public static String rootDir = "";
 	
@@ -156,7 +155,7 @@ public class HiveServer extends JavaPlugin {
 			}
 			
 			if(isThisRootMachine()){
-				for(Player p : getServer().getOnlinePlayers()){
+				for(Player p : Bukkit.getServer().getOnlinePlayers()){
 					p.saveData();
 					p.kickPlayer("Launching a Content Patch to ALL #DungeonRealms Servers...");
 				}				
@@ -196,7 +195,7 @@ public class HiveServer extends JavaPlugin {
 			}
 			
 			if(isThisRootMachine()){
-				for(Player p : getServer().getOnlinePlayers()){
+				for(Player p : Bukkit.getServer().getOnlinePlayers()){
 					p.saveData();
 					p.kickPlayer("Launching a Content Patch to ALL #DungeonRealms Servers...");
 				}				

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.vaqxine.Main;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
@@ -114,8 +115,8 @@ public class UploadPlayerData extends Thread {
 				MountMechanics.mule_itemlist_string.remove(p_name);
 			}
 
-			if(Hive.server_swap.containsKey(p_name) && Hive.instance.getServer().getPlayer(p_name) != null){
-				Player pl = Hive.instance.getServer().getPlayer(p_name);
+			if(Hive.server_swap.containsKey(p_name) && Main.plugin.getServer().getPlayer(p_name) != null){
+				Player pl = Main.plugin.getServer().getPlayer(p_name);
 				String server_prefix = Hive.server_swap.get(p_name);
 				
 				Hive.setPlayerOffline(p_name, 0, true); // Instant set offline!
@@ -140,7 +141,7 @@ public class UploadPlayerData extends Thread {
 		          Bukkit.getLogger().info("You'll never see me!");
 		        }
 		        
-		        pl.sendPluginMessage(Hive.instance, "BungeeCord", b.toByteArray());
+		        pl.sendPluginMessage(Main.plugin, "BungeeCord", b.toByteArray());
 				//CommunityMechanics.sendPacketCrossServer("@server_num@" + p_name + ":" + -1, -1, true);
 				// Tells players the user has left the old server.
 			}

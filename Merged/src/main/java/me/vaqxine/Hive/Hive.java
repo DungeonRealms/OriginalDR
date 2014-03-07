@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import me.vaqxine.Main;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.ChatMechanics.ChatMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
@@ -111,7 +112,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.fusesource.jansi.Ansi;
 
 import de.kumpelblase2.remoteentities.EntityManager;
@@ -120,7 +120,7 @@ import de.kumpelblase2.remoteentities.api.DespawnReason;
 import de.kumpelblase2.remoteentities.api.RemoteEntity;
 import de.kumpelblase2.remoteentities.api.RemoteEntityType;
 
-public class Hive extends JavaPlugin implements Listener {
+public class Hive implements Listener {
     //"US-5", "US-6", "US-7", "US-8"
     List<String> us_public_servers = new ArrayList<String>(Arrays.asList("US-1", "US-2", "US-3", "US-4", "US-11"));
     List<String> us_private_servers = new ArrayList<String>(Arrays.asList("US-9", "US-10"));
@@ -407,7 +407,6 @@ public class Hive extends JavaPlugin implements Listener {
                     out = new PrintWriter(kkSocket.getOutputStream(), true);
 
                     out.println("[online]" + MOTD.substring(0, MOTD.indexOf(" ")));
-                    
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -423,25 +422,25 @@ public class Hive extends JavaPlugin implements Listener {
         makeAllTables();
         setSystemPath();
 
-        getServer().getPluginManager().registerEvents(this, this);
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
+        Main.plugin.getServer().getMessenger().registerOutgoingPluginChannel(Main.plugin, "BungeeCord");
 
         main_world_name = Bukkit.getWorlds().get(0).getName();
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 updateServerPlayers();
             }
             /* 5 second delay, 10 second increments */
         }, 20 * 5, 20 * 10);
 
-        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
             public void run() {
-                npc_manager = RemoteEntities.createManager(instance);
+                npc_manager = RemoteEntities.createManager(Main.plugin);
             }
         }, 5 * 20L);
 
-        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
             public void run() {
                 loading_server = false; // Let people in!
             }
@@ -453,19 +452,19 @@ public class Hive extends JavaPlugin implements Listener {
 			}
 		}, 10 * 20L, 10 * 20L);*/
 
-        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 uptime++;
             }
         }, 5L, 5L);
 
-        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 if(seconds_to_reboot > 0){
                     seconds_to_reboot--;
                 }
                 if(MoneyMechanics.no_bank_use){
-                    for(Player pl : getServer().getOnlinePlayers()){
+                    for(Player pl : Main.plugin.getServer().getOnlinePlayers()){
                         if(pl.getInventory().getName().startsWith("Bank Chest") || pl.getInventory().getName().equalsIgnoreCase("Collection Bin")){
                             pl.closeInventory();
                         }
@@ -474,7 +473,7 @@ public class Hive extends JavaPlugin implements Listener {
             }
         }, 1 * 20L, 1 * 20L);
 
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 for(Entry<Integer, Long> data : last_ping.entrySet()){
                     long time = data.getValue();
@@ -559,20 +558,20 @@ public class Hive extends JavaPlugin implements Listener {
 			}
 		}, 10 * 20L, 10 * 20L);*/ // Require at least a 20 second d/c for it to care, otherwise it could just lag spike out and fix itself.
 
-        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 player_count = Bukkit.getServer().getOnlinePlayers().length;
             }
         }, 10 * 20L, 5 * 20L);
 
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 ConnectionPool.refresh = true;
             }
         }, 240 * 20L, 240 * 20L);
 
 
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 WebsiteConnectionPool.refresh = true;
             }
@@ -596,7 +595,7 @@ public class Hive extends JavaPlugin implements Listener {
 			}
 		}, 10 * 20L, 5 * 20L);*/
 
-        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 if(reboot_me == true){
                     reboot_me = false;
@@ -618,12 +617,12 @@ public class Hive extends JavaPlugin implements Listener {
                         } 
                     }
 
-                    getServer().shutdown();
+                    Main.plugin.getServer().shutdown();
                 }
             }
         }, 10 * 20L, 1 * 20L);
 
-        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 List<String> to_remove = new ArrayList<String>();
                 for(Entry<String, String> data : to_kick.entrySet()){
@@ -643,7 +642,7 @@ public class Hive extends JavaPlugin implements Listener {
         }, 20 * 20L, 1 * 20L);
 
 
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 if(Hive.server_lock == true){
                     return;
@@ -653,7 +652,7 @@ public class Hive extends JavaPlugin implements Listener {
             }
         }, 10 * 20L, 20 * 20L); // Perform it quickly on launch, then after a while.
 
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 if(payload_pending == true){
                     try {
@@ -683,10 +682,10 @@ public class Hive extends JavaPlugin implements Listener {
 
         }, 10 * 20L, 5 * 20L);
 
-        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {    	
-                if(server_lock == true && (force_kick == true || get_payload == true || get_payload_spoof == true) && instance.getServer().getOnlinePlayers().length > 0){
-                    for(Player p : instance.getServer().getOnlinePlayers()){
+                if(server_lock == true && (force_kick == true || get_payload == true || get_payload_spoof == true) && Main.plugin.getServer().getOnlinePlayers().length > 0){
+                    for(Player p : Main.plugin.getServer().getOnlinePlayers()){
                         if(p.isOp() && get_payload == false && get_payload_spoof == false){
                             continue; // Don't kick the OP's.
                         }
@@ -706,18 +705,18 @@ public class Hive extends JavaPlugin implements Listener {
             }
         }, 5 * 20L, 5L);
 
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {    	
                 if(ready_to_die == true){
                     if((new File(rootDir + "/" + "payload.zip").exists())){
                         ready_to_die = false;
-                        getServer().shutdown();
+                        Main.plugin.getServer().shutdown();
                     }
                 }
             }
         }, 10 * 20L, 1 * 20L);
 
-        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {    	
                 List<String> to_remove = new ArrayList<String>();
                 for(Entry<String, Integer> data : safe_logout.entrySet()){
@@ -751,7 +750,7 @@ public class Hive extends JavaPlugin implements Listener {
         }, 5 * 20L, 20L);
 
 
-        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 for(Map.Entry<String, Long> set : logout_time.entrySet()){
                     try{
@@ -811,7 +810,7 @@ public class Hive extends JavaPlugin implements Listener {
 
         }, 5 * 20L, 20L);
 
-        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 anti_crash_time = System.currentTimeMillis();
                 // Update variable to determine if server is responding....
@@ -989,7 +988,7 @@ public class Hive extends JavaPlugin implements Listener {
 
         RealmMechanics.uploadLocalRealms();
         setAllPlayersAsOffline(); // Sets all players to offline so they can log in again whenever they want now that their data is uploaded.
-        getServer().shutdown();
+        Main.plugin.getServer().shutdown();
     }
 
     public static void runSyncQuery(String query){
@@ -1112,8 +1111,8 @@ public class Hive extends JavaPlugin implements Listener {
             return;
         }
 
-        int players_on = getServer().getOnlinePlayers().length;
-        int players_max = getServer().getMaxPlayers();
+        int players_on = Main.plugin.getServer().getOnlinePlayers().length;
+        int players_max = Main.plugin.getServer().getMaxPlayers();
 
         if(Hive.shutting_down || Hive.server_frozen || Hive.server_lock || Hive.force_kick || Hive.restart_inc){
             players_on = 0;
@@ -1131,7 +1130,7 @@ public class Hive extends JavaPlugin implements Listener {
             kkSocket.connect(new InetSocketAddress(Proxy_IP, Hive.transfer_port), 1000);
             out = new PrintWriter(kkSocket.getOutputStream(), true);
 
-            out.println("@population@" + prefix + ":" + getServer().getOnlinePlayers().length + "/" + getServer().getMaxPlayers());
+            out.println("@population@" + prefix + ":" + Main.plugin.getServer().getOnlinePlayers().length + "/" + Main.plugin.getServer().getMaxPlayers());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -2709,7 +2708,7 @@ public class Hive extends JavaPlugin implements Listener {
                 //pl.setLevel(0);
                 HealthMechanics.setPlayerHP(pl.getName(), 0);
                 pl.setHealth(0);
-                pl.setMetadata("hp", new FixedMetadataValue(instance, 0));
+                pl.setMetadata("hp", new FixedMetadataValue(Main.plugin, 0));
                 killing_self.remove(pl.getName());
             }
             else{
@@ -2731,7 +2730,7 @@ public class Hive extends JavaPlugin implements Listener {
 			return;
 		}*/
 
-        if(loaded_players.contains(p_name) && getServer().getPlayer(p_name) == null){
+        if(loaded_players.contains(p_name) && Main.plugin.getServer().getPlayer(p_name) == null){
             loaded_players.remove(p_name);
         }
 
@@ -2853,7 +2852,7 @@ public class Hive extends JavaPlugin implements Listener {
 			return;
 		}*/
 
-        int players_online = this.getServer().getOnlinePlayers().length;
+        int players_online = Main.plugin.getServer().getOnlinePlayers().length;
         if(players_online >= Bukkit.getMaxPlayers()){
             if(VIP == false){
                 e.setKickMessage(ChatColor.RED.toString() + "This Dungeon Realms server is currently FULL." + "\n" + ChatColor.GRAY.toString() + "You can subscribe at http://dungeonrealms.net/buy/ to get instant access.");
@@ -3051,7 +3050,7 @@ public class Hive extends JavaPlugin implements Listener {
             List<Object> data = remote_player_data.get(p_name);
             final Location loc = (Location)data.get(0);
             p.getInventory().clear();
-            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+            Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable(){
                 public void run(){
                     p.teleport(loc.add(0,1,0));
                     // Run TP after a second.
@@ -3083,7 +3082,7 @@ public class Hive extends JavaPlugin implements Listener {
             player_level.put(p_name, level);
             player_food_level.put(p_name, food_level);
 
-            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                 public void run() {
                     p.setHealth((int)f_hp);
                     if(f_hp > 0){
@@ -3135,7 +3134,7 @@ public class Hive extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLoginLoaded(PlayerJoinEvent e){
         final Player p = e.getPlayer();
-        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+        Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable(){
             public void run() {
                 if(!(loaded_players.contains(p.getName()))){
                     loaded_players.add(p.getName());
@@ -3170,7 +3169,7 @@ public class Hive extends JavaPlugin implements Listener {
         
         if(first_login.contains(p.getName())){
             //p.teleport(TutorialMechanics.tutorialSpawn, TeleportCause.PLUGIN);
-            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+        	Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable(){
                 public void run() {
                     p.teleport(TutorialMechanics.tutorialSpawn, TeleportCause.PLUGIN);
                 }
@@ -3181,7 +3180,7 @@ public class Hive extends JavaPlugin implements Listener {
             //p.teleport(((Location)remote_player_data.get(p.getName()).get(0)).add(0, 1, 0), TeleportCause.PLUGIN);
         }
 
-        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+        Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable(){
             public void run(){
                 Player p = Bukkit.getPlayer(p_name);
                 if(p != null){
@@ -3303,7 +3302,7 @@ public class Hive extends JavaPlugin implements Listener {
         }
 
         if(player_sdays_left.containsKey(p.getName()) || PermissionMechanics.rank_map.get(p.getName()).equalsIgnoreCase("sub++")){
-            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+        	Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable(){
                 public void run() {
                     if(!PermissionMechanics.rank_map.get(p.getName()).equalsIgnoreCase("sub++")){
                         p.sendMessage(ChatColor.GOLD + "You have " + ChatColor.UNDERLINE.toString() + player_sdays_left.get(p.getName()) + " day(s)" + ChatColor.GOLD + " left until your subscription expires.");
@@ -3325,7 +3324,7 @@ public class Hive extends JavaPlugin implements Listener {
         }
 
         if(online_today.contains(p.getName()) && !first_login.contains(p.getName())){
-            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+        	Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable(){
                 public void run() {
                     //if(forum_usergroup.containsKey(p.getName()) && forum_usergroup.get(p.getName()) != -1){
                     int amount_to_give = new Random().nextInt(5) + 10;
@@ -3442,7 +3441,7 @@ public class Hive extends JavaPlugin implements Listener {
         final Player p = e.getPlayer();
 
         if(server_swap.containsKey(p.getName())){
-            this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable(){
+        	Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable(){
                 public void run() {
                     Hive.server_swap.remove(p.getName());
                     Hive.server_swap_location.remove(p.getName());
@@ -3549,7 +3548,7 @@ public class Hive extends JavaPlugin implements Listener {
 
             final Entity ent = re.getBukkitEntity();
 
-            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                 public void run() {
                     Player playerNPC = ((Player)ent);
 
@@ -4104,7 +4103,7 @@ public class Hive extends JavaPlugin implements Listener {
                 if(durability == 5){
                     // Current server, do nothing.
                     pl.sendMessage(ChatColor.YELLOW + "You are already on the " + ChatColor.BOLD + MOTD.substring(0, MOTD.indexOf(" ")) + ChatColor.YELLOW + " shard.");
-                    this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+                    Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                         public void run() {
                             pl.closeInventory();
                         }
@@ -4114,7 +4113,7 @@ public class Hive extends JavaPlugin implements Listener {
                 if(durability == 14){
                     // Current server, do nothing.
                     pl.sendMessage(ChatColor.RED + "This shard is currently " + ChatColor.UNDERLINE + "unavailable.");
-                    this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+                    Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                         public void run() {
                             pl.closeInventory();
                         }
@@ -4178,7 +4177,7 @@ public class Hive extends JavaPlugin implements Listener {
                     }
 
                     if(deny){
-                        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+                    	Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                             public void run() {
                                 pl.closeInventory();
                             }
@@ -4188,7 +4187,7 @@ public class Hive extends JavaPlugin implements Listener {
 
                     if(Hive.restart_inc || Hive.server_lock || Hive.local_ddos || Hive.hive_ddos){
                         pl.sendMessage(ChatColor.RED + "This opperation is currently " + ChatColor.UNDERLINE + "unavailable.");
-                        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+                        Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                             public void run() {
                                 pl.closeInventory();
                             }
@@ -4202,7 +4201,7 @@ public class Hive extends JavaPlugin implements Listener {
                             // Don't let them in.
                             pl.sendMessage(ChatColor.RED + "You are " + ChatColor.UNDERLINE + "not" + ChatColor.RED + " authorized to connect to subscriber only servers.");
                             pl.sendMessage(ChatColor.GRAY + "Subscribe at http://dungeonrealms.net/shop to gain instant access!");
-                            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+                            Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                                 public void run() {
                                     pl.closeInventory();
                                 }
@@ -4224,7 +4223,7 @@ public class Hive extends JavaPlugin implements Listener {
                             String rank = PermissionMechanics.getRank(pl.getName());
                             if(!pl.isOp() && rank.equalsIgnoreCase("default")){
                                 pl.sendMessage(ChatColor.RED + "This shard is currently " + ChatColor.UNDERLINE + "FULL.");
-                                this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+                                Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                                     public void run() {
                                         pl.closeInventory();
                                     }
@@ -4274,7 +4273,7 @@ public class Hive extends JavaPlugin implements Listener {
                     pl.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Your current game session has been paused while your data is transferred.");
                     pl.sendMessage("");
 
-                    this.getServer().getScheduler().runTaskAsynchronously(this, new Runnable(){
+                    Main.plugin.getServer().getScheduler().runTaskAsynchronously(Main.plugin, new Runnable(){
                         public void run() {
                             try {
                                 ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, pl.getLocation(), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 1F, 10);
@@ -4321,13 +4320,13 @@ public class Hive extends JavaPlugin implements Listener {
                     //pl.setPlayerListName(""); // So server treats them like NPC, no trading, etc.
                     RealmMechanics.player_god_mode.put(pl.getName(), System.currentTimeMillis());
 
-                    this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+                    Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable(){
                         public void run() {
                             pl.closeInventory();
                         }
                     }, 2L);
 
-                    this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable(){
+                    Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable(){
                         public void run() {
                             //UploadPlayerData.uploadData(pl.getName());
                             Thread t = new UploadPlayerData(pl.getName());
@@ -4335,11 +4334,11 @@ public class Hive extends JavaPlugin implements Listener {
                         }
                     }, 4L);
 
-                    this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+                    Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable(){
                         public void run() {
                             // 30 second timeout, if they're still online then d/c them.
-                            if(getServer().getPlayer(pl.getName()) != null && server_swap.containsKey(pl.getName())){
-                                Player upl = getServer().getPlayer(pl.getName());
+                            if(Main.plugin.getServer().getPlayer(pl.getName()) != null && server_swap.containsKey(pl.getName())){
+                                Player upl = Main.plugin.getServer().getPlayer(pl.getName());
                                 upl.kickPlayer("Connection Timeout");
                             }
                         }
@@ -4574,7 +4573,7 @@ public class Hive extends JavaPlugin implements Listener {
         final Player pl = (Player)e.getPlayer();
         if(server_swap_pending.containsKey(pl.getName())){
             // Remove in 2 ticks.
-            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+        	Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                 public void run() {
                     server_swap_pending.remove(pl.getName());
                 }
@@ -4642,7 +4641,7 @@ public class Hive extends JavaPlugin implements Listener {
             }
 
             server_swap_pending.put(p.getName(), ""); // Prevent packet abuse, put a map here immediatly.
-            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                 public void run() {
                     // Delay the openning of the inventory to prevent packet abuse.
                     p.openInventory(getShardInventory());
@@ -4735,7 +4734,7 @@ public class Hive extends JavaPlugin implements Listener {
         if(cmd.getName().equalsIgnoreCase("suicide")){
             final Player p = (Player)sender;
 
-            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                 public void run() {
                     if(server_swap.containsKey(p.getName()) || server_swap_pending.containsKey(p.getName())){
                         p.sendMessage(ChatColor.GRAY + "You cannot do that right now.");

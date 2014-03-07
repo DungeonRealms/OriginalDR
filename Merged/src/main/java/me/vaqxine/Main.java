@@ -11,6 +11,8 @@ import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.FatigueMechanics.FatigueMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
+import me.vaqxine.Hive.Hive;
+import me.vaqxine.HiveServer.HiveServer;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
@@ -77,6 +79,8 @@ public class Main extends JavaPlugin {
 	public static TradeMechanics tradeMechanics;
 	public static TutorialMechanics tutorialMechanics;
 	public static WeatherMechanics weatherMechanics;
+	public static Hive hive;
+	public static HiveServer hiveServer;
 	
 	public static Main plugin;
 	
@@ -118,7 +122,11 @@ public class Main extends JavaPlugin {
 		tradeMechanics = new TradeMechanics();
 		tutorialMechanics = new TutorialMechanics();
 		weatherMechanics = new WeatherMechanics();
+		hive = new Hive();
+		hiveServer = new HiveServer();
 		
+		hive.onEnable();
+		hiveServer.onEnable();
 		achievmentMechanics.onEnable();
 		bossMechanics.onEnable();
 		chatMechanics.onEnable();
@@ -193,6 +201,8 @@ public class Main extends JavaPlugin {
 		tradeMechanics.onDisable();
 		tutorialMechanics.onDisable();
 		weatherMechanics.onDisable();
+		hive.onDisable();
+		hiveServer.onDisable();
 	}
 	
 }

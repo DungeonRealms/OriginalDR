@@ -3,6 +3,7 @@ package me.vaqxine.Hive;
 import java.sql.SQLException;
 import java.util.List;
 
+import me.vaqxine.Main;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 
@@ -31,7 +32,7 @@ public class BackupPlayerData extends Thread {
 			//  15 minute delay between syncs.
 			
 			if(!(Hive.restart_inc) && !(Hive.shutting_down) && !(ShopMechanics.shop_shutdown) && !(Hive.server_frozen)){
-				backupPlayers(Hive.instance.getServer().getOnlinePlayers());
+				backupPlayers(Main.plugin.getServer().getOnlinePlayers());
 				System.out.println("");
 				System.out.println(Ansi.ansi().fg(Ansi.Color.MAGENTA).boldOff().toString() + "[Hive] Backup Query Complete. Sleeping 15m..." + Ansi.ansi().fg(Ansi.Color.WHITE).boldOff().toString());
 				System.out.println("");
