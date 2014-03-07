@@ -20,6 +20,10 @@
 			<id>sk89q-repo</id>
 			<url>http://maven.sk89q.com/repo/</url>
 		</repository>
+		<repository>
+			<id>minecade-thirdparty-repo</id>
+			<url>http://repo.mineca.de/nexus/content/repositories/thirdparty/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -45,6 +49,36 @@
 			<groupId>com.sk89q</groupId>
 			<artifactId>worldguard</artifactId>
 			<version>5.9.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.kumpelblase2</groupId>
+			<artifactId>remoteentities</artifactId>
+			<version>1.8</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.vexsoftware</groupId>
+			<artifactId>votifier</artifactId>
+			<version>1.9</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mcsg.double0negative</groupId>
+			<artifactId>tabapi</artifactId>
+			<version>0.1.15</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.citizensnpcs</groupId>
+			<artifactId>citizensnpcs</artifactId>
+			<version>2.0.11</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.confuser</groupId>
+			<artifactId>barapi</artifactId>
+			<version>2.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
