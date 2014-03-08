@@ -18,11 +18,12 @@ import me.vaqxine.Main;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DonationMechanics.DonationMechanics;
 import me.vaqxine.Hive.Hive;
+import me.vaqxine.PermissionMechanics.commands.CommandSetRank;
+import me.vaqxine.PermissionMechanics.commands.CommandGMHelp;
+import me.vaqxine.PermissionMechanics.commands.CommandPMHelp;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -40,6 +41,10 @@ public class PermissionMechanics implements Listener {
 
 	public void onEnable() {    
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
+		
+		Main.plugin.getCommand("setrank").setExecutor(new CommandSetRank());
+		Main.plugin.getCommand("gmhelp").setExecutor(new CommandGMHelp());
+		Main.plugin.getCommand("pmhelp").setExecutor(new CommandPMHelp());
 		
 		rank_forumgroup.put("default", 2);
 		rank_forumgroup.put("pmod", 11);
@@ -285,86 +290,4 @@ public class PermissionMechanics implements Listener {
 		return rank_map.get(p_name);
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("setrank")) {
-			Player p = null;
-			if(sender instanceof Player){
-				p = (Player) sender;
-				if(!(p.isOp())){
-					return true;
-				}
-			}
-			if(args.length != 2){
-				if(p != null){
-					p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax");
-					p.sendMessage(ChatColor.RED + "/setrank <PLAYER> <RANK>");
-					p.sendMessage(ChatColor.RED + "Ranks: " + ChatColor.GRAY + "Default | SUB | SUB+ | SUB++ | PMOD | GM | WD");
-				}
-				return true;
-			}
-
-			String p_name = args[0];
-			String rank = args[1];
-
-			if(!(rank.equalsIgnoreCase("default")) && !(rank.equalsIgnoreCase("wd")) && !(rank.equalsIgnoreCase("sub")) && !(rank.equalsIgnoreCase("sub+")) && !(rank.equalsIgnoreCase("sub++")) && !(rank.equalsIgnoreCase("PMod")) && !(rank.equalsIgnoreCase("GM"))){
-				if(p != null){
-					p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Invalid Rank '" + rank + "'");
-					p.sendMessage(ChatColor.RED + "/setrank <PLAYER> <RANK>");
-					p.sendMessage(ChatColor.RED + "Ranks: " + ChatColor.GRAY + "Default | SUB | SUB+ | SUB++ | PMOD | GM | WD");
-				}
-				return true;
-			}
-
-			setRank(p_name, rank, true);
-
-			if(p != null){
-				p.sendMessage(ChatColor.GREEN + "You have set the user " + p_name + " to the rank of " + rank + " on all Dungeon Realm servers.");
-			}
-
-		}
-
-		if (cmd.getName().equalsIgnoreCase("gmhelp")) {
-			Player p = (Player)sender;
-
-			if(!getRank(p.getName()).equalsIgnoreCase("gm") && !(p.isOp())){
-				return true;
-			}
-
-			if(args.length != 0){
-				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax");
-				p.sendMessage(ChatColor.RED + "/gmhelp");
-				p.sendMessage(ChatColor.GRAY + "Displays a list of Game Master commands.");
-				return true;
-			}
-
-			p.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "              " + " *** Game Master Commands ***");
-			p.sendMessage(ChatColor.AQUA + "/mute <PLAYER> <TIME(minutes)>" + ChatColor.GRAY + " Mutes PLAYER for TIME minutes from local and global chat.");
-			p.sendMessage(ChatColor.AQUA + "/kick <PLAYER> <REASON>" + ChatColor.GRAY + " Kicks PLAYER and displays REASON to them.");
-			p.sendMessage(ChatColor.AQUA + "/ban <PLAYER> <TIME(hours)>" + ChatColor.GRAY + " Bans PLAYER for TIME minutes from all servers.");
-			//p.sendMessage(ChatColor.AQUA + "/flag <PLAYER> (REASON)" + ChatColor.GRAY + " Flags PLAYER for REASON for other mods to see. Leave REASON blank to view flags on player.");
-		}
-
-		if (cmd.getName().equalsIgnoreCase("pmhelp")) {
-			Player p = (Player) sender;
-
-			if(!getRank(p.getName()).equalsIgnoreCase("pmod") && !(p.isOp())){
-				return true;
-			}
-
-			if(args.length != 0){
-				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax");
-				p.sendMessage(ChatColor.RED + "/pmhelp");
-				p.sendMessage(ChatColor.GRAY + "Displays a list of Player Moderator commands.");
-				return true;
-			}
-
-			p.sendMessage(ChatColor.WHITE + "" + ChatColor.BOLD + "              " + " *** Player Moderator Commands ***");
-			p.sendMessage(ChatColor.WHITE + "/mute <PLAYER> <TIME(minutes)>" + ChatColor.GRAY + " Mutes PLAYER for TIME minutes from local and global chat.");
-			p.sendMessage(ChatColor.WHITE + "/kick <PLAYER> <REASON>" + ChatColor.GRAY + " Kicks PLAYER and displays REASON to them.");
-			p.sendMessage(ChatColor.WHITE + "/ban <PLAYER> <TIME(hours)>" + ChatColor.GRAY + " Bans PLAYER for TIME minutes from all servers.");
-			p.sendMessage(ChatColor.WHITE + "/flag <PLAYER> (REASON)" + ChatColor.GRAY + " Flags PLAYER for REASON for other mods to see. Leave REASON blank to view flags on player.");
-		}
-
-		return true;
-	}
 }

@@ -21,6 +21,7 @@ import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
+import me.vaqxine.MountMechanics.commands.CommandMount;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
@@ -33,8 +34,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftHorse;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.AnimalTamer;
@@ -169,6 +168,8 @@ public class MountMechanics implements Listener {
 		instance = this;
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
+		Main.plugin.getCommand("mount").setExecutor(new CommandMount());
+		
 		TradeWindow.setItem(0, ShopMechanics.setPrice(t2_horse_mount, 3000));
 		TradeWindow.setItem(1, ShopMechanics.setPrice(t3_horse_armor, 7000));
 		TradeWindow.setItem(2, ShopMechanics.setPrice(t4_horse_armor, 15000));
@@ -1494,30 +1495,4 @@ public class MountMechanics implements Listener {
 			}
 		}
 	}
-
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("mount")) {
-			Player p = (Player) sender;
-
-			if(!(p.isOp())){
-				return true;
-			}
-
-			p.getInventory().addItem(ShopMechanics.removePrice(t1_mule));
-			p.getInventory().addItem(ShopMechanics.removePrice(t2_mule));
-			p.getInventory().addItem(ShopMechanics.removePrice(t2_mule_upgrade));
-			p.getInventory().addItem(ShopMechanics.removePrice(t3_mule_upgrade));
-			
-			if(p.getName().equalsIgnoreCase("Vaquxine")){
-				for(Entity ent : p.getNearbyEntities(4, 4, 4)){
-					if(ent instanceof Horse){
-						ent.remove();
-					}
-				}
-			}
-		}
-
-		return true;
-	}
-
 }
