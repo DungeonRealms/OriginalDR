@@ -21,14 +21,13 @@ import me.vaqxine.FatigueMechanics.FatigueMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
-import me.vaqxine.MerchantMechanics.MerchantMechanics;
+import me.vaqxine.ItemMechanics.commands.CommandAddWeapon;
 import me.vaqxine.ModerationMechanics.ModerationMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PartyMechanics.PartyMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
-import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
 import net.minecraft.server.v1_7_R1.EntityLiving;
 import net.minecraft.server.v1_7_R1.NBTTagCompound;
@@ -47,8 +46,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
@@ -199,6 +196,8 @@ public class ItemMechanics implements Listener {
 		Main.plugin.getServer().getPluginManager().registerEvents(new Halloween(this), Main.plugin);
 		instance = this;
 
+		Main.plugin.getCommand("addweapon").setExecutor(new CommandAddWeapon());
+		
 		File home_dir = new File("plugins/ItemMechanics");
 
 		if(!(home_dir.exists())){
@@ -5774,106 +5773,4 @@ public class ItemMechanics implements Listener {
 		return i;
 	}
 
-	@SuppressWarnings("deprecation")
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		Player p = (Player)sender;
-		//ChatColor red = ChatColor.RED;
-		//ChatColor white = ChatColor.WHITE;
-		if(cmd.getName().equalsIgnoreCase("addweapon")){
-
-			if(!(p.isOp())){
-				return true;
-			}
-			//getDamage(p.getItemInHand());
-
-			if(args.length == 0){
-				p.getInventory().clear();
-				p.updateInventory();
-				p.sendMessage(ChatColor.YELLOW + "Inventory Cleared.");
-				return true;
-			}
-
-			if(args[0].equalsIgnoreCase("repair")){
-				ItemStack hand = p.getItemInHand();
-				hand.setDurability((short)0);
-				p.setItemInHand(hand);
-				Attributes attributes = new Attributes(p.getItemInHand());
-				attributes.clear();
-				p.getInventory().addItem(attributes.getStack());
-				p.updateInventory();
-				return true;
-			}
-
-			if(args[0].equalsIgnoreCase("orb")){
-				p.getInventory().addItem(orb_of_peace);
-				p.getInventory().addItem(MerchantMechanics.orb_of_alteration);
-				p.getInventory().addItem(MerchantMechanics.orb_of_alteration);
-				p.getInventory().addItem(MerchantMechanics.orb_of_alteration);
-				p.getInventory().addItem(MerchantMechanics.orb_of_alteration);
-				p.getInventory().addItem(MerchantMechanics.orb_of_alteration);
-			}
-
-			if(args[0].equalsIgnoreCase("spooky")){
-				p.getInventory().addItem(Halloween.halloween_candy);
-				p.getInventory().addItem(Halloween.halloween_mask);
-			}
-
-			if(!(p.getName().equalsIgnoreCase("Vaquxine")) && !(p.getName().equalsIgnoreCase("Availer"))){
-				return true;
-			}
-			if(args[0].equalsIgnoreCase("noob")){
-				for(ItemStack is : generateNoobArmor()){
-					p.getInventory().addItem(RealmMechanics.makeUntradeable(is));
-				}
-			}
-			if(args[0].equalsIgnoreCase("1")){
-				p.getInventory().addItem(generateRandomTierItem(1));
-			}
-			if(args[0].equalsIgnoreCase("2")){
-				p.getInventory().addItem(generateRandomTierItem(2));
-			}
-			if(args[0].equalsIgnoreCase("3")){
-				p.getInventory().addItem(generateRandomTierItem(3));
-			}
-			if(args[0].equalsIgnoreCase("4")){
-				p.getInventory().addItem(generateRandomTierItem(4));
-			}
-			if(args[0].equalsIgnoreCase("5")){
-				p.getInventory().addItem(generateRandomTierItem(5));
-			}
-			if(args[0].equalsIgnoreCase("arrow")){
-				p.getInventory().addItem(t1_arrow);
-				p.getInventory().addItem(t2_arrow);
-				p.getInventory().addItem(t3_arrow);
-				p.getInventory().addItem(t4_arrow);
-				p.getInventory().addItem(t5_arrow);
-			}
-			if(args[0].equalsIgnoreCase("egg")){
-				p.getInventory().addItem(easter_egg);
-			}
-			if(args[0].equalsIgnoreCase("pots")){
-				p.getInventory().addItem(MerchantMechanics.t1_pot);
-				p.getInventory().addItem(MerchantMechanics.t2_pot);
-				p.getInventory().addItem(MerchantMechanics.t3_pot);
-				p.getInventory().addItem(MerchantMechanics.t4_pot);
-				p.getInventory().addItem(MerchantMechanics.t5_pot);
-
-				p.getInventory().addItem(MerchantMechanics.t1_s_pot);
-				p.getInventory().addItem(MerchantMechanics.t2_s_pot);
-				p.getInventory().addItem(MerchantMechanics.t3_s_pot);
-				p.getInventory().addItem(MerchantMechanics.t4_s_pot);
-				p.getInventory().addItem(MerchantMechanics.t5_s_pot);
-			}
-			else{
-				ItemStack custom_i = ItemGenerators.customGenerator(args[0]);
-				if(custom_i != null){
-					p.getInventory().addItem(custom_i);
-				}
-			}
-			//addCustomItem(p, Material.STONE_SWORD, white.toString() + "Flaming Sword", red.toString() + "DMG: 1~5" + "," + red.toString() + "FIRE DMG: +1");
-			return true;
-		}
-
-		return true;
-	}
 }

@@ -19,6 +19,18 @@ import me.vaqxine.Main;
 import me.vaqxine.ChatMechanics.ChatMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
+import me.vaqxine.GuildMechanics.commands.CommandG;
+import me.vaqxine.GuildMechanics.commands.CommandGAccept;
+import me.vaqxine.GuildMechanics.commands.CommandGBanner;
+import me.vaqxine.GuildMechanics.commands.CommandGBio;
+import me.vaqxine.GuildMechanics.commands.CommandGDecline;
+import me.vaqxine.GuildMechanics.commands.CommandGDemote;
+import me.vaqxine.GuildMechanics.commands.CommandGInvite;
+import me.vaqxine.GuildMechanics.commands.CommandGKick;
+import me.vaqxine.GuildMechanics.commands.CommandGMotd;
+import me.vaqxine.GuildMechanics.commands.CommandGPromote;
+import me.vaqxine.GuildMechanics.commands.CommandGQuit;
+import me.vaqxine.GuildMechanics.commands.CommandGuild;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.ItemMechanics.ItemMechanics;
@@ -169,6 +181,19 @@ public class GuildMechanics implements Listener {
 		instance = this;
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
+		Main.plugin.getCommand("g").setExecutor(new CommandG());
+		Main.plugin.getCommand("gaccept").setExecutor(new CommandGAccept());
+		Main.plugin.getCommand("gbanner").setExecutor(new CommandGBanner());
+		Main.plugin.getCommand("gbio").setExecutor(new CommandGBio());
+		Main.plugin.getCommand("gdecline").setExecutor(new CommandGDecline());
+		Main.plugin.getCommand("gdemote").setExecutor(new CommandGDemote());
+		Main.plugin.getCommand("ginvite").setExecutor(new CommandGInvite());
+		Main.plugin.getCommand("gkick").setExecutor(new CommandGKick());
+		Main.plugin.getCommand("gmotd").setExecutor(new CommandGMotd());
+		Main.plugin.getCommand("gpromote").setExecutor(new CommandGPromote());
+		Main.plugin.getCommand("gquit").setExecutor(new CommandGQuit());
+		Main.plugin.getCommand("guild").setExecutor(new CommandGuild());
+		
 		manager = Bukkit.getScoreboardManager();
 		board = manager.getNewScoreboard();
 		

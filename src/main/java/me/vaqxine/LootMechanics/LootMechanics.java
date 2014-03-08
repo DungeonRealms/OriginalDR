@@ -20,6 +20,10 @@ import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemGenerators;
 import me.vaqxine.ItemMechanics.ItemMechanics;
+import me.vaqxine.LootMechanics.commands.CommandHideLoot;
+import me.vaqxine.LootMechanics.commands.CommandLoadLoot;
+import me.vaqxine.LootMechanics.commands.CommandLoot;
+import me.vaqxine.LootMechanics.commands.CommandShowLoot;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.PowerupMechanics.PowerupMechanics;
@@ -34,10 +38,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
@@ -92,6 +93,11 @@ public class LootMechanics implements Listener {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		templatePath.mkdir();
 
+		Main.plugin.getCommand("hideloot").setExecutor(new CommandHideLoot());
+		Main.plugin.getCommand("loadloot").setExecutor(new CommandLoadLoot());
+		Main.plugin.getCommand("loot").setExecutor(new CommandLoot());
+		Main.plugin.getCommand("showloot").setExecutor(new CommandShowLoot());
+		
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {
 				loadGameWorldlootSpawnerData(); // Loads DungeonRealms loot chests.
@@ -900,7 +906,7 @@ public class LootMechanics implements Listener {
 		}
 	}
 
-	public void loadGameWorldlootSpawnerData(){ // loot1=0,0,0
+	public static void loadGameWorldlootSpawnerData(){ // loot1=0,0,0
 		int count = 0;
 		int skip_count = 0;
 		
@@ -946,7 +952,7 @@ public class LootMechanics implements Listener {
 		}
 	}
 
-	public void loadlootSpawnTemplates(){
+	public static void loadlootSpawnTemplates(){
 		//373,5:1-1%20 /healthpotion
 		//T2:1-1%4
 
@@ -1438,94 +1444,4 @@ public class LootMechanics implements Listener {
 
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		Player p = (Player)sender;
-
-		if(cmd.getName().equalsIgnoreCase("loadloot") && p.isOp()){
-			loadlootSpawnTemplates();
-			loadGameWorldlootSpawnerData();
-			p.sendMessage(ChatColor.GREEN + "Loaded all loot spawn templates into memory.");
-			return true;
-		}
-
-		if(cmd.getName().equalsIgnoreCase("loot") && p.isOp()){
-			if(args.length > 0 && args[0].equalsIgnoreCase("chunk")){
-				p.getInventory().addItem(ItemMechanics.signNewCustomItem(Material.MAGMA_CREAM, (short)0, ChatColor.LIGHT_PURPLE.toString() + "Orb of Alteration", ChatColor.GRAY.toString() + "Randomizes bonus stats of selected equipment"));
-				if(MonsterMechanics.loaded_chunks.contains(p.getLocation().getChunk().getBlock(0, 0, 0).getLocation())){
-					p.sendMessage("LOADED");
-				}
-				else{
-					p.sendMessage("NOT LOADED");
-				}
-				return true;
-				//p.sendMessage(MonsterMechanics.loaded_chunks.contains(p.getLocation().getChunk().getBlock(0, 0, 0).getLocation()));
-			}
-			p.getInventory().addItem(new ItemStack(Material.GLOWSTONE, 10));
-			p.sendMessage(ChatColor.YELLOW + "Added 10X Chest Spawn Blocks to inventory.");
-			return true;
-		}
-
-		if(cmd.getName().equalsIgnoreCase("showloot") && p.isOp()){
-			// TODO: /showloot <radius>
-			if(args.length != 1){
-				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax. " + ChatColor.RED + "/showloot <radius>");
-				return true;
-			}	 
-
-			int radius = Integer.parseInt(args[0]);
-			Location loc = p.getLocation();
-			World w = loc.getWorld();
-			int i, j, k;
-			int x = (int)loc.getX();
-			int y = (int)loc.getY();
-			int z = (int)loc.getZ();
-
-			for (i = -radius; i <= radius; i++) {
-				for (j = -radius; j <= radius; j++) {
-					for (k = -radius; k <= radius; k++) {
-						loc = w.getBlockAt(x + i, y + j, z + k).getLocation();
-						if(loot_spawns.containsKey(loc) || (InstanceMechanics.instance_loot.containsKey(loc.getWorld().getName()) && InstanceMechanics.instance_loot.get(loc.getWorld().getName()).containsKey(loc))){
-							loc.getBlock().setType(Material.GLOWSTONE);
-						}
-					}
-				}
-			}
-
-			p.sendMessage(ChatColor.YELLOW + "Displaying loot chests spawners in a " + radius + " block radius...");
-			p.sendMessage(ChatColor.YELLOW + "Local spawning will be disabled while they are visible.");
-			p.sendMessage(ChatColor.GRAY + "Break them to unregister the spawn point.");
-			return true;
-		}
-
-		if(cmd.getName().equalsIgnoreCase("hideloot") && p.isOp()){
-			// TODO: /hideloot <radius>
-			if(args.length != 1){
-				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax. " + ChatColor.RED + "/hideloot <radius>");
-				return true;
-			}	 
-
-			int radius = Integer.parseInt(args[0]);
-			Location loc = p.getLocation();
-			World w = loc.getWorld();
-			int i, j, k;
-			int x = (int)loc.getX();
-			int y = (int)loc.getY();
-			int z = (int)loc.getZ();
-
-			for (i = -radius; i <= radius; i++) {
-				for (j = -radius; j <= radius; j++) {
-					for (k = -radius; k <= radius; k++) {
-						loc = w.getBlockAt(x + i, y + j, z + k).getLocation();
-						if(loot_spawns.containsKey(loc) || InstanceMechanics.instance_loot.get(loc.getWorld().getName()).containsKey(loc)){
-							loc.getBlock().setType(Material.AIR);
-						}
-					}
-				}
-			}
-
-			p.sendMessage(ChatColor.YELLOW + "Hiding mob spawners in a " + radius + " block radius...");
-			return true;
-		}
-		return true;
-	}
 }

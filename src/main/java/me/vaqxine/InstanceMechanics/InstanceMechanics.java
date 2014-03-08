@@ -23,13 +23,18 @@ import java.util.zip.ZipOutputStream;
 
 import me.vaqxine.Main;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
-import me.vaqxine.BossMechanics.BossMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.ConnectionPool;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
+import me.vaqxine.InstanceMechanics.commands.CommandBossTP;
+import me.vaqxine.InstanceMechanics.commands.CommandDRLightning;
+import me.vaqxine.InstanceMechanics.commands.CommandDRReplaceNear;
+import me.vaqxine.InstanceMechanics.commands.CommandDebuffCrystal;
+import me.vaqxine.InstanceMechanics.commands.CommandISay;
+import me.vaqxine.InstanceMechanics.commands.CommandInstance;
 import me.vaqxine.LootMechanics.LootMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
@@ -54,7 +59,6 @@ import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
@@ -158,6 +162,13 @@ public class InstanceMechanics implements Listener {
 		plugin_instance = this;
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
+		Main.plugin.getCommand("bosstp").setExecutor(new CommandBossTP());
+		Main.plugin.getCommand("debuffcrystal").setExecutor(new CommandDebuffCrystal());
+		Main.plugin.getCommand("drlightning").setExecutor(new CommandDRLightning());
+		Main.plugin.getCommand("drreplacenear").setExecutor(new CommandDRReplaceNear());
+		Main.plugin.getCommand("instance").setExecutor(new CommandInstance());
+		Main.plugin.getCommand("isay").setExecutor(new CommandISay());
+		
 		instance_template.put("DODungeon", "Varenglade");
 		instance_template.put("fireydungeon", "Infernal Abyss");
 		instance_template.put("T1Dungeon", "Bandit Trove");
@@ -1166,7 +1177,7 @@ public class InstanceMechanics implements Listener {
 
 	}
 
-	public void asyncLoadNewInstance(final String instance, final boolean load_template, boolean new_template){
+	public static void asyncLoadNewInstance(final String instance, final boolean load_template, boolean new_template){
 		String instance_template = "";
 		if(load_template == false){
 			instance_template = instance.substring(0, instance.lastIndexOf("."));
@@ -1357,7 +1368,7 @@ public class InstanceMechanics implements Listener {
 
 	}
 
-	public String linkInstanceToParty(String instance_template, List<String> party, boolean template){
+	public static String linkInstanceToParty(String instance_template, List<String> party, boolean template){
 		String new_instance = instance_template;
 
 		if(!(template)){
@@ -1375,7 +1386,7 @@ public class InstanceMechanics implements Listener {
 		return new_instance;
 	}
 
-	public int getNextInstanceNumber(String w_name){
+	public static int getNextInstanceNumber(String w_name){
 		int next_num = 0; 
 		File f = new File(w_name + "." + next_num);
 		while(f.exists() || instance_loaded.containsKey(w_name + "." + next_num)){
@@ -1435,354 +1446,9 @@ public class InstanceMechanics implements Listener {
 		return return_list;
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		Player p = null;
-
-		if(sender instanceof Player){
-			p = (Player)sender;
-		}
-
-		if(cmd.getName().equalsIgnoreCase("drlightning")){
-			if(p != null){
-				if(!(p.isOp())){
-					return true;
-				}
-			}
-
-			if(args.length != 3){
-				if(p != null){
-					if(!(p.isOp())){
-						return true;
-					}
-					p.sendMessage(ChatColor.RED + "Invalid Syntax. Please use /drlightning <x> <y> <z> to spawn a lightning strike at that location.");
-					return true;
-				}
-			}
-
-			if(sender instanceof BlockCommandSender){
-				BlockCommandSender cb = (BlockCommandSender)sender;
-				double x;
-				double y;
-				double z;
-
-				x = Double.parseDouble(args[0]);
-				y = Double.parseDouble(args[1]);
-				z = Double.parseDouble(args[2]);
-
-				Location loc = new Location(cb.getBlock().getWorld(), x, y, z);
-				loc.getWorld().strikeLightning(loc);
-			}
-			else if(sender instanceof Player){
-				double x;
-				double y;
-				double z;
-
-				x = Double.parseDouble(args[0]);
-				y = Double.parseDouble(args[1]);
-				z = Double.parseDouble(args[2]);
-
-				Location loc = new Location(p.getWorld(), x, y, z);
-				loc.getWorld().strikeLightning(loc);
-			}
-		}
-
-		if(cmd.getName().equalsIgnoreCase("debuffcrystal")){
-			if(p != null){
-				if(!(p.isOp())){
-					return true;
-				}
-			}
-
-			if(args.length != 3){
-				if(p != null){
-					if(!(p.isOp())){
-						return true;
-					}
-					p.sendMessage(ChatColor.RED + "Invalid Syntax. Please use /debuffcrystal <x> <y> <z> to spawn a crystal at that location.");
-					return true;
-				}
-			}
-
-			if(sender instanceof BlockCommandSender){
-				BlockCommandSender cb = (BlockCommandSender)sender;
-				double x;
-				double y;
-				double z;
-
-				x = Double.parseDouble(args[0]);
-				y = Double.parseDouble(args[1]);
-				z = Double.parseDouble(args[2]);
-
-				Location loc = new Location(cb.getBlock().getWorld(), x, y, z);
-				loc.getWorld().spawn(loc, EnderCrystal.class);
-			}
-			else if(sender instanceof Player){
-				double x;
-				double y;
-				double z;
-
-				x = Double.parseDouble(args[0]);
-				y = Double.parseDouble(args[1]);
-				z = Double.parseDouble(args[2]);
-
-				Location loc = new Location(p.getWorld(), x, y, z);
-				loc.getWorld().spawn(loc, EnderCrystal.class);
-			}
-		}
-
-
-		if(cmd.getName().equalsIgnoreCase("isay")){
-			if(p != null){
-				if(!(p.isOp())){
-					return true;
-				}
-			}
-
-			if(args.length == 0){
-				if(p != null){
-					if(!(p.isOp())){
-						return true;
-					}
-					p.sendMessage(ChatColor.RED + "Invalid Syntax. Please use /isay <msg> to send a local world messsage.");
-					return true;
-				}
-			}
-
-			String msg = "";
-			for(String s : args){
-				msg += s + " ";
-			}
-			msg = msg.substring(0, msg.lastIndexOf(" "));
-
-			msg = msg.replaceAll("&0", ChatColor.BLACK.toString());
-			msg = msg.replaceAll("&1", ChatColor.DARK_BLUE.toString());
-			msg = msg.replaceAll("&2", ChatColor.DARK_GREEN.toString());
-			msg = msg.replaceAll("&3", ChatColor.DARK_AQUA.toString());
-			msg = msg.replaceAll("&4", ChatColor.DARK_RED.toString());
-			msg = msg.replaceAll("&5", ChatColor.DARK_PURPLE.toString());
-			msg = msg.replaceAll("&6", ChatColor.GOLD.toString());
-			msg = msg.replaceAll("&7", ChatColor.GRAY.toString());
-			msg = msg.replaceAll("&8", ChatColor.DARK_GRAY.toString());
-			msg = msg.replaceAll("&9", ChatColor.BLUE.toString());
-			msg = msg.replaceAll("&a", ChatColor.GREEN.toString());
-			msg = msg.replaceAll("&b", ChatColor.AQUA.toString());
-			msg = msg.replaceAll("&c", ChatColor.RED.toString());
-			msg = msg.replaceAll("&d", ChatColor.LIGHT_PURPLE.toString());
-			msg = msg.replaceAll("&e", ChatColor.YELLOW.toString());
-			msg = msg.replaceAll("&f", ChatColor.WHITE.toString());
-
-			msg = msg.replaceAll("&u", ChatColor.UNDERLINE.toString());
-			msg = msg.replaceAll("&s", ChatColor.BOLD.toString());
-			msg = msg.replaceAll("&i", ChatColor.ITALIC.toString());
-			msg = msg.replaceAll("&m", ChatColor.MAGIC.toString());
-
-			if(sender instanceof BlockCommandSender){
-				BlockCommandSender cb = (BlockCommandSender)sender;
-				for(Player pl : cb.getBlock().getWorld().getPlayers()){
-					pl.sendMessage(msg);
-				}
-			}
-			else if(sender instanceof Player){
-				for(Player pl : p.getWorld().getPlayers()){
-					pl.sendMessage(msg);
-				}
-			}
-		}
-
-		if(cmd.getName().equalsIgnoreCase("drreplacenear")){
-			if(args.length != 3){
-				return true;
-			}
-			if(!(sender instanceof BlockCommandSender)){
-				return true;
-			}
-
-			BlockCommandSender cb = (BlockCommandSender)sender;
-
-			int radius = Integer.parseInt(args[0]);
-			int from_id = Integer.parseInt(args[1]);
-			int to_id = Integer.parseInt(args[2]);
-
-			for(Block b : getNearbyBlocks(cb.getBlock().getLocation(), radius)){
-				if(b.getTypeId() == from_id){
-					b.setType(Material.getMaterial(to_id));
-				}
-			}
-		}
-
-		if(cmd.getName().equalsIgnoreCase("bosstp")){
-			// /bosstp X Y Z
-			// Checks to make sure enough % of mobs are dead then TP's players to boss room.
-			if(args.length != 3){
-				return true;
-			}
-			if(!(sender instanceof BlockCommandSender)){
-				return true;
-			}
-
-			BlockCommandSender cb = (BlockCommandSender)sender;
-			if(!isInstance(cb.getBlock().getWorld().getName())){
-				return true;
-			}
-
-			if(teleport_on_complete.containsKey(cb.getBlock().getWorld().getName())){
-				return true; // Don't spawn anymore, they're done.
-			}
-
-			double x = Double.parseDouble(args[0]);
-			double y = Double.parseDouble(args[1]);
-			double z = Double.parseDouble(args[2]);
-
-			String instance_name = cb.getBlock().getWorld().getName();
-			if(instance_name.contains(".")){
-				instance_name = instance_name.substring(0, instance_name.indexOf("."));
-			}
-
-			int total_mobs = 0;
-			if(InstanceMechanics.total_mobs.containsKey(cb.getBlock().getWorld().getName())){
-				total_mobs = InstanceMechanics.total_mobs.get(cb.getBlock().getWorld().getName());
-			}
-
-			int alive_mobs = 0;
-			for(LivingEntity le : cb.getBlock().getWorld().getLivingEntities()){
-				if(MonsterMechanics.mob_health.containsKey((Entity)le)){
-					alive_mobs++;
-				}
-			}
-
-			double percent_alive = 100 - (((double)(total_mobs - alive_mobs) / ((double)total_mobs)) * 100.0D);
-
-			if(percent_alive >= 25.0D && !instance_name.equalsIgnoreCase("OneWolfeDungeon")){
-				// Too many monsters still alive, no TP.
-				int mobs_to_kill = (int)(total_mobs - (Math.round(((percent_alive - 25.0D) / 100.0D) * (double)total_mobs)));
-				if(mobs_to_kill > 0){
-					for(Player pl : cb.getBlock().getWorld().getPlayers()){
-						pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " move on to the boss room of this instance until you kill at least " + ChatColor.BOLD + mobs_to_kill + ChatColor.RED + " more monsters.");
-					}
-					return true;
-				}
-			}
-
-			/*if(mob_kill_count.containsKey(cb.getBlock().getWorld().getName())){
-				int mobs_killed = mob_kill_count.get(cb.getBlock().getWorld().getName());
-				if((mobs_killed * 1.90) < total_mobs){
-					// They killed less than 75% of the mobs in the dungeon, yet they're somehow despawned. BUG ABUSEEEE.
-					int mobs_to_kill = (int)(total_mobs - (Math.round(((mobs_killed * 1.90) / 100.0D) * (double)total_mobs)));
-
-					for(Player pl : cb.getBlock().getWorld().getPlayers()){
-						pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " move on to the boss room of this instance until you kill at least " + ChatColor.BOLD + mobs_to_kill + ChatColor.RED + " more monsters.");
-						pl.sendMessage(ChatColor.GRAY + "The system has also detected that some mobs were forcibly despawned rather than slain. If this is the case, you will need to reset the instance.");
-					}
-					return true;
-				}
-			}*/
-
-			for(final Player pl : cb.getBlock().getWorld().getPlayers()){
-				pl.teleport(new Location(pl.getWorld(), x, y + 2, z));
-				pl.setFallDistance(0.0F);
-
-				/*if(pl.getWorld().getName().contains("fireydungeon")){
-					plugin_instance.getServer().getScheduler().scheduleSyncDelayedTask(plugin_instance, new Runnable() {
-						public void run() {
-							setPlayerEnvironment(pl, Environment.NETHER);
-							pl.setFallDistance(0.0F);
-						}
-					}, 10L);
-				}*/
-			}
-
-			if(cb.getBlock().getWorld().getName().contains("DODungeon")){
-				Location loc = new Location(cb.getBlock().getWorld(), -364, 60, -1.2);
-				Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "Burick The Fanatic");
-				BossMechanics.boss_map.put(boss, "unholy_priest");
-				for(Player pl : boss.getWorld().getPlayers()){
-					pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Burick The Fanatic: " + ChatColor.WHITE + "Ahahaha! You dare try to kill ME?! I am Burick, disciple of Goragath! None of you will leave this place alive!");
-				}
-				boss.getWorld().playSound(boss.getLocation(), Sound.ENDERDRAGON_HIT, 4F, 0.5F);
-			}
-
-			if(cb.getBlock().getWorld().getName().contains("T1Dungeon")){
-				Location loc = new Location(cb.getBlock().getWorld(), 529, 55, -313);
-				Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "bandit", "Mayel The Cruel");
-				BossMechanics.boss_map.put(boss, "bandit_leader");
-				for(Player pl : boss.getWorld().getPlayers()){
-					pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Mayel The Cruel: " + ChatColor.WHITE + "How dare you challenge ME, the leader of the Cyrene Bandits! To me, my brethern, let us crush these incolents!");
-				}
-				boss.getWorld().playSound(boss.getLocation(), Sound.AMBIENCE_CAVE, 1F, 1F);
-			}
-
-			if(cb.getBlock().getWorld().getName().contains("fireydungeon")){
-				Location loc = new Location(cb.getBlock().getWorld(), -54, 158, 646); 
-				Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "The Infernal Abyss");
-				BossMechanics.boss_map.put(boss, "fire_demon");
-				for(Player pl : boss.getWorld().getPlayers()){
-					pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "The Infernal Abyss: " + ChatColor.WHITE + "... I have nothing to say to you foolish mortals, except for this: Burn.");
-				}
-				boss.getWorld().playSound(boss.getLocation(), Sound.AMBIENCE_THUNDER, 1F, 1F);
-			}
-
-			if(cb.getBlock().getWorld().getName().contains("OneWolfeDungeon")){
-				Location loc = new Location(cb.getBlock().getWorld(), -54, 158, 646); // TODO: onewolf - spawn his wolf pet as well
-				Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.ZOMBIE, "goblin", "Jebotch The Wicked");
-				BossMechanics.boss_map.put(boss, "jebotch");
-				for(Player pl : boss.getWorld().getPlayers()){
-					pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Jebotch The Wicked: " + ChatColor.WHITE + "Glory cannot be attained without blood, now let me see you bleed!");
-				}
-				boss.getWorld().playSound(boss.getLocation(), Sound.GHAST_MOAN, 1F, 0.25F);
-			}
-		}
-
 		if(cmd.getName().equalsIgnoreCase("instance")){
-			if(p != null && !(p.isOp())){
-				return true;
-			}
-
-			if(args.length == 3){
-				setPlayerEnvironment(p, Environment.NETHER);
-			}
-
-			if(args.length == 0){
-				p.sendMessage(ChatColor.WHITE + "To designate the entrance to an instance, define a worldguard region and name it prefix it with 'instance_' followed by the name of the instance template. For ex: instance_MapName");
-				p.sendMessage(ChatColor.YELLOW + "To designate the exits of an instance, define a worldguard region inside the instance and prefix it with 'exit_instance'. You can have multiple exits, exit_instance1, exit_instance2, etc.");
-				p.sendMessage(" ");
-				p.sendMessage(ChatColor.YELLOW + "/instance load <instance template> -- Loads a test instance of given template and teleports you there.");
-				p.sendMessage(ChatColor.WHITE + "/instance unload <instance> -- Unloads the instance specified.");
-				p.sendMessage(ChatColor.YELLOW + "/instance edit <instance template> -- Loads the TEMPLATE of a given instance for editing mobs, loot, or blocks.");
-
-				return true;
-			}
-
-			String sub_cmd = args[0];
-			if(sub_cmd.equalsIgnoreCase("load")){
-				String instance_name = args[1];
-				String new_instance = linkInstanceToParty(instance_name, PartyMechanics.getPartyMembers(p.getName()), false); // Define new instance.
-				if(!(teleport_on_load.contains(p.getName()))){
-					teleport_on_load.add(p.getName());
-				}
-				asyncLoadNewInstance(new_instance, false, false); // Load new instance.
-				p.sendMessage(ChatColor.GRAY + "Loading: " + new_instance + " . . .");
-			}
-			if(sub_cmd.equalsIgnoreCase("unload")){
-				String instance_name = args[1];
-				asyncUnloadWorld(instance_name);
-			}
-			if(sub_cmd.equalsIgnoreCase("edit")){
-				String instance_name = args[1];
-				String new_instance = linkInstanceToParty(instance_name, PartyMechanics.getPartyMembers(p.getName()), true); // Define new instance.
-				if(!(teleport_on_load.contains(p.getName()))){
-					teleport_on_load.add(p.getName());
-				}
-				asyncLoadNewInstance(new_instance, true, false); // Load new instance.
-				p.sendMessage(ChatColor.GRAY + "Loading Template: " + new_instance + " . . .");
-			}
-			if(sub_cmd.equalsIgnoreCase("shards")){
-				subtractShards(p.getName(), 1, -50000);
-				subtractShards(p.getName(), 2, -50000);
-				subtractShards(p.getName(), 3, -50000);
-				subtractShards(p.getName(), 4, -50000);
-				subtractShards(p.getName(), 5, -50000);
-			}
+			
 		}
 
 		return true; // Always return true.

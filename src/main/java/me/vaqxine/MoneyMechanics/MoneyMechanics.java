@@ -21,6 +21,7 @@ import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
+import me.vaqxine.MoneyMechanics.commands.CommandMNote;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
@@ -36,8 +37,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -115,6 +114,8 @@ public class MoneyMechanics implements Listener {
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
+		Main.plugin.getCommand("mnote").setExecutor(new CommandMNote());
+		
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				if(no_bank_use == true){
@@ -2357,72 +2358,6 @@ public class MoneyMechanics implements Listener {
 				}
 			}, 2L);
 		}
-	}
-
-
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		Player p = (Player)sender;
-		if(cmd.getName().equalsIgnoreCase("mnote")){
-
-			if(!(p.getName().equalsIgnoreCase("Vaquxine")) && !(p.getName().equalsIgnoreCase("Availer"))){
-				return true;
-			}
-
-			if(args.length == 0){
-				p.sendMessage(ChatColor.YELLOW + "USAGE: /mnote create <value (in Gems)>");
-				return true;
-			}
-			if(args[0].equalsIgnoreCase("pouch")){
-				p.getInventory().addItem(CraftItemStack.asCraftCopy(t1_gem_pouch));
-				p.getInventory().addItem(CraftItemStack.asCraftCopy(t2_gem_pouch));
-				p.getInventory().addItem(CraftItemStack.asCraftCopy(t3_gem_pouch));
-				p.getInventory().addItem(CraftItemStack.asCraftCopy(t4_gem_pouch));
-				//p.getInventory().addItem(CraftItemStack.asCraftCopy(t1_gem_pouch));
-			}
-			if(args[0].equalsIgnoreCase("upload")){
-				uploadBankDatabaseData(p.getName(), false);
-				p.sendMessage("All GEMS data uploaded to SQL.");
-				return true;
-			}
-			if(args[0].equalsIgnoreCase("download")){
-				downloadBankDatabaseData(p.getName());
-				p.sendMessage("All GEMS data downloaded and loaded into memory.");
-				return true;
-			}
-			if(args[0].equalsIgnoreCase("create")){
-				if(!(args.length == 2)){
-					p.sendMessage(ChatColor.YELLOW + "USAGE: /mnote create <value (in Gems)>");
-					return true;
-				}
-				try{
-					Integer.parseInt(args[1]);}catch(NumberFormatException e){
-						p.sendMessage(ChatColor.RED + "Invalid Gems amount specified. Must be a whole number.");
-						return true;
-					}
-				int amount = Integer.parseInt(args[1]);
-				if(amount <= 0){
-					p.sendMessage(ChatColor.RED + "Please specify a positive integer above 0.");
-					return true;
-				}
-				if(amount > 999999){
-					p.sendMessage(ChatColor.RED + "You cannot store more than 999,999 Gems in one bank note.");
-					return true;
-				}
-
-				if(!Hive.isHiveOnline()){
-					p.sendMessage(ChatColor.RED + "This server is currently desynced from the HIVE, this action cannot be completed at this time.");
-					return true;
-				}
-
-				addMoneyCert(p, amount, true);
-			}
-			else{
-				p.sendMessage(ChatColor.YELLOW + "USAGE: /mnote create <value (in Gems)>");
-			}
-		}
-
-		return true;
-
 	}
 
 }
