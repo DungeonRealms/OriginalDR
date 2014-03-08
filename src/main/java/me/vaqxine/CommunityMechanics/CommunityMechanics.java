@@ -24,6 +24,25 @@ import java.util.logging.Logger;
 
 import me.vaqxine.Main;
 import me.vaqxine.ChatMechanics.ChatMechanics;
+import me.vaqxine.CommunityMechanics.commands.CommandAdd;
+import me.vaqxine.CommunityMechanics.commands.CommandDebug;
+import me.vaqxine.CommunityMechanics.commands.CommandDelete;
+import me.vaqxine.CommunityMechanics.commands.CommandIgnore;
+import me.vaqxine.CommunityMechanics.commands.CommandRoll;
+import me.vaqxine.CommunityMechanics.commands.CommandTips;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleChaos;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleFF;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleFilter;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleGlobal;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleGuild;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleParty;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleProfile;
+import me.vaqxine.CommunityMechanics.commands.CommandTogglePvP;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleStarterPack;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleTells;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleTips;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleTradeChat;
+import me.vaqxine.CommunityMechanics.commands.CommandToggles;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.FatigueMechanics.FatigueMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;
@@ -151,6 +170,26 @@ public class CommunityMechanics implements Listener {
 
 	public void onEnable() {
 		instance = this;
+		
+		Main.plugin.getCommand("add").setExecutor(new CommandAdd());
+		Main.plugin.getCommand("debug").setExecutor(new CommandDebug());
+		Main.plugin.getCommand("delete").setExecutor(new CommandDelete());
+		Main.plugin.getCommand("ignore").setExecutor(new CommandIgnore());
+		Main.plugin.getCommand("roll").setExecutor(new CommandRoll());
+		Main.plugin.getCommand("tips").setExecutor(new CommandTips());
+		Main.plugin.getCommand("togglechaos").setExecutor(new CommandToggleChaos());
+		Main.plugin.getCommand("toggleff").setExecutor(new CommandToggleFF());
+		Main.plugin.getCommand("togglefilter").setExecutor(new CommandToggleFilter());
+		Main.plugin.getCommand("toggleglobal").setExecutor(new CommandToggleGlobal());
+		Main.plugin.getCommand("toggleguild").setExecutor(new CommandToggleGuild());
+		Main.plugin.getCommand("toggleparty").setExecutor(new CommandToggleParty());
+		Main.plugin.getCommand("toggleprofile").setExecutor(new CommandToggleProfile());
+		Main.plugin.getCommand("togglepvp").setExecutor(new CommandTogglePvP());
+		Main.plugin.getCommand("toggles").setExecutor(new CommandToggles());
+		Main.plugin.getCommand("togglestarterpack").setExecutor(new CommandToggleStarterPack());
+		Main.plugin.getCommand("toggletells").setExecutor(new CommandToggleTells());
+		Main.plugin.getCommand("toggletips").setExecutor(new CommandToggleTips());
+		Main.plugin.getCommand("toggletradechat").setExecutor(new CommandToggleTradeChat());
 		
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		

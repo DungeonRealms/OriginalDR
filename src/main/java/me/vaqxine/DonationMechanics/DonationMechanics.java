@@ -1,8 +1,6 @@
 package me.vaqxine.DonationMechanics;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
@@ -20,13 +18,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.vaqxine.Main;
+import me.vaqxine.DonationMechanics.commands.CommandAccept;
+import me.vaqxine.DonationMechanics.commands.CommandAcceptAll;
+import me.vaqxine.DonationMechanics.commands.CommandAddEC;
+import me.vaqxine.DonationMechanics.commands.CommandAddPet;
+import me.vaqxine.DonationMechanics.commands.CommandGiveBeta;
+import me.vaqxine.DonationMechanics.commands.CommandGiveSub;
+import me.vaqxine.DonationMechanics.commands.CommandGiveSubLife;
+import me.vaqxine.DonationMechanics.commands.CommandGiveSubPlus;
+import me.vaqxine.DonationMechanics.commands.CommandRemoveSub;
+import me.vaqxine.DonationMechanics.commands.CommandRemoveSubPlus;
+import me.vaqxine.DonationMechanics.commands.CommandRewardSubLife;
+import me.vaqxine.DonationMechanics.commands.CommandTickDays;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -70,6 +75,19 @@ public class DonationMechanics implements Listener {
 	
 	public void onEnable() {
 		local_IP = Bukkit.getIp();
+		
+		Main.plugin.getCommand("accept").setExecutor(new CommandAccept());
+		Main.plugin.getCommand("acceptall").setExecutor(new CommandAcceptAll());
+		Main.plugin.getCommand("addec").setExecutor(new CommandAddEC());
+		Main.plugin.getCommand("addpet").setExecutor(new CommandAddPet());
+		Main.plugin.getCommand("givebeta").setExecutor(new CommandGiveBeta());
+		Main.plugin.getCommand("givesub").setExecutor(new CommandGiveSub());
+		Main.plugin.getCommand("givesublife").setExecutor(new CommandGiveSubLife());
+		Main.plugin.getCommand("givesubplus").setExecutor(new CommandGiveSubPlus());
+		Main.plugin.getCommand("removesub").setExecutor(new CommandRemoveSub());
+		Main.plugin.getCommand("removesubplus").setExecutor(new CommandRemoveSubPlus());
+		Main.plugin.getCommand("rewardsublife").setExecutor(new CommandRewardSubLife());
+		Main.plugin.getCommand("tickdays").setExecutor(new CommandTickDays());
 		
 		RankThread = new RankThread();
 		RankThread.start();
@@ -424,7 +442,7 @@ public class DonationMechanics implements Listener {
 		async_set_rank.put(p_name, rank);
 	}
 
-	public int downloadECASH(String p_name){
+	public static int downloadECASH(String p_name){
 		Connection con = null;
 		PreparedStatement pst = null;
 
@@ -571,395 +589,6 @@ public class DonationMechanics implements Listener {
 
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-
-		if(cmd.getName().equalsIgnoreCase("rewardsublife")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(!(ps.isOp())){
-					return true;
-				}
-			}
-			
-			tickLifetimeSubEcash();
-			log.info("[DonationMechanics] 999 E-CASH has been given to all sub++ users.");
-		}
-		
-		if(cmd.getName().equalsIgnoreCase("tickdays")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(!(ps.isOp())){
-					return true;
-				}
-			}
-			
-			tickSubscriberDays();
-			log.info("[DonationMechanics] Ticked all user's subscriber days forward by ONE.");
-			
-			tickFreeEcash();
-			log.info("[DonationMechanics] Reset all 'Free E-cash' users, login for more e-cash!");
-		}
-		
-		if(cmd.getName().equalsIgnoreCase("addec")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(!(ps.isOp())){
-					return true;
-				}
-			}
-			final String p_name = args[0];
-			final int amount = Integer.parseInt(args[1]);
-
-			// Add <amount> E-CASH to player. (player_database->ecash)
-
-			int current = downloadECASH(p_name);
-			log.info("[DonationMechanics] Adding " + amount + " ECASH to " + p_name + "'s stash of " + current + " EC!");
-			
-			current += amount;
-			setECASH_SQL(p_name, current);
-			sendPacketCrossServer("[ecash]" + p_name + ":" + current, -1, true);
-			
-			if(Bukkit.getPlayer(p_name) != null){
-				Player pl = Bukkit.getPlayer(p_name);
-				pl.sendMessage(ChatColor.GOLD + "  +" + amount + ChatColor.BOLD + " E-CASH");
-				pl.playSound(pl.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
-			}
-		}
-
-		if(cmd.getName().equalsIgnoreCase("removesubplus")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(!(ps.isOp())){
-					return true;
-				}
-			}
-			String p_name = args[0];
-			int user_id = getForumUserID(p_name);
-			String current_rank = getRank(p_name);
-			
-			if(!current_rank.equalsIgnoreCase("sub+")){
-				boolean plus = true;
-				removeSubscriber(user_id, plus);
-				return true;
-			}
-			
-			sendPacketCrossServer("[rank_map]" + p_name + ":" + "default", -1, true);
-			
-			if(user_id == -1){
-				log.info("[DonationMechanics] Set user " + p_name + " to DEFAULT, however they didn't have a forum account!");
-				if(ps != null){
-					ps.sendMessage(ChatColor.RED + "The user " + p_name + " does not have a forum account yet. Cannot set DEFAULT status.");
-				}
-				return true;
-			}
-
-			boolean plus = true;
-			removeSubscriber(user_id, plus);
-			addSubscriberDays(p_name, 0, true);
-			setRank(p_name, "default");
-			if(ps != null){
-				ps.sendMessage(ChatColor.GREEN + "Set " + p_name + " to DEFAULT.");
-				ps.sendMessage(ChatColor.GRAY + "FORUM USER_ID: " + user_id);
-			}
-			log.info("[DonationMechanics] Set user " + p_name + " to DEFAULT. user_id = " + user_id);
-		}
-
-		if(cmd.getName().equalsIgnoreCase("removesub")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(!(ps.isOp())){
-					return true;
-				}
-			}
-			String p_name = args[0];
-			int user_id = getForumUserID(p_name);
-			
-			log.info("d1");
-			
-			String current_rank = getRank(p_name);
-			
-			if(!current_rank.equalsIgnoreCase("sub")){
-				boolean plus = false;
-				removeSubscriber(user_id, plus);
-				return true;
-			}
-			
-			log.info("d2");
-			
-			if(user_id == -1){
-				log.info("[DonationMechanics] Set user " + p_name + " to DEFAULT, however they didn't have a forum account!");
-				if(ps != null){
-					ps.sendMessage(ChatColor.RED + "The user " + p_name + " does not have a forum account yet. Cannot set DEFAULT status.");
-				}
-				return true;
-			}
-			
-			log.info("d3");
-
-			boolean plus = false;
-			removeSubscriber(user_id, plus);
-			setRank(p_name, "default");
-			
-			log.info("d4");
-			
-			addSubscriberDays(p_name, 0, true);
-			sendPacketCrossServer("[rank_map]" + p_name + ":" + "default", -1, true);
-			if(ps != null){
-				ps.sendMessage(ChatColor.GREEN + "Set " + p_name + " to DEFAULT.");
-				ps.sendMessage(ChatColor.GRAY + "FORUM USER_ID: " + user_id);
-			}
-			log.info("[DonationMechanics] Set user " + p_name + " to DEFAULT. user_id = " + user_id);
-		}
-
-		if(cmd.getName().equalsIgnoreCase("givesub")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(!(ps.isOp())){
-					return true;
-				}
-			}
-			String p_name = args[0];
-			int user_id = getForumUserID(p_name);
-			if(user_id == -1){
-				log.info("[DonationMechanics] Granted user " + p_name + " SUBSCRIBER STATUS, however they didn't have a forum account!");
-				if(ps != null){
-					ps.sendMessage(ChatColor.RED + "The user " + p_name + " does not have a forum account yet. Cannot grant subscriber status.");
-				}
-				return true;
-			}
-
-			String current_rank = getRank(p_name);
-			boolean plus = false;
-	
-			setAsSubscriber(user_id, plus);
-			
-			if(!current_rank.equalsIgnoreCase("default")){
-				// Don't let them overwrite pmod, sub+, sub++ ... just give them additional forum group.
-				return true;
-			}
-			
-			setRank(p_name, "sub");
-			addSubscriberDays(p_name, 30, false);
-			sendPacketCrossServer("[forum_group]" + p_name + ":" + 75, -1, true);
-			sendPacketCrossServer("[rank_map]" + p_name + ":" + "sub", -1, true);
-			if(ps != null){
-				ps.sendMessage(ChatColor.GREEN + "Set " + p_name + " to SUBSCRIBER.");
-				ps.sendMessage(ChatColor.GRAY + "FORUM USER_ID: " + user_id);
-			}
-			log.info("[DonationMechanics] Set user " + p_name + " to SUBSCRIBER. user_id = " + user_id);
-		}
-
-		if(cmd.getName().equalsIgnoreCase("givesublife")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(!(ps.isOp())){
-					return true;
-				}
-			}
-			String p_name = args[0];
-			int user_id = getForumUserID(p_name);
-			if(user_id == -1){
-				log.info("[DonationMechanics] Granted user " + p_name + " SUBSCRIBER++ (LIFETIME) STATUS, however they didn't have a forum account!");
-				if(ps != null){
-					ps.sendMessage(ChatColor.RED + "The user " + p_name + " does not have a forum account yet. Cannot grant subscriber++ (LIFETIME) status.");
-				}
-				return true;
-			}
-			
-			boolean plus = true;
-			setAsSubscriber(user_id, plus);
-			setRank(p_name, "sub++");
-			addSubscriberDays(p_name, 9999, false);
-			//addSubscriberDays(p_name, 30, false); Never bother to expire.
-			sendPacketCrossServer("[forum_group]" + p_name + ":" + 79, -1, true);
-			sendPacketCrossServer("[rank_map]" + p_name + ":" + "sub++", -1, true);
-			if(ps != null){
-				ps.sendMessage(ChatColor.GREEN + "Set " + p_name + " to LIFETIME SUBSCRIBER (SUB++).");
-				ps.sendMessage(ChatColor.GRAY + "FORUM USER_ID: " + user_id);
-			}
-			log.info("[DonationMechanics] Set user " + p_name + " to LIFETIME SUBSCRIBER (SUB++). user_id = " + user_id);
-		}
-		
-		if(cmd.getName().equalsIgnoreCase("givesubplus")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(!(ps.isOp())){
-					return true;
-				}
-			}
-			String p_name = args[0];
-			int user_id = getForumUserID(p_name);
-			if(user_id == -1){
-				log.info("[DonationMechanics] Granted user " + p_name + " SUBSCRIBER+ STATUS, however they didn't have a forum account!");
-				if(ps != null){
-					ps.sendMessage(ChatColor.RED + "The user " + p_name + " does not have a forum account yet. Cannot grant subscriber+ status.");
-				}
-				return true;
-			}
-			
-			String current_rank = getRank(p_name);
-			boolean plus = true;
-			
-			setAsSubscriber(user_id, plus);
-			
-			if(!current_rank.equalsIgnoreCase("default") && !(current_rank.equalsIgnoreCase("sub"))){
-				log.info("[DonationMechanics] Not overwriting " + p_name + "'s rank, because they're currently a " + current_rank);
-				// Don't let them overwrite pmod, sub+, sub++ ...
-				return true;
-			}
-
-			setRank(p_name, "sub+");
-			addSubscriberDays(p_name, 30, false);
-			sendPacketCrossServer("[forum_group]" + p_name + ":" + 76, -1, true);
-			sendPacketCrossServer("[rank_map]" + p_name + ":" + "sub+", -1, true);
-			if(ps != null){
-				ps.sendMessage(ChatColor.GREEN + "Set " + p_name + " to SUBSCRIBER+.");
-				ps.sendMessage(ChatColor.GRAY + "FORUM USER_ID: " + user_id);
-			}
-			log.info("[DonationMechanics] Set user " + p_name + " to SUBSCRIBER+. user_id = " + user_id);
-		}
-
-		if(cmd.getName().equalsIgnoreCase("givebeta")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(!(ps.isOp())){
-					return true;
-				}
-			}
-			String p_name = args[0];
-			int user_id = getForumUserID(p_name);
-			if(user_id == -1){
-				log.info("[DonationMechanics] Granted user " + p_name + " BETA ACCESS, however they didn't have a forum account!");
-				if(ps != null){
-					ps.sendMessage(ChatColor.RED + "The user " + p_name + " does not have a forum account yet. Cannot grant premium access.");
-				}
-				return true;
-			}
-			setAsBetaTester(user_id);
-			if(ps != null){
-				ps.sendMessage(ChatColor.GREEN + "Added PREMIUM user " + p_name + " into the Dungeon Realms CLOSED BETA.");
-				ps.sendMessage(ChatColor.GRAY + "FORUM USER_ID: " + user_id);
-			}
-			log.info("[DonationMechanics] Granted user " + p_name + " BETA ACCESS. user_id = " + user_id);
-		}
-
-		if(cmd.getName().equalsIgnoreCase("accept")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(args.length <= 0){
-					ps.sendMessage(ChatColor.RED + "Incorrect Syntax. " + "/accept " + "<MINECRAFT IGN>");
-					return true;
-				}
-				if(!(ps.isOp())){
-					log.info("[DonationMechanics] User " + ps.getName() + " tried to illegally grant access to " + args[0]);
-					return true;
-				}
-			}
-
-			String p_name = args[0];
-			int user_id = getForumUserID(p_name);
-			if(user_id == -1){
-				log.info("[DonationMechanics] Granted user " + p_name + " ACCEPTED APPLICANT (BETA ACCESS), however they didn't have a forum account!");
-				if(ps != null){
-					ps.sendMessage(ChatColor.RED + "The user " + p_name + " does not have a forum account yet. Cannot grant access.");
-				}
-				return true;
-			}
-			setAsNormalBetaTester(user_id);
-			log.info("[DonationMechanics] Granted user " + p_name + " ACCEPTED APPLICANT (BETA ACCESS) user_id = " + user_id);
-			if(ps != null){
-				ps.sendMessage(ChatColor.GREEN + "Accepted user " + p_name + " into the Dungeon Realms CLOSED BETA.");
-				ps.sendMessage(ChatColor.GRAY + "FORUM USER_ID: " + user_id);
-			}
-		}
-
-		if(cmd.getName().equalsIgnoreCase("acceptall")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(args.length != 0){
-					ps.sendMessage(ChatColor.RED + "Incorrect Syntax. " + "/acceptall");
-					return true;
-				}
-				if(!(ps.isOp())){
-					log.info("[DonationMechanics] User " + ps.getName() + " tried to illegally grant access to ALL");
-					return true;
-				}
-			}
-
-			File f = new File("accept.txt");
-			BufferedReader reader;
-			try {
-				reader = new BufferedReader(new FileReader(f));
-
-				String line = "";
-				int count = 0;
-				while((line = reader.readLine()) != null){
-					count++;
-					String p_name = line;
-					int user_id = getForumUserID(p_name);
-					if(user_id == -1){
-						log.info("[DonationMechanics] Granted user " + p_name + " ACCEPTED APPLICANT (BETA ACCESS), however they didn't have a forum account!");
-						if(ps != null){
-							ps.sendMessage(ChatColor.RED + "The user " + p_name + " does not have a forum account yet. Cannot grant access.");
-						}
-						continue;
-					}
-
-					setAsNormalBetaTester(user_id);
-				}
-				reader.close();
-
-				log.info("[DonationMechanics] Granted ALL users in accept.txt beta access.");
-				if(ps != null){
-					ps.sendMessage(ChatColor.GREEN + "Accepted ALL users in accept.txt to closed beta.");
-					ps.sendMessage(ChatColor.GRAY + "TOTAL ACCEPTS: " + count);
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-
-		if(cmd.getName().equalsIgnoreCase("addpet")){
-			Player p = null;
-			if(sender instanceof Player){
-				p = (Player)sender;
-				if(!(p.isOp())){return true;}
-			}
-			if(args.length != 2){
-				if(p != null){
-					p.sendMessage("Incorrect Syntax. " + "/addpet <player> <pet>");
-					return true;
-				}
-				log.info("[PetMechanics] Incorrect syntax. /addpet <player> <pet>");
-			}
-
-			String player = args[0];
-			String pet = args[1];
-
-			addPetToPlayer(player, pet);
-			sendPacketCrossServer("[addpet]" + player + ":" + pet, -1, true);
-			
-			log.info("[PetMechanics] Added pet '" + pet + "' to player " + player + ".");
-			if(p != null){
-				p.sendMessage("Added pet '" + pet + "' to player " + player + ".");
-			}
-		}
-		return true;
-	}
-
 	public static int getForumUserID(String mc_name){
 		Connection con = null;
 		PreparedStatement pst = null;
@@ -999,7 +628,7 @@ public class DonationMechanics implements Listener {
 	}
 
 	@SuppressWarnings("resource")
-	public void setAsNormalBetaTester(int user_id){
+	public static void setAsNormalBetaTester(int user_id){
 		Connection con = null;
 		PreparedStatement pst = null;
 
@@ -1047,7 +676,7 @@ public class DonationMechanics implements Listener {
 	}
 
 	@SuppressWarnings("resource")
-	public void setAsBetaTester(int user_id){
+	public static void setAsBetaTester(int user_id){
 		Connection con = null;
 		PreparedStatement pst = null;
 
@@ -1165,7 +794,7 @@ public class DonationMechanics implements Listener {
 	}
 	
 	@SuppressWarnings("resource")
-	public void setAsSubscriber(int user_id, boolean sub_plus){
+	public static void setAsSubscriber(int user_id, boolean sub_plus){
 		Connection con = null;
 		PreparedStatement pst = null;
 
@@ -1242,7 +871,7 @@ public class DonationMechanics implements Listener {
 	}
 
 	@SuppressWarnings("resource")
-	public void removeSubscriber(int user_id, boolean sub_plus){
+	public static void removeSubscriber(int user_id, boolean sub_plus){
 		Connection con = null;
 		PreparedStatement pst = null;
 
