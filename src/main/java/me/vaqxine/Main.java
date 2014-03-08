@@ -1,5 +1,7 @@
 package me.vaqxine;
 
+import java.util.logging.Logger;
+
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.BossMechanics.BossMechanics;
 import me.vaqxine.ChatMechanics.ChatMechanics;
@@ -83,9 +85,11 @@ public class Main extends JavaPlugin {
 	public static HiveServer hiveServer;
 	
 	public static Main plugin;
+	public static Logger log;
 	
 	public void onEnable(){
 		plugin = this;
+		log = this.getLogger();
 		achievmentMechanics = new AchievmentMechanics();
 		bossMechanics = new BossMechanics();
 		chatMechanics = new ChatMechanics();

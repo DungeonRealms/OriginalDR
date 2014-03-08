@@ -25,7 +25,7 @@ public class TipMechanics implements Listener {
 	public static List<String> used_tips = new ArrayList<String>();
 	// Tips given in current game session, prevent a lot of repeats.
 
-	public void displayRandomTip(){
+	public static void displayRandomTip(){
 		String tip = getRandomTip();
 		if(tip == null){
 			return;
@@ -39,7 +39,7 @@ public class TipMechanics implements Listener {
 		}
 	}
 	
-	public String getRandomTip(){
+	public static String getRandomTip(){
 		if(tips.size() == 0 && used_tips.size() == 0){
 			// No tips loaded.
 			return null;

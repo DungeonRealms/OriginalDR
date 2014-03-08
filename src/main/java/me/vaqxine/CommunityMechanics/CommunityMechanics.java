@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -43,16 +42,12 @@ import net.minecraft.server.v1_7_R1.PacketPlayOutNamedEntitySpawn;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -69,7 +64,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -1158,7 +1152,7 @@ public class CommunityMechanics implements Listener {
 	}
 
 	@SuppressWarnings("resource")
-	public void upload_social_lists(Player p){
+	public static void upload_social_lists(Player p){
 		Connection con = null;
 		PreparedStatement pst = null;
 
@@ -1420,7 +1414,7 @@ public class CommunityMechanics implements Listener {
 	}
 
 
-	public void addBuddy(Player host, String new_friend_name){
+	public static void addBuddy(Player host, String new_friend_name){
 		List<String> cur_list = new ArrayList<String>();
 		if(buddy_list.containsKey(host.getName())){
 			cur_list = buddy_list.get(host.getName());
@@ -1432,7 +1426,7 @@ public class CommunityMechanics implements Listener {
 		upload_social_lists(host);
 	}
 
-	public void addIgnore(Player host, String new_friend_name){
+	public static void addIgnore(Player host, String new_friend_name){
 		//boolean first_add = false;
 		List<String> cur_list = new ArrayList<String>();
 		if(ignore_list.containsKey(host.getName())){
@@ -1445,7 +1439,7 @@ public class CommunityMechanics implements Listener {
 		upload_social_lists(host);
 	}
 
-	public void deleteFromAllLists(Player host, String to_remove){
+	public static void deleteFromAllLists(Player host, String to_remove){
 
 		if(isPlayerOnBuddyList(host, to_remove)){
 			List<String> cur_list = buddy_list.get(host.getName());
@@ -1487,7 +1481,7 @@ public class CommunityMechanics implements Listener {
 		updateCommBook(host);
 	}
 
-	public int getBuddyListLength(String p_name){
+	public static int getBuddyListLength(String p_name){
 		if(!(buddy_list.containsKey(p_name))){
 			return 0;
 		}
@@ -1538,7 +1532,7 @@ public class CommunityMechanics implements Listener {
 		}
 	}
 	
-	public String getToggleDescription(String toggle){
+	public static String getToggleDescription(String toggle){
 		String desc = ChatColor.GRAY.toString();
 		if(toggle.equalsIgnoreCase("toggledebug")){
 			desc += "Toggles displaying combat debug messages.";
@@ -1585,7 +1579,7 @@ public class CommunityMechanics implements Listener {
 		return desc;
 	}
 	
-	public ItemStack generateToggleButton(String toggle, boolean on){
+	public static ItemStack generateToggleButton(String toggle, boolean on){
 		ItemStack toggle_button = new ItemStack(Material.INK_SACK);
 		ChatColor cc = null;
 		
@@ -1616,589 +1610,6 @@ public class CommunityMechanics implements Listener {
 			return true;
 		} 
 		return false;
-	}
-
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-
-		final Player p = (Player)sender;
-
-		if(cmd.getName().equalsIgnoreCase("crypt")){
-			if(p != null){
-				if(!(p.isOp())){
-					return true;
-				}
-			}
-
-			return true;
-		}
-		
-		if(cmd.getName().equalsIgnoreCase("roll")){
-			if(args.length != 1){
-				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax. " + ChatColor.GRAY + "/roll <1-10000>");
-				return true;
-			}
-
-			if(args[0].length() > 5){
-				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax. " + ChatColor.GRAY + "/roll <1-10000>");
-				return true;
-			}
-
-			String number = args[0];
-			Random dice = new Random();
-
-			if(number.contains("-")){
-				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Non-Positive Max Number. " + ChatColor.RED + "/roll <1-10000>");
-				return true;
-			}
-
-			if(roll_delay.containsKey(p.getName())){
-				long last_roll = roll_delay.get(p.getName());
-				if((System.currentTimeMillis() - last_roll) <= 1000){
-					// Less than a second since last roll, stop spamming.
-					return true;
-				}
-			}
-			roll_delay.put(p.getName(), System.currentTimeMillis());
-
-			int roll;
-			try{
-				roll = dice.nextInt(Integer.parseInt(number) + 1);
-			} catch(NumberFormatException nfe){
-				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Non-Numeric Max Number. " + ChatColor.RED + "/roll <1-10000>");
-				return true;
-			}
-			Location loc = p.getLocation();
-
-			for (Entity ent : p.getNearbyEntities(20, 20, 20)){
-				if(!(ent instanceof Player)){continue;}
-				Player player = (Player)ent;
-				if(player.getLocation().distanceSquared(loc) < 400 && !(isPlayerOnIgnoreList(player, p.getName()))){
-					player.sendMessage(ChatColor.BOLD + "" + ChatColor.GRAY + ChatMechanics.getPlayerPrefix(p.getName(), true) + ChatMechanics.getPlayerColor(p, player) + p.getName() + ChatColor.GRAY + " has rolled a " + ChatColor.UNDERLINE + ChatColor.BOLD + roll + ChatColor.GRAY + " out of " + ChatColor.UNDERLINE + ChatColor.BOLD + args[0] + "."); 
-				}
-			}
-
-			p.sendMessage(ChatColor.BOLD + "" + ChatColor.GRAY + ChatMechanics.getPlayerPrefix(p.getName(), true) + ChatMechanics.getPlayerColor(p, p) + p.getName() + ChatColor.GRAY + " has rolled a " + ChatColor.UNDERLINE + ChatColor.BOLD + roll + ChatColor.GRAY + " out of " + ChatColor.UNDERLINE + ChatColor.BOLD + args[0] + "."); 
-			return true;
-
-		}
-		
-		if(cmd.getName().equalsIgnoreCase("tips")){
-			if(!(p.isOp())){
-				return true;
-			}
-			
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /tips");
-				p.sendMessage(ChatColor.GRAY + "Description: Displays a random tip.");
-				return true;
-			}
-
-			TipMechanics.displayRandomTip();
-		}
-
-		if(cmd.getName().equalsIgnoreCase("toggles")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /toggles");
-				p.sendMessage(ChatColor.GRAY + "Description: Displays currently active toggles.");
-				return true;
-			}
-
-			int toggle_count = 14;
-			Inventory toggle_menu = Bukkit.createInventory(null, 18, "Toggle Menu");
-			ItemStack divider = ItemMechanics.signCustomItem(Material.PISTON_MOVING_PIECE, (short)0, " ", "");
-			
-			if(!(toggle_list.containsKey(p.getName()))){
-				// No toggles, show all red.
-				int x = -1;
-				while(x < (toggle_count - 1)){
-					x++;
-					String toggle = toggle_map.get(x);
-					toggle_menu.setItem(x, generateToggleButton(toggle, false));
-				}
-			}
-			else if(toggle_list.containsKey(p.getName())){
-				// Some toggles.
-				int x = -1;
-				while(x < (toggle_count - 1)){
-					x++;
-					String toggle = toggle_map.get(x);
-					if(toggle.equalsIgnoreCase("toggletradechat")){
-						toggle_menu.setItem(x, generateToggleButton(toggle, toggle_list.get(p.getName()).contains("tchat")));
-					}
-					else{
-						toggle_menu.setItem(x, generateToggleButton(toggle, toggle_list.get(p.getName()).contains(toggle.replaceAll("toggle", ""))));
-					}
-					
-				}
-			}
-			
-			int x = -1;
-			while(x < (toggle_menu.getSize() - 1)){
-				x++;
-				if(toggle_menu.getItem(x) == null || toggle_menu.getItem(x).getType() == Material.AIR){
-					toggle_menu.setItem(x, divider);
-				}
-			}
-			
-			p.openInventory(toggle_menu);
-		}
-
-		
-		if(cmd.getName().equalsIgnoreCase("debug")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /debug");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables displaying debug messages.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("debug")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("debug");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Debug Messages - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("debug")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("debug");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Debug Messages - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("togglestarterpack")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /togglestarterpack");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables getting starter items on reboot.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("starterpack")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("starterpack");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Respawn Item Pack - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("starterpack")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("starterpack");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Respawn Item Pack - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("togglechaos")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /togglechaos");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables recieving chaotic alignment.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("chaos")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("chaos");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Anti-Chaotic - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("chaos")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("chaos");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Anti-Chaotic - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("toggletips")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /toggletips");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables displaying server tips.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("tips")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("tips");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Gameplay Tips - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("tips")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("tips");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Gameplay Tips - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("toggleff")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /toggleff");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables friendly fire against buddies.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("ff")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("ff");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Friendly Fire - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("ff")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("ff");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Friendly Fire - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("toggleguild")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /toggleguild");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables Non-BUD guild invitations.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("guild")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("guild");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Non-BUD Guild Invites - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("guild")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("guild");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Non-BUD Guild Invites - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("toggleprofile")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /toggleprofile");
-				p.sendMessage(ChatColor.GRAY + "Description: Toggles displaying identifying information such as inventory and location on your online profile.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("profile")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("profile");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Online Profile - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("profile")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("profile");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Online Profile - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("togglepvp")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /togglepvp");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables killing blows on Lawful players.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("pvp")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("pvp");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Outgoing PVP Damage - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("pvp")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("pvp");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Outgoing PVP Damage - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("toggleparty")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /toggleparty");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables Non-BUD party invitations.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("party")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("party");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Non-BUD Party Invites - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("party")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("party");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Non-BUD Party Invites - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("toggletradechat")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /toggletradechat");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables sending and recieving trade messages.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("tchat")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("tchat");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Trade Chat - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("tchat")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("tchat");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Trade Chat - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("togglefilter")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /togglefilter");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables the adult language chat filter.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("filter")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("filter");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Adult Chat Filter - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("filter")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("filter");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Adult Chat Filter - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("toggleglobal")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /toggleglobal");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables sending and recieving global messages.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("global")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("global");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Global Chat - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("global")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("global");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Global Chat - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("toggletells")){
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /toggletells");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables recieving non-bud private messages.");
-				return true;
-			}
-
-			if(toggle_list.get(p.getName()).contains("tells")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.remove("tells");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Non-BUD Private Messages - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-
-			if(!toggle_list.get(p.getName()).contains("tells")){
-				List<String> ltoggle_list = toggle_list.get(p.getName());
-				ltoggle_list.add("tells");
-				toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Non-BUD Private Messages - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-		}
-		if(cmd.getName().equalsIgnoreCase("add")){
-			if(!(args.length == 1)){
-				p.sendMessage(ChatColor.RED + "Incorrect syntax - " + ChatColor.BOLD + "/add <PLAYER>");
-				return true;
-			}
-
-			final String to_add = args[0];
-
-			String rank = PermissionMechanics.getRank(p.getName());
-			int max_buds = 50;
-
-			if(rank.equalsIgnoreCase("sub")){
-				max_buds = 100;
-			}
-			if(rank.equalsIgnoreCase("sub+") || rank.equalsIgnoreCase("sub++")){
-				max_buds = 150;
-			}
-
-			if(getBuddyListLength(p.getName()) >= max_buds){
-				p.sendMessage(ChatColor.RED + "Max. Buddy Limit of " + ChatColor.BOLD + max_buds + ChatColor.RED + " Reached.");
-				p.sendMessage(ChatColor.GRAY + "You can " + ChatColor.UNDERLINE + "subscribe" + ChatColor.GRAY + " at store.dungeonrealms.net to increase your buddy limit");
-				return true;
-			}
-
-			if(isPlayerOnBuddyList(p, to_add)){
-				p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + to_add + ChatColor.YELLOW + " is already on your BUDDY LIST.");
-				return true;
-			}
-
-			if(isPlayerOnIgnoreList(p, to_add)){
-				p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + to_add + ChatColor.YELLOW + " is currently on your IGNORE LIST.");
-				p.sendMessage(ChatColor.GRAY + "Use " + ChatColor.BOLD + "/delete " + to_add + ChatColor.GRAY + " to remove them from your ignore list.");
-				return true;
-			}
-
-			if(to_add.equalsIgnoreCase(p.getName())){
-				p.sendMessage(ChatColor.YELLOW + "You can't add yourself to your buddy list!");
-				p.sendMessage(ChatColor.GRAY + "Go make some friends :).");
-				return true;
-			}
-
-			if(to_add.length() > 16){
-				p.sendMessage(ChatColor.YELLOW + "Player name exceeds max. length of 16 characters.");
-				return true;
-			}
-
-			final OfflinePlayer op = Bukkit.getOfflinePlayer(to_add);
-
-			new BukkitRunnable(){
-				@Override
-				public void run() {
-					addBuddy(p, to_add);
-					updateCommBook(p);
-					p.sendMessage(ChatColor.GREEN + "You've added " + ChatColor.BOLD + to_add + ChatColor.GREEN + " to your BUDDY list.");
-
-					if(op.isOp()){
-						return;
-					}
-					
-					int bud_server = getPlayerServer(to_add);
-
-					if(bud_server >= 0){
-						String prefix = "US-";
-
-						if(bud_server > 1000){
-							bud_server -= 1000;
-							prefix = "EU-";
-						}
-
-						if(bud_server > 2000){
-							bud_server -= 2000;
-							prefix = "BR-";
-						}
-
-						if(bud_server >= 3000){
-							bud_server -= 3000;
-							prefix = "US-YT";
-						}
-
-						String remote_server = prefix + bud_server;
-						p.playSound(p.getLocation(), Sound.ORB_PICKUP, 2F, 1.2F);
-						p.sendMessage(ChatColor.YELLOW + to_add + " has joined " + remote_server + ".");
-					}
-					else if(bud_server <= -1){
-						return; // They're not online.
-					}
-				}
-			}.runTaskLaterAsynchronously(Main.plugin, 1L);
-			
-			return true;
-		}
-
-		if(cmd.getName().equalsIgnoreCase("ignore")){
-			if(!(args.length == 1)){
-				p.sendMessage(ChatColor.RED + "Incorrect syntax - " + ChatColor.BOLD + "/ignore <PLAYER>");
-				return true;
-			}
-
-			final String to_add = args[0];
-
-			if(isPlayerOnIgnoreList(p, to_add)){
-				p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + to_add + ChatColor.YELLOW + " is already on your IGNORE LIST.");
-				p.sendMessage(ChatColor.GRAY + "Use " + ChatColor.BOLD + "/delete " + to_add + ChatColor.GRAY + " to remove them from your ignore list.");
-				return true;
-			}
-
-			if(isPlayerOnBuddyList(p, to_add)){
-				deleteFromAllLists(p, to_add);
-			}
-
-
-			new BukkitRunnable(){
-				@Override
-				public void run() {
-					addIgnore(p, to_add);
-					updateCommBook(p);
-					p.sendMessage(ChatColor.RED + "You've added " + ChatColor.BOLD + to_add + ChatColor.RED + " to your IGNORE list.");
-				}
-			}.runTaskLaterAsynchronously(Main.plugin, 1L);
-			
-		}
-
-		if(cmd.getName().equalsIgnoreCase("delete")){
-			if(!(args.length == 1)){
-				p.sendMessage(ChatColor.RED + "Incorrect syntax - " + ChatColor.BOLD + "/delete <PLAYER>");
-				return true;
-			}
-
-			final String to_remove = args[0];
-
-			new BukkitRunnable(){
-				@Override
-				public void run() {
-					deleteFromAllLists(p, to_remove);
-					updateCommBook(p);
-				}
-			}.runTaskLaterAsynchronously(Main.plugin, 1L);
-			
-			//TODO: Send "X has logged out" to person who was deleted.
-		}
-		return true;
 	}
 
 	public static Socket getSocket(int server_num){
