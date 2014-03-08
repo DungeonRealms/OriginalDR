@@ -18,15 +18,6 @@ import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
-import me.vaqxine.PartyMechanics.commands.CommandP;
-import me.vaqxine.PartyMechanics.commands.CommandPAccept;
-import me.vaqxine.PartyMechanics.commands.CommandPDecline;
-import me.vaqxine.PartyMechanics.commands.CommandPInvite;
-import me.vaqxine.PartyMechanics.commands.CommandPKick;
-import me.vaqxine.PartyMechanics.commands.CommandPLoot;
-import me.vaqxine.PartyMechanics.commands.CommandPPromote;
-import me.vaqxine.PartyMechanics.commands.CommandPQuit;
-import me.vaqxine.PartyMechanics.commands.CommandParty;
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutEntityEquipment;
@@ -91,15 +82,15 @@ public class PartyMechanics implements Listener {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		manager = Bukkit.getScoreboardManager();
 		
-		Main.plugin.getCommand("p").setExecutor(new CommandP());
-		Main.plugin.getCommand("paccept").setExecutor(new CommandPAccept());
-		Main.plugin.getCommand("party").setExecutor(new CommandParty());
-		Main.plugin.getCommand("pdecline").setExecutor(new CommandPDecline());
-		Main.plugin.getCommand("pinvite").setExecutor(new CommandPInvite());
-		Main.plugin.getCommand("pkick").setExecutor(new CommandPKick());
-		Main.plugin.getCommand("ploot").setExecutor(new CommandPLoot());
-		Main.plugin.getCommand("ppromote").setExecutor(new CommandPPromote());
-		Main.plugin.getCommand("pquit").setExecutor(new CommandPQuit());
+		//Main.plugin.getCommand("p").setExecutor(new CommandP()); // TODO - Check Command
+		//Main.plugin.getCommand("paccept").setExecutor(new CommandPAccept());
+		//Main.plugin.getCommand("party").setExecutor(new CommandParty());
+		//Main.plugin.getCommand("pdecline").setExecutor(new CommandPDecline());
+		//Main.plugin.getCommand("pinvite").setExecutor(new CommandPInvite());
+		//Main.plugin.getCommand("pkick").setExecutor(new CommandPKick());
+		//Main.plugin.getCommand("ploot").setExecutor(new CommandPLoot());
+		//Main.plugin.getCommand("ppromote").setExecutor(new CommandPPromote());
+		//Main.plugin.getCommand("pquit").setExecutor(new CommandPQuit());
 		
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {

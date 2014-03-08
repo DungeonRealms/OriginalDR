@@ -35,7 +35,7 @@ public class HiveServer {
 	public void onEnable() {
 		setSystemPath();
 
-		Main.plugin.getCommand("classicollout").setExecutor(new CommandClassicRollout());
+		Main.plugin.getCommand("classicrollout").setExecutor(new CommandClassicRollout());
 		Main.plugin.getCommand("cycle").setExecutor(new CommandCycle());
 		Main.plugin.getCommand("rollout").setExecutor(new CommandRollout());
 		
