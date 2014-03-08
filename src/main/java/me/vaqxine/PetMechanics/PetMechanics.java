@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 
 import me.vaqxine.Main;
 import me.vaqxine.ChatMechanics.ChatMechanics;
-import me.vaqxine.DonationMechanics.DonationMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.Hive.Hive;
@@ -28,6 +27,7 @@ import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
+import me.vaqxine.PetMechanics.commands.CommandPet;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.TeleportationMechanics.TeleportationMechanics;
 import net.minecraft.server.v1_7_R1.EntityCreature;
@@ -44,8 +44,6 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftCreeper;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
@@ -135,6 +133,8 @@ public class PetMechanics implements Listener {
 		loadPetMessageTemplates();
 		instance = this;
 
+		Main.plugin.getCommand("pet").setExecutor(new CommandPet());
+		
 		for(org.bukkit.entity.Horse.Color horse_color : org.bukkit.entity.Horse.Color.values()){
 			horse_color_list.add(horse_color);
 		}
@@ -2298,49 +2298,4 @@ public class PetMechanics implements Listener {
 		}
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-
-		if(cmd.getName().equalsIgnoreCase("pet")){
-			Player p = (Player)sender;
-			if(!(p.isOp())){return true;}
-			p.getInventory().addItem(generatePetEgg(EntityType.BAT, ""));
-			p.sendMessage("[DEBUG] Field 0x0000c2 -> null");
-
-			for(Entity ent : p.getNearbyEntities(32, 32, 32)){
-				if(ent instanceof Horse){
-					ent.remove();
-				}
-			}
-		}
-
-		if(cmd.getName().equalsIgnoreCase("addpet")){
-			Player p = null;
-			if(sender instanceof Player){
-				p = (Player)sender;
-				if(!(p.isOp())){return true;}
-			}
-			if(args.length != 2){
-				if(p != null){
-					p.sendMessage("Incorrect Syntax. " + "/addpet <player> <pet>");
-					return true;
-				}
-				log.info("[PetMechanics] Incorrect syntax. /addpet <player> <pet>");
-			}
-
-			String player = args[0];
-			String pet = args[1];
-
-			addPetToPlayer(player, pet);
-			if(Bukkit.getPlayer(player) == null){
-				DonationMechanics.sendPacketCrossServer("[addpet]" + player + ":" + pet, -1, true);
-			}
-
-			log.info("[PetMechanics] Added pet '" + pet + "' to player " + player + ".");
-			if(p != null){
-				p.sendMessage("Added pet '" + pet + "' to player " + player + ".");
-			}
-		}
-
-		return true;
-	}
 }

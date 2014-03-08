@@ -17,6 +17,8 @@ import me.vaqxine.MerchantMechanics.MerchantMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
+import me.vaqxine.TutorialMechanics.commands.CommandSkip;
+import me.vaqxine.TutorialMechanics.commands.CommandTutorial;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,8 +26,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
@@ -64,7 +64,7 @@ public class TutorialMechanics implements Listener {
 	public static HashMap<String, List<String>> completion_delay = new HashMap<String, List<String>>();
 	// Player_name, List of NPC names who have a timer event to tell them they've completed running. (used for rewards)
 
-	List<String> skip_confirm = new ArrayList<String>();
+	public static List<String> skip_confirm = new ArrayList<String>();
 	// Confirm skipping of tutorial island.
 
 	List<String> leave_confirm = new ArrayList<String>();
@@ -83,6 +83,9 @@ public class TutorialMechanics implements Listener {
 		TI.setCanSeeFriendlyInvisibles(true);
 		TI.setDisplayName("TI");
 
+		Main.plugin.getCommand("skip").setExecutor(new CommandSkip());
+		Main.plugin.getCommand("tutorial").setExecutor(new CommandTutorial());
+		
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {
 				Location chest_shop_ex1 = new Location(Bukkit.getWorlds().get(0), 900, 39, -203);
@@ -636,29 +639,4 @@ public class TutorialMechanics implements Listener {
 		pl.sendMessage("");
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-
-		if(cmd.getName().equalsIgnoreCase("tutorial")){
-			final Player p = (Player)sender;
-			if(!(p.isOp())){
-				return true;
-			}
-		}
-
-		if(cmd.getName().equalsIgnoreCase("skip")){
-			Player p = (Player)sender;
-			if(!(onTutorialIsland(p))){
-
-				return true;
-			}
-			if(!(skip_confirm.contains(p.getName()))){
-				skip_confirm.add(p.getName());
-				p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "WARNING: " + ChatColor.RED + "If you skip this tutorial you will not recieve " + ChatColor.UNDERLINE + "ANY" + ChatColor.RED + " of the item rewards for completing it.");
-				p.sendMessage(ChatColor.GRAY + "If you're sure you still want to skip it, type '" + ChatColor.GREEN + ChatColor.BOLD + "Y" + ChatColor.GRAY + "' to finish the tutorial. Otherwise, just type '" + ChatColor.RED + "cancel" + ChatColor.GRAY + "' to continue with the tutorial.");
-				return true;
-			}
-		}
-
-		return true;
-	}
 }

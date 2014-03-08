@@ -15,9 +15,11 @@ import me.vaqxine.Main;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
+import me.vaqxine.SpawnMechanics.commands.CommandAddSpawn;
+import me.vaqxine.SpawnMechanics.commands.CommandSetVSpawn;
+import me.vaqxine.SpawnMechanics.commands.CommandSpawn;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -37,6 +39,11 @@ public class SpawnMechanics implements Listener {
 	public void onEnable() {
 		loadSpawnLocationTemplate();
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
+		
+		Main.plugin.getCommand("addspawn").setExecutor(new CommandAddSpawn());
+		Main.plugin.getCommand("setvspawn").setExecutor(new CommandSetVSpawn());
+		Main.plugin.getCommand("spawn").setExecutor(new CommandSpawn());
+		
 	    log.info("[SpawnMechanics] has been enabled.");
 	  }
 
@@ -143,37 +150,13 @@ public class SpawnMechanics implements Listener {
 		}
 
 		public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-			 
-			 if(cmd.getName().equalsIgnoreCase("addspawn")){
-				 	Player p = (Player)sender;
-				 	if(!(p.isOp())){return true;}
-				 	Location new_spawn_loc = p.getLocation();
-				 	spawn_map.add(new_spawn_loc);
-				 	p.sendMessage(ChatColor.YELLOW + "New spawn location registered and loaded.");
-				 	p.sendMessage(ChatColor.GRAY + "" + new_spawn_loc.getBlockX() + ", " + new_spawn_loc.getBlockY() + ", " + new_spawn_loc.getBlockZ());
-				 }
-			 
-			 if(cmd.getName().equalsIgnoreCase("spawn")){
-				 	Player p = (Player)sender;
-				 	if(!(p.isOp())){return true;}
-					Location respawn_location = getRandomSpawnPoint(p.getName());
-					p.teleport(respawn_location);
-				 }
-			 
-			 /*if(cmd.getName().equalsIgnoreCase("tppos")){
-				 	Player p = (Player)sender;
-				 	if(!(p.isOp())){return true;}
-					p.teleport(new Location(p.getWorld(), -985, 65, -285));
-			  }*/
-
-			 if(cmd.getName().equalsIgnoreCase("setvspawn")){
-				 	Player p = (Player)sender;
-				 	if(!(p.isOp())){return true;}
-					p.getWorld().setSpawnLocation(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ());
-					p.sendMessage(ChatColor.YELLOW + "Set VANILLA GLOBAL spawn to your position.");
-				 }
-
-			 return true;
+			/*if(cmd.getName().equalsIgnoreCase("tppos")){
+				Player p = (Player)sender;
+				if(!(p.isOp())){return true;}
+				p.teleport(new Location(p.getWorld(), -985, 65, -285));
+			}*/
+		
+			return true;
 		}	  
 	  
 }

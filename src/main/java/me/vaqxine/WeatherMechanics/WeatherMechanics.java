@@ -5,12 +5,11 @@ import java.util.logging.Logger;
 
 import me.vaqxine.Main;
 import me.vaqxine.DuelMechanics.DuelMechanics;
+import me.vaqxine.WeatherMechanics.drweather.CommandDRWeather;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.WeatherType;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,6 +24,8 @@ public class WeatherMechanics implements Listener {
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
+		Main.plugin.getCommand("drweather").setExecutor(new CommandDRWeather());
+		
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				for(Player pl : Main.plugin.getServer().getOnlinePlayers()){
@@ -61,21 +62,4 @@ public class WeatherMechanics implements Listener {
 		}
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		Player p = (Player)sender;
-		if(!(p.isOp())){
-			return true;
-		}
-		
-		if(cmd.getName().equalsIgnoreCase("drweather")){
-			if(args[0].equalsIgnoreCase("rain")){
-				p.setPlayerWeather(WeatherType.DOWNFALL);
-			}
-			else{
-				p.setPlayerWeather(WeatherType.CLEAR);
-			}
-		}
-		
-		return true;
-	}
 }

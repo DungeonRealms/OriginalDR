@@ -28,6 +28,11 @@ import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.MerchantMechanics.MerchantMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
+import me.vaqxine.ProfessionMechanics.commands.CommandHideFish;
+import me.vaqxine.ProfessionMechanics.commands.CommandProf;
+import me.vaqxine.ProfessionMechanics.commands.CommandSetFish;
+import me.vaqxine.ProfessionMechanics.commands.CommandSetOre;
+import me.vaqxine.ProfessionMechanics.commands.CommandShowFish;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
 import net.minecraft.server.v1_7_R1.Packet;
@@ -38,15 +43,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Furnace;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
@@ -262,6 +263,12 @@ public class ProfessionMechanics implements Listener {
 	public void onEnable(){
 		instance = this;
 
+		Main.plugin.getCommand("hidefish").setExecutor(new CommandHideFish());
+		Main.plugin.getCommand("prof").setExecutor(new CommandProf());
+		Main.plugin.getCommand("setfish").setExecutor(new CommandSetFish());
+		Main.plugin.getCommand("setore").setExecutor(new CommandSetOre());
+		Main.plugin.getCommand("showfish").setExecutor(new CommandShowFish());
+		
 		loadSkillLocationData();
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
@@ -891,7 +898,7 @@ public class ProfessionMechanics implements Listener {
 		return 1;
 	}
 
-	public String getItemDescription(ItemStack is){
+	public static String getItemDescription(ItemStack is){
 		Material m = is.getType();
 		if(m == Material.WOOD_PICKAXE){
 			return "A pickaxe made out of wood.";
@@ -1008,7 +1015,7 @@ public class ProfessionMechanics implements Listener {
 		return ChatColor.WHITE;
 	}
 
-	public int getItemEXP(ItemStack is){
+	public static int getItemEXP(ItemStack is){
 		if(!(is.hasItemMeta())){
 			return 0;
 		}
@@ -1154,7 +1161,7 @@ public class ProfessionMechanics implements Listener {
 		return buff;
 	}
 
-	public String getRandomStatBuff(int cur_tier, String skill){
+	public static String getRandomStatBuff(int cur_tier, String skill){
 
 		if(skill.equalsIgnoreCase("fishing")){
 			int buff_type = new Random().nextInt(6);
@@ -1371,7 +1378,7 @@ public class ProfessionMechanics implements Listener {
 		return "";
 	}
 
-	public void addEXP(Player pl, ItemStack is, int amount, String skill){
+	public static void addEXP(Player pl, ItemStack is, int amount, String skill){
 
 		if(profession_buff){
 			amount = (int)Math.round(amount * 1.20D); // +20%
@@ -1583,7 +1590,7 @@ public class ProfessionMechanics implements Listener {
 		item_exp.put(is, cur_exp);
 	}
 
-	public String generateEXPBar(double cur_exp, double needed_exp, int how_many_bars){
+	public static String generateEXPBar(double cur_exp, double needed_exp, int how_many_bars){
 		int max_bar = how_many_bars;
 
 		String return_string = ChatColor.GREEN.toString() + "";
@@ -3864,156 +3871,6 @@ public class ProfessionMechanics implements Listener {
 			//removeMobEffect(pl, PotionEffectType.FAST_DIGGING.getId());
 			pl.removePotionEffect(PotionEffectType.FAST_DIGGING);
 		}
-	}
-
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		Player p = (Player)sender;
-
-		if(!(p.isOp())){
-			return true;
-		}
-
-		if(cmd.getName().equalsIgnoreCase("prof")){
-			if(args.length == 1 && args[0].equalsIgnoreCase("fish")){
-				p.getInventory().addItem(t1_fishing);
-				p.getInventory().addItem(t3_fishing);
-				p.getInventory().addItem(getFishDrop(1));
-				p.getInventory().addItem(getFishDrop(2));
-				p.getInventory().addItem(getFishDrop(3));
-				p.getInventory().addItem(getFishDrop(4));
-				p.getInventory().addItem(getFishDrop(5));
-				return true;
-			}
-			if(args.length == 1 && args[0].equalsIgnoreCase("addexp")){
-				addEXP(p, p.getItemInHand(), 5000, "fishing");
-				return true;
-			}
-			if(args.length == 1){
-				p.getInventory().addItem(MerchantMechanics.t1_s_pot);
-				p.getInventory().addItem(MerchantMechanics.t2_s_pot);
-				p.getInventory().addItem(MerchantMechanics.t3_s_pot);
-				p.getInventory().addItem(MerchantMechanics.t4_s_pot);
-				p.getInventory().addItem(MerchantMechanics.t5_s_pot);
-			}
-			// TODO: Add Level 1 pickaxe
-			//p.setLevel(Integer.parseInt(args[0]));
-			p.getInventory().addItem(t1_pickaxe);
-			p.getInventory().addItem(t2_pickaxe);
-			p.getInventory().addItem(t3_pickaxe);
-			p.getInventory().addItem(t4_pickaxe);
-			p.getInventory().addItem(t5_pickaxe);
-
-			p.getInventory().addItem(coal_ore);
-			p.getInventory().addItem(emerald_ore);
-			p.getInventory().addItem(iron_ore);
-			p.getInventory().addItem(diamond_ore);
-			p.getInventory().addItem(gold_ore);
-			//p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, 1));
-		}
-
-		if(cmd.getName().equalsIgnoreCase("setfish")){
-			if(args.length != 1){
-				p.sendMessage("/setfish [none, t1, t2, t3, t4, t5]");
-				return true;
-			}
-
-			String fish_type = args[0];
-
-			if(fish_type.equalsIgnoreCase("none")){
-				fishing_place.remove(p.getName());
-				p.sendMessage(ChatColor.RED + "Your block placements will no longer be recorded as fishing locations.");
-				return true;
-			}
-
-			fishing_place.put(p.getName(), fish_type);
-			p.setItemInHand(new ItemStack(Material.WATER_LILY, -1));
-			p.setGameMode(GameMode.CREATIVE);
-			p.sendMessage(ChatColor.GOLD + "Now placing: '" + fish_type + "' fishing spots.");
-			p.sendMessage(ChatColor.GRAY + "The game will record every location where you place these lilypads as a fishing spot for the tier. Type '/setfish none' to stop.");
-			p.sendMessage(ChatColor.RED + "Please also note that any water spot within 10 blocks of a placed fishing spot will inherent the spot's properties.");
-		}
-
-		if(cmd.getName().equalsIgnoreCase("showfish")){
-			if(args.length != 1){
-				p.sendMessage("/showfish <radius>");
-				return true;
-			}
-
-			int radius = Integer.parseInt(args[0]);
-			Location loc = p.getLocation();
-			World w = loc.getWorld();
-			int i, j, k;
-			int x = (int) loc.getX();
-			int y = (int) loc.getY();
-			int z = (int) loc.getZ();
-
-			for (i = -radius; i <= radius; i++) {
-				for (j = -radius; j <= radius; j++) {
-					for (k = -radius; k <= radius; k++) {
-						loc = w.getBlockAt(x + i, y + j, z + k).getLocation();
-						if (fishing_location.containsKey(loc)) {
-							loc.getBlock().setType(Material.WATER_LILY);
-						}
-					}
-				}
-			}
-
-		}
-
-		if(cmd.getName().equalsIgnoreCase("hidefish")){
-			if(args.length != 1){
-				p.sendMessage("/hidefish <radius>");
-				return true;
-			}
-
-			int radius = Integer.parseInt(args[0]);
-			Location loc = p.getLocation();
-			World w = loc.getWorld();
-			int i, j, k;
-			int x = (int) loc.getX();
-			int y = (int) loc.getY();
-			int z = (int) loc.getZ();
-
-			for (i = -radius; i <= radius; i++) {
-				for (j = -radius; j <= radius; j++) {
-					for (k = -radius; k <= radius; k++) {
-						loc = w.getBlockAt(x + i, y + j, z + k).getLocation();
-						if (fishing_location.containsKey(loc)) {
-							loc.getBlock().setType(Material.AIR);
-						}
-					}
-				}
-			}
-		}
-
-		if(cmd.getName().equalsIgnoreCase("setore")){
-			if(args.length != 1){
-				p.sendMessage("/setore [none, t1, t2, t3, t4, t5]");
-				p.sendMessage("t1 = coal ore");
-				p.sendMessage("t2 = emerald ore");
-				p.sendMessage("t3 = iron ore");
-				p.sendMessage("t4 = diamond ore");
-				p.sendMessage("t5 = gold ore");
-				return true;
-
-			}
-
-			String ore_type = args[0];
-
-			if(ore_type.equalsIgnoreCase("none")){
-				ore_place.remove(p.getName());
-				p.sendMessage(ChatColor.RED + "Your block placements will no longer be recorded as ore locations.");
-				return true;
-			}
-
-			ore_place.put(p.getName(), ore_type);
-			p.setItemInHand(new ItemStack(Material.STONE, -1));
-			p.setGameMode(GameMode.CREATIVE);
-			p.sendMessage(ChatColor.GOLD + "Now placing: '" + ore_type + "' ore.");
-			p.sendMessage(ChatColor.GRAY + "The game will record every location where you place these stone blocks as a spawn point for this ore. Type '/setore none' to stop.");
-		}
-
-		return true;
 	}
 
 }

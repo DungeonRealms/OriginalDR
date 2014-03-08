@@ -17,6 +17,7 @@ import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
+import me.vaqxine.TeleportationMechanics.commands.CommandDRTP;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,8 +25,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -94,6 +93,8 @@ public class TeleportationMechanics implements Listener {
 	public void onEnable(){
 		log.info("[TeleportationMechanics] has been enabled.");
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
+		
+		Main.plugin.getCommand("drtp").setExecutor(new CommandDRTP());
 		
 		warp_map.put("overworld", new Location(Bukkit.getWorlds().get(0), -1158, 94, -515, 91F, 1F));
 		warp_map.put("underworld", new Location(Bukkit.getWorlds().get(0), -362, 170, -3440, -90F, 1F));
@@ -711,26 +712,5 @@ public class TeleportationMechanics implements Listener {
 		is.setDurability(ran_dur);
 		return is;
 	}
-
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-
-		if(cmd.getName().equalsIgnoreCase("drtp")){
-			Player p = (Player)sender;
-			if(!(p.isOp())){
-				return true;
-			}
-			
-			p.getInventory().addItem(CraftItemStack.asCraftCopy(makeUnstackable(Cyrennica_scroll)));
-			p.getInventory().addItem(CraftItemStack.asCraftCopy(makeUnstackable(Dark_Oak_Tavern_scroll)));
-			p.getInventory().addItem(CraftItemStack.asCraftCopy(makeUnstackable(Harrison_scroll)));
-			p.getInventory().addItem(CraftItemStack.asCraftCopy(makeUnstackable(Deadpeaks_Mountain_Camp_scroll)));
-			p.getInventory().addItem(CraftItemStack.asCraftCopy(makeUnstackable(Jagged_Rocks_Tavern)));
-			p.getInventory().addItem(CraftItemStack.asCraftCopy(makeUnstackable(Tripoli_scroll)));
-			p.getInventory().addItem(CraftItemStack.asCraftCopy(makeUnstackable(Swamp_safezone_scroll)));
-			p.getInventory().addItem(CraftItemStack.asCraftCopy(makeUnstackable(Crestguard_keep_scroll)));
-		}
-		return true;
-	}
-
 
 }

@@ -17,6 +17,7 @@ import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RestrictionMechanics.RestrictionMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
+import me.vaqxine.TradeMechanics.commands.CommandToggleTrade;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,8 +25,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -68,6 +67,8 @@ public class TradeMechanics implements Listener {
 		
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
+		Main.plugin.getCommand("toggletrade").setExecutor(new CommandToggleTrade());
+		
 		ItemMeta im = divider.getItemMeta();
 		im.setDisplayName(" ");
 		divider.setItemMeta(im);
@@ -1315,34 +1316,4 @@ public class TradeMechanics implements Listener {
 		}
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-
-		if(cmd.getName().equalsIgnoreCase("toggletrade")){
-			Player p = (Player)sender;
-			if(!(args.length == 0)){
-				p.sendMessage(ChatColor.RED + "Invalid Command.");
-				p.sendMessage(ChatColor.GRAY + "Usage: /toggletrade");
-				p.sendMessage(ChatColor.GRAY + "Description: Enables / Disables recieving trade requests.");
-				return true;
-			}
-
-			if(CommunityMechanics.toggle_list.get(p.getName()).contains("trade")){
-				List<String> ltoggle_list = CommunityMechanics.toggle_list.get(p.getName());
-				ltoggle_list.remove("trade");
-				CommunityMechanics.toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.GREEN + "Trade - " + ChatColor.BOLD + "ENABLED");
-				return true;
-			}
-
-			if(!CommunityMechanics.toggle_list.get(p.getName()).contains("trade")){
-				List<String> ltoggle_list = CommunityMechanics.toggle_list.get(p.getName());
-				ltoggle_list.add("trade");
-				CommunityMechanics.toggle_list.put(p.getName(), ltoggle_list);
-				p.sendMessage(ChatColor.RED + "Trade - " + ChatColor.BOLD + "DISABLED");
-				return true;
-			}
-		}
-
-		return true;
-	}
 }

@@ -47,6 +47,9 @@ import me.vaqxine.ModerationMechanics.ModerationMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
+import me.vaqxine.RealmMechanics.commands.CommandRealm;
+import me.vaqxine.RealmMechanics.commands.CommandResetRealm;
+import me.vaqxine.RealmMechanics.commands.CommandSetRealmTier;
 import me.vaqxine.RepairMechanics.RepairMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
@@ -72,8 +75,6 @@ import org.bukkit.WorldType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
@@ -208,7 +209,7 @@ public class RealmMechanics implements Listener {
 	public static ConcurrentHashMap<String, Long> flying_realms = new ConcurrentHashMap<String, Long>();
 	// Realm name, The time is was set to flying + 30mins.
 
-	static HashMap<String, Long> realm_reset_cd = new HashMap<String, Long>();
+	public static HashMap<String, Long> realm_reset_cd = new HashMap<String, Long>();
 	// Prevents abuse of /resetrealm.
 
 	public static HashMap<String, List<String>> build_list = new HashMap<String, List<String>>();
@@ -243,6 +244,10 @@ public class RealmMechanics implements Listener {
 		instance = this;
 		main_world_name = Bukkit.getWorlds().get(0).getName();
 
+		Main.plugin.getCommand("realm").setExecutor(new CommandRealm());
+		Main.plugin.getCommand("resetrealm").setExecutor(new CommandResetRealm());
+		Main.plugin.getCommand("setrealmtier").setExecutor(new CommandSetRealmTier());
+		
 		setSystemPath();
 		cleanupRealmFolders();
 
@@ -4557,7 +4562,7 @@ public class RealmMechanics implements Listener {
 
 	}
 
-	public void resetRealm(Player p){
+	public static void resetRealm(Player p){
 		if(inv_portal_map.containsKey(p.getName())){
 			Location l = inv_portal_map.get(p.getName());
 			l.getBlock().setType(Material.AIR);
@@ -4667,91 +4672,6 @@ public class RealmMechanics implements Listener {
 		log.info("Creating dir "+dir.getName());
 		if(!dir.mkdirs()) throw new RuntimeException("Can not create dir "+dir);
 	}	  
-
-
-
-	@SuppressWarnings("deprecation")
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-
-		if(cmd.getName().equalsIgnoreCase("realm")){
-			Player p = (Player)sender;
-
-			String msg = "";
-			for(String s : args){
-				if(!(s.contains("/realm"))){
-					msg += s + " ";
-				}
-			}
-
-			realm_title.put(p.getName(), msg);
-			p.sendMessage("");
-			p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "                       " + "* REALM TITLE SET *");
-			p.sendMessage(ChatColor.GRAY + "\"" + msg + "\"");
-			p.sendMessage("");
-		}
-		
-		if(cmd.getName().equalsIgnoreCase("setrealmtier")){
-			Player pl = null;
-			if(sender instanceof Player){
-				pl = (Player)sender;
-				if(!(pl.isOp())){
-					return true;
-				}
-			}
-			
-			if(args.length != 2 && pl != null){
-				pl.sendMessage("/setrealmtier <player> <tier>");
-				return true;
-			}
-			
-			String p_name = args[0];
-			int tier = Integer.parseInt(args[1]);
-			
-			if(Bukkit.getPlayer(p_name) == null){
-				pl.sendMessage(ChatColor.RED + "The player '" + p_name + "' is not online.");
-				return true;
-			}
-			
-			realm_tier.put(p_name, tier);
-			pl.sendMessage(ChatColor.GREEN + "Set player " + p_name + "'s realm tier to " + tier);
-		}
-
-		if(cmd.getName().equalsIgnoreCase("resetrealm")){
-			final Player p = (Player)sender;
-			if(realm_loaded_status.containsKey(p.getName()) && realm_loaded_status.get(p.getName()) == true){
-				p.sendMessage(ChatColor.RED + "Your realm is still LOADED on another server.");
-				p.sendMessage(ChatColor.GRAY + "Wait 2 minute(s) and try again, or rejoin the other server.");
-				async_realm_status.add(p.getName());
-				return true;
-			}
-			if(realm_reset_cd.containsKey(p.getName())){
-				if((System.currentTimeMillis() - realm_reset_cd.get(p.getName())) <= (3600 * 1000)){ // 1 hour.
-					p.sendMessage(ChatColor.RED + "You may only reset your realm " + ChatColor.UNDERLINE + "ONCE" + ChatColor.RED + " per hour.");
-					return true;
-				}
-			}
-			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "REALM RESET RUNNING..."+ ChatColor.RED + " 0%");
-			resetRealm(p);
-			realm_tier.put(p.getName(), 1);
-			int slot = -1;
-			if(p.getInventory().contains(Material.NETHER_STAR)){
-				slot = p.getInventory().first(Material.NETHER_STAR);
-			}
-
-			if(slot == -1){
-				if(p.getInventory().getItem(7) == null && p.getInventory().getItem(7).getType() == Material.AIR){
-					p.getInventory().setItem(7, makeTeleportRune(p));
-				}
-				else{
-					p.getInventory().setItem(p.getInventory().firstEmpty(), makeTeleportRune(p));
-				}
-			}
-			p.updateInventory();
-			realm_reset_cd.put(p.getName(), System.currentTimeMillis());
-		}
-
-		return true;
-	}
 
 }
 

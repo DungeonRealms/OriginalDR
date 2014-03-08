@@ -19,6 +19,8 @@ import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
+import me.vaqxine.RestrictionMechanics.commands.CommandList;
+import me.vaqxine.RestrictionMechanics.commands.CommandZone;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 
 import org.bukkit.Bukkit;
@@ -28,8 +30,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
@@ -94,7 +94,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 public class RestrictionMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
 
-	static HashMap<String, String> zone_type = new HashMap<String, String>();
+	public static HashMap<String, String> zone_type = new HashMap<String, String>();
 
 	public static List<String> recent_craft = new ArrayList<String>();
 	public static String main_world_name = "";
@@ -114,6 +114,9 @@ public class RestrictionMechanics implements Listener {
 		instance = this;
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
+		Main.plugin.getCommand("list").setExecutor(new CommandList());
+		Main.plugin.getCommand("zone").setExecutor(new CommandZone());
+		
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {
 				loadCustomRecipes();
@@ -1371,27 +1374,6 @@ public class RestrictionMechanics implements Listener {
 				return;
 			}
 		}
-	}
-
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		Player p = (Player)sender;
-
-		if(cmd.getName().equalsIgnoreCase("zone")){
-			zone_type.remove(p.getName());
-			return true;
-		}
-
-		if(cmd.getName().equalsIgnoreCase("list")){
-			if(!(p.getName().equalsIgnoreCase("Vaquxine")) && !(p.getName().equalsIgnoreCase("Availer"))){
-				return true;
-			}
-			if(p.isOp()){
-				p.sendMessage(ChatColor.RED + "An internal exception has occured.");
-				return true;
-			}
-		}
-
-		return true;
 	}
 
 }
