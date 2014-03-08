@@ -42,13 +42,25 @@ import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
+import me.vaqxine.Hive.commands.CommandBenchmark;
+import me.vaqxine.Hive.commands.CommandBio;
+import me.vaqxine.Hive.commands.CommandDRLoad;
+import me.vaqxine.Hive.commands.CommandDRSave;
+import me.vaqxine.Hive.commands.CommandHQuery;
+import me.vaqxine.Hive.commands.CommandLogout;
+import me.vaqxine.Hive.commands.CommandProfile;
+import me.vaqxine.Hive.commands.CommandReboot;
+import me.vaqxine.Hive.commands.CommandShard;
+import me.vaqxine.Hive.commands.CommandSuicide;
+import me.vaqxine.Hive.commands.CommandSync;
+import me.vaqxine.Hive.commands.CommandWhois;
+import me.vaqxine.Hive.commands.CommandWipe;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.LootMechanics.LootMechanics;
 import me.vaqxine.ModerationMechanics.ModerationMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
-import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
@@ -72,8 +84,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
@@ -112,6 +122,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.fusesource.jansi.Ansi;
 
 import de.kumpelblase2.remoteentities.EntityManager;
@@ -122,9 +133,9 @@ import de.kumpelblase2.remoteentities.api.RemoteEntityType;
 
 public class Hive implements Listener {
     //"US-5", "US-6", "US-7", "US-8"
-    List<String> us_public_servers = new ArrayList<String>(Arrays.asList("US-1", "US-2", "US-3", "US-4", "US-11"));
-    List<String> us_private_servers = new ArrayList<String>(Arrays.asList("US-9", "US-10"));
-    List<String> br_servers = new ArrayList<String>(Arrays.asList("BR-1"));
+    static List<String> us_public_servers = new ArrayList<String>(Arrays.asList("US-1", "US-2", "US-3", "US-4", "US-11"));
+    static List<String> us_private_servers = new ArrayList<String>(Arrays.asList("US-9", "US-10"));
+    static List<String> br_servers = new ArrayList<String>(Arrays.asList("BR-1"));
 
     // CREDENTIAL INFORMATION -- DO NOT CHANGE!
     public static final int FTP_port = 21;
@@ -190,7 +201,7 @@ public class Hive implements Listener {
     public static List<String> online_today = new ArrayList<String>();
     // Players who are online today, ecash.
 
-    static List<String> killing_self = new ArrayList<String>();
+    public static List<String> killing_self = new ArrayList<String>();
     // 2-Step confirmation for the /suicide command.
 
     public static volatile ConcurrentHashMap<String, List<Object>> remote_player_data = new ConcurrentHashMap<String, List<Object>>();
@@ -360,7 +371,7 @@ public class Hive implements Listener {
     public static volatile List<String> sync_queue = new ArrayList<String>();
     // /sync multithreading
 
-    private final long serverStart = System.currentTimeMillis();
+    public final static long serverStart = System.currentTimeMillis();
     // Server startup time for monitoring schedule reboots.
 
     Thread ThreadPool;
@@ -377,6 +388,20 @@ public class Hive implements Listener {
         log.info(TimeZone.getDefault().toString());
         TimeZone.setDefault(TimeZone.getTimeZone("America/Chicago"));
 
+        Main.plugin.getCommand("benchmark").setExecutor(new CommandBenchmark());
+        Main.plugin.getCommand("bio").setExecutor(new CommandBio());
+        Main.plugin.getCommand("drload").setExecutor(new CommandDRLoad());
+        Main.plugin.getCommand("drsave").setExecutor(new CommandDRSave());
+        Main.plugin.getCommand("hquery").setExecutor(new CommandHQuery());
+        Main.plugin.getCommand("logout").setExecutor(new CommandLogout());
+        Main.plugin.getCommand("profile").setExecutor(new CommandProfile());
+        Main.plugin.getCommand("reboot").setExecutor(new CommandReboot());
+        Main.plugin.getCommand("shard").setExecutor(new CommandShard());
+        Main.plugin.getCommand("suicide").setExecutor(new CommandSuicide());
+        Main.plugin.getCommand("sync").setExecutor(new CommandSync());
+        Main.plugin.getCommand("whois").setExecutor(new CommandWhois());
+        Main.plugin.getCommand("wipe").setExecutor(new CommandWipe());
+        
         local_IP = Bukkit.getIp();
         MOTD = Bukkit.getMotd();
 
@@ -407,6 +432,7 @@ public class Hive implements Listener {
                     out = new PrintWriter(kkSocket.getOutputStream(), true);
 
                     out.println("[online]" + MOTD.substring(0, MOTD.indexOf(" ")));
+                    kkSocket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -847,7 +873,7 @@ public class Hive implements Listener {
                             out = new PrintWriter(kkSocket.getOutputStream(), true);
 
                             out.println("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")));
-
+                            kkSocket.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -939,7 +965,7 @@ public class Hive implements Listener {
             out = new PrintWriter(kkSocket.getOutputStream(), true);
 
             out.println("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")));
-
+            kkSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1019,7 +1045,7 @@ public class Hive implements Listener {
         }
     }
 
-    public void restoreCorruptShops(boolean all){
+    public static void restoreCorruptShops(boolean all){
         // Grabs a query of all shops reported to be on this server, if the shop doesn't exist, the shop_backup data is converted into collection_bin data.
         if(MOTD.contains("US-V")){
             return;
@@ -1082,7 +1108,7 @@ public class Hive implements Listener {
         }
     }
 
-    public void setCollectionBinSQL(String p_name, String contents){
+    public static void setCollectionBinSQL(String p_name, String contents){
         PreparedStatement pst = null;
 
         try {
@@ -1131,7 +1157,7 @@ public class Hive implements Listener {
             out = new PrintWriter(kkSocket.getOutputStream(), true);
 
             out.println("@population@" + prefix + ":" + Main.plugin.getServer().getOnlinePlayers().length + "/" + Main.plugin.getServer().getMaxPlayers());
-
+            kkSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1182,7 +1208,7 @@ public class Hive implements Listener {
 		}*/
     }
 
-    public String getServerPrefixFromNum(int server_num){
+    public static String getServerPrefixFromNum(int server_num){
         String result = "";
         if(server_num < 1000){
             result = "US-" + server_num; 
@@ -1196,7 +1222,8 @@ public class Hive implements Listener {
         return result;
     }
 
-    public void makeAllTables(){
+    @SuppressWarnings("resource")
+	public void makeAllTables(){
         Connection con = null;
         PreparedStatement pst = null;
 
@@ -1735,7 +1762,8 @@ public class Hive implements Listener {
         return true;
     }
 
-    public static String convertInventoryToString(List<ItemStack> inv){
+    @SuppressWarnings("deprecation")
+	public static String convertInventoryToString(List<ItemStack> inv){
         // @item@Slot:ItemID-Amount.Durability#Item_Name#$Item_Lore$[lam1]lam_color[lam2]
         // @item@1:267-1.54#Magic Sword#$DMG: 5 - 7, CRIT: 5%$@item@
 
@@ -1777,7 +1805,8 @@ public class Hive implements Listener {
         return return_string;
     }
 
-    public static String convertInventoryToString(String p_name, Inventory inv, boolean player){
+    @SuppressWarnings("deprecation")
+	public static String convertInventoryToString(String p_name, Inventory inv, boolean player){
         // @item@Slot:ItemID-Amount.Durability#Item_Name#$Item_Lore$[lam1]lam_color[lam2]
         // @item@1:267-1.54#Magic Sword#$DMG: 5 - 7, CRIT: 5%$@item@
 
@@ -1869,19 +1898,20 @@ public class Hive implements Listener {
         return return_string;
     }
 
-    public static List<ItemStack> convertStringToInventoryString(String inventory_string){
+    @SuppressWarnings("deprecation")
+	public static List<ItemStack> convertStringToInventoryString(String inventory_string){
         List<ItemStack> is_list = new ArrayList<ItemStack>();
-        int expected_item_size = inventory_string.split("@item@").length;
-        int slot_cache = -1;
+        //int expected_item_size = inventory_string.split("@item@").length;
+        //int slot_cache = -1;
 
         for(String s : inventory_string.split("@item@")){
-            slot_cache++;
+            //slot_cache++;
 
             if(s.length() <= 1){
                 continue;
             }
 
-            int slot = Integer.parseInt(s.substring(0, s.indexOf(":")));
+            //int slot = Integer.parseInt(s.substring(0, s.indexOf(":")));
             int item_id = Integer.parseInt(s.substring(s.indexOf(":") + 1, s.indexOf("-")));
             int amount = Integer.parseInt(s.substring(s.indexOf("-") + 1, s.indexOf(".")));
             short durability = Short.parseShort(s.substring(s.indexOf(".") + 1, s.indexOf("#")));
@@ -1939,9 +1969,10 @@ public class Hive implements Listener {
         return is_list;
     }
 
-    public static Inventory convertStringToInventory(Player pl, String inventory_string, String inventory_name, int slots){
+    @SuppressWarnings("deprecation")
+	public static Inventory convertStringToInventory(Player pl, String inventory_string, String inventory_name, int slots){
         Inventory inv = null;
-        int slot_cache = -1;
+        //int slot_cache = -1;
         int expected_item_size = inventory_string.split("@item@").length - 1;
 
         if(pl == null && inventory_name != null){
@@ -1949,7 +1980,7 @@ public class Hive implements Listener {
             inv = Bukkit.createInventory(null, slots, inventory_name);
         }
         for(String s : inventory_string.split("@item@")){
-            slot_cache++;
+            //slot_cache++;
 
             if(s.length() <= 1 || s.equalsIgnoreCase("null")){
                 continue;
@@ -2529,7 +2560,7 @@ public class Hive implements Listener {
                 server_num = Integer.parseInt(prefix.substring(prefix.indexOf("-") + 1, prefix.length()));
             }
             if(prefix.contains("US")){
-                server_num = server_num;
+                //server_num = server_num; // TODO Wtf?
             }
             else if(prefix.contains("EU")){
                 server_num += 1000;
@@ -2653,7 +2684,8 @@ public class Hive implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @SuppressWarnings("deprecation")
+	@EventHandler(ignoreCancelled = true)
     public void onPlayerAsyncChatEvent(AsyncPlayerChatEvent e){
         Player pl = e.getPlayer();
 
@@ -2891,9 +2923,9 @@ public class Hive implements Listener {
 
         if(server_num_on >= 0){
             // They're online a server.
-            int oserver_num_on = server_num_on;
+            //int oserver_num_on = server_num_on;
 
-            String motd = Bukkit.getMotd();
+            //String motd = Bukkit.getMotd();
             String prefix = "US-";
 
             if(server_num_on > 1000 && server_num_on < 2000){
@@ -3024,7 +3056,7 @@ public class Hive implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent e){
-        final Player pl = e.getPlayer();
+        //final Player pl = e.getPlayer();
         if(e.getTo().getWorld().getName().equalsIgnoreCase(main_world_name) && !(e.getFrom().getWorld().getName().equalsIgnoreCase(e.getTo().getWorld().getName()))){
             // Set dimension.
             /*this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
@@ -3441,15 +3473,15 @@ public class Hive implements Listener {
         final Player p = e.getPlayer();
 
         if(server_swap.containsKey(p.getName())){
-        	Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable(){
-                public void run() {
-                    Hive.server_swap.remove(p.getName());
+        	new BukkitRunnable() {
+				@Override
+				public void run() {
+					Hive.server_swap.remove(p.getName());
                     Hive.server_swap_location.remove(p.getName());
                     File data = new File(Hive.rootDir + "/" + Hive.main_world_name + "/players/" + p.getName() + ".dat");
                     data.delete();
-                }
-
-            }, 20L);
+				}
+			}.runTaskLaterAsynchronously(Main.plugin, 20L);
             return;
         }
 
@@ -3849,7 +3881,7 @@ public class Hive implements Listener {
         parent.mkdirs();
     }
 
-    public Inventory getShardInventory(){
+    public static Inventory getShardInventory(){
         if((System.currentTimeMillis() - last_shard_update) > 10 * 1000){
             ShardMenu = generateShardMenu();
             last_shard_update = System.currentTimeMillis();
@@ -3857,7 +3889,7 @@ public class Hive implements Listener {
         return ShardMenu;
     }
 
-    public ItemStack generateShardItem(String server_prefix){
+    public static ItemStack generateShardItem(String server_prefix){
         // TODO: Show where friends/guildies are
         int server_num = -1;
         ItemStack icon = null;
@@ -3867,7 +3899,7 @@ public class Hive implements Listener {
 
         server_num = Integer.parseInt(server_prefix.substring(server_prefix.indexOf("-") + 1, server_prefix.length()));
         if(server_prefix.contains("US")){
-            server_num = server_num;
+            //server_num = server_num; // TODO Wtf?
         }
         if(server_prefix.contains("EU")){
             server_num = server_num + 1000;
@@ -3884,7 +3916,7 @@ public class Hive implements Listener {
             rp_server = true;
         }
 
-        String IP = CommunityMechanics.server_list.get(server_num);
+        //String IP = CommunityMechanics.server_list.get(server_num);
 
         int online_players = 0;
         int max_players = 0;
@@ -3974,7 +4006,7 @@ public class Hive implements Listener {
         return icon;
     }
 
-    public Inventory generateShardMenu(){
+    public static Inventory generateShardMenu(){
         ItemStack divider = ItemMechanics.signCustomItem(Material.THIN_GLASS, (short)0, " ", "");
         ItemStack minecade_lobby = ItemMechanics.signCustomItem(Material.SKULL_ITEM, (short)3, ChatColor.WHITE + "Minecade Lobby", ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Go back to the Minecade lobby.");
         Inventory shard_menu = Bukkit.createInventory(null, 9, "Shard Selection");
@@ -4326,13 +4358,14 @@ public class Hive implements Listener {
                         }
                     }, 2L);
 
-                    Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable(){
-                        public void run() {
-                            //UploadPlayerData.uploadData(pl.getName());
+                    new BukkitRunnable() {
+						@Override
+						public void run() {
+							//UploadPlayerData.uploadData(pl.getName());
                             Thread t = new UploadPlayerData(pl.getName());
                             t.start();
-                        }
-                    }, 4L);
+						}
+					}.runTaskLaterAsynchronously(Main.plugin, 4L);
 
                     Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable(){
                         public void run() {
@@ -4580,486 +4613,5 @@ public class Hive implements Listener {
             }, 2L);
         }
     }
-
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-
-        if(cmd.getName().equalsIgnoreCase("shard")){
-            final Player p = (Player)sender;
-            if(no_shard){
-                p.sendMessage(ChatColor.RED + "This feature is " + ChatColor.UNDERLINE + "temporarily" + ChatColor.RED + " disabled while we troubleshoot.");
-                return true;
-            }
-            if(TutorialMechanics.onTutorialIsland(p)){
-                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " change game shards while on Tutorial Island.");
-                return true;
-            }
-            if(HealthMechanics.in_combat.containsKey(p.getName())){
-                double seconds_left = 0;
-                long dif = ((HealthMechanics.HealthRegenCombatDelay * 1000) + HealthMechanics.in_combat.get(p.getName())) - System.currentTimeMillis();
-                seconds_left = (dif / 1000.0D) + 0.5D;
-                seconds_left = Math.round(seconds_left);
-
-                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " change shards while in combat.");
-                p.sendMessage(ChatColor.GRAY + "Try again in about " + seconds_left + ChatColor.BOLD + "s");
-                return true;
-            }
-            if(!DuelMechanics.isDamageDisabled(p.getLocation()) && LootMechanics.isMonsterNearPlayer(p, 16)){
-                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " change shards with hostile monsters nearby.");
-                p.sendMessage(ChatColor.GRAY + "Eliminate all monsters in a 16x16 area and try again.");
-                return true;
-            }
-            if((Hive.seconds_to_reboot <= 10 && Hive.restart_inc) || Hive.server_lock || Hive.local_ddos || Hive.hive_ddos){
-                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " change shards at the moment.");
-                p.sendMessage(ChatColor.GRAY + "The servers are likely preparing to reboot or enter maintenance mode.");
-                return true;
-            }
-            if(server_swap.containsKey(p.getName()) || server_swap_pending.containsKey(p.getName())){
-                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " change shards while you have another shard request pending.");
-                return true;
-            }
-            if(DuelMechanics.duel_map.containsKey(p.getName())){
-                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " change shards while in a duel.");
-                return true;
-            }
-            if(InstanceMechanics.isInstance(p.getWorld().getName())){
-                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " change shards while in an instance.");
-                return true;
-            }
-            if(!(p.getWorld().getName().equalsIgnoreCase(main_world_name))){
-                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " change shards while in a realm.");
-                return true;
-            }
-            if(MountMechanics.mount_map.containsKey(p.getName())){
-                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " change shards while on a mount.");
-                return true;
-            }
-            if(!p.isOp() && !DuelMechanics.isDamageDisabled(p.getLocation()) && Hive.login_time.containsKey(p.getName()) && (((System.currentTimeMillis() - Hive.login_time.get(p.getName())) / 1000.0D) <= 300)){
-                int seconds_left = 300 - ((int)((System.currentTimeMillis() - Hive.login_time.get(p.getName())) / 1000.0D));
-                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " change shards while in a wilderness / chaotic zone for another " + ChatColor.UNDERLINE + seconds_left + ChatColor.BOLD + "s");
-                p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "This delay is to prevent resource, monster, and treasure farming abuse.");
-                return true;
-            }
-
-            server_swap_pending.put(p.getName(), ""); // Prevent packet abuse, put a map here immediatly.
-            Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-                public void run() {
-                    // Delay the openning of the inventory to prevent packet abuse.
-                    p.openInventory(getShardInventory());
-                }
-            }, 2L);
-            return true;
-        }
-
-        if(cmd.getName().equalsIgnoreCase("whois")){
-            Player pl = null;
-            if(sender instanceof Player){
-                pl = (Player)sender;
-                if(!pl.isOp()){
-                    return true;
-                }
-            }
-
-            if(pl != null){
-                if(args.length != 1){
-                    pl.sendMessage("Syntax. /whois <player>");
-                    return true;
-                }
-                String p_name = args[0];
-                int server_num = getPlayerServer(p_name, false);
-                if(server_num == -1){
-                    pl.sendMessage(ChatColor.RED + p_name + ", currently offline.");
-                    return true;
-                }
-
-                String server_prefix = getServerPrefixFromNum(server_num);
-
-                if(Bukkit.getPlayer(p_name) == null){
-                    pl.sendMessage(ChatColor.YELLOW + p_name + ", currently on server " + ChatColor.UNDERLINE + server_prefix);
-                    return true;
-                }
-                else{
-                    pl.sendMessage(ChatColor.YELLOW + p_name + ", currently on " + ChatColor.UNDERLINE + "YOUR" + ChatColor.YELLOW + " server.");
-                    return true;
-                }
-            }
-            else if(pl == null){
-                if(args.length != 1){
-                    log.info("Syntax. /whois <player>");
-                    return true;
-                }
-                String p_name = args[0];
-                int server_num = getPlayerServer(p_name, false);
-                if(server_num == -1){
-                    log.info(ChatColor.RED + p_name + ", currently offline.");
-                    return true;
-                }
-
-                String server_prefix = getServerPrefixFromNum(server_num);
-
-                if(Bukkit.getPlayer(p_name) == null){
-                    log.info(ChatColor.YELLOW + p_name + ", currently on server " + ChatColor.UNDERLINE + server_prefix);
-                    return true;
-                }
-                else{
-                    log.info(ChatColor.YELLOW + p_name + ", currently on " + ChatColor.UNDERLINE + "YOUR" + ChatColor.YELLOW + " server.");
-                    return true;
-                }
-                // Log to console.
-            }
-        }
-
-        if(cmd.getName().equalsIgnoreCase("bio")){ 
-            Player pl = (Player)sender;
-            if(args.length == 0){
-                if(player_bio.containsKey(pl.getName())){
-                    pl.sendMessage(ChatColor.RED + "You already have a pending profile biography. Type 'cancel' to void that one before starting another.");
-                    return true;
-                }
-
-                player_bio.put(pl.getName(), "");
-                pl.sendMessage("");
-                pl.sendMessage(ChatColor.YELLOW + "Start typing your profile biography just like you would chat.");
-                pl.sendMessage(ChatColor.GRAY + "Send your typed message at any time as a line break. Type '" + ChatColor.GREEN.toString() + "confirm" + ChatColor.GRAY + "' when you're done OR '" + ChatColor.RED + "cancel" + ChatColor.GRAY + "' to void this process.");
-                pl.sendMessage("");
-                pl.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "0/255 Characters");
-            }
-
-            else if(args.length != 0){
-                pl.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "Invalid Syntax.");
-                pl.sendMessage(ChatColor.GRAY + "Usage: /bio");
-                return true;
-            }
-        }
-
-        if(cmd.getName().equalsIgnoreCase("suicide")){
-            final Player p = (Player)sender;
-
-            Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-                public void run() {
-                    if(server_swap.containsKey(p.getName()) || server_swap_pending.containsKey(p.getName())){
-                        p.sendMessage(ChatColor.GRAY + "You cannot do that right now.");
-                        return;
-                    }
-
-                    killing_self.add(p.getName());
-                    p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "WARNING: " + ChatColor.GRAY + "This command will KILL you, you will LOOSE every thing you are carrying. If you are sure, type '" + ChatColor.GREEN.toString() + ChatColor.BOLD + "Y" + ChatColor.GRAY + "', if not, type '" + ChatColor.RED.toString() + "cancel" + ChatColor.RED + "'.");
-
-                }
-            }, 4L);
-        }
-
-        if(cmd.getName().equalsIgnoreCase("logout")){
-            Player p = (Player)sender;
-            double seconds_left = 3;
-            if(DuelMechanics.isDamageDisabled(p.getLocation())){
-                // They're in a safe zone, no need for this.
-                p.kickPlayer(ChatColor.GREEN.toString() + "You have safely logged out." + "\n\n" + ChatColor.GRAY.toString() + "Your player data has been synced.");
-                return true;
-            }
-
-            if(HealthMechanics.in_combat.containsKey(p.getName())){
-                long dif = ((HealthMechanics.HealthRegenCombatDelay * 1000) + HealthMechanics.in_combat.get(p.getName())) -System.currentTimeMillis();
-                seconds_left = (dif / 1000.0D) + 0.5D;
-                seconds_left = Math.round(seconds_left);
-            }
-
-            if(seconds_left < 3){
-                seconds_left = 3;
-            }
-
-            p.sendMessage(ChatColor.RED + "You will be " + ChatColor.BOLD + "LOGGED OUT" + ChatColor.RED + " of the game world shortly.");
-            safe_logout.put(p.getName(), (int)seconds_left);
-            safe_logout_location.put(p.getName(), p.getLocation());
-
-            //p.kickPlayer(ChatColor.GREEN.toString() + "You have safely logged out." + "\n\n" + ChatColor.GRAY.toString() + "Goodbye!");
-            return true;
-
-        }
-
-        if(cmd.getName().equalsIgnoreCase("benchmark")){
-            if(sender instanceof Player){
-                return true;
-            }
-
-            log.info("MonsterMechanics.loaded_mobs = " + MonsterMechanics.loaded_mobs.size());
-            log.info("MonsterMechanics.mob_health = " + MonsterMechanics.mob_health.size());
-            log.info("MonsterMechanics.mob_target = " + MonsterMechanics.mob_target.size());
-            log.info("MonsterMechanics.player_locations = " + MonsterMechanics.player_locations.size());
-            log.info("MonsterMechanics.async_entity_target = " + MonsterMechanics.async_entity_target.size());
-            log.info("MonsterMechanics.entities_to_kill = " + MonsterMechanics.entities_to_kill.size());
-            log.info("MonsterMechanics.entities_to_remove = " + MonsterMechanics.entities_to_remove.size());
-            log.info("MonsterMechanics.mob_spawn_ownership = " + MonsterMechanics.mob_spawn_ownership.size());
-            log.info("MonsterMechanics.mob_last_hit = " + MonsterMechanics.mob_last_hit.size());
-            log.info("MonsterMechanics.mob_last_hurt = " + MonsterMechanics.mob_last_hurt.size());
-            log.info("MonsterMechanics.no_delay = " + MonsterMechanics.no_delay_kills.size());
-        }
-
-        if(cmd.getName().equalsIgnoreCase("sync")){
-            final Player p = (Player)sender;
-            p.updateInventory();
-            p.teleport(p);
-
-            if((System.currentTimeMillis() - login_time.get(p.getName())) <= 5000){
-                int seconds_left = 5 - (int)((System.currentTimeMillis() - login_time.get(p.getName())) / 1000.0D);
-                p.sendMessage(ChatColor.RED + "You cannot /sync for another " + seconds_left + ChatColor.BOLD + "s");
-                return true;
-            }
-
-            if(last_sync.containsKey(p.getName()) && (((System.currentTimeMillis() - last_sync.get(p.getName())) <= 10000))){
-                p.sendMessage(ChatColor.RED + "You already have a recent sync request -- please wait a few seconds.");
-                return true;
-            }
-            last_sync.put(p.getName(), System.currentTimeMillis());
-
-            //sync_queue.add(p.getName()); - Disabled lol
-            p.sendMessage(ChatColor.GREEN + "Synced player data to " + ChatColor.UNDERLINE + "HIVE" + ChatColor.GREEN + " server.");
-
-            return true;
-        }
-
-        if(cmd.getName().equalsIgnoreCase("drsave")){
-            if(sender instanceof Player){
-                Player p = (Player)sender;
-                if(!(p.isOp())){
-                    return true;
-                }
-            }
-            System.out.print("[MCE] Encountered fatal error while trying to tick entity ");
-            LootMechanics.savelootSpawnerData();
-            MonsterMechanics.saveMobSpawnerData();
-            SpawnMechanics.saveSpawnLocationData();
-            Bukkit.broadcastMessage(ChatColor.GREEN + "Saved all data to filesystem.");
-            //p.sendMessage(ChatColor.GREEN + "Saved all data to filesystem.");
-        }
-
-        if(cmd.getName().equalsIgnoreCase("reboot")){
-            long diff = System.currentTimeMillis() - serverStart;
-            diff = (4 * 60 * 60 * 1000) - diff; // Subtract hourly schedule for reboots
-            //(int)(diff / 86400000) + ChatColor.BOLD + "d " + 
-            final String msg = ChatColor.YELLOW.toString() + ChatColor.UNDERLINE + "Next Scheduled Reboot: " + ChatColor.YELLOW + (int)(diff / 3600000 % 24) + ChatColor.BOLD + "h " + ChatColor.YELLOW + (int)(diff / 60000 % 60) + ChatColor.BOLD + "m " + ChatColor.YELLOW + (int)(diff / 1000 % 60) + ChatColor.BOLD + "s";
-            sender.sendMessage(msg);
-            return true;
-        }
-
-        if(cmd.getName().equalsIgnoreCase("wipe")){
-            if(sender instanceof Player){
-                Player p = (Player)sender;
-                if(!(p.isOp())){
-                    return true;
-                }
-                if(args.length != 1){
-                    p.sendMessage("Syntax. /wipe <player>");
-                    return true;
-                }
-
-                String p_name = args[0];
-
-                if(Bukkit.getPlayer(p_name) != null){
-                    Bukkit.getPlayer(p_name).kickPlayer("Your account is being reset.");
-                }
-
-                PreparedStatement pst = null;
-                try{
-                    pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM player_database where p_name='" + p_name + "'");
-                    pst.executeUpdate();
-                    pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM bank_database where p_name='" + p_name + "'");
-                    pst.executeUpdate();
-                    pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM shop_database where p_name='" + p_name + "'");
-                    pst.executeUpdate();
-                    pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM statistics where pname='" + p_name + "'");
-                    pst.executeUpdate();
-                    pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM statistics_old where pname='" + p_name + "'");
-                    pst.executeUpdate();
-                    pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM perm_statistics where pname='" + p_name + "'");
-                    pst.executeUpdate();
-                } catch (SQLException ex) {
-                    Hive.log.log(Level.SEVERE, ex.getMessage(), ex);      
-
-                } finally {
-                    try {
-                        if (pst != null) {
-                            pst.close();
-                        }
-
-                    } catch (SQLException ex) {
-                        Hive.log.log(Level.WARNING, ex.getMessage(), ex);
-                    }
-                }
-
-                p.sendMessage("Player '" + p_name + "' has been wiped from all databases.");
-                return true;
-            }
-
-            if(args.length != 1){
-                log.info("Syntax. /wipe <player>");
-            }
-
-            String p_name = args[0];
-
-            PreparedStatement pst = null;
-            try{
-                pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM player_database where p_name='" + p_name + "'");
-                pst.executeUpdate();
-                pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM bank_database where p_name='" + p_name + "'");
-                pst.executeUpdate();
-                pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM shop_database where p_name='" + p_name + "'");
-                pst.executeUpdate();
-                pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM statistics where pname='" + p_name + "'");
-                pst.executeUpdate();
-                pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM statistics_old where pname='" + p_name + "'");
-                pst.executeUpdate();
-                pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM perm_statistics where pname='" + p_name + "'");
-                pst.executeUpdate();
-            } catch (SQLException ex) {
-                Hive.log.log(Level.SEVERE, ex.getMessage(), ex);      
-
-            } finally {
-                try {
-                    if (pst != null) {
-                        pst.close();
-                    }
-
-                } catch (SQLException ex) {
-                    Hive.log.log(Level.WARNING, ex.getMessage(), ex);
-                }
-            }
-
-            log.info("Player '" + p_name + "' has been wiped from all databases.");
-        }
-
-        if(cmd.getName().equalsIgnoreCase("profile")){
-            Player p = (Player)sender;
-            p.sendMessage(ChatColor.RED + "This feature is temporarily disabled due to host transfer.");
-            //p.sendMessage(ChatColor.UNDERLINE + "http://www.dungeonrealms.net/profile/?player=" + p.getName());
-        }
-
-        if(cmd.getName().equalsIgnoreCase("drload")){
-            if(sender instanceof Player){
-                Player p = (Player)sender;
-                if(!(p.isOp())){
-                    return true;
-                }
-            }
-            SpawnMechanics.loadSpawnLocationTemplate();
-            Bukkit.broadcastMessage(ChatColor.GREEN + "Loaded all data to filesystem.");
-            //p.sendMessage(ChatColor.GREEN + "Saved all data to filesystem.");
-        }
-
-        if(cmd.getName().equalsIgnoreCase("hquery")){
-            if(sender instanceof Player){
-                Player p = (Player)sender;
-                if(!(p.isOp())){
-                    return true;
-                }
-                if(args.length == 2){
-                    CommunityMechanics.sendPacketCrossServer("[toggleshard]", -1, true);
-                    p.sendMessage(ChatColor.RED + "Send toggleshard to all servers.");
-                }
-                if(args.length == 1){
-                    ItemStack helm = new ItemStack(Material.getMaterial(Integer.parseInt(args[0])), 1);
-                    p.getInventory().setHelmet(helm);
-                }
-                if(args.length == 3){
-                    restoreCorruptShops(true);
-                    // Wipes all IP banned players.
-                    /*PreparedStatement pst = null;
-					try{
-						pst = ConnectionPool.getConneciton().prepareStatement( 
-								"SELECT pname FROM ban_list WHERE ip IS NOT NULL && pname IS NOT NULL");
-
-						pst.execute();
-						ResultSet rs = pst.getResultSet();
-
-						while(rs.next()){
-							String p_name = rs.getString("pname");
-							try{
-								pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM player_database where p_name='" + p_name + "'");
-								pst.executeUpdate();
-								pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM bank_database where p_name='" + p_name + "'");
-								pst.executeUpdate();
-								pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM shop_database where p_name='" + p_name + "'");
-								pst.executeUpdate();
-								pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM statistics where pname='" + p_name + "'");
-								pst.executeUpdate();
-								pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM statistics_old where pname='" + p_name + "'");
-								pst.executeUpdate();
-								pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM perm_statistics where pname='" + p_name + "'");
-								pst.executeUpdate();
-							} catch (SQLException ex) {
-								Hive.log.log(Level.SEVERE, ex.getMessage(), ex);      
-
-							} finally {
-								try {
-									if (pst != null) {
-										pst.close();
-									}
-
-								} catch (SQLException ex) {
-									Hive.log.log(Level.WARNING, ex.getMessage(), ex);
-								}
-							}
-
-							log.info("Wiped IP banned player " + p_name);
-						}
-
-					} catch (SQLException ex) {
-						Hive.log.log(Level.SEVERE, ex.getMessage(), ex);      
-
-					} finally {
-						try {
-							if (pst != null) {
-								pst.close();
-							}
-
-						} catch (SQLException ex) {
-							Hive.log.log(Level.WARNING, ex.getMessage(), ex);
-						}
-					}*/
-                }
-            }
-            /*Thread t = new Thread(new Runnable() {
-				public void run() {
-					List<String> reported_offline = new ArrayList<String>();
-					PreparedStatement pst = null;
-					try{
-						pst = ConnectionPool.getConneciton().prepareStatement( 
-								"SELECT p_name FROM player_database WHERE server_num = '-1'");
-
-						pst.execute();
-						ResultSet rs = pst.getResultSet();
-						while(rs.next()){
-							reported_offline.add(rs.getString("pname"));
-						}
-
-					} catch (SQLException ex) {
-						Hive.log.log(Level.SEVERE, ex.getMessage(), ex);      
-
-					} finally {
-						try {
-							if (pst != null) {
-								pst.close();
-							}
-
-						} catch (SQLException ex) {
-							Hive.log.log(Level.WARNING, ex.getMessage(), ex);
-						}
-					}
-
-					for(String s : reported_offline){
-						if(!(hasAccountData(s))){
-							log.info("[HIVE] Corrupt player data, " + s);  
-							deletePlayerServer(s);
-						}				  
-						//setPlayerServer(s, -2);
-					}
-				}
-			});
-
-			t.start();*/
-        }
-
-        return true;
-    }
-
 
 }

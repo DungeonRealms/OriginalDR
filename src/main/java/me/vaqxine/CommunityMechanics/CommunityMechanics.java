@@ -235,6 +235,7 @@ public class CommunityMechanics implements Listener {
 		
 		// Tip batch sender.
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
+			@SuppressWarnings("static-access")
 			public void run() {
 				TipMechanics.displayRandomTip();
 			}

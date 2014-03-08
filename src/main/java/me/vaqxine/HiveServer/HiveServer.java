@@ -18,15 +18,13 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import me.vaqxine.Main;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.Hive.Hive;
+import me.vaqxine.HiveServer.commands.CommandClassicRollout;
+import me.vaqxine.HiveServer.commands.CommandCycle;
+import me.vaqxine.HiveServer.commands.CommandRollout;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.fusesource.jansi.Ansi;
 
 public class HiveServer {
@@ -37,6 +35,10 @@ public class HiveServer {
 	public void onEnable() {
 		setSystemPath();
 
+		Main.plugin.getCommand("classicollout").setExecutor(new CommandClassicRollout());
+		Main.plugin.getCommand("cycle").setExecutor(new CommandCycle());
+		Main.plugin.getCommand("rollout").setExecutor(new CommandRollout());
+		
 		log.info(Ansi.ansi().fg(Ansi.Color.CYAN).boldOff().toString() + "**************************");
 		log.info(Ansi.ansi().fg(Ansi.Color.CYAN).boldOff().toString() + "[HIVE (Server Edition)] has been enabled.");
 		log.info(Ansi.ansi().fg(Ansi.Color.CYAN).boldOff().toString() + "**************************" + Ansi.ansi().fg(Ansi.Color.WHITE).boldOff().toString());
@@ -57,14 +59,14 @@ public class HiveServer {
 		rootDir = rootDir.substring(0, rep);
 	}
 
-	public boolean isThisRootMachine(){
+	public static boolean isThisRootMachine(){
 		File f = new File("key");
 		if(f.exists()){return true;}
 		else{return false;}
 	}	
 
 
-	public void send8008Packet(String input, String server_ip, boolean all){
+	public static void send8008Packet(String input, String server_ip, boolean all){
 
 		Socket kkSocket = null;
 		PrintWriter out = null;
@@ -88,24 +90,24 @@ public class HiveServer {
 					out = new PrintWriter(kkSocket.getOutputStream(), true);
 				} catch (SocketTimeoutException e) {
 					e.printStackTrace();
-					log.info(Ansi.ansi().fg(Ansi.Color.RED).boldOff().toString() + "[HIVE (Server Edition)] Failed to send payload to server @ " + s + " ; this server may be offline.");
+					Main.log.info(Ansi.ansi().fg(Ansi.Color.RED).boldOff().toString() + "[HIVE (Server Edition)] Failed to send payload to server @ " + s + " ; this server may be offline.");
 					continue;
 				}
 
 				out.println(input);
 				out.close();
 				kkSocket.close();
-				log.info(Ansi.ansi().fg(Ansi.Color.CYAN).boldOff().toString() + "[HIVE (SERVER Edition)] Sent payload to " + s + "..." + Ansi.ansi().fg(Ansi.Color.WHITE).boldOff().toString());
+				Main.log.info(Ansi.ansi().fg(Ansi.Color.CYAN).boldOff().toString() + "[HIVE (SERVER Edition)] Sent payload to " + s + "..." + Ansi.ansi().fg(Ansi.Color.WHITE).boldOff().toString());
 			} catch (IOException e) {
 				e.printStackTrace();
-				log.info(Ansi.ansi().fg(Ansi.Color.RED).boldOff().toString() + "[HIVE (Server Edition)] Failed to send payload to server @ " + s + "");
+				Main.log.info(Ansi.ansi().fg(Ansi.Color.RED).boldOff().toString() + "[HIVE (Server Edition)] Failed to send payload to server @ " + s + "");
 				continue;
 			}
 
 		}
 	}
 
-	public void sendProxyShutdown(){
+	public static void sendProxyShutdown(){
 		Socket kkSocket = null;
 		PrintWriter out = null;
 		try {
@@ -124,124 +126,6 @@ public class HiveServer {
 		if(out != null){
 			out.close();
 		}
-	}
-
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-
-		if(cmd.getName().equalsIgnoreCase("classicrollout")){
-			if(sender instanceof Player){
-				Player p = (Player)sender;
-				p.sendMessage(ChatColor.RED + "You cannot issue this command from anywhere but the console window.");
-				return true;
-			}
-
-			if(args.length != 1){
-				log.info("Invalid Syntax. /rollout <IP/*>");
-				return true;
-			}
-			
-			String ip = args[0];
-
-			if(isThisRootMachine()){
-				if(ip.equalsIgnoreCase("*")){
-					send8008Packet("@rollout@", null, true);
-					//CommunityMechanics.sendPacketCrossServer("@rollout@", -1, true);
-					sendProxyShutdown();
-				}
-				else{
-					//CommunityMechanics.sendPacketCrossServer("@rollout@", args[0]);
-					send8008Packet("@rollout@", args[0], false);
-				}
-			}
-			
-			if(isThisRootMachine()){
-				for(Player p : Bukkit.getServer().getOnlinePlayers()){
-					p.saveData();
-					p.kickPlayer("Launching a Content Patch to ALL #DungeonRealms Servers...");
-				}				
-				
-				World w = Bukkit.getWorlds().get(0);
-				Bukkit.unloadWorld(w, true);
-				
-				Bukkit.shutdown();
-				return true;
-			}
-		}
-		
-		if(cmd.getName().equalsIgnoreCase("rollout")){
-			if(sender instanceof Player){
-				Player p = (Player)sender;
-				p.sendMessage(ChatColor.RED + "You cannot issue this command from anywhere but the console window.");
-				return true;
-			}
-
-			if(args.length != 1){
-				log.info("Invalid Syntax. /rollout <IP/*>");
-				return true;
-			}
-			
-			String ip = args[0];
-
-			if(isThisRootMachine()){
-				if(ip.equalsIgnoreCase("*")){
-					//send8008Packet("@rollout@", null, true);
-					CommunityMechanics.sendPacketCrossServer("@rollout@", -1, true);
-					sendProxyShutdown();
-				}
-				else{
-					CommunityMechanics.sendPacketCrossServer("@rollout@", args[0]);
-					//send8008Packet("@rollout@", args[0], false);
-				}
-			}
-			
-			if(isThisRootMachine()){
-				for(Player p : Bukkit.getServer().getOnlinePlayers()){
-					p.saveData();
-					p.kickPlayer("Launching a Content Patch to ALL #DungeonRealms Servers...");
-				}				
-				
-				World w = Bukkit.getWorlds().get(0);
-				Bukkit.unloadWorld(w, true);
-				
-				Bukkit.shutdown();
-				return true;
-			}
-		}
-
-		if(cmd.getName().equalsIgnoreCase("cycle")){
-			if(sender instanceof Player){
-				Player p = (Player)sender;
-				p.sendMessage(ChatColor.RED + "You cannot issue this command from anywhere but the console window.");
-				return true;
-			}
-
-			if(args.length != 1){
-				log.info("Invalid Syntax. /cycle <IP/*>");
-				return true;
-			}
-			
-			String ip = args[0];
-			
-			if(isThisRootMachine()){
-				if(ip.equalsIgnoreCase("*")){
-					//send8008Packet("@restart@", null, true);
-					CommunityMechanics.sendPacketCrossServer("@restart@", -1, true);
-					sendProxyShutdown();
-					return true;
-				}
-				else if(ip.equalsIgnoreCase("proxy")){
-					sendProxyShutdown();
-					return true;
-				}
-				else{
-					CommunityMechanics.sendPacketCrossServer("@rollout@", args[0]);
-					//send8008Packet("@restart@", args[0], false);
-					return true;
-				}
-			}
-		}
-
-		return true;
 	}
 
 	public static void deleteFolder(File folder) {
