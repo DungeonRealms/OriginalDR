@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import me.vaqxine.Main;
+import me.vaqxine.EnchantMechanics.commands.CommandDREnchant;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.ItemMechanics.ItemMechanics;
@@ -21,8 +22,6 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -117,6 +116,9 @@ public class EnchantMechanics implements Listener {
 	
 	public void onEnable() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
+		
+		Main.plugin.getCommand("drenchant").setExecutor(new CommandDREnchant());
+		
 		log.info("[EnchantMechanics] V1.0 has been enabled.");
 	}
 	
@@ -660,33 +662,4 @@ public class EnchantMechanics implements Listener {
 		}
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		Player p = (Player)sender;
-	
-		if(cmd.getName().equalsIgnoreCase("drenchant")){
-			if(!p.isOp()){
-				return true;
-			}
-			p.getInventory().addItem(t1_wep_scroll);
-			p.getInventory().addItem(t2_wep_scroll);
-			p.getInventory().addItem(t3_wep_scroll);
-			p.getInventory().addItem(t4_wep_scroll);
-			p.getInventory().addItem(t5_wep_scroll);
-			
-			p.getInventory().addItem(t1_armor_scroll);
-			p.getInventory().addItem(t2_armor_scroll);
-			p.getInventory().addItem(t3_armor_scroll);
-			p.getInventory().addItem(t4_armor_scroll);
-			p.getInventory().addItem(t5_armor_scroll);
-			
-			p.getInventory().addItem(t1_white_scroll);
-			p.getInventory().addItem(t2_white_scroll);
-			p.getInventory().addItem(t3_white_scroll);
-			p.getInventory().addItem(t4_white_scroll);
-			p.getInventory().addItem(t5_white_scroll);
-			// TODO: Debug command.
-		}
-
-	 return true;
-	 }
 }

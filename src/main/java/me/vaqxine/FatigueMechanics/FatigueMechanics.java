@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import me.vaqxine.Main;
 import me.vaqxine.DuelMechanics.DuelMechanics;
+import me.vaqxine.FatigueMechanics.commands.CommandFat;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
@@ -27,8 +28,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -78,6 +77,8 @@ public class FatigueMechanics implements Listener {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		main_world_name = Bukkit.getWorlds().get(0).getName();
 		instance = this;
+		
+		Main.plugin.getCommand("fat").setExecutor(new CommandFat());
 		
 		// Nasty hack to prevent sprinting while starving.
 		new BukkitRunnable(){
@@ -824,20 +825,5 @@ public class FatigueMechanics implements Listener {
 		fatigue_effect.remove(p);
 		starving.remove(p);
 	}
-
-
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		Player p = (Player)sender;
-
-		if(cmd.getName().equalsIgnoreCase("fat")){
-			if(!(p.isOp())){
-				return true;
-			}
-			p.setFoodLevel(10);
-		}
-
-		return true;
-	}
-
 
 }

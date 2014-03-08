@@ -20,6 +20,9 @@ import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.ChatMechanics.ChatMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
+import me.vaqxine.EcashMechanics.commands.CommandCheckECash;
+import me.vaqxine.EcashMechanics.commands.CommandECash;
+import me.vaqxine.EcashMechanics.commands.CommandFireWand;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
@@ -44,8 +47,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R1.block.CraftJukebox;
@@ -171,6 +172,10 @@ public class EcashMechanics implements Listener {
 		instance = this;
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
+		Main.plugin.getCommand("checkecash").setExecutor(new CommandCheckECash());
+		Main.plugin.getCommand("ecash").setExecutor(new CommandECash());
+		Main.plugin.getCommand("firewand").setExecutor(new CommandFireWand());
+		
 		music_select = Bukkit.createInventory(null, 18, "Music Selection");
 		music_select.addItem(new ItemStack(Material.getMaterial(2256)));
 		music_select.addItem(new ItemStack(Material.getMaterial(2257)));
@@ -1972,70 +1977,4 @@ public class EcashMechanics implements Listener {
 
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-
-		if(cmd.getName().equalsIgnoreCase("ecash")){
-			Player pl = (Player)sender;
-
-			pl.playSound(pl.getLocation(), Sound.WOOD_CLICK, 1.0F, 1.0F);
-
-			MerchantMechanics.in_npc_shop.add(pl.getName());
-			pl.openInventory(MerchantMechanics.eCashVendor);
-		}
-
-		if(cmd.getName().equalsIgnoreCase("checkecash")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(!(ps.isOp())){
-					return true;
-				}
-			}
-
-			if(ps != null){
-				if(args.length != 1){
-					ps.sendMessage("Syntax: /checkecash <player>");
-					return true;
-				}
-				String p_name = args[0];
-				if(Hive.player_ecash.containsKey(p_name)){
-					int ecash_balance = Hive.player_ecash.get(p_name);
-					ps.sendMessage(p_name + "'s E-CASH: " + ChatColor.GREEN + ecash_balance);
-				}
-				else{
-					ps.sendMessage(ChatColor.RED + "Player '" + p_name + "' is not online your local server.");
-				}
-			}
-		}
-
-		if(cmd.getName().equalsIgnoreCase("firewand")){
-			Player ps = null;
-			if(sender instanceof Player){
-				ps = (Player)sender;
-				if(!(ps.isOp())){
-					return true;
-				}
-			}
-
-			if(ps != null){
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.firework_wand));
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.flame_trail));
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.flaming_armor));
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.musical_spirit));
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.old_music_box));
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.global_microphone));
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.global_delay_buff));
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.increased_drops));
-
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.item_lore_tag));
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.item_ownership_tag));
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.profession_exp_boost));
-
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.skeleton_horse));
-				ps.getInventory().addItem(CraftItemStack.asCraftCopy(MerchantMechanics.undead_horse));
-			}
-		}
-
-		return true;
-	}
 }
