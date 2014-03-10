@@ -39,7 +39,7 @@ public class CommandAddWeapon implements CommandExecutor {
 			p.setItemInHand(hand);
 			Attributes attributes = new Attributes(p.getItemInHand());
 			attributes.clear();
-			p.getInventory().addItem(attributes.getStack());
+			//p.getInventory().addItem(attributes.getStack()); // TODO Seriously?
 			p.updateInventory();
 			return true;
 		}

@@ -259,6 +259,8 @@ public class ProfessionMechanics implements Listener {
 
 	public static InventoryHolder spoof_furnace = null;
 
+	public static int splashCounter = 10;
+	
 	@SuppressWarnings("deprecation")
 	public void onEnable(){
 		instance = this;
@@ -509,6 +511,11 @@ public class ProfessionMechanics implements Listener {
 
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
+				int chance = splashCounter * splashCounter;
+				if(splashCounter == 1) splashCounter = 21;
+				splashCounter--;
+				Random r = new Random();
+				
 				if(fishingParticles.size() <= 0){
 					return; // Do nothing.
 				}
@@ -521,14 +528,14 @@ public class ProfessionMechanics implements Listener {
 							continue; // Not time to respawn fish yet.
 						}
 						try {
-							ParticleEffect.sendToLocation(ParticleEffect.SPLASH, epicenter, new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.4F, 20);
+							ParticleEffect.sendToLocation(ParticleEffect.SPLASH, epicenter, r.nextFloat(), r.nextFloat(), r.nextFloat(), 0.4F, 20);
 						} catch (Exception e1) {e1.printStackTrace();}
 						//epicenter.getWorld().spawnParticle(epicenter, Particle.SPLASH, 0.4F, 20);
 						
 						for(Location loc : data.getValue()){
-							if(new Random().nextInt(4) == 1){
+							if(r.nextInt(chance) == 1){
 								try {
-									ParticleEffect.sendToLocation(ParticleEffect.SPLASH, loc, new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.4F, 20);
+									ParticleEffect.sendToLocation(ParticleEffect.SPLASH, loc, r.nextFloat(), r.nextFloat(), r.nextFloat(), 0.4F, 20);
 								} catch (Exception e1) {e1.printStackTrace();}
 								//loc.getWorld().spawnParticle(loc, Particle.SPLASH, 0.4F, 20);
 							}
@@ -538,7 +545,7 @@ public class ProfessionMechanics implements Listener {
 					return;
 				}
 			}
-		}, 10 * 20L, 4L);
+		}, 10 * 20L, 10L);
 
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {

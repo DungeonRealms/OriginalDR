@@ -18,6 +18,15 @@ import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
+import me.vaqxine.PartyMechanics.commands.CommandP;
+import me.vaqxine.PartyMechanics.commands.CommandPAccept;
+import me.vaqxine.PartyMechanics.commands.CommandPDecline;
+import me.vaqxine.PartyMechanics.commands.CommandPInvite;
+import me.vaqxine.PartyMechanics.commands.CommandPKick;
+import me.vaqxine.PartyMechanics.commands.CommandPLoot;
+import me.vaqxine.PartyMechanics.commands.CommandPPromote;
+import me.vaqxine.PartyMechanics.commands.CommandPQuit;
+import me.vaqxine.PartyMechanics.commands.CommandParty;
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutEntityEquipment;
@@ -82,15 +91,15 @@ public class PartyMechanics implements Listener {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		manager = Bukkit.getScoreboardManager();
 		
-		//Main.plugin.getCommand("p").setExecutor(new CommandP()); // TODO - Check Command
-		//Main.plugin.getCommand("paccept").setExecutor(new CommandPAccept());
-		//Main.plugin.getCommand("party").setExecutor(new CommandParty());
-		//Main.plugin.getCommand("pdecline").setExecutor(new CommandPDecline());
-		//Main.plugin.getCommand("pinvite").setExecutor(new CommandPInvite());
-		//Main.plugin.getCommand("pkick").setExecutor(new CommandPKick());
-		//Main.plugin.getCommand("ploot").setExecutor(new CommandPLoot());
-		//Main.plugin.getCommand("ppromote").setExecutor(new CommandPPromote());
-		//Main.plugin.getCommand("pquit").setExecutor(new CommandPQuit());
+		Main.plugin.getCommand("p").setExecutor(new CommandP()); // TODO - Check Command
+		Main.plugin.getCommand("paccept").setExecutor(new CommandPAccept());
+		Main.plugin.getCommand("party").setExecutor(new CommandParty());
+		Main.plugin.getCommand("pdecline").setExecutor(new CommandPDecline());
+		Main.plugin.getCommand("pinvite").setExecutor(new CommandPInvite());
+		Main.plugin.getCommand("pkick").setExecutor(new CommandPKick());
+		Main.plugin.getCommand("ploot").setExecutor(new CommandPLoot());
+		Main.plugin.getCommand("ppromote").setExecutor(new CommandPPromote());
+		Main.plugin.getCommand("pquit").setExecutor(new CommandPQuit());
 		
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
@@ -110,9 +119,10 @@ public class PartyMechanics implements Listener {
 					/*if(!(party_map.containsKey(sb.getName()))){
 						continue;
 					}*/
+					List<OfflinePlayer> reset = new ArrayList<OfflinePlayer>();
 					for(OfflinePlayer pl : sb.getPlayers()){
 						if(!(player_hp.containsKey(pl.getName()))){
-							sb.resetScores(pl);
+							reset.add(pl);
 							continue;
 						}
 						String special_char = "";
@@ -138,6 +148,9 @@ public class PartyMechanics implements Listener {
 						} catch(NullPointerException npe){
 							continue;
 						}
+					}
+					for(OfflinePlayer pl : reset){
+						sb.resetScores(pl);
 					}
 				}
 			}
@@ -417,7 +430,6 @@ public class PartyMechanics implements Listener {
 
 		Scoreboard party_ui = Bukkit.getPlayer(party_title).getScoreboard();
 		Objective obj = party_ui.getObjective(DisplaySlot.SIDEBAR);
-		
 		Score hp = obj.getScore(Bukkit.getOfflinePlayer(ChatColor.stripColor(p_name))); 
 		hp.setScore(HealthMechanics.getPlayerHP(pl.getName()));
 		pl.setScoreboard(party_ui);
@@ -439,6 +451,10 @@ public class PartyMechanics implements Listener {
 			}
 			if(party_count == 8){
 				p_mem.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.BOLD + "8/8" + ChatColor.GRAY + " party members. You will now recieve +5% DMG/ARMOR AND " + ChatColor.UNDERLINE + "GREATLY" + ChatColor.GRAY + " increased drop rates when fighting together.");
+			}
+			
+			if(Bukkit.getPlayer(s) != null){
+				Bukkit.getPlayer(s).setScoreboard(party_ui);
 			}
 			/*this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 				public void run() {
@@ -476,8 +492,10 @@ public class PartyMechanics implements Listener {
 
 		Scoreboard party_ui = Bukkit.getPlayer(party_name).getScoreboard();
 		Objective obj = party_ui.getObjective(DisplaySlot.SIDEBAR);
-		Score hp = obj.getScore(Bukkit.getOfflinePlayer(pl.getName()));
-		hp.setScore(0);
+		if(obj != null){
+			Score hp = obj.getScore(Bukkit.getOfflinePlayer(pl.getName()));
+			hp.setScore(0);
+		}
 		
 		/*Scoreboard party_ui = api.getScoreboard(getPartyTitle(party_name));
 		party_ui.removeItem(pl.getName());
@@ -572,7 +590,7 @@ public class PartyMechanics implements Listener {
 	public static void createParty(String party_title, Player p_owner, List<String> existing_members){
 		if(!p_owner.getName().equalsIgnoreCase("Notch")){
 			p_owner.sendMessage(ChatColor.RED + "Parties are temporarily disabled due to a 1.7.2 conflict.");
-			return;
+		//	return;
 		}
 		
 		int incr = 0;
@@ -592,6 +610,7 @@ public class PartyMechanics implements Listener {
 
 		Scoreboard party_ui = manager.getNewScoreboard();
 		Objective obj = party_ui.getObjective("player_data");
+		if(obj == null) obj = party_ui.registerNewObjective("player_data", "dummy");
 		obj.setDisplayName(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Party");
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
@@ -639,6 +658,7 @@ public class PartyMechanics implements Listener {
 	}
 
 	public static void inviteToParty(Player to_invite, Player p_owner){
+		if(!party_map.containsKey(p_owner)) party_map.put(p_owner.getName(), new ArrayList<String>());
 		if(!(isPartyLeader(p_owner.getName()))){
 			if(inv_party_map.containsKey(p_owner.getName())){ // In another party.
 				p_owner.sendMessage(ChatColor.RED.toString() + "You are NOT the leader of your party.");

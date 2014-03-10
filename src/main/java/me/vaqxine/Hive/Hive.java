@@ -1133,7 +1133,7 @@ public class Hive implements Listener {
     public void updateServerPopulations(){
         final String prefix = MOTD.substring(0, MOTD.indexOf(" "));
 
-        if(prefix.equalsIgnoreCase("US-0")){
+        if(prefix.equalsIgnoreCase("US-0") || prefix.equalsIgnoreCase("US-99")){
             return;
         }
 

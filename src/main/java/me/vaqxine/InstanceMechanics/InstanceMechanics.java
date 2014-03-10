@@ -624,6 +624,14 @@ public class InstanceMechanics implements Listener {
 
 		int attempts = 0;
 		while(Main.plugin.getServer().getWorlds().size() > 1 && attempts <= 100){
+			boolean quit = true;
+			for(World w : Bukkit.getWorlds()){
+				if(!w.getName().contains("DungeonRealms")){
+					quit = false;
+					break;
+				}
+			}
+			if(quit) break;
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
