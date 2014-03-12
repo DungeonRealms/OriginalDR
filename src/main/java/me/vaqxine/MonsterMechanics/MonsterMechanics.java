@@ -1513,6 +1513,8 @@ public class MonsterMechanics implements Listener {
 
 				for (String s : mob_data) {
 					if(s.equalsIgnoreCase("")){continue;}
+					if(!s.split(":")[1].contains("-")) continue;
+					if(s.split(":")[1].split("-").length == 1) continue;
 					int mob_num = Integer.parseInt(s.split(":")[1].split("-")[1]);
 					to_spawn_list.add(mob_num + ":" + cur_time);
 				}

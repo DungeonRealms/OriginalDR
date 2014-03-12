@@ -4,6 +4,7 @@ package me.vaqxine.PartyMechanics;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -112,6 +113,7 @@ public class PartyMechanics implements Listener {
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				for(String party_name : party_map.keySet()){
+					if(Bukkit.getPlayer(party_name) == null) continue;
 					Scoreboard sb = Bukkit.getPlayer(party_name).getScoreboard();
 					if(sb == null){
 						continue;
@@ -119,15 +121,17 @@ public class PartyMechanics implements Listener {
 					/*if(!(party_map.containsKey(sb.getName()))){
 						continue;
 					}*/
-					List<OfflinePlayer> reset = new ArrayList<OfflinePlayer>();
-					for(OfflinePlayer pl : sb.getPlayers()){
-						if(!(player_hp.containsKey(pl.getName()))){
+					List<String> reset = new ArrayList<String>();
+					Iterator<String> players = party_map.get(party_name).iterator();
+					while(players.hasNext()){
+						String pl = players.next();
+						if(!(player_hp.containsKey(pl))){
 							reset.add(pl);
 							continue;
 						}
 						String special_char = "";
-						String pl_name = pl.getName();
-						if(isPartyLeader(ChatColor.stripColor(pl.getName()))){
+						String pl_name = pl;
+						if(isPartyLeader(ChatColor.stripColor(pl))){
 							special_char = ChatColor.BOLD.toString(); //ChatColor.BOLD.toString();
 							if(pl_name.length() > 13){
 								pl_name = pl_name.substring(0, 13);
@@ -142,15 +146,15 @@ public class PartyMechanics implements Listener {
 							Objective obj = sb.getObjective(DisplaySlot.SIDEBAR);
 	
 							Score hp = obj.getScore(Bukkit.getOfflinePlayer(special_char + ChatColor.stripColor(pl_name))); 
-							hp.setScore(player_hp.get(pl.getName()));
+							hp.setScore(player_hp.get(pl));
 							//sb.setItem(special_char + ChatColor.stripColor(pl_name), player_hp.get(pl.getName()), false);
 							
 						} catch(NullPointerException npe){
 							continue;
 						}
 					}
-					for(OfflinePlayer pl : reset){
-						sb.resetScores(pl);
+					for(String pl : reset){
+						sb.resetScores(Bukkit.getOfflinePlayer(pl));
 					}
 				}
 			}
@@ -427,15 +431,16 @@ public class PartyMechanics implements Listener {
 		if(p_name.length() > 14){
 			p_name = p_name.substring(0, 14);
 		}
-
+		
 		Scoreboard party_ui = Bukkit.getPlayer(party_title).getScoreboard();
 		Objective obj = party_ui.getObjective(DisplaySlot.SIDEBAR);
 		Score hp = obj.getScore(Bukkit.getOfflinePlayer(ChatColor.stripColor(p_name))); 
 		hp.setScore(HealthMechanics.getPlayerHP(pl.getName()));
 		pl.setScoreboard(party_ui);
-		/*party_ui.setItem(ChatColor.stripColor(p_name), HealthMechanics.getPlayerHP(pl.getName()), false);
-		party_ui.showToPlayer(pl);*/
-
+		//party_ui.setItem(ChatColor.stripColor(p_name), HealthMechanics.getPlayerHP(pl.getName()), false);
+		//party_ui.showToPlayer(pl);
+		pl.setScoreboard(party_ui);
+		
 		int party_count = getPartyCount(party_title);
 
 		for(String s : party_members){
@@ -588,10 +593,10 @@ public class PartyMechanics implements Listener {
 	}
 
 	public static void createParty(String party_title, Player p_owner, List<String> existing_members){
-		if(!p_owner.getName().equalsIgnoreCase("Notch")){
-			p_owner.sendMessage(ChatColor.RED + "Parties are temporarily disabled due to a 1.7.2 conflict.");
+		//if(!p_owner.getName().equalsIgnoreCase("Notch")){
+		//	p_owner.sendMessage(ChatColor.RED + "Parties are temporarily disabled due to a 1.7.2 conflict.");
 		//	return;
-		}
+		//}
 		
 		int incr = 0;
 
@@ -609,8 +614,9 @@ public class PartyMechanics implements Listener {
 		party_title = p_owner_name + "." + incr;
 
 		Scoreboard party_ui = manager.getNewScoreboard();
-		Objective obj = party_ui.getObjective("player_data");
-		if(obj == null) obj = party_ui.registerNewObjective("player_data", "dummy");
+		p_owner.setScoreboard(party_ui);
+		p_owner.sendMessage(ChatColor.DARK_AQUA + "SCOREBOARD SET!");
+		Objective obj = party_ui.registerNewObjective("player_data", "dummy");
 		obj.setDisplayName(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Party");
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
@@ -621,10 +627,9 @@ public class PartyMechanics implements Listener {
 		hp.setScore(HealthMechanics.getPlayerHP(p_owner.getName()));
 		//party_ui.setItem(ChatColor.BOLD + p_owner_name, HealthMechanics.getPlayerHP(p_owner.getName()), false);
 		//party_ui.showToPlayer(p_owner);
-		p_owner.setScoreboard(party_ui);
 		
 		if(existing_members == null){
-			party_map.put(p_owner.getName(), new ArrayList<String>(Arrays.asList(p_owner.getName())));
+			party_map.put(p_owner.getName(), Arrays.asList(p_owner.getName()));
 			party_loot.put(p_owner.getName(), "random");
 			party_loot_index.put(p_owner.getName(), 0);
 		}

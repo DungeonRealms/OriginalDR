@@ -434,7 +434,7 @@ public class Hive implements Listener {
                     out.println("[online]" + MOTD.substring(0, MOTD.indexOf(" ")));
                     kkSocket.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.err.println("Can't connect to the proxy! Server not whitelisted!");
                 }
 
                 if(out != null){

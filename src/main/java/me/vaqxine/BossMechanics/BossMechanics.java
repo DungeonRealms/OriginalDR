@@ -37,6 +37,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class BossMechanics implements Listener {
@@ -512,14 +513,15 @@ public class BossMechanics implements Listener {
 
 			if(server_message.length() > 0){
 				final String f_server_message = server_message;
-				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+				new BukkitRunnable() {
+					@Override
 					public void run() {
 						for(Player pl : Bukkit.getServer().getOnlinePlayers()){
 							pl.sendMessage(f_server_message);
 							pl.sendMessage(ChatColor.GRAY + "Group: " + f_adv);
 						}
 					}
-				}, 30L);
+				}.runTaskLater(Main.plugin, 30L);
 			}
 		}
 

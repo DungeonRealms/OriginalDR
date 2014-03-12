@@ -109,7 +109,14 @@ public class FatigueMechanics implements Listener {
 			public void run() {
 				for(Player p : Bukkit.getOnlinePlayers()){
 					if(p.isSprinting()){
-						if(DuelMechanics.isDamageDisabled(p.getLocation()) && !(DuelMechanics.duel_map.containsKey(p.getName())) && !(TutorialMechanics.TI.hasPlayer(p))){
+						if(DuelMechanics
+								.isDamageDisabled(p
+										.getLocation()) && !(DuelMechanics
+												.duel_map
+												.containsKey(p
+														.getName())) && !(TutorialMechanics
+																.TI
+																.hasPlayer(p))){
 							continue; 
 						}
 						removeEnergy(p, 0.15F); // ORIGINAL: 0.15F

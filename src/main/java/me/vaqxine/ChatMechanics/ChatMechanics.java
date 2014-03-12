@@ -55,6 +55,7 @@ import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ChatMechanics implements Listener {
 	public static Logger log = Logger.getLogger("Minecraft");
@@ -575,12 +576,13 @@ public class ChatMechanics implements Listener {
 		String prefix = getPlayerPrefix(p);
 		log.info(ChatColor.stripColor("" + "<" + "G" + ">" + " " + prefix + p.getName() + ": " + msg));
 
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+		new BukkitRunnable() {
+			@Override
 			public void run() {
 				sending_message.remove(p.getName());
 			}
-		}, 2L);
-
+		}.runTaskLater(Main.plugin, 2L);
+		
 	}
 
 	@EventHandler

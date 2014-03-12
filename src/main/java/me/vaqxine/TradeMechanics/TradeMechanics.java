@@ -622,12 +622,13 @@ public class TradeMechanics implements Listener {
 			// TRADE
 			trader.updateInventory();
 			
-			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+			new BukkitRunnable() {
+				@Override
 				public void run() {
 					trader.removeMetadata("no_trade", Main.plugin);
 					tradie.removeMetadata("no_trade", Main.plugin);
 				}
-			}, 2 * 20L);
+			}.runTaskLater(Main.plugin, 2L * 20L);
 		}
 	}
 
@@ -784,10 +785,9 @@ public class TradeMechanics implements Listener {
 		trade_partner.sendMessage(ChatColor.YELLOW + "Trade cancelled by " + ChatColor.BOLD.toString() + closer.getName() + ChatColor.YELLOW.toString() + ".");
 
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-			@SuppressWarnings("deprecation")
 			public void run() {
-				trade_partner.updateInventory();
-				closer.updateInventory();
+				//trade_partner.updateInventory();
+				//closer.updateInventory();
 			}
 		}, 2L);
 

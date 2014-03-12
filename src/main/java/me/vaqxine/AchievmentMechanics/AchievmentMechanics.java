@@ -306,7 +306,7 @@ public class AchievmentMechanics implements Listener {
 		}
 
 		if(PetMechanics.player_pets.containsKey(p_name)){
-			if(PetMechanics.player_pets.get(p_name).contains("baby_zombie") || Hive.forum_usergroup.get(p_name) == 9){
+			if(PetMechanics.player_pets.get(p_name).contains("baby_zombie") || (Hive.forum_usergroup.containsKey(p_name) && Hive.forum_usergroup.get(p_name) == 9)){
 				AchievmentMechanics.addAchievment(p_name, "Old Timer");
 			}
 			if(PetMechanics.player_pets.get(p_name).size() > 0){
