@@ -2098,7 +2098,9 @@ public class MoneyMechanics implements Listener {
 					withdraw_type.put(p, "note");
 
 					Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+						@SuppressWarnings("unused")
 						public void run() {
+							if(p == null) return;
 							p.updateInventory();
 							p.closeInventory();
 							p.playSound(p.getLocation(), Sound.CHEST_CLOSE, 1F, 1F);

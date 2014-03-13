@@ -55,6 +55,7 @@ import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
+import me.vaqxine.enums.CC;
 import net.minecraft.server.v1_7_R1.DataWatcher;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutEntityMetadata;
@@ -272,7 +273,11 @@ public class RealmMechanics implements Listener {
 
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
-				ConnectionPool.refresh = true;
+				try{
+					ConnectionPool.refresh = true;
+				} catch (NoClassDefFoundError e){
+					System.err.println(CC.YELLOW + "Class Not Found?");
+				}
 			}
 		}, 120 * 20L, 120 * 20L);
 
@@ -1258,7 +1263,7 @@ public class RealmMechanics implements Listener {
 		List<Player> plist = new ArrayList<Player>();
 		for(Player pl : p_realm.getPlayers()){
 			pl.sendMessage(ChatColor.RED + "The owner of this realm has LOGGED OUT.");
-			pl.sendMessage(ChatColor.RED + "You will be kicked out of this realm in " + ChatColor.BOLD + "2 minute(s).");
+			pl.sendMessage(ChatColor.RED + "You will be kicked out of the realm immediately.");
 			plist.add(pl);
 		}
 
@@ -1304,7 +1309,7 @@ public class RealmMechanics implements Listener {
 				t.start();
 
 			}
-		}, 100 * 20L);
+		}, 1l);
 	}
 
 	public boolean isShopBlock(Material m){

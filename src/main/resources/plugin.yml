@@ -242,13 +242,13 @@ commands:
   unmute:
     description: Unmutes player.
     usage: /<command>
-  kick:
+  drkick:
     description: Kicks player.
     usage: /<command>
   ipban:
     description: IP Ban.
     usage: /<command>
-  ban:
+  drban:
     description: Bans player.
     usage: /<command>
   unban:

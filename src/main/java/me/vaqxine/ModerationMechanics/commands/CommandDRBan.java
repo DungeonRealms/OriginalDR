@@ -11,7 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandBan implements CommandExecutor {
+public class CommandDRBan implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -35,7 +35,7 @@ public class CommandBan implements CommandExecutor {
 
 		if(args.length <= 2){
 			if(p != null){
-				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Invalid Syntax. " + ChatColor.RED + "/ban <PLAYER> <TIME(in hours)> <REASON>");
+				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Invalid Syntax. " + ChatColor.RED + "/drban <PLAYER> <TIME(in hours)> <REASON>");
 				p.sendMessage(ChatColor.GRAY + "Insert -1 for <TIME> to permentantly lock.");
 			}
 			return true;

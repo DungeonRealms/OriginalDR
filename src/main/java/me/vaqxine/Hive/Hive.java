@@ -70,6 +70,7 @@ import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
+import me.vaqxine.enums.CC;
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutEntityEquipment;
@@ -875,7 +876,7 @@ public class Hive implements Listener {
                             out.println("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")));
                             kkSocket.close();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            System.err.println(CC.RED + "Not connected to proxy!");
                         }
 
                         if(out != null){
@@ -953,7 +954,7 @@ public class Hive implements Listener {
 			} 
 		}*/
 
-        CommunityMechanics.sendPacketCrossServer("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")), -1, true);
+        //CommunityMechanics.sendPacketCrossServer("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")), -1, true); // TODO Wtf? A crash packet on shutdown?
 
         Socket kkSocket = null;
         PrintWriter out = null;
@@ -967,7 +968,7 @@ public class Hive implements Listener {
             out.println("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")));
             kkSocket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(CC.RED + "Not connected to proxy!");
         }
 
         if(out != null){

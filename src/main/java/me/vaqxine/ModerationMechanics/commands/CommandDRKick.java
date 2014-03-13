@@ -11,7 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandKick implements CommandExecutor {
+public class CommandDRKick implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -33,7 +33,7 @@ public class CommandKick implements CommandExecutor {
 
 		if(args.length <= 1){
 			if(p != null){
-				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Invalid Syntax. " + ChatColor.RED + "/kick <PLAYER> <REASON>");
+				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Invalid Syntax. " + ChatColor.RED + "/drkick <PLAYER> <REASON>");
 			}
 			return true;
 		}

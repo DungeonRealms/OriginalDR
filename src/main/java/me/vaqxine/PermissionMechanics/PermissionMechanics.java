@@ -21,6 +21,7 @@ import me.vaqxine.Hive.Hive;
 import me.vaqxine.PermissionMechanics.commands.CommandSetRank;
 import me.vaqxine.PermissionMechanics.commands.CommandGMHelp;
 import me.vaqxine.PermissionMechanics.commands.CommandPMHelp;
+import me.vaqxine.enums.CC;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -194,7 +195,8 @@ public class PermissionMechanics implements Listener {
 						out.println("[rank]" + fp_name + "@" + frank);
 						kkSocket.close();
 					} catch (IOException e) {
-						e.printStackTrace();
+						//e.printStackTrace();
+						System.err.println(CC.RED + "Not connected to proxy!");
 					}
 
 					if(out != null){
@@ -288,6 +290,16 @@ public class PermissionMechanics implements Listener {
 		}
 
 		return rank_map.get(p_name);
+	}
+	
+	public boolean isPMOD(String p_name){
+		String rank = getRank(p_name);
+		return rank.equalsIgnoreCase("GM") || rank.equalsIgnoreCase("PMOD") ? true : false;
+	}
+	
+	public static boolean isGM(String p_name){
+		String rank = getRank(p_name);
+		return rank.equalsIgnoreCase("GM") ? true : false;
 	}
 
 }

@@ -25,6 +25,7 @@ import me.vaqxine.RestrictionMechanics.RestrictionMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
+import me.vaqxine.enums.CC;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -64,6 +65,7 @@ import org.bukkit.scoreboard.Team;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
@@ -142,7 +144,7 @@ public class DuelMechanics implements Listener {
 
 	static WorldGuardPlugin wg = null;
 	static DuelMechanics instance = null;
-
+	
 	public void onEnable() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		instance = this;
@@ -1871,38 +1873,26 @@ public class DuelMechanics implements Listener {
 	}
 
 	public static String getRegionName(Location l) { 
-		try {			
-			Class<?> bukkitUtil = wg.getClass().getClassLoader().loadClass("com.sk89q.worldguard.bukkit.BukkitUtil");
-			Method toVector = bukkitUtil.getMethod("toVector", Block.class);
-			Vector blockVector = (Vector) toVector.invoke(null, l.getBlock());
+		
+		try {
+			ApplicableRegionSet set = wg.getRegionManager(l.getWorld()).getApplicableRegions(l);
+			if(set.size() == 0) return "";
 
-			List<String> regionSet = wg.getGlobalRegionManager().get(l.getWorld()).getApplicableRegionsIDs(blockVector);
-
-			if (regionSet.size() < 1) {
-				return "";
-			}
-
-			String return_region = "";
-			int return_priority = -1;
-
-			for (String region : regionSet) {
-				int region_priority = wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getPriority();
-
-				if(return_region.equalsIgnoreCase("")){
-					return_region = wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getId();
-					return_priority = region_priority;
-				}
-
-				if(region_priority > return_priority){
-					return_region = wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getId();
-					return_priority = region_priority;
+			String returning = "";
+			int priority = -1;
+			for(ProtectedRegion s : set){
+				if(s.getPriority() > priority){
+					if(!s.getId().equals("")){
+						returning = s.getId();
+						priority = s.getPriority();
+					}
 				}
 			}
-
-			return return_region;
+			
+			return returning;
 
 		} catch (Exception e) {
-
+			System.err.println(CC.RED + "Region error!");
 		}
 		return "";
 	}

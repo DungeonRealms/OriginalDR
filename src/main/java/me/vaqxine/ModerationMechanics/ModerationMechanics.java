@@ -26,13 +26,13 @@ import me.vaqxine.Main;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.ModerationMechanics.commands.CommandArmorSee;
-import me.vaqxine.ModerationMechanics.commands.CommandBan;
+import me.vaqxine.ModerationMechanics.commands.CommandDRBan;
 import me.vaqxine.ModerationMechanics.commands.CommandBankSee;
 import me.vaqxine.ModerationMechanics.commands.CommandCheck;
 import me.vaqxine.ModerationMechanics.commands.CommandDRTPPos;
 import me.vaqxine.ModerationMechanics.commands.CommandDRVanish;
 import me.vaqxine.ModerationMechanics.commands.CommandIPBan;
-import me.vaqxine.ModerationMechanics.commands.CommandKick;
+import me.vaqxine.ModerationMechanics.commands.CommandDRKick;
 import me.vaqxine.ModerationMechanics.commands.CommandLock;
 import me.vaqxine.ModerationMechanics.commands.CommandMute;
 import me.vaqxine.ModerationMechanics.commands.CommandPlayerClone;
@@ -99,6 +99,10 @@ public class ModerationMechanics implements Listener {
 						Player pl = Bukkit.getPlayer(s);
 						for(Player p : Main.plugin.getServer().getOnlinePlayers()){
 							if(p.getName().equalsIgnoreCase(pl.getName())){continue;}
+							if(PermissionMechanics.isGM(p.getName()) || p.isOp()){
+								p.showPlayer(pl);
+								continue;
+							}
 							p.hidePlayer(pl);
 						}
 					}
@@ -114,9 +118,9 @@ public class ModerationMechanics implements Listener {
 	private void initializeCommands() {
 		Main.plugin.getCommand("mute").setExecutor(new CommandMute());
 		Main.plugin.getCommand("unmute").setExecutor(new CommandUnmute());
-		Main.plugin.getCommand("kick").setExecutor(new CommandKick());
+		Main.plugin.getCommand("drkick").setExecutor(new CommandDRKick());
 		Main.plugin.getCommand("ipban").setExecutor(new CommandIPBan());
-		Main.plugin.getCommand("ban").setExecutor(new CommandBan());
+		Main.plugin.getCommand("drban").setExecutor(new CommandDRBan());
 		Main.plugin.getCommand("unban").setExecutor(new CommandUnban());
 		Main.plugin.getCommand("report").setExecutor(new CommandReport());
 		Main.plugin.getCommand("check").setExecutor(new CommandCheck());

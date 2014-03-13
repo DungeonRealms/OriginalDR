@@ -52,6 +52,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatTabCompleteEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -326,7 +327,7 @@ public class ChatMechanics implements Listener {
 		return_string = return_string + ChatColor.WHITE + GuildMechanics.getGuildPrefix(p.getName()) + ChatColor.RESET;
 
 		if(p.isOp() || rank.equalsIgnoreCase("GM")){
-			if(p.getName().equalsIgnoreCase("Vaquxine")){
+			if(p.getName().equalsIgnoreCase("Vaquxine") || p.getName().equalsIgnoreCase("Vilsol")){
 				return_string += "" + ChatColor.DARK_AQUA + ChatColor.BOLD.toString() + "DEV" + " " + ChatColor.GRAY;
 			}
 			else{
@@ -755,6 +756,11 @@ public class ChatMechanics implements Listener {
 
 	}
 
+	@EventHandler
+	public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent e){
+		if(e.getMessage().equalsIgnoreCase("server") || e.getMessage().equalsIgnoreCase("/server")) e.setCancelled(true);
+	}
+	
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) // We need to ignore all those "enter XXX" situations.
 	public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e){
@@ -972,7 +978,7 @@ public class ChatMechanics implements Listener {
 		log.info(ChatColor.stripColor("" + p.getName() + ": " + msg));
 		Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {
-				sending_message.remove(p.getName());
+				//sending_message.remove(p.getName()); // TODO Obsolete code, event already ended...
 			}
 		}, 2L);
 	}
