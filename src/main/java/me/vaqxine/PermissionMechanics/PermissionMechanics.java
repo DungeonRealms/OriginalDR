@@ -18,9 +18,10 @@ import me.vaqxine.Main;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DonationMechanics.DonationMechanics;
 import me.vaqxine.Hive.Hive;
-import me.vaqxine.PermissionMechanics.commands.CommandSetRank;
 import me.vaqxine.PermissionMechanics.commands.CommandGMHelp;
 import me.vaqxine.PermissionMechanics.commands.CommandPMHelp;
+import me.vaqxine.PermissionMechanics.commands.CommandSetRank;
+import me.vaqxine.database.ConnectionPool;
 import me.vaqxine.enums.CC;
 
 import org.bukkit.Bukkit;
@@ -30,7 +31,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class PermissionMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
@@ -55,13 +55,6 @@ public class PermissionMechanics implements Listener {
 		rank_forumgroup.put("gm", 72);
 		rank_forumgroup.put("wd", 72);
 
-		new BukkitRunnable(){
-			@Override
-			public void run() {
-				ConnectionPool.refresh = true;
-			}
-		}.runTaskTimerAsynchronously(Main.plugin, 120 * 20L, 120 * 20L);
-		
 		log.info("[PermissionMechanics] has been enabled.");
 	}
 
@@ -103,7 +96,7 @@ public class PermissionMechanics implements Listener {
 		PreparedStatement pst = null;
 
 		try {
-			pst = ConnectionPool.getConneciton().prepareStatement( 
+			pst = ConnectionPool.getConnection().prepareStatement( 
 					"SELECT rank FROM player_database WHERE p_name = '" + p_name + "'");
 
 			pst.execute();
@@ -196,7 +189,7 @@ public class PermissionMechanics implements Listener {
 						kkSocket.close();
 					} catch (IOException e) {
 						//e.printStackTrace();
-						System.err.println(CC.RED + "Not connected to proxy!");
+						System.err.println(CC.RED + "Not connected to proxy!" + CC.DEFAULT);
 					}
 
 					if(out != null){
@@ -243,7 +236,7 @@ public class PermissionMechanics implements Listener {
 			PreparedStatement pst = null;
 
 			try {
-				pst = ConnectionPool.getConneciton().prepareStatement( 
+				pst = ConnectionPool.getConnection().prepareStatement( 
 						"SELECT rank FROM player_database WHERE p_name = '" + p_name + "'");
 
 				pst.execute();

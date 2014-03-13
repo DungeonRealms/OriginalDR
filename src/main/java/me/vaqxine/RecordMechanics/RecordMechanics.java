@@ -13,13 +13,13 @@ import java.util.logging.Logger;
 
 import me.vaqxine.Main;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
+import me.vaqxine.database.ConnectionPool;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class RecordMechanics implements Listener {
 	  static Logger log = Logger.getLogger("Minecraft");
@@ -36,13 +36,6 @@ public class RecordMechanics implements Listener {
 	  
 	  public void onEnable(){
 		  Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
-		
-		  new BukkitRunnable(){
-				@Override
-				public void run() {
-					ConnectionPool.refresh = true;
-				}
-			}.runTaskTimerAsynchronously(Main.plugin, 180 * 20L, 180 * 20L);
 		
 	    log.info("[RecordMechanics] has been ENABLED. LOGGING DATA!");
 	  }
@@ -73,7 +66,7 @@ public class RecordMechanics implements Listener {
 	        int duel_lose = 0;
  		  	
 	        try {
-	          pst = ConnectionPool.getConneciton().prepareStatement( 
+	          pst = ConnectionPool.getConnection().prepareStatement( 
 	        		 "SELECT lawful_kills, unlawful_kills, deaths, mob_kills, money, duel_wins, duel_lose FROM statistics WHERE pname = '" + pname + "'");
 	            
 	 		  pst.execute();
@@ -97,7 +90,7 @@ public class RecordMechanics implements Listener {
 	 		  duel_wins += nduel_wins;
 	 		  duel_lose += nduel_lose;
 	 		  
-	          pst = ConnectionPool.getConneciton().prepareStatement( 
+	          pst = ConnectionPool.getConnection().prepareStatement( 
 	         		   "SELECT lawful_kills, unlawful_kills, deaths, mob_kills, money, duel_wins, duel_lose FROM statistics WHERE pname = '" + pname + "'");
 	            
 	 		  pst.execute();
@@ -113,7 +106,7 @@ public class RecordMechanics implements Listener {
 	 		  	//tduel_lose = rs.getInt("duel_lose");
 	 	      }
 	 		  
-	          pst = ConnectionPool.getConneciton().prepareStatement( 
+	          pst = ConnectionPool.getConnection().prepareStatement( 
 	         		   "INSERT INTO statistics (pname, lawful_kills, unlawful_kills, deaths, mob_kills, money, duel_wins, duel_lose)"
 	 	               + " VALUES"
 	 	               + "('"+ pname + "', '"+ lawful_kills +"', '" + unlawful_kills + "', '" + deaths + "', '" + mob_kills + "', '" + money + "', '" + duel_wins + "', '" + duel_lose + "') ON DUPLICATE KEY UPDATE lawful_kills = '" + lawful_kills + "', unlawful_kills = '"

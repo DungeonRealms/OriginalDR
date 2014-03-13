@@ -40,8 +40,10 @@ import me.vaqxine.TeleportationMechanics.TeleportationMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.WeatherMechanics.WeatherMechanics;
+import me.vaqxine.database.ConnectionPool;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin {
 
@@ -167,9 +169,21 @@ public class Main extends JavaPlugin {
 		tradeMechanics.onEnable();
 		tutorialMechanics.onEnable();
 		weatherMechanics.onEnable();
+		
+		new BukkitRunnable(){
+			@Override
+			public void run() {
+				try{
+					ConnectionPool.refresh = true;
+				} catch (NoClassDefFoundError e){
+					System.err.println("Couldn't refresh connection. Class not found!");
+				}
+			}
+		}.runTaskTimerAsynchronously(Main.plugin, 240 * 20L, 240 * 20L);
 	}
 	
 	public void onDisable(){
+		ConnectionPool.refresh = false;
 		achievmentMechanics.onDisable();
 		bossMechanics.onDisable();
 		chatMechanics.onDisable();

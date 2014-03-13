@@ -26,7 +26,6 @@ import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
-import me.vaqxine.Hive.ConnectionPool;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.InstanceMechanics.commands.CommandBossTP;
@@ -40,6 +39,7 @@ import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PartyMechanics.PartyMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
+import me.vaqxine.database.ConnectionPool;
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 import net.minecraft.server.v1_7_R1.EntityTracker;
 import net.minecraft.server.v1_7_R1.EntityTrackerEntry;
@@ -653,7 +653,7 @@ public class InstanceMechanics implements Listener {
 		PreparedStatement pst;
 
 		try {
-			pst = ConnectionPool.getConneciton().prepareStatement( 
+			pst = ConnectionPool.getConnection().prepareStatement( 
 					"SELECT instance_template, times FROM instance");
 
 			pst.execute();

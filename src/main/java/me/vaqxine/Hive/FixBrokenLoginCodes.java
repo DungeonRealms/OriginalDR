@@ -13,6 +13,7 @@ import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
+import me.vaqxine.database.ConnectionPool;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -52,7 +53,7 @@ public class FixBrokenLoginCodes extends Thread {
 		  List<String> sql_reported_online = new ArrayList<String>();
 		  List<String> to_fix = new ArrayList<String>();
 	        try {
-	            pst = ConnectionPool.getConneciton().prepareStatement( 
+	            pst = ConnectionPool.getConnection().prepareStatement( 
 	         		   "SELECT p_name FROM player_database WHERE server_num = '" + server_num_local + "'");
 	            
 	 		  pst.execute();
@@ -146,7 +147,7 @@ public class FixBrokenLoginCodes extends Thread {
 				MountMechanics.mule_inventory.remove(p_name);
 				MountMechanics.mule_itemlist_string.remove(p_name);
 
-        		pst = ConnectionPool.getConneciton().prepareStatement( 
+        		pst = ConnectionPool.getConnection().prepareStatement( 
 	         		   "INSERT INTO player_database (p_name, server_num)"
 	 	               + " VALUES"
 	 	               + "('"+ p_name + "', '"+ (-1) +"') ON DUPLICATE KEY UPDATE server_num = '" + (-1) + "'");

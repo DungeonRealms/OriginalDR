@@ -1,12 +1,11 @@
 package me.vaqxine.MountMechanics.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;

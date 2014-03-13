@@ -5,8 +5,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 
 import me.vaqxine.Main;
-import me.vaqxine.Hive.ConnectionPool;
 import me.vaqxine.Hive.Hive;
+import me.vaqxine.database.ConnectionPool;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -37,17 +37,17 @@ public class CommandWipe implements CommandExecutor {
 
             PreparedStatement pst = null;
             try{
-                pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM player_database where p_name='" + p_name + "'");
+                pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM player_database where p_name='" + p_name + "'");
                 pst.executeUpdate();
-                pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM bank_database where p_name='" + p_name + "'");
+                pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM bank_database where p_name='" + p_name + "'");
                 pst.executeUpdate();
-                pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM shop_database where p_name='" + p_name + "'");
+                pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM shop_database where p_name='" + p_name + "'");
                 pst.executeUpdate();
-                pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM statistics where pname='" + p_name + "'");
+                pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM statistics where pname='" + p_name + "'");
                 pst.executeUpdate();
-                pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM statistics_old where pname='" + p_name + "'");
+                pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM statistics_old where pname='" + p_name + "'");
                 pst.executeUpdate();
-                pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM perm_statistics where pname='" + p_name + "'");
+                pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM perm_statistics where pname='" + p_name + "'");
                 pst.executeUpdate();
             } catch (SQLException ex) {
                 Hive.log.log(Level.SEVERE, ex.getMessage(), ex);      
@@ -75,17 +75,17 @@ public class CommandWipe implements CommandExecutor {
 
         PreparedStatement pst = null;
         try{
-            pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM player_database where p_name='" + p_name + "'");
+            pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM player_database where p_name='" + p_name + "'");
             pst.executeUpdate();
-            pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM bank_database where p_name='" + p_name + "'");
+            pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM bank_database where p_name='" + p_name + "'");
             pst.executeUpdate();
-            pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM shop_database where p_name='" + p_name + "'");
+            pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM shop_database where p_name='" + p_name + "'");
             pst.executeUpdate();
-            pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM statistics where pname='" + p_name + "'");
+            pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM statistics where pname='" + p_name + "'");
             pst.executeUpdate();
-            pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM statistics_old where pname='" + p_name + "'");
+            pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM statistics_old where pname='" + p_name + "'");
             pst.executeUpdate();
-            pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM perm_statistics where pname='" + p_name + "'");
+            pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM perm_statistics where pname='" + p_name + "'");
             pst.executeUpdate();
         } catch (SQLException ex) {
             Hive.log.log(Level.SEVERE, ex.getMessage(), ex);      

@@ -70,6 +70,7 @@ import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
+import me.vaqxine.database.ConnectionPool;
 import me.vaqxine.enums.CC;
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 import net.minecraft.server.v1_7_R1.Packet;
@@ -593,13 +594,6 @@ public class Hive implements Listener {
 
         Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
-                ConnectionPool.refresh = true;
-            }
-        }, 240 * 20L, 240 * 20L);
-
-
-        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
-            public void run() {
                 WebsiteConnectionPool.refresh = true;
             }
         }, 300 * 20L, 300 * 20L);
@@ -876,7 +870,7 @@ public class Hive implements Listener {
                             out.println("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")));
                             kkSocket.close();
                         } catch (IOException e) {
-                            System.err.println(CC.RED + "Not connected to proxy!");
+                            System.err.println(CC.RED + "Not connected to proxy!" + CC.DEFAULT);
                         }
 
                         if(out != null){
@@ -968,7 +962,7 @@ public class Hive implements Listener {
             out.println("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")));
             kkSocket.close();
         } catch (IOException e) {
-            System.err.println(CC.RED + "Not connected to proxy!");
+            System.err.println(CC.RED + "Not connected to proxy!" + CC.DEFAULT);
         }
 
         if(out != null){
@@ -1023,7 +1017,7 @@ public class Hive implements Listener {
         PreparedStatement pst = null;
 
         try {
-            pst = ConnectionPool.getConneciton().prepareStatement(query);
+            pst = ConnectionPool.getConnection().prepareStatement(query);
             pst.executeUpdate();
 
             Hive.log.info("[Hive] SYNC Executed query: " + query);
@@ -1068,13 +1062,13 @@ public class Hive implements Listener {
         try {
 
             if(all){
-                pst = ConnectionPool.getConneciton().prepareStatement( 
+                pst = ConnectionPool.getConnection().prepareStatement( 
                         "SELECT p_name, shop_backup FROM shop_database WHERE shop_backup!='null' && shop_backup IS NOT NULL && shop_backup!='' && (collection_bin IS NULL) && server_num>=0"); //  collection_bin IS NOT NULL && collection_bin!='null' &&
 
                 pst.execute();
             }
             else if(!all){
-                pst = ConnectionPool.getConneciton().prepareStatement( 
+                pst = ConnectionPool.getConnection().prepareStatement( 
                         "SELECT p_name, shop_backup FROM shop_database WHERE server_num = '" + lserver_num + "' && server_num!=-1 && shop_backup!='null' && shop_backup IS NOT NULL && shop_backup!='' && (collection_bin IS NULL)"); //  collection_bin IS NOT NULL && collection_bin!='null' &&
 
                 pst.execute();
@@ -1113,7 +1107,7 @@ public class Hive implements Listener {
         PreparedStatement pst = null;
 
         try {
-            pst = ConnectionPool.getConneciton().prepareStatement( 
+            pst = ConnectionPool.getConnection().prepareStatement( 
                     "INSERT INTO shop_database (p_name, collection_bin, server_num) VALUES('" + p_name + "', '" + contents + "', '-1') ON DUPLICATE KEY UPDATE collection_bin='" + contents + "', server_num='-1'");
 
             pst.executeUpdate();
@@ -1231,36 +1225,36 @@ public class Hive implements Listener {
         try {
 
             // Combines: gems, bank_data, bank_level
-            pst = ConnectionPool.getConneciton().prepareStatement("CREATE TABLE IF NOT EXISTS " + "bank_database" + "(p_name VARCHAR(18) PRIMARY KEY, content LONGTEXT, level INT, money INT) ENGINE=InnoDB;");
+            pst = ConnectionPool.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS " + "bank_database" + "(p_name VARCHAR(18) PRIMARY KEY, content LONGTEXT, level INT, money INT) ENGINE=InnoDB;");
             pst.executeUpdate();
 
             // Combines: shop_data, cbin_data, shop_level
-            pst = ConnectionPool.getConneciton().prepareStatement("CREATE TABLE IF NOT EXISTS " + "shop_database" + "(p_name VARCHAR(18) PRIMARY KEY, server_num INT, level INT, collection_bin LONGTEXT, shop_backup LONGTEXT) ENGINE=InnoDB;");
+            pst = ConnectionPool.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS " + "shop_database" + "(p_name VARCHAR(18) PRIMARY KEY, server_num INT, level INT, collection_bin LONGTEXT, shop_backup LONGTEXT) ENGINE=InnoDB;");
             pst.executeUpdate();
 
             // Combines player_data, p_login_data, max_health, last_login, align_status, align_time
-            pst = ConnectionPool.getConneciton().prepareStatement("CREATE TABLE IF NOT EXISTS " + "player_database" + "(p_name VARCHAR(18) PRIMARY KEY, location TEXT, inventory LONGTEXT, hp INT, food_level INT, level INT, guild_name VARCHAR(16), combat_log BIT, last_login_time LONG, rank TINYTEXT, server_num INT, align_status VARCHAR(16), align_time LONG, toggles TEXT, pets TEXT, buddy_list TEXT, ignore_list TEXT, realm_tier INT, realm_title TINYTEXT, realm_loaded TINYINT(1), noob_player TINYINT(1), last_server TINYTEXT, ecash INT, ip TEXT, portal_shards TEXT, saved_gear TEXT, mule_inventory TEXT) ENGINE=InnoDB;");
+            pst = ConnectionPool.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS " + "player_database" + "(p_name VARCHAR(18) PRIMARY KEY, location TEXT, inventory LONGTEXT, hp INT, food_level INT, level INT, guild_name VARCHAR(16), combat_log BIT, last_login_time LONG, rank TINYTEXT, server_num INT, align_status VARCHAR(16), align_time LONG, toggles TEXT, pets TEXT, buddy_list TEXT, ignore_list TEXT, realm_tier INT, realm_title TINYTEXT, realm_loaded TINYINT(1), noob_player TINYINT(1), last_server TINYTEXT, ecash INT, ip TEXT, portal_shards TEXT, saved_gear TEXT, mule_inventory TEXT) ENGINE=InnoDB;");
             pst.executeUpdate();
 
-            pst = ConnectionPool.getConneciton().prepareStatement("CREATE TABLE IF NOT EXISTS " + "instance" + "(instance_template VARCHAR(18) PRIMARY KEY, times LONGTEXT) ENGINE=InnoDB;");
+            pst = ConnectionPool.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS " + "instance" + "(instance_template VARCHAR(18) PRIMARY KEY, times LONGTEXT) ENGINE=InnoDB;");
             pst.executeUpdate();
 
-            pst = ConnectionPool.getConneciton().prepareStatement("CREATE TABLE IF NOT EXISTS " + "guilds" + "(guild_name VARCHAR(16) PRIMARY KEY, guild_handle VARCHAR(3), guild_color INT, guild_server_num INT, members LONGTEXT, motd LONGTEXT) ENGINE=InnoDB;");
+            pst = ConnectionPool.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS " + "guilds" + "(guild_name VARCHAR(16) PRIMARY KEY, guild_handle VARCHAR(3), guild_color INT, guild_server_num INT, members LONGTEXT, motd LONGTEXT) ENGINE=InnoDB;");
             pst.executeUpdate();
 
-            pst = ConnectionPool.getConneciton().prepareStatement("CREATE TABLE IF NOT EXISTS " + "reports" + "(id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), type CHAR(18), reporter CHAR(18), offender CHAR(18), report TEXT, server VARCHAR(4), time DATETIME, cords TEXT) ENGINE=InnoDB;");
+            pst = ConnectionPool.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS " + "reports" + "(id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id), type CHAR(18), reporter CHAR(18), offender CHAR(18), report TEXT, server VARCHAR(4), time DATETIME, cords TEXT) ENGINE=InnoDB;");
             pst.executeUpdate();
 
-            pst = ConnectionPool.getConneciton().prepareStatement("CREATE TABLE IF NOT EXISTS " + "statistics" + "(pname CHAR(18) PRIMARY KEY, unlawful_kills INT, lawful_kills INT, deaths INT, mob_kills INT, money INT) ENGINE=InnoDB;");
+            pst = ConnectionPool.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS " + "statistics" + "(pname CHAR(18) PRIMARY KEY, unlawful_kills INT, lawful_kills INT, deaths INT, mob_kills INT, money INT) ENGINE=InnoDB;");
             pst.executeUpdate();
 
-            pst = ConnectionPool.getConneciton().prepareStatement("CREATE TABLE IF NOT EXISTS " + "perm_statistics" + "(pname CHAR(18) PRIMARY KEY, unlawful_kills INT, lawful_kills INT, deaths INT, mob_kills INT, money INT) ENGINE=InnoDB;");
+            pst = ConnectionPool.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS " + "perm_statistics" + "(pname CHAR(18) PRIMARY KEY, unlawful_kills INT, lawful_kills INT, deaths INT, mob_kills INT, money INT) ENGINE=InnoDB;");
             pst.executeUpdate();
 
-            pst = ConnectionPool.getConneciton().prepareStatement("CREATE TABLE IF NOT EXISTS " + "ban_list" + "(pname CHAR(18) PRIMARY KEY, unban_date DATETIME, ban_reason TEXT, who_banned CHAR(18), ban_date DATETIME, unban_reason TEXT, who_unbanned CHAR(18), rank CHAR(12), ban_count TINYINT) ENGINE=InnoDB;");
+            pst = ConnectionPool.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS " + "ban_list" + "(pname CHAR(18) PRIMARY KEY, unban_date DATETIME, ban_reason TEXT, who_banned CHAR(18), ban_date DATETIME, unban_reason TEXT, who_unbanned CHAR(18), rank CHAR(12), ban_count TINYINT) ENGINE=InnoDB;");
             pst.executeUpdate();
 
-            pst = ConnectionPool.getConneciton().prepareStatement("CREATE TABLE IF NOT EXISTS " + "mute_map" + "(pname CHAR(18) PRIMARY KEY, unmute LONG, who_muted CHAR(18)) ENGINE=InnoDB;");
+            pst = ConnectionPool.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS " + "mute_map" + "(pname CHAR(18) PRIMARY KEY, unmute LONG, who_muted CHAR(18)) ENGINE=InnoDB;");
             pst.executeUpdate();
 
         } catch (SQLException ex) {
@@ -1287,7 +1281,7 @@ public class Hive implements Listener {
         PreparedStatement pst = null;
 
         try {
-            pst = ConnectionPool.getConneciton().prepareStatement( 
+            pst = ConnectionPool.getConnection().prepareStatement( 
                     "INSERT INTO player_database (p_name, first_login) VALUES('" + p_name + "', '" + System.currentTimeMillis() + "') ON DUPLICATE KEY UPDATE first_login=" + System.currentTimeMillis());
 
             pst.executeUpdate();
@@ -1309,7 +1303,7 @@ public class Hive implements Listener {
         PreparedStatement pst = null;
 
         try {
-            pst = ConnectionPool.getConneciton().prepareStatement( 
+            pst = ConnectionPool.getConnection().prepareStatement( 
                     "INSERT INTO player_database (p_name, combat_log) VALUES('" + p_name + "', " + 1 + ") ON DUPLICATE KEY UPDATE combat_log=1");
 
             pst.executeUpdate();
@@ -1485,7 +1479,7 @@ public class Hive implements Listener {
         PreparedStatement pst = null;
 
         // 15 KEYS! -- Monster Query.
-        pst = ConnectionPool.getConneciton().prepareStatement( 
+        pst = ConnectionPool.getConnection().prepareStatement( 
                 "INSERT INTO player_database (p_name, location, inventory, hp, food_level, level, last_login_time, rank, align_status, align_time, toggles, buddy_list, ignore_list, realm_tier, realm_title, noob_player, combat_log, last_server, ip, portal_shards, saved_gear, mule_inventory, achievments, ecash_storage) " +
                         "VALUES('" + p_name + "', '" + location + "', '" + StringEscapeUtils.escapeSql(inventory) + "', '" + hp + "', '" + food_level + "', '" + level + "', '" + last_login_time + "', '" + rank+  "', '" + align_status + "', '" +
                         align_time + "', '" + toggles + "', '" + buddy_list + "', '" + ignore_list + "', '" + realm_tier + "', '" + realm_title + "', '" + i_new_player + "', 0, '" + last_server + "', '" + ip + "', '" + portal_shard_string + "', '" + saved_gear + "', '" + mule_inventory_string + "', '" + achievments + "', '" + ecash_storage + "') " +
@@ -1529,7 +1523,7 @@ public class Hive implements Listener {
         PreparedStatement pst = null;
 
         try {
-            pst = ConnectionPool.getConneciton().prepareStatement( 
+            pst = ConnectionPool.getConnection().prepareStatement( 
                     "SELECT server_num, location, inventory, hp, food_level, level, first_login, combat_log, last_login_time, rank, align_status, align_time, toggles, pets, buddy_list, ignore_list, realm_tier, realm_title, realm_loaded, noob_player, ecash, ip, sdays_left, portal_shards, saved_gear, lost_gear, mule_inventory, achievments, online_today, ecash_storage FROM player_database WHERE p_name = '" + p_name + "'");
 
             pst.execute();
@@ -2093,7 +2087,7 @@ public class Hive implements Listener {
         PreparedStatement pst;
 
         try {
-            pst = ConnectionPool.getConneciton().prepareStatement( 
+            pst = ConnectionPool.getConnection().prepareStatement( 
                     "SELECT location FROM player_database WHERE p_name = '" + p_name + "'");
 
             pst.execute();
@@ -2129,7 +2123,7 @@ public class Hive implements Listener {
         PreparedStatement pst;
 
         try {
-            pst = ConnectionPool.getConneciton().prepareStatement( 
+            pst = ConnectionPool.getConnection().prepareStatement( 
                     "SELECT rank FROM player_database WHERE p_name = '" + p_name + "'");
 
             pst.execute();
@@ -2223,7 +2217,7 @@ public class Hive implements Listener {
 
         try {
             for(String p_name : player_inventory.keySet()){
-                pst = ConnectionPool.getConneciton().prepareStatement( 
+                pst = ConnectionPool.getConnection().prepareStatement( 
                         "INSERT INTO player_database (p_name, server_num)"
                                 + " VALUES"
                                 + "('"+ p_name + "', '"+ (-1) +"') ON DUPLICATE KEY UPDATE server_num = '" + (-1) + "'");
@@ -2308,7 +2302,7 @@ public class Hive implements Listener {
             PreparedStatement pst = null;
 
             try {
-                pst = ConnectionPool.getConneciton().prepareStatement( 
+                pst = ConnectionPool.getConnection().prepareStatement( 
                         "SELECT server_num FROM player_database WHERE p_name = '" + p_name + "'");
 
                 pst.execute();
@@ -2365,7 +2359,7 @@ public class Hive implements Listener {
 
         try {
 
-            pst = ConnectionPool.getConneciton().prepareStatement( 
+            pst = ConnectionPool.getConnection().prepareStatement( 
                     "INSERT INTO player_database (p_name, server_num)"
                             + " VALUES"
                             + "('"+ p_name + "', '"+ server_num +"') ON DUPLICATE KEY UPDATE server_num = '" + server_num + "'");
@@ -2412,7 +2406,7 @@ public class Hive implements Listener {
 
                 try {
 
-                    pst = ConnectionPool.getConneciton().prepareStatement("DELETE FROM p_login_data WHERE pname = '" + p_name + "'");
+                    pst = ConnectionPool.getConnection().prepareStatement("DELETE FROM p_login_data WHERE pname = '" + p_name + "'");
                     pst.executeUpdate();
 
                 } catch (SQLException ex) {
@@ -2452,7 +2446,7 @@ public class Hive implements Listener {
             PreparedStatement pst = null;
 
             try {
-                pst = ConnectionPool.getConneciton().prepareStatement( 
+                pst = ConnectionPool.getConnection().prepareStatement( 
                         "INSERT INTO player_database (p_name, server_num)"
                                 + " VALUES"
                                 + "('"+ p_name + "', '"+ (-1) +"') ON DUPLICATE KEY UPDATE server_num = '" + (-1) + "'");
@@ -2510,7 +2504,7 @@ public class Hive implements Listener {
             PreparedStatement pst = null;
 
             try {
-                pst = ConnectionPool.getConneciton().prepareStatement( 
+                pst = ConnectionPool.getConnection().prepareStatement( 
                         "INSERT INTO player_database (p_name, server_num)"
                                 + " VALUES"
                                 + "('"+ p_name + "', '"+ (-1) +"') ON DUPLICATE KEY UPDATE server_num = '" + (-1) + "'");

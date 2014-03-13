@@ -37,6 +37,7 @@ import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
+import me.vaqxine.database.ConnectionPool;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -242,13 +243,6 @@ public class GuildMechanics implements Listener {
 				}
 			}
 		}, 5 * 20L, 20L);
-
-		// Refreshes SQL Connection Pool.
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
-			public void run() {
-				ConnectionPool.refresh = true;
-			}
-		}, 20 * 20L, 200 * 20L); 
 
 		// Refreshes Tab API menu thing.
 		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {

@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
+import me.vaqxine.database.ConnectionPool;
+
 public class ThreadPool extends Thread {
 	@Override
 	public void run(){
@@ -15,7 +17,7 @@ public class ThreadPool extends Thread {
 				PreparedStatement pst = null;
 
 				try {
-					pst = ConnectionPool.getConneciton().prepareStatement(query);
+					pst = ConnectionPool.getConnection().prepareStatement(query);
 					pst.executeUpdate();
 					
 					Hive.log.info("[Hive] ASYNC Executed query: " + query);

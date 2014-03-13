@@ -55,7 +55,6 @@ import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
-import me.vaqxine.enums.CC;
 import net.minecraft.server.v1_7_R1.DataWatcher;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutEntityMetadata;
@@ -270,16 +269,6 @@ public class RealmMechanics implements Listener {
 		RealmStatusThread = new RealmStatusThread();
 		RealmStatusThread.start();
 		// Handles all isRealmLoaded() SQL queries and local memory updates for determing realm's loaded server.
-
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
-			public void run() {
-				try{
-					ConnectionPool.refresh = true;
-				} catch (NoClassDefFoundError e){
-					System.err.println(CC.YELLOW + "Class Not Found?");
-				}
-			}
-		}, 120 * 20L, 120 * 20L);
 
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {

@@ -2,11 +2,11 @@ package me.vaqxine.SpawnMechanics.commands;
 
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class CommandAddSpawn implements CommandExecutor {

@@ -30,6 +30,7 @@ import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PetMechanics.commands.CommandPet;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.TeleportationMechanics.TeleportationMechanics;
+import me.vaqxine.database.ConnectionPool;
 import net.minecraft.server.v1_7_R1.EntityCreature;
 import net.minecraft.server.v1_7_R1.EntityCreeper;
 import net.minecraft.server.v1_7_R1.EntityInsentient;
@@ -142,12 +143,6 @@ public class PetMechanics implements Listener {
 		for(Style horse_style : Style.values()){
 			horse_style_list.add(horse_style);
 		}
-
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
-			public void run() {
-				ConnectionPool.refresh = true;
-			}
-		}, 200 * 20L, 200 * 20L);
 
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
@@ -690,7 +685,7 @@ public class PetMechanics implements Listener {
 		StringEscapeUtils.escapeSql(pet_string); 
 
 		try {
-			PreparedStatement pst = ConnectionPool.getConneciton().prepareStatement( 
+			PreparedStatement pst = ConnectionPool.getConnection().prepareStatement( 
 					"INSERT INTO player_database (p_name, pets)"
 							+ " VALUES"
 							+ "('" + p_name + "', '" + pet_string +"') ON DUPLICATE KEY UPDATE pets = '" + pet_string + "'");
@@ -794,7 +789,7 @@ public class PetMechanics implements Listener {
 		try {
 			//con = DriverManager.getConnection(Hive.sql_url, Hive.sql_user, Hive.sql_password);
 
-			pst = ConnectionPool.getConneciton().prepareStatement(
+			pst = ConnectionPool.getConnection().prepareStatement(
 					"SELECT pets FROM player_database WHERE p_name = '" + pname + "'");
 
 			pst.execute();

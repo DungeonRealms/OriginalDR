@@ -2,11 +2,11 @@ package me.vaqxine.PartyMechanics.commands;
 
 import me.vaqxine.PartyMechanics.PartyMechanics;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class CommandPDecline implements CommandExecutor {

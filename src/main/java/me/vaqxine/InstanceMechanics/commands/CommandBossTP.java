@@ -1,9 +1,5 @@
 package me.vaqxine.InstanceMechanics.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-
 import me.vaqxine.BossMechanics.BossMechanics;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
@@ -12,6 +8,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.command.BlockCommandSender;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;

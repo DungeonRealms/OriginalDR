@@ -27,6 +27,7 @@ import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
+import me.vaqxine.database.ConnectionPool;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -135,19 +136,10 @@ public class MoneyMechanics implements Listener {
 			}
 		}, 10 * 20L, 1 * 20L);
 
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
-			public void run() {
-				if(Hive.shutting_down == false){
-					ConnectionPool.refresh = true;
-				}
-			}
-		}, 240 * 20L, 240 * 20L);
-
 		log.info("[MoneyMechanics] has been enabled.");
 	}
 
 	public void onDisable() {
-		ConnectionPool.refresh = false;
 		int attempts = 0;
 		while(bank_contents.size() > 0 && attempts <= 100){
 			attempts++;
@@ -419,7 +411,7 @@ public class MoneyMechanics implements Listener {
 		bank_contents.remove(p_name);*/
 		
 		try {
-			pst = ConnectionPool.getConneciton().prepareStatement(
+			pst = ConnectionPool.getConnection().prepareStatement(
 					"SELECT money, level, content FROM bank_database WHERE p_name = '" + p_name + "'");
 
 			pst.execute();
@@ -645,7 +637,7 @@ public class MoneyMechanics implements Listener {
 		PreparedStatement pst = null;
 
 		try {
-			pst = ConnectionPool.getConneciton().prepareStatement( 
+			pst = ConnectionPool.getConnection().prepareStatement( 
 					"INSERT INTO bank_database (p_name, content, money, level)"
 							+ " VALUES"
 							+ "('"+ p_name + "', '"+ StringEscapeUtils.escapeSql(final_bank_content) +"', '" + final_bank_net + "', '" + final_bank_level + "') ON DUPLICATE KEY UPDATE content = '" 

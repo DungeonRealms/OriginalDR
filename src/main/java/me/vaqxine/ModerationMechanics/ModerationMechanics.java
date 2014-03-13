@@ -26,13 +26,13 @@ import me.vaqxine.Main;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.ModerationMechanics.commands.CommandArmorSee;
-import me.vaqxine.ModerationMechanics.commands.CommandDRBan;
 import me.vaqxine.ModerationMechanics.commands.CommandBankSee;
 import me.vaqxine.ModerationMechanics.commands.CommandCheck;
+import me.vaqxine.ModerationMechanics.commands.CommandDRBan;
+import me.vaqxine.ModerationMechanics.commands.CommandDRKick;
 import me.vaqxine.ModerationMechanics.commands.CommandDRTPPos;
 import me.vaqxine.ModerationMechanics.commands.CommandDRVanish;
 import me.vaqxine.ModerationMechanics.commands.CommandIPBan;
-import me.vaqxine.ModerationMechanics.commands.CommandDRKick;
 import me.vaqxine.ModerationMechanics.commands.CommandLock;
 import me.vaqxine.ModerationMechanics.commands.CommandMute;
 import me.vaqxine.ModerationMechanics.commands.CommandPlayerClone;
@@ -44,6 +44,7 @@ import me.vaqxine.ModerationMechanics.commands.CommandUnban;
 import me.vaqxine.ModerationMechanics.commands.CommandUnlock;
 import me.vaqxine.ModerationMechanics.commands.CommandUnmute;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
+import me.vaqxine.database.ConnectionPool;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
 
@@ -83,13 +84,6 @@ public class ModerationMechanics implements Listener {
 
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
-
-		new BukkitRunnable(){
-			@Override
-			public void run() {
-				ConnectionPool.refresh = true;
-			}
-		}.runTaskTimerAsynchronously(Main.plugin, 120 * 20L, 120 * 20L);
 
 		new BukkitRunnable(){
 			@Override
@@ -176,7 +170,7 @@ public class ModerationMechanics implements Listener {
 
 		try {
 			//con = DriverManager.getConnection(Hive.sql_url, Hive.sql_user, Hive.sql_password);
-			pst = ConnectionPool.getConneciton().prepareStatement( 
+			pst = ConnectionPool.getConnection().prepareStatement( 
 					"SELECT ban_count FROM ban_list WHERE pname = '" + p_name + "'");
 
 			pst.execute();
@@ -213,7 +207,7 @@ public class ModerationMechanics implements Listener {
 		if(!IP.contains(".")){
 			// Probably a username.
 			try {
-				pst = ConnectionPool.getConneciton().prepareStatement( 
+				pst = ConnectionPool.getConnection().prepareStatement( 
 						"SELECT ip FROM player_database WHERE p_name='" + IP + "'");
 
 				pst.execute();
@@ -261,7 +255,7 @@ public class ModerationMechanics implements Listener {
 				}
 				log.info("[ModerationMechanics] Processing IP: " + s_ip);
 				
-				pst = ConnectionPool.getConneciton().prepareStatement( 
+				pst = ConnectionPool.getConnection().prepareStatement( 
 						"SELECT p_name FROM player_database WHERE ip like '%" + s_ip + "%'");
 
 				pst.execute();
@@ -430,7 +424,7 @@ public class ModerationMechanics implements Listener {
 
 		try {
 			con = DriverManager.getConnection(Hive.sql_url, Hive.sql_user, Hive.sql_password);
-			pst = ConnectionPool.getConneciton().prepareStatement( 
+			pst = ConnectionPool.getConnection().prepareStatement( 
 					"SELECT unban_reason FROM ban_list WHERE pname = '" + p_name + "'");
 
 			pst.execute();
@@ -471,7 +465,7 @@ public class ModerationMechanics implements Listener {
 
 		try {
 			//con = DriverManager.getConnection(Hive.sql_url, Hive.sql_user, Hive.sql_password);
-			pst = ConnectionPool.getConneciton().prepareStatement( 
+			pst = ConnectionPool.getConnection().prepareStatement( 
 					"SELECT unban_date, perm FROM ban_list WHERE pname = '" + p_name + "'");
 
 			pst.execute();

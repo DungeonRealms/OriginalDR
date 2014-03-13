@@ -27,7 +27,6 @@ import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.LootMechanics.LootMechanics;
-import me.vaqxine.MoneyMechanics.ConnectionPool;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
@@ -36,6 +35,7 @@ import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
+import me.vaqxine.database.ConnectionPool;
 import net.citizensnpcs.api.CitizensAPI;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
@@ -185,12 +185,6 @@ public class ShopMechanics implements Listener {
 			}
 		}, 2 * 20L);
 		
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
-			public void run() {
-				ConnectionPool.refresh = true;
-			}
-		}, 120 * 20L, 120 * 20L);
-
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				if(npc_to_remove.size() <= 0){return;}
@@ -372,7 +366,7 @@ public class ShopMechanics implements Listener {
 		PreparedStatement pst = null;
 
 		try {
-			pst = ConnectionPool.getConneciton().prepareStatement( 
+			pst = ConnectionPool.getConnection().prepareStatement( 
 					"INSERT INTO shop_database (p_name, collection_bin)"
 							+ " VALUES"
 							+ "('"+ p_name + "', '"+ "null" +"') ON DUPLICATE KEY UPDATE collection_bin = '" + "null" + "'");
@@ -595,7 +589,7 @@ public class ShopMechanics implements Listener {
 		shop_server.remove(p_name);
 
 		try {
-			pst = ConnectionPool.getConneciton().prepareStatement(
+			pst = ConnectionPool.getConnection().prepareStatement(
 					"SELECT level, server_num, collection_bin FROM shop_database WHERE p_name = '" + p_name + "'");
 
 			pst.execute();
@@ -686,7 +680,7 @@ public class ShopMechanics implements Listener {
 
 		try {
 
-			pst = ConnectionPool.getConneciton().prepareStatement( 
+			pst = ConnectionPool.getConnection().prepareStatement( 
 					"INSERT INTO shop_database (p_name, collection_bin)"
 							+ " VALUES"
 							+ "('"+ p_name + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "'");
@@ -756,7 +750,7 @@ public class ShopMechanics implements Listener {
 		PreparedStatement pst = null;
 
 		try {
-			pst = ConnectionPool.getConneciton().prepareStatement( 
+			pst = ConnectionPool.getConnection().prepareStatement( 
 					"INSERT INTO shop_database (p_name, level, server_num, collection_bin)"
 							+ " VALUES"
 							+ "('"+ p_name + "', '"+ lshop_level +"', '" + server_num + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE level = '" + lshop_level + "', server_num='" + server_num + "', collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "'");
@@ -907,7 +901,7 @@ public class ShopMechanics implements Listener {
 		PreparedStatement pst = null;
 
 		try {
-			pst = ConnectionPool.getConneciton().prepareStatement(query);
+			pst = ConnectionPool.getConnection().prepareStatement(query);
 			pst.executeUpdate();
 
 			Hive.log.info("[Hive] SYNC Executed query: " + query);

@@ -3,10 +3,10 @@ package me.vaqxine.DonationMechanics.commands;
 import me.vaqxine.Main;
 import me.vaqxine.DonationMechanics.DonationMechanics;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class CommandGiveSubPlus implements CommandExecutor {

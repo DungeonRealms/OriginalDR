@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import me.vaqxine.database.ConnectionPool;
+
 public class RealmStatusThread extends Thread {
 	@Override
 	public void run(){
@@ -15,7 +17,7 @@ public class RealmStatusThread extends Thread {
 				PreparedStatement pst = null;
 
 				try {
-					pst = ConnectionPool.getConneciton().prepareStatement( 
+					pst = ConnectionPool.getConnection().prepareStatement( 
 							"SELECT realm_loaded FROM player_database WHERE p_name = '" + p_name + "'");
 
 					pst.execute();

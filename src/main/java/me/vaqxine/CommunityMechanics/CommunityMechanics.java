@@ -53,6 +53,7 @@ import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
+import me.vaqxine.database.ConnectionPool;
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutEntityEquipment;
@@ -218,13 +219,6 @@ public class CommunityMechanics implements Listener {
 
 		aqua = HealthMechanics.board.registerNewTeam("aqua");
 		aqua.setPrefix("�b" + ChatColor.BOLD.toString() + "GM" + ChatColor.AQUA.toString() + " ");
-		
-		new BukkitRunnable(){
-			@Override
-			public void run() {
-				ConnectionPool.refresh = true;
-			}
-		}.runTaskTimerAsynchronously(Main.plugin, 240 * 20L, 240 * 20L);
 		
 		new BukkitRunnable(){
 			@Override
@@ -1126,7 +1120,7 @@ public class CommunityMechanics implements Listener {
 
 		try {
 
-			pst = ConnectionPool.getConneciton().prepareStatement("SELECT last_login_time FROM player_database WHERE p_name = '" + p_name + "'");
+			pst = ConnectionPool.getConnection().prepareStatement("SELECT last_login_time FROM player_database WHERE p_name = '" + p_name + "'");
 
 			pst.execute();
 			ResultSet rs = pst.getResultSet();
@@ -1219,7 +1213,7 @@ public class CommunityMechanics implements Listener {
 		}
 		try {
 			if(buddy_list.containsKey(p.getName())){
-				pst = ConnectionPool.getConneciton().prepareStatement( 
+				pst = ConnectionPool.getConnection().prepareStatement( 
 						"INSERT INTO player_database (p_name, buddy_list)"
 								+ " VALUES"
 								+ "('"+ p.getName() + "', '"+ StringEscapeUtils.escapeSql(buddy_list_string) +"') ON DUPLICATE KEY UPDATE buddy_list='" + StringEscapeUtils.escapeSql(buddy_list_string) + "'");
@@ -1228,7 +1222,7 @@ public class CommunityMechanics implements Listener {
 			}
 
 			if(ignore_list.containsKey(p.getName())){
-				pst = ConnectionPool.getConneciton().prepareStatement( 
+				pst = ConnectionPool.getConnection().prepareStatement( 
 						"INSERT INTO player_database (p_name, ignore_list)"
 								+ " VALUES"
 								+ "('"+ p.getName() + "', '"+ StringEscapeUtils.escapeSql(ignore_list_string) +"') ON DUPLICATE KEY UPDATE ignore_list='" + StringEscapeUtils.escapeSql(ignore_list_string) + "'");
@@ -1264,7 +1258,7 @@ public class CommunityMechanics implements Listener {
 
 		try {
 			//con = DriverManager.getConnection(Hive.sql_url, Hive.sql_user, Hive.sql_password);
-			pst = ConnectionPool.getConneciton().prepareStatement( 
+			pst = ConnectionPool.getConnection().prepareStatement( 
 					"SELECT buddy_List FROM player_database WHERE p_name = '" + p_name + "'");
 
 			pst.execute();
