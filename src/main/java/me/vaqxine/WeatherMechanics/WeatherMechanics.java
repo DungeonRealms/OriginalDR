@@ -14,19 +14,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class WeatherMechanics implements Listener {
 	Logger log = Logger.getLogger("Minecraft");
 	
 	public static volatile HashMap<String, WeatherType> player_weather = new HashMap<String, WeatherType>();
 	
-	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
 		Main.plugin.getCommand("drweather").setExecutor(new CommandDRWeather());
 		
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable() {
+			@Override
 			public void run() {
 				for(Player pl : Main.plugin.getServer().getOnlinePlayers()){
 					if(getRegionName(pl.getLocation()).startsWith("rain_") && pl.getPlayerWeather() != WeatherType.DOWNFALL){
@@ -39,7 +40,7 @@ public class WeatherMechanics implements Listener {
 					}
 				}
 			}
-		}, 10 * 20L, 5L);
+		}.runTaskTimer(Main.plugin, 10L * 20L, 20L);
 
 		log.info("[WeatherMechanics] has been enabled.");
 	}

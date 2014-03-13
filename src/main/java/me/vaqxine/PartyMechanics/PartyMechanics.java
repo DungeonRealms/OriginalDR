@@ -19,15 +19,6 @@ import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
-import me.vaqxine.PartyMechanics.commands.CommandP;
-import me.vaqxine.PartyMechanics.commands.CommandPAccept;
-import me.vaqxine.PartyMechanics.commands.CommandPDecline;
-import me.vaqxine.PartyMechanics.commands.CommandPInvite;
-import me.vaqxine.PartyMechanics.commands.CommandPKick;
-import me.vaqxine.PartyMechanics.commands.CommandPLoot;
-import me.vaqxine.PartyMechanics.commands.CommandPPromote;
-import me.vaqxine.PartyMechanics.commands.CommandPQuit;
-import me.vaqxine.PartyMechanics.commands.CommandParty;
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutEntityEquipment;
@@ -92,15 +83,15 @@ public class PartyMechanics implements Listener {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		manager = Bukkit.getScoreboardManager();
 		
-		Main.plugin.getCommand("p").setExecutor(new CommandP()); // TODO - Check Command
-		Main.plugin.getCommand("paccept").setExecutor(new CommandPAccept());
-		Main.plugin.getCommand("party").setExecutor(new CommandParty());
-		Main.plugin.getCommand("pdecline").setExecutor(new CommandPDecline());
-		Main.plugin.getCommand("pinvite").setExecutor(new CommandPInvite());
-		Main.plugin.getCommand("pkick").setExecutor(new CommandPKick());
-		Main.plugin.getCommand("ploot").setExecutor(new CommandPLoot());
-		Main.plugin.getCommand("ppromote").setExecutor(new CommandPPromote());
-		Main.plugin.getCommand("pquit").setExecutor(new CommandPQuit());
+		//Main.plugin.getCommand("p").setExecutor(new CommandP()); // TODO - Check Command
+		//Main.plugin.getCommand("paccept").setExecutor(new CommandPAccept());
+		//Main.plugin.getCommand("party").setExecutor(new CommandParty());
+		//Main.plugin.getCommand("pdecline").setExecutor(new CommandPDecline());
+		//Main.plugin.getCommand("pinvite").setExecutor(new CommandPInvite());
+		//Main.plugin.getCommand("pkick").setExecutor(new CommandPKick());
+		//Main.plugin.getCommand("ploot").setExecutor(new CommandPLoot());
+		//Main.plugin.getCommand("ppromote").setExecutor(new CommandPPromote());
+		//Main.plugin.getCommand("pquit").setExecutor(new CommandPQuit());
 		
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
@@ -416,6 +407,11 @@ public class PartyMechanics implements Listener {
 
 	// AnEpicPlayerName
 	public static void addPlayerToParty(final Player pl, String party_title){
+		if(!pl.getName().equals("Notch")){
+			pl.sendMessage(ChatColor.RED + "Parties are temporarily disabled due to a 1.7.2 conflict.");
+			return;
+		}
+		
 		if(party_title.contains(".")){
 			party_title = party_title.substring(0, party_title.indexOf("."));
 		}
@@ -470,6 +466,10 @@ public class PartyMechanics implements Listener {
 	}
 
 	public static void removePlayerFromParty(Player pl, String party_name){
+		if(!pl.getName().equals("Notch")){
+			pl.sendMessage(ChatColor.RED + "Parties are temporarily disabled due to a 1.7.2 conflict.");
+			return;
+		}
 		// TODO: Fix this with the new party names (16 char bullshit)
 
 		/*int incr = 0;
@@ -593,10 +593,10 @@ public class PartyMechanics implements Listener {
 	}
 
 	public static void createParty(String party_title, Player p_owner, List<String> existing_members){
-		//if(!p_owner.getName().equalsIgnoreCase("Notch")){
-		//	p_owner.sendMessage(ChatColor.RED + "Parties are temporarily disabled due to a 1.7.2 conflict.");
-		//	return;
-		//}
+		if(!p_owner.getName().equals("Notch")){
+			p_owner.sendMessage(ChatColor.RED + "Parties are temporarily disabled due to a 1.7.2 conflict.");
+			return;
+		}
 		
 		int incr = 0;
 
@@ -663,6 +663,10 @@ public class PartyMechanics implements Listener {
 	}
 
 	public static void inviteToParty(Player to_invite, Player p_owner){
+		if(!p_owner.getName().equals("Notch")){
+			p_owner.sendMessage(ChatColor.RED + "Parties are temporarily disabled due to a 1.7.2 conflict.");
+			return;
+		}
 		if(!party_map.containsKey(p_owner)) party_map.put(p_owner.getName(), new ArrayList<String>());
 		if(!(isPartyLeader(p_owner.getName()))){
 			if(inv_party_map.containsKey(p_owner.getName())){ // In another party.

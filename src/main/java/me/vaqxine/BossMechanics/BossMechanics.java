@@ -17,6 +17,7 @@ import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemGenerators;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
+import me.vaqxine.enums.CC;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -77,29 +78,37 @@ public class BossMechanics implements Listener {
 	- When he is going to die, i.e the last 10%, he "rages" particle effects and beings to hit a lot harder.
 	 */
 
-	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		
 		Main.plugin.getCommand("spawnboss").setExecutor(new CommandSpawnBoss());
 		
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable() {
+			@Override
 			public void run() {
 				for(Entity ent : enraged_boss){
-					// Spawn particles, he's mad bro mad.
 					try {
 						ParticleEffect.sendToLocation(ParticleEffect.PORTAL, ent.getLocation(), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.2F, 50);
 						ParticleEffect.sendToLocation(ParticleEffect.WITCH_MAGIC, ent.getLocation(), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.2F, 20);
 					} catch (Exception e) {
-						e.printStackTrace();
+						System.err.println(CC.YELLOW + "Unable to spawn boss particles!" + CC.DEFAULT);
 					}
 				}
 			}
-		}, 10 * 20L, 5L);
+		}.runTaskTimerAsynchronously(Main.plugin, 10L * 20L, 10L);
 
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable() {
+			@Override
 			public void run() {
+				
+			}
+		};
+		
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				List<Entity> remove = new ArrayList<Entity>();
 				for(Entry<Entity, List<Entity>> data : minion_map.entrySet()){
 					Entity boss = data.getKey();
 					if(!(boss_saved_location.containsKey(boss))){
@@ -118,7 +127,7 @@ public class BossMechanics implements Listener {
 						LivingEntity le_boss = (LivingEntity)boss;
 						boss_saved_location.remove(boss);
 						le_boss.removePotionEffect(PotionEffectType.INVISIBILITY);
-						minion_map.remove(boss);
+						remove.add(boss);
 						for(Player pl : boss.getWorld().getPlayers()){
 							pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Burick The Fanatic: " + ChatColor.WHITE + "Face me, pathetic creatures!");
 						}
@@ -135,17 +144,22 @@ public class BossMechanics implements Listener {
 						}
 					}
 				}
+				
+				for(Entity e : remove){
+					minion_map.remove(e);
+				}
 			}
-		}, 10 * 20L, 10L);
+		}.runTaskTimerAsynchronously(Main.plugin, 10L * 20L, 20L);
 
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		new BukkitRunnable() {
+			@Override
 			public void run() {
+				List<Entity> remove = new ArrayList<Entity>();
 				for(Entry<Entity, List<Entity>> data : minion_map.entrySet()){
 					Entity boss = data.getKey();
-					// Levitate the boss while minion_map is populated.
 					LivingEntity le = (LivingEntity)boss;
 					if(le == null || le.isDead()){
-						minion_map.remove(boss);
+						remove.add(boss);
 					}
 					if(le.hasPotionEffect(PotionEffectType.INVISIBILITY)){
 						if(boss_saved_location.containsKey(boss) && (boss.getLocation().distanceSquared(boss_saved_location.get(boss)) > 64)){
@@ -153,8 +167,12 @@ public class BossMechanics implements Listener {
 						}
 					}
 				}
+				
+				for(Entity e : remove){
+					minion_map.remove(e);
+				}
 			}
-		}, 10 * 20L, 1L);
+		}.runTaskTimerAsynchronously(Main.plugin, 10L * 20L, 2L);
 
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {

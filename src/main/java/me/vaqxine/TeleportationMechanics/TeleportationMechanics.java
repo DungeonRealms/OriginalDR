@@ -42,6 +42,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class TeleportationMechanics implements Listener {
 	public static Logger log = Logger.getLogger("Minecraft");
@@ -89,7 +90,6 @@ public class TeleportationMechanics implements Listener {
 	public static HashMap<String, Location> warp_map = new HashMap<String, Location>();
 	// Player Name, Time of last movement check. -- Used for teleport_ regions.
 	
-	@SuppressWarnings("deprecation")
 	public void onEnable(){
 		log.info("[TeleportationMechanics] has been enabled.");
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
@@ -110,20 +110,21 @@ public class TeleportationMechanics implements Listener {
 		
 		
 		// Teleports users in teleport_<warp_name> regions
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
-            public void run() {
-            	for(Player pl : Main.plugin.getServer().getOnlinePlayers()){
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				for(Player pl : Main.plugin.getServer().getOnlinePlayers()){
 					String region = DuelMechanics.getRegionName(pl.getLocation());
 					if(region.startsWith("teleport_")){
 						// Teleport!
-
+				
 						/*if(processing_move.containsKey(pl.getName()) && (System.currentTimeMillis() - processing_move.get(pl.getName())) <= (4 * 1000)){
 							// Don't get them in a TP loop.
 							continue;
 						}*/
-
+				
 						String warp_name = region.substring(region.indexOf("_") + 1, region.length());
-						
+							
 						if(!(warp_map.containsKey(warp_name))){
 							continue;
 						}
@@ -132,11 +133,10 @@ public class TeleportationMechanics implements Listener {
 						warp.setYaw(pl.getLocation().getYaw());
 						processing_move.put(pl.getName(), System.currentTimeMillis() + 4000);
 						pl.teleport(warp);
-						
-            	}
-            }
-         }
-	 }, 5 * 20L, 1 * 20L);
+					}
+				}
+			}
+		}.runTaskTimer(Main.plugin, 5L * 20L, 20L);
 		
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
@@ -173,8 +173,9 @@ public class TeleportationMechanics implements Listener {
             }
 	 }, 5 * 20L, 10L);
 		
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
-			public void run() {    	
+		new BukkitRunnable() {
+			@Override
+			public void run() {
 				List<String> to_remove = new ArrayList<String>();
 				for(Entry<String, Integer> data : tp_effect.entrySet()){
 					String p_name = data.getKey();
@@ -225,10 +226,9 @@ public class TeleportationMechanics implements Listener {
 					seconds_left--;
 					tp_effect.put(p_name, seconds_left);
 				}
-
 			}
-		}, 5 * 20L, 20L);
-
+		}.runTaskTimer(Main.plugin, 5L * 20L, 20L);
+		
 	}
 
 	public void onDisable() {
