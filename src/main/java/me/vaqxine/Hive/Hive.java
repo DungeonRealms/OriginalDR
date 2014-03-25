@@ -388,7 +388,7 @@ public class Hive implements Listener {
     @SuppressWarnings("deprecation")
     public void onEnable() {
         instance = this;
-        if(MOTD.contains("99")) databaseName = "dungeonrealms_test";
+        //if(MOTD.contains("99")) databaseName = "dungeonrealms_test";
         log.info(TimeZone.getDefault().toString());
         TimeZone.setDefault(TimeZone.getTimeZone("America/Chicago"));
 
@@ -2576,7 +2576,7 @@ public class Hive implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCommandPreProcess(PlayerCommandPreprocessEvent e){
-        if(e.getMessage().equalsIgnoreCase("/stop") && e.getPlayer() != null && (e.getPlayer().getName().equalsIgnoreCase("availer") || e.getPlayer().getName().equalsIgnoreCase("vaquxine"))){
+        if(e.getMessage().equalsIgnoreCase("/stop") && e.getPlayer() == null){
             server_lock = true;
             setAllPlayersAsOffline();
 

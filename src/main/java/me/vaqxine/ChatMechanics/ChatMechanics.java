@@ -767,6 +767,10 @@ public class ChatMechanics implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) // We need to ignore all those "enter XXX" situations.
 	public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e){
+		if(e.getMessage().startsWith("/plugins")){
+			e.setCancelled(true);
+			return;
+		}
 		e.setCancelled(true);
 		String msg = e.getMessage();
 		final Player p = e.getPlayer();
