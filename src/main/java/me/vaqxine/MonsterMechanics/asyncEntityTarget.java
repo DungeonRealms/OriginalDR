@@ -48,7 +48,7 @@ public class asyncEntityTarget extends Thread {
 						if(!(MonsterMechanics.mob_messages.containsKey(mob_type))){continue;}
 						possible_messages = MonsterMechanics.mob_messages.get(mob_type);
 						int which_message = new Random().nextInt(possible_messages.size());
-
+						
 						String message = possible_messages.get(which_message);
 						// message.substring(0, message.indexOf(":"))
 						LivingEntity le = (LivingEntity)e.getEntity();

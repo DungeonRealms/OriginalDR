@@ -170,7 +170,8 @@ public class ChatMechanics implements Listener {
 		try {
 			con = DriverManager.getConnection(Hive.sql_url, Hive.sql_user, Hive.sql_password);
 			pst = con.prepareStatement( 
-					"SELECT unmute FROM mute_map WHERE unmute = '" + p_name + "'");
+			        /*Was the wrong data searching for*/
+					"SELECT unmute FROM mute_map WHERE pname = '" + p_name + "'");
 
 			pst.execute();
 			ResultSet rs = pst.getResultSet();
@@ -327,7 +328,7 @@ public class ChatMechanics implements Listener {
 		return_string = return_string + ChatColor.WHITE + GuildMechanics.getGuildPrefix(p.getName()) + ChatColor.RESET;
 
 		if(p.isOp() || rank.equalsIgnoreCase("GM")){
-			if(p.getName().equalsIgnoreCase("Vaquxine") || p.getName().equalsIgnoreCase("Vilsol")){
+			if(p.getName().equalsIgnoreCase("Vaquxine") || p.getName().equalsIgnoreCase("Vilsol") || p.getName().equalsIgnoreCase("iFamasssxD")){
 				return_string += "" + ChatColor.DARK_AQUA + ChatColor.BOLD.toString() + "DEV" + " " + ChatColor.GRAY;
 			}
 			else{
@@ -372,7 +373,7 @@ public class ChatMechanics implements Listener {
 		}
 		
 		if(op.isOp() || rank.equalsIgnoreCase("GM")){
-			if(p_name.equalsIgnoreCase("Vaquxine")){
+			if(p_name.equalsIgnoreCase("Vaquxine") || p_name.equalsIgnoreCase("iFamasssxD")){
 				return_string += "" + ChatColor.DARK_AQUA + ChatColor.BOLD.toString() + "DEV" + " " + ChatColor.GRAY;
 			}
 			else{
@@ -756,9 +757,11 @@ public class ChatMechanics implements Listener {
 
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent e){
-		if(e.getMessage().equalsIgnoreCase("server") || e.getMessage().equalsIgnoreCase("/server")) e.setCancelled(true);
+		if(e.getMessage().equalsIgnoreCase("server") || e.getMessage().equalsIgnoreCase("/server")) {
+		    e.setCancelled(true);
+		}
 	}
 	
 	@SuppressWarnings("deprecation")

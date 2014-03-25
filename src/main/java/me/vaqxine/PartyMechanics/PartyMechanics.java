@@ -188,11 +188,9 @@ public class PartyMechanics implements Listener {
 		if(inv_party_map.containsKey(pl.getName())){
 			removePlayerFromParty(pl, inv_party_map.get(pl.getName()));
 		}
-
 		if(party_invite.containsKey(pl.getName())){
 			pl.performCommand("pdecline");
 		}
-
 		player_hp.remove(pl.getName());
 	}
 

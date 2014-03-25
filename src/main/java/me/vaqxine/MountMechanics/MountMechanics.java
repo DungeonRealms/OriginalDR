@@ -45,6 +45,7 @@ import org.bukkit.entity.Horse.Variant;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -54,6 +55,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -859,7 +861,12 @@ public class MountMechanics implements Listener {
 			mule.remove();
 		}
 	}
-
+	@EventHandler
+	public void onWitherSkull(ExplosionPrimeEvent e){
+	    if(e.getEntity() instanceof WitherSkull){
+	    e.setCancelled(true);
+	    }
+	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerMountEntity(VehicleEnterEvent e){
 		if(e.getVehicle() instanceof Horse){
@@ -1283,7 +1290,11 @@ public class MountMechanics implements Listener {
 					pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " summon your mount outside of Andalucia.");
 					return;
 				}
-
+				Location l = pl.getLocation();
+				if(l.clone().add(0, 1, 0).getBlock().getType() != Material.AIR){
+				    pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " summon your mount in this location.");
+				    return;
+				}
 				double seconds_left = 5; // Default 5 seconds cast time.
 				if(HealthMechanics.in_combat.containsKey(pl.getName())){
 					long dif = ((HealthMechanics.HealthRegenCombatDelay * 1000) + HealthMechanics.in_combat.get(pl.getName())) - System.currentTimeMillis();

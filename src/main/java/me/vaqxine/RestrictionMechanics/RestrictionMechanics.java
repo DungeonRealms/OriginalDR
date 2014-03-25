@@ -148,14 +148,23 @@ public class RestrictionMechanics implements Listener {
 			public void run() {
 				for(Player p : Main.plugin.getServer().getOnlinePlayers()){
 					Location to = p.getLocation();
-					if(to.getZ() >= 1500 || to.getX() <= -1850 || to.getX() >= 1400){
-						if(p.isOp()){
-							p.sendMessage("You would normally be TP'd, but you're an OP so I'm ignoring...");
+					if(to.getZ() >= 1500 || to.getX() <= -1850 || to.getX() >= 1400 || to.getZ() <= -851){
+					    if(isWithinAvalon(to)){
+					        //So if they are in the location of avalon then they are fine. Otherwise they can be changed.
+					        continue;
+					    }
+					    if(p.isOp()){
+							//p.sendMessage("You would normally be TP'd, but you're an OP so I'm ignoring..."); Annoying
 							continue;
+						}
+						if(p.isInsideVehicle()){
+						    Entity e = p.getVehicle();
+						    e.eject();
 						}
 						p.teleport(SpawnMechanics.getRandomSpawnPoint(p.getName()));
 						p.sendMessage(ChatColor.BLUE + "Oops! Your character was found outside the bounds of the map.");
 					}
+					    
 				}
 			}
 		}, 15 * 20L, 20L);
@@ -213,7 +222,7 @@ public class RestrictionMechanics implements Listener {
 	public void onSlimeSplitEvent(SlimeSplitEvent e){
 		e.setCancelled(true);
 	}
-
+	
 	@EventHandler
 	public void onEntityChangeBlockEvent(EntityChangeBlockEvent e){
 		e.setCancelled(true);
@@ -664,7 +673,15 @@ public class RestrictionMechanics implements Listener {
 
 		return false;
 	}
-
+	public boolean isWithinAvalon(Location l){
+	    int x = l.getBlockX(),z = l.getBlockZ();
+	    if(x > -559 && x < 436){//1000 blocks
+	        if(z > -3800 && z < -3105){// 700 blocks
+	            return true;
+	        }
+	    }
+	    return false;
+	}
 	public void removeIllegalItems(Inventory inv){
 		// Armor icons, Weapon icons, bones, pumpkin vines
 		int index = -1;

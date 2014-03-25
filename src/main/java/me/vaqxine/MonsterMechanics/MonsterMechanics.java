@@ -93,6 +93,7 @@ import org.bukkit.entity.ThrownPotion;
 import org.bukkit.entity.Witch;
 import org.bukkit.entity.WitherSkull;
 import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -4858,7 +4859,13 @@ public class MonsterMechanics implements Listener {
 			e.setCancelled(true);
 			return;
 		}
-
+		if(e.getEntity() instanceof Zombie && e.getTarget() instanceof Player){
+		    if(e.getEntity().getLocation().distance(e.getTarget().getLocation()) > 15.0D){
+		        //15 block radius for mob spawns * Fix for the extra long agro range
+		        e.setCancelled(true);
+		        return;
+		    }
+		}
 		async_entity_target.add(e);
 	}
 

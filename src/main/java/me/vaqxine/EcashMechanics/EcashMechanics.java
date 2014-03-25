@@ -748,7 +748,6 @@ public class EcashMechanics implements Listener {
 				pl.updateInventory();
 				return;
 			}
-			
 			if((e.getCursor() != null && e.getCursor().getType() != Material.AIR && !(PetMechanics.isPermUntradeable(e.getCursor()))) || ((e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR && !(PetMechanics.isPermUntradeable(e.getCurrentItem()))))){
 				e.setCancelled(true);
 				pl.updateInventory();
@@ -858,7 +857,7 @@ public class EcashMechanics implements Listener {
 					pl.sendMessage(ChatColor.RED + "Global Loot 20% Multiplier - " + ChatColor.BOLD + "CANCELLED");
 				}
 				else{
-					pl.sendMessage(ChatColor.RED + "Your inventory is currently full. Cannot readd Global Loot Buff until you clear space.");
+					pl.sendMessage(ChatColor.RED + "Your inventory is currently full. Cannot read Global Loot Buff until you clear space.");
 					pl.sendMessage(ChatColor.GRAY + "Clear some space and type 'cancel' again.");
 				}
 			}
@@ -884,7 +883,7 @@ public class EcashMechanics implements Listener {
 					pl.sendMessage(ChatColor.RED + "Global Message - " + ChatColor.BOLD + "CANCELLED");
 				}
 				else{
-					pl.sendMessage(ChatColor.RED + "Your inventory is currently full. Cannot readd Global Messenger until you clear space.");
+					pl.sendMessage(ChatColor.RED + "Your inventory is currently full. Cannot read Global Messenger until you clear space.");
 					pl.sendMessage(ChatColor.GRAY + "Clear some space and type 'cancel' again.");
 				}
 				return;
