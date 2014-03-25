@@ -162,6 +162,7 @@ public class Hive implements Listener {
     public static final String ftp_pass = "9bgsMKsknkJ6OY"; // $WHe4KT`l^S6sc
 
     public static final String sql_url = "jdbc:mysql://" + Hive_IP + ":" + SQL_port + "/dungeonrealms";
+    public static String databaseName = "dungeonrealms";
     // CREDENTIAL INFORMATION -- DO NOT CHANGE!
 
     public static String local_IP = "";
@@ -387,6 +388,7 @@ public class Hive implements Listener {
     @SuppressWarnings("deprecation")
     public void onEnable() {
         instance = this;
+        if(MOTD.contains("99")) databaseName = "dungeonrealms_test";
         log.info(TimeZone.getDefault().toString());
         TimeZone.setDefault(TimeZone.getTimeZone("America/Chicago"));
 
