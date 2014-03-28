@@ -42,7 +42,7 @@ public class CommandInstance implements CommandExecutor {
 		String sub_cmd = args[0];
 		if(sub_cmd.equalsIgnoreCase("load")){
 			String instance_name = args[1];
-			String new_instance = InstanceMechanics.linkInstanceToParty(instance_name, PartyMechanics.getPartyMembers(p.getName()), false); // Define new instance.
+			String new_instance = InstanceMechanics.linkInstanceToParty(instance_name, PartyMechanics.party_map.get(p.getName()).getPartyList(), false); // Define new instance.
 			if(!(InstanceMechanics.teleport_on_load.contains(p.getName()))){
 				InstanceMechanics.teleport_on_load.add(p.getName());
 			}
@@ -55,7 +55,7 @@ public class CommandInstance implements CommandExecutor {
 		}
 		if(sub_cmd.equalsIgnoreCase("edit")){
 			String instance_name = args[1];
-			String new_instance = InstanceMechanics.linkInstanceToParty(instance_name, PartyMechanics.getPartyMembers(p.getName()), true); // Define new instance.
+			String new_instance = InstanceMechanics.linkInstanceToParty(instance_name, PartyMechanics.party_map.get(p.getName()).getPartyList(), true); // Define new instance.
 			if(!(InstanceMechanics.teleport_on_load.contains(p.getName()))){
 				InstanceMechanics.teleport_on_load.add(p.getName());
 			}

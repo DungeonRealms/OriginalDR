@@ -432,7 +432,7 @@ implements Listener
 			}
 		}  
 	}
-
+/*
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
@@ -492,5 +492,5 @@ implements Listener
 				handleBeaconEffect(p, -1);
 			}
 		}
-	}
+	}*/
 }

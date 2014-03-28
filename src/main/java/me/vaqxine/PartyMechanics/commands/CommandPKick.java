@@ -1,5 +1,6 @@
 package me.vaqxine.PartyMechanics.commands;
 
+import me.vaqxine.PartyMechanics.Party;
 import me.vaqxine.PartyMechanics.PartyMechanics;
 
 import org.bukkit.Bukkit;
@@ -21,7 +22,7 @@ public class CommandPKick implements CommandExecutor {
 		}
 
 		if(!(PartyMechanics.isPartyLeader(p.getName()))){
-			if(PartyMechanics.inv_party_map.containsKey(p.getName())){ // In another party.
+			if(PartyMechanics.party_map.containsKey(p.getName())){ // In another party.
 				p.sendMessage(ChatColor.RED.toString() + "You are NOT the leader of your party.");
 				p.sendMessage(ChatColor.GRAY.toString() + "Type " + ChatColor.BOLD.toString() + "/pquit" + ChatColor.GRAY + " to quit your current party.");
 				return true;
@@ -42,8 +43,8 @@ public class CommandPKick implements CommandExecutor {
 		}
 
 		Player to_kick = Bukkit.getPlayer(p_2kick);
-		String party_name = PartyMechanics.inv_party_map.get(to_kick.getName());
-		PartyMechanics.removePlayerFromParty(to_kick, party_name);
+		Party party_name = PartyMechanics.party_map.get(to_kick.getName());
+		party_name.removePlayer(to_kick);
 		to_kick.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "You have been kicked out of the party.");
 		return true;
 	}

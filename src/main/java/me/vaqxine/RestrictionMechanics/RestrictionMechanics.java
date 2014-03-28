@@ -158,8 +158,7 @@ public class RestrictionMechanics implements Listener {
 							continue;
 						}
 						if(p.isInsideVehicle()){
-						    Entity e = p.getVehicle();
-						    e.eject();
+						    p.leaveVehicle();
 						}
 						p.teleport(SpawnMechanics.getRandomSpawnPoint(p.getName()));
 						p.sendMessage(ChatColor.BLUE + "Oops! Your character was found outside the bounds of the map.");
@@ -324,7 +323,7 @@ public class RestrictionMechanics implements Listener {
 
 		if(cmd.startsWith("/tpall") || cmd.startsWith("/say") || cmd.startsWith("/stop")){
 			log.info(cmd + " issued!");
-			if(!(p.getName().equalsIgnoreCase("availer")) && !(p.getName().equalsIgnoreCase("vaquxine"))){
+			if(!(p.getName().equalsIgnoreCase("availer")) && !(p.getName().equalsIgnoreCase("vaquxine")) && !(p.getName().equalsIgnoreCase("iFamasssxD"))){
 				e.setCancelled(true);
 				return;
 			}

@@ -87,6 +87,7 @@ import de.kumpelblase2.remoteentities.RemoteEntities;
 import de.kumpelblase2.remoteentities.api.DespawnReason;
 import de.kumpelblase2.remoteentities.api.RemoteEntity;
 import de.kumpelblase2.remoteentities.api.RemoteEntityType;
+import de.kumpelblase2.remoteentities.entities.RemotePlayer;
 
 public class ShopMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
@@ -194,7 +195,7 @@ public class ShopMechanics implements Listener {
 						continue;
 					}
 					
-					re.getBukkitEntity().remove();
+					re.despawn(DespawnReason.CUSTOM);
 					npc_to_remove.remove(re);
 				}
 			}
@@ -278,7 +279,7 @@ public class ShopMechanics implements Listener {
 			}
 		}
 		for(RemoteEntity re : to_remove){
-			re.getBukkitEntity().remove();
+		    re.despawn(DespawnReason.CUSTOM);
 			Hive.npc_manager.removeEntity(re.getID(), true);
 		}
 	}
@@ -976,6 +977,9 @@ public class ShopMechanics implements Listener {
 		if (!shop_owners.containsKey(b)) {
 			return false;
 		}
+		if(p.isOp()){
+		    return true;
+		}
 		if (!shop_owners.get(b).equalsIgnoreCase(p.getName())) {
 			return false;
 		}
@@ -1157,7 +1161,7 @@ public class ShopMechanics implements Listener {
 
 	public static void setStoreColor(Block b, ChatColor c) {
 		// Player owner = getShopOwner(b);
-		RemoteEntity re = shop_nameplates.get(b);
+		RemotePlayer re = (RemotePlayer) shop_nameplates.get(b);
 		CraftPlayer p = (CraftPlayer) re.getBukkitEntity();
 		CommunityMechanics.setColor(p, c);
 	}
@@ -2163,7 +2167,7 @@ public class ShopMechanics implements Listener {
 
 					if(shop_nameplates.containsKey(chest)){
 						RemoteEntity re = shop_nameplates.get(chest);
-						re.getBukkitEntity().remove();
+						re.despawn(DespawnReason.CUSTOM);
 						Hive.npc_manager.removeEntity(re.getID(), true);
 						/*NPC n = shop_nameplates.get(chest);
 						n.removeFromWorld();*/
@@ -2282,19 +2286,18 @@ public class ShopMechanics implements Listener {
 
 			Block b = inverse_shop_owners.get(p.getName());
 
-			RemoteEntity re = shop_nameplates.get(b);
+			RemotePlayer re = (RemotePlayer) shop_nameplates.get(b);
 			try{
-				re.getBukkitEntity().remove();
-				Hive.npc_manager.removeEntity(re.getID(), true);
+				re.setName(msg);
 			} catch(Exception err){
 				err.printStackTrace();
 				npc_to_remove.add(re);
 			}
 
-			Location l1 = b.getLocation();
-			Location l2 = chest_partners.get(b).getLocation();
+			//Location l1 = b.getLocation();
+			//Location l2 = chest_partners.get(b).getLocation();
 			shop_name_list.add(msg);
-			assignShopNameplate(msg, l1, l2);
+			//assignShopNameplate(msg, l1, l2);
 			setStoreColor(b, ChatColor.RED);
 
 			Inventory new_shop_inv = Bukkit.createInventory(null, getShopSlots(getShopLevel(p.getName())), msg + " @" + p.getName());
@@ -2600,7 +2603,7 @@ public class ShopMechanics implements Listener {
 
 				if(shop_nameplates.containsKey(chest)){
 					RemoteEntity re = shop_nameplates.get(chest);
-					re.getBukkitEntity().remove();
+					re.despawn(DespawnReason.CUSTOM);
 					Hive.npc_manager.removeEntity(re.getID(), true);
 					/*NPC n = shop_nameplates.get(chest);
 					n.removeFromWorld();*/
@@ -2819,8 +2822,8 @@ public class ShopMechanics implements Listener {
 				}
 
 				if(shop_nameplates.containsKey(b)){
-					RemoteEntity re = shop_nameplates.get(b);
-					re.getBukkitEntity().remove();
+					RemotePlayer re = (RemotePlayer) shop_nameplates.get(b);
+					re.despawn(DespawnReason.CUSTOM);
 					Hive.npc_manager.removeEntity(re.getID(), true);
 					/*NPC n = shop_nameplates.get(chest);
 					n.removeFromWorld();*/
@@ -2938,12 +2941,12 @@ public class ShopMechanics implements Listener {
 		if (!(isShop(b)) && !(isShopOwner(p, b))) {
 			return;
 		}
-
-		if(!isShopOpen(b)  && !(isShopOwner(p, b))){
+		    if(!isShopOpen(b)  && !(isShopOwner(p, b))){
+		   
 			e.setCancelled(true);
 			p.sendMessage(ChatColor.RED + "This shop is currently closed.");
 			return;
-		}
+		    }
 
 		e.setCancelled(true);
 		Player owner = getShopOwner(b);
@@ -3057,7 +3060,7 @@ public class ShopMechanics implements Listener {
 			/*NPC n = shop_nameplates.get(b1);
 			n.removeFromWorld();*/
 			RemoteEntity re = shop_nameplates.get(b1);
-			re.getBukkitEntity().remove();
+			re.despawn(DespawnReason.CUSTOM);
 			Hive.npc_manager.removeEntity(re.getID(), true);
 			
 			shop_nameplates.remove(b1);
@@ -3115,9 +3118,8 @@ public class ShopMechanics implements Listener {
 			loc = chest_loc1.subtract(-1.0, 1.1, -0.5);
 		}
 		
-		RemoteEntity re = ((de.kumpelblase2.remoteentities.EntityManager) npc_manager).createNamedEntity(RemoteEntityType.Human, loc, name);
+		RemotePlayer re = (RemotePlayer) ((de.kumpelblase2.remoteentities.EntityManager) npc_manager).createNamedEntity(RemoteEntityType.Human, loc, name);
 		//NPC n = m.spawnHumanNPC(name, loc);
-		
 		re.setPushable(false);
 		re.setStationary(true, true);
 		re.getMind().clearMovementDesires();

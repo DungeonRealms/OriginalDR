@@ -1,5 +1,9 @@
 package me.vaqxine.ItemMechanics.commands;
 
+import java.util.Arrays;
+
+import me.vaqxine.EcashMechanics.EcashMechanics;
+import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.ItemMechanics.Attributes;
 import me.vaqxine.ItemMechanics.Halloween;
 import me.vaqxine.ItemMechanics.ItemGenerators;
@@ -8,11 +12,13 @@ import me.vaqxine.MerchantMechanics.MerchantMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class CommandAddWeapon implements CommandExecutor {
 
@@ -58,13 +64,43 @@ public class CommandAddWeapon implements CommandExecutor {
 			p.getInventory().addItem(Halloween.halloween_mask);
 		}
 
-		if(!(p.getName().equalsIgnoreCase("Vaquxine")) && !(p.getName().equalsIgnoreCase("Availer"))){
+		if(!(p.getName().equalsIgnoreCase("Vaquxine")) && !(p.getName().equalsIgnoreCase("Availer")) && !(p.getName().equalsIgnoreCase("iFamasssxD"))){
 			return true;
 		}
+		
 		if(args[0].equalsIgnoreCase("noob")){
 			for(ItemStack is : ItemMechanics.generateNoobArmor()){
 				p.getInventory().addItem(RealmMechanics.makeUntradeable(is));
 			}
+		}
+		if(args[0].equalsIgnoreCase("enchantwhite")){
+		    p.getInventory().addItem(EnchantMechanics.t5_white_scroll);
+		    p.getInventory().addItem(EnchantMechanics.t1_white_scroll);
+		    p.getInventory().addItem(EnchantMechanics.t2_white_scroll);
+		    p.getInventory().addItem(EnchantMechanics.t3_white_scroll);
+		    p.getInventory().addItem(EnchantMechanics.t4_white_scroll);
+		}
+		if(args[0].equalsIgnoreCase("enchantarmor")){
+		    p.getInventory().addItem(EnchantMechanics.t1_armor_scroll);
+		    p.getInventory().addItem(EnchantMechanics.t2_armor_scroll);
+		    p.getInventory().addItem(EnchantMechanics.t3_armor_scroll);
+		    p.getInventory().addItem(EnchantMechanics.t4_armor_scroll);
+		    p.getInventory().addItem(EnchantMechanics.t5_armor_scroll);
+		}
+		if(args[0].equalsIgnoreCase("enchantweapon")){
+		    p.getInventory().addItem(EnchantMechanics.t1_wep_scroll);
+		    p.getInventory().addItem(EnchantMechanics.t2_wep_scroll);
+		    p.getInventory().addItem(EnchantMechanics.t3_wep_scroll);
+		    p.getInventory().addItem(EnchantMechanics.t4_wep_scroll);
+		    p.getInventory().addItem(EnchantMechanics.t5_wep_scroll);
+		}
+		if(args[0].equalsIgnoreCase("sword_of_famasss")){
+		    ItemStack is = new ItemStack(Material.GOLD_SWORD);
+		    ItemMeta im = is.getItemMeta();
+		    im.setLore(Arrays.asList(ChatColor.RED + "DMG: 10000 - 15000", ChatColor.RED + "VIT: +1000"));
+		    im.setDisplayName(ChatColor.YELLOW + "Majestic Sword of iFamasssxD :)");
+		    is.setItemMeta(im);
+		    p.getInventory().addItem(is);
 		}
 		if(args[0].equalsIgnoreCase("1")){
 			p.getInventory().addItem(ItemMechanics.generateRandomTierItem(1));

@@ -30,6 +30,7 @@ import me.vaqxine.ItemMechanics.ItemGenerators;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.MerchantMechanics.MerchantMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
+import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
@@ -749,7 +750,19 @@ public class EcashMechanics implements Listener {
 				return;
 			}
 			if((e.getCursor() != null && e.getCursor().getType() != Material.AIR && !(PetMechanics.isPermUntradeable(e.getCursor()))) || ((e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR && !(PetMechanics.isPermUntradeable(e.getCurrentItem()))))){
-				e.setCancelled(true);
+			   if((e.getCurrentItem() != null && MountMechanics.isMount(e.getCurrentItem())) ||(e.getCursor() != null && MountMechanics.isMount(e.getCursor()))){
+			       pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + "store a mount in the E-Case Storage.");
+			       e.setCancelled(true);
+			       pl.updateInventory();
+			       return;
+			   }
+			   if((e.getCurrentItem() != null && MountMechanics.isMule(e.getCurrentItem())) ||(e.getCursor() != null && MountMechanics.isMule(e.getCursor()))){
+                   pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + "store a mule in the E-Cash Storage.");
+                   e.setCancelled(true);
+                   pl.updateInventory();
+                   return;
+               }
+			    e.setCancelled(true);
 				pl.updateInventory();
 				pl.sendMessage(ChatColor.RED + "The E-Cash Storage only accept " + ChatColor.UNDERLINE + "Permenant Untradeable" + ChatColor.RED + " items.");
 				return;

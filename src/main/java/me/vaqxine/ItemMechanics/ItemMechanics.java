@@ -5090,6 +5090,7 @@ public class ItemMechanics implements Listener {
 					leech_val = 1;
 				}
 				if((leech_val + HealthMechanics.getPlayerHP(p_attacker.getName())) > getMaxHP(p_attacker)){
+				    if(p_attacker.isDead())return;
 					HealthMechanics.setPlayerHP(p_attacker.getName(), getMaxHP(p_attacker));
 					p_attacker.setHealth(20);
 				}
@@ -5418,7 +5419,12 @@ public class ItemMechanics implements Listener {
 		projectile_map.remove(proj);
 	}
 
-
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerCancelled(InventoryClickEvent e){
+	    if(e.isCancelled()){
+	        ((Player)e.getWhoClicked()).updateInventory();
+	    }
+	}
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerShootWand(PlayerInteractEvent e){
@@ -5448,7 +5454,10 @@ public class ItemMechanics implements Listener {
 				e.setCancelled(true);
 				return;
 			}
-
+			if(pl.isInsideVehicle()){
+			    e.setCancelled(true);
+			    return;
+			}
 			Projectile pj = null;
 
 			if(getItemTier(wep) == 1){

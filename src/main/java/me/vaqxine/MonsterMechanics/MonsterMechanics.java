@@ -4327,8 +4327,8 @@ public class MonsterMechanics implements Listener {
 		player_slow.put(p.getName(), System.currentTimeMillis());
 		p.setWalkSpeed(0.165F);
 
-		if(PartyMechanics.inv_party_map.containsKey(p.getName())){ // They're in a party.
-			int mem_nearby = PartyMechanics.getPlayersInArea(PartyMechanics.inv_party_map.get(p.getName()), ent.getLocation(), 75);
+		if(PartyMechanics.party_map.containsKey(p.getName())){ // They're in a party.
+			int mem_nearby = PartyMechanics.getPlayersInArea(PartyMechanics.party_map.get(p.getName()), ent.getLocation(), 75);
 			if(mem_nearby >= 8){
 				dmg -= (dmg * 0.05D);
 			}
@@ -4492,8 +4492,8 @@ public class MonsterMechanics implements Listener {
 				}
 			}
 
-			if(PartyMechanics.inv_party_map.containsKey(p.getName())){ // They're in a party.
-				int mem_nearby = PartyMechanics.getPlayersInArea(PartyMechanics.inv_party_map.get(p.getName()), ent.getLocation(), 75);
+			if(PartyMechanics.party_map.containsKey(p.getName())){ // They're in a party.
+				int mem_nearby = PartyMechanics.getPlayersInArea(PartyMechanics.party_map.get(p.getName()), ent.getLocation(), 75);
 				if(mem_nearby >= 8){
 					double dmg = e.getDamage();
 					dmg += (dmg * 0.05D);
@@ -5067,8 +5067,8 @@ public class MonsterMechanics implements Listener {
 					double item_drop_multiplier = 1 + (ItemMechanics.ifind_data.get(p_name) / 100);
 					double gold_drop_multiplier = 1 + (ItemMechanics.gfind_data.get(p_name) / 100);
 
-					if(PartyMechanics.inv_party_map.containsKey(p.getName())){ // They're in a party.
-						int mem_nearby = PartyMechanics.getPlayersInArea(PartyMechanics.inv_party_map.get(p.getName()), ent.getLocation(), 75);
+					if(PartyMechanics.party_map.containsKey(p.getName())){ // They're in a party.
+						int mem_nearby = PartyMechanics.getPlayersInArea(PartyMechanics.party_map.get(p.getName()), ent.getLocation(), 75);
 						if(mem_nearby >= 4 && mem_nearby < 8){
 							item_drop_multiplier += (item_drop_multiplier * 0.005);
 							gold_drop_multiplier += (item_drop_multiplier * 0.005);

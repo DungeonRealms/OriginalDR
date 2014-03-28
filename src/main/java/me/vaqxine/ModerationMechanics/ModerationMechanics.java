@@ -39,7 +39,9 @@ import me.vaqxine.ModerationMechanics.commands.CommandPlayerClone;
 import me.vaqxine.ModerationMechanics.commands.CommandRealmClone;
 import me.vaqxine.ModerationMechanics.commands.CommandReport;
 import me.vaqxine.ModerationMechanics.commands.CommandSayAll;
+import me.vaqxine.ModerationMechanics.commands.CommandSendPacket;
 import me.vaqxine.ModerationMechanics.commands.CommandStuck;
+import me.vaqxine.ModerationMechanics.commands.CommandUnBankSee;
 import me.vaqxine.ModerationMechanics.commands.CommandUnban;
 import me.vaqxine.ModerationMechanics.commands.CommandUnlock;
 import me.vaqxine.ModerationMechanics.commands.CommandUnmute;
@@ -58,6 +60,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -67,7 +70,7 @@ public class ModerationMechanics implements Listener {
 	
 	public static Logger log = Logger.getLogger("Minecraft");
 	Thread port_listener;
-
+	public static HashMap<String, String> looking_into_offline_bank = new HashMap<String, String>();
 	public static HashMap<String, Integer> report_step = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> particle_effects = new HashMap<String, Integer>();
 	public static ConcurrentHashMap<String, String> report_data = new ConcurrentHashMap<String, String>();
@@ -128,6 +131,8 @@ public class ModerationMechanics implements Listener {
 		Main.plugin.getCommand("realmclone").setExecutor(new CommandRealmClone());
 		Main.plugin.getCommand("playerclone").setExecutor(new CommandPlayerClone());
 		Main.plugin.getCommand("drvanish").setExecutor(new CommandDRVanish());
+		Main.plugin.getCommand("unbanksee").setExecutor(new CommandUnBankSee());
+		Main.plugin.getCommand("sendpacket").setExecutor(new CommandSendPacket());
 	}
 
 	public void onDisable() {
@@ -702,6 +707,16 @@ public class ModerationMechanics implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void onInventoryClose(InventoryCloseEvent e){
+	    if(e.getInventory().getTitle().contains("CLONE OF")){
+	        Player p = (Player) e.getPlayer();
+	        //They must just be looking into an online players bank.
+	        if(!looking_into_offline_bank.containsKey(p.getName()))return;
+	           p.sendMessage(ChatColor.RED + looking_into_offline_bank.get(p.getName()) + "'s bank is still loaded into memory.");
+	           p.sendMessage(ChatColor.GRAY + "To unload it use /unbanksee");
+	    }
+	}
 	/*public static void sendPacketCrossServer(String packet_data, int server_num, boolean all_servers){
 		String local_ip = Hive.local_IP;
 

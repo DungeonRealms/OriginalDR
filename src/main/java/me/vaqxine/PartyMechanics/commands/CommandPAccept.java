@@ -35,25 +35,27 @@ public class CommandPAccept implements CommandExecutor {
 			return true;
 		}
 
-		if(PartyMechanics.party_map.get(party_name).size() >= 8){
+		if(PartyMechanics.party_map.get(party_name).getPartyList().size() >= 8){
 			p.sendMessage(ChatColor.RED + "This party is currently full (8/8).");
 			PartyMechanics.party_invite.remove(p.getName());
 			PartyMechanics.party_invite_time.remove(p.getName());
 			return true;
 		}
 
-		for(String s : PartyMechanics.party_map.get(party_name)){
+		for(String s : PartyMechanics.party_map.get(party_name).getPartyList()){
 			if(Bukkit.getPlayer(s) != null){
 				Player pty_mem = Bukkit.getPlayer(s);
 				pty_mem.sendMessage(ChatColor.LIGHT_PURPLE.toString() + "<" + ChatColor.BOLD + "P" + ChatColor.LIGHT_PURPLE + ">" + ChatColor.GRAY + " " + p.getName() + ChatColor.GRAY.toString() + " has " + ChatColor.LIGHT_PURPLE + ChatColor.UNDERLINE + "joined" + ChatColor.GRAY + " your party.");
 			}
 		}
 
-		PartyMechanics.addPlayerToParty(p, party_name);
+		PartyMechanics.party_map.get(party_name).addPlayer(p);
 		p.sendMessage("");
 		p.sendMessage(ChatColor.LIGHT_PURPLE + "You have joined " + ChatColor.BOLD + party_name + "'s" + ChatColor.LIGHT_PURPLE + " party.");
 		p.sendMessage(ChatColor.GRAY + "To chat with your party, use " + ChatColor.BOLD + "/p" + ChatColor.GRAY + " OR " + ChatColor.BOLD + " /p <message>");
 		AchievmentMechanics.addAchievment(p.getName(), "Party up!");
+		PartyMechanics.party_invite.remove(p.getName());
+		PartyMechanics.party_invite_time.remove(p.getName());
 		return true;
 	}
 	

@@ -32,7 +32,7 @@ public class CommandPPromote implements CommandExecutor {
 		}
 
 		if(!(PartyMechanics.isPartyLeader(p.getName()))){
-			if(PartyMechanics.inv_party_map.containsKey(p.getName())){ // In another party.
+			if(PartyMechanics.party_map.containsKey(p.getName())){ // In another party.
 				p.sendMessage(ChatColor.RED.toString() + "You are NOT the leader of your party.");
 				p.sendMessage(ChatColor.GRAY.toString() + "Type " + ChatColor.BOLD.toString() + "/pquit" + ChatColor.GRAY + " to quit your current party.");
 				return true;
@@ -55,12 +55,12 @@ public class CommandPPromote implements CommandExecutor {
 		String new_leader = "";
 
 		List<String> remaining_members = new ArrayList<String>();
-		for(String s : PartyMechanics.party_map.get(p.getName())){
+		for(String s : PartyMechanics.party_map.get(p.getName()).getPartyList()){
 			remaining_members.add(s);
 		}
 		new_leader = Bukkit.getPlayer(p_name).getName();
 		PartyMechanics.party_map.remove(p.getName());
-		PartyMechanics.party_map.put(new_leader, remaining_members);
+		//PartyMechanics.party_map.put(new_leader, remaining_members);
 
 		//api.getScoreboard(p.getName()).stopShowingAllPlayers();
 		for(OfflinePlayer mem : p.getScoreboard().getPlayers()){
@@ -78,7 +78,7 @@ public class CommandPPromote implements CommandExecutor {
 		//Scoreboard new_ui = api.getScoreboard(getPartyTitle(new_leader));
 
 		for(String s : remaining_members){
-			PartyMechanics.inv_party_map.put(s, new_leader);
+			//PartyMechanics.party_map.put(s, new_leader);
 			if(Bukkit.getPlayer(s) != null){
 				Player pty_mem = Bukkit.getPlayer(s);
 				if(!new_ui.getPlayers().contains(pty_mem.getName())){

@@ -1395,6 +1395,13 @@ public class MountMechanics implements Listener {
 	public void onEntityDeath(EntityDeathEvent e){
 		if(e.getEntity() instanceof Horse || inv_mule_map.containsKey(e.getEntity())){
 			e.getDrops().clear();
+			Horse horse = (Horse) e.getEntity();
+			if(horse.getVariant().equals(Variant.MULE)){
+			    if(horse.isCarryingChest()){
+			        //so the stupid thing doesnt drop the chest
+			    horse.setCarryingChest(false);
+			    }
+			}
 			if(e.getEntity().getPassenger() != null && e.getEntity().getPassenger() instanceof Player){
 				Player p_rider = (Player)e.getEntity().getPassenger();
 				e.getEntity().eject();

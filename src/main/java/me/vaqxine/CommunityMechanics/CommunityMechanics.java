@@ -197,28 +197,28 @@ public class CommunityMechanics implements Listener {
 		TipMechanics.loadTips();
 		
 		green = HealthMechanics.board.registerNewTeam("green");
-		green.setPrefix("�a");
+		green.setPrefix(ChatColor.GREEN.toString());
 
 		dark_green = HealthMechanics.board.registerNewTeam("dark_green");
-		dark_green.setPrefix("�2");
+		dark_green.setPrefix(ChatColor.DARK_GREEN.toString());
 
 		yellow = HealthMechanics.board.registerNewTeam("yellow");
-		yellow.setPrefix("�e");
+		yellow.setPrefix(ChatColor.YELLOW.toString());
 
 		red = HealthMechanics.board.registerNewTeam("red");
-		red.setPrefix("�c");
+		red.setPrefix(ChatColor.RED.toString());
 
 		dark_red = HealthMechanics.board.registerNewTeam("dark_red");
-		dark_red.setPrefix("�4");
+		dark_red.setPrefix(ChatColor.DARK_RED.toString());
 
 		purple = HealthMechanics.board.registerNewTeam("purple");
-		purple.setPrefix("�d");
+		purple.setPrefix(ChatColor.LIGHT_PURPLE.toString());
 
 		white = HealthMechanics.board.registerNewTeam("white");
-		white.setPrefix("�f");
+		white.setPrefix(ChatColor.WHITE.toString());
 
 		aqua = HealthMechanics.board.registerNewTeam("aqua");
-		aqua.setPrefix("�b" + ChatColor.BOLD.toString() + "GM" + ChatColor.AQUA.toString() + " ");
+		aqua.setPrefix(ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "GM" + ChatColor.AQUA.toString() + " ");
 		
 		new BukkitRunnable(){
 			@Override

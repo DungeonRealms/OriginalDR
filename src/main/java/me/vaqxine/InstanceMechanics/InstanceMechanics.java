@@ -480,7 +480,7 @@ public class InstanceMechanics implements Listener {
 
 						if(PartyMechanics.hasParty(pl.getName())){
 							// This will ensure only the approved people can join existing instances.
-							for(String s : PartyMechanics.getPartyMembers(pl.getName())){
+							for(String s : PartyMechanics.party_map.get(pl.getName()).getPartyList()){
 								if(s.equalsIgnoreCase(pl.getName())){
 									continue;
 								}
@@ -569,7 +569,7 @@ public class InstanceMechanics implements Listener {
 							continue;
 						}
 
-						String new_instance = linkInstanceToParty(instance_name, PartyMechanics.getPartyMembers(pl.getName()), false); // Define new instance.
+						String new_instance = linkInstanceToParty(instance_name, PartyMechanics.party_map.get(pl.getName()).getPartyList(), false); // Define new instance.
 						if(!(teleport_on_load.contains(pl.getName()))){
 							teleport_on_load.add(pl.getName());
 						}
@@ -601,7 +601,7 @@ public class InstanceMechanics implements Listener {
 							}
 						}
 						if(PartyMechanics.hasParty(pl.getName())){
-							for(String s : PartyMechanics.getPartyMembers(pl.getName())){
+							for(String s : PartyMechanics.party_map.get(pl.getName()).getPartyList()){
 								if(s.equalsIgnoreCase(pl.getName())){
 									continue;
 								}

@@ -162,7 +162,6 @@ public class Hive implements Listener {
     public static final String ftp_pass = "9bgsMKsknkJ6OY"; // $WHe4KT`l^S6sc
 
     public static final String sql_url = "jdbc:mysql://" + Hive_IP + ":" + SQL_port + "/dungeonrealms";
-    public static String databaseName = "dungeonrealms";
     // CREDENTIAL INFORMATION -- DO NOT CHANGE!
 
     public static String local_IP = "";
@@ -388,7 +387,6 @@ public class Hive implements Listener {
     @SuppressWarnings("deprecation")
     public void onEnable() {
         instance = this;
-        //if(MOTD.contains("99")) databaseName = "dungeonrealms_test";
         log.info(TimeZone.getDefault().toString());
         TimeZone.setDefault(TimeZone.getTimeZone("America/Chicago"));
 
@@ -813,7 +811,7 @@ public class Hive implements Listener {
                                 }
                             }
 
-                            n.getBukkitEntity().remove();
+                            n.despawn(DespawnReason.CUSTOM);
                            // ShopMechanics.updateEntity(n.getBukkitEntity(), lpl);; // TODO - Need to update to latest DR Api!
 
                             Thread t = new Thread(new Runnable(){
@@ -2576,7 +2574,7 @@ public class Hive implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCommandPreProcess(PlayerCommandPreprocessEvent e){
-        if(e.getMessage().equalsIgnoreCase("/stop") && e.getPlayer() == null){
+        if(e.getMessage().equalsIgnoreCase("/stop") && e.getPlayer() != null && (e.getPlayer().getName().equalsIgnoreCase("availer") || e.getPlayer().getName().equalsIgnoreCase("vaquxine") || e.getPlayer().getName().equalsIgnoreCase("ifamasssxd"))){
             server_lock = true;
             setAllPlayersAsOffline();
 
@@ -3054,6 +3052,7 @@ public class Hive implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent e){
         //final Player pl = e.getPlayer();
+        if(e.getTo().getWorld() == null)return;
         if(e.getTo().getWorld().getName().equalsIgnoreCase(main_world_name) && !(e.getFrom().getWorld().getName().equalsIgnoreCase(e.getTo().getWorld().getName()))){
             // Set dimension.
             /*this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
@@ -4547,7 +4546,7 @@ public class Hive implements Listener {
                     }
                 }
 
-                n.getBukkitEntity().remove();
+                n.despawn(DespawnReason.CUSTOM);
                 //ShopMechanics.updateEntity(n.getBukkitEntity(), lpl); // TODO - Need to update to latest DR Api!
             }
 

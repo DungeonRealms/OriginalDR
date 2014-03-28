@@ -19,7 +19,12 @@ public class CommandP implements CommandExecutor {
 			return true;*/
 
 			// Toggle party-only chat.
-			if(!(PartyMechanics.party_only.contains(p.getName()))){
+		    if(!(PartyMechanics.party_map.containsKey(p.getName()))){
+			p.sendMessage(ChatColor.RED + "You are not in a party.");
+			return true;
+		}
+
+            if (!(PartyMechanics.party_only.contains(p.getName()))){
 				PartyMechanics.party_only.add(p.getName());
 				p.sendMessage(ChatColor.LIGHT_PURPLE + "Messages will now be default sent to <P>. Type " + ChatColor.UNDERLINE + "/l <msg>" + ChatColor.LIGHT_PURPLE + " to speak in local.");
 				p.sendMessage(ChatColor.GRAY + "To change this back, type " + ChatColor.BOLD + "/p" + ChatColor.GRAY + " again.");
@@ -31,11 +36,7 @@ public class CommandP implements CommandExecutor {
 			return true;
 		}
 
-		if(!(PartyMechanics.inv_party_map.containsKey(p.getName()))){
-			p.sendMessage(ChatColor.RED + "You are not in a party.");
-			return true;
-		}
-
+		
 		String msg = "";
 
 		for(String s : args){

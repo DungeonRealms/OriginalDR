@@ -20,7 +20,7 @@ public class CommandPLoot implements CommandExecutor {
 		}
 
 		if(!(PartyMechanics.isPartyLeader(p.getName()))){
-			if(PartyMechanics.inv_party_map.containsKey(p.getName())){ // In another party.
+			if(PartyMechanics.party_map.containsKey(p.getName())){ // In another party.
 				p.sendMessage(ChatColor.RED.toString() + "You are NOT the leader of your party.");
 				p.sendMessage(ChatColor.GRAY.toString() + "Type " + ChatColor.BOLD.toString() + "/pquit" + ChatColor.GRAY + " to quit your current party.");
 				return true;
@@ -48,7 +48,7 @@ public class CommandPLoot implements CommandExecutor {
 		}
 
 		PartyMechanics.party_loot.put(p.getName(), new_loot);
-		PartyMechanics.sendRawMessageToParty(p.getName(), "The loot profile of this party has been set to: " + ChatColor.LIGHT_PURPLE + new_loot.toUpperCase());
+		PartyMechanics.sendMessageToParty(p, "The loot profile of this party has been set to: " + ChatColor.LIGHT_PURPLE + new_loot.toUpperCase());
 		return true;
 	}
 	

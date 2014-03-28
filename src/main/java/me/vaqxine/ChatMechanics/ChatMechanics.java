@@ -179,7 +179,7 @@ public class ChatMechanics implements Listener {
 				//mute_list.remove(p_name);
 				return;
 			}
-			long unmute = rs.getLong("rank");
+			long unmute = rs.getLong("unmute");
 			mute_list.put(p_name, unmute);
 
 		} catch (SQLException ex) {
@@ -272,7 +272,7 @@ public class ChatMechanics implements Listener {
 		}
 
 		if(align.equalsIgnoreCase("good")){
-			c = ChatColor.GRAY;
+		c = ChatColor.GRAY;
 			//return; // Do nothing if they're good, stay white plz.
 		}
 		if(align.equalsIgnoreCase("neutral")){
@@ -767,10 +767,6 @@ public class ChatMechanics implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true) // We need to ignore all those "enter XXX" situations.
 	public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e){
-		if(e.getMessage().startsWith("/plugins")){
-			e.setCancelled(true);
-			return;
-		}
 		e.setCancelled(true);
 		String msg = e.getMessage();
 		final Player p = e.getPlayer();

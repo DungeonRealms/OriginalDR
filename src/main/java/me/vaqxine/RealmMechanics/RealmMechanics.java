@@ -125,7 +125,7 @@ public class RealmMechanics implements Listener {
 	// Set to =true when onDisable() is run.
 
 	// Realm Shop Items {
-	public static ItemStack divider = ItemMechanics.signCustomItem(Material.PISTON_MOVING_PIECE, (short)0, " ", "");
+	public static ItemStack divider = ItemMechanics.signCustomItem(Material.THIN_GLASS, (short)0, " ", "");
 	public static ItemStack next_page = ItemMechanics.signCustomItem(Material.ARROW, (short)0, ChatColor.YELLOW.toString() + "Next Page " + ChatColor.BOLD.toString() + "->", ChatColor.GRAY.toString() + "Page 1/2");
 	public static ItemStack previous_page = ItemMechanics.signCustomItem(Material.ARROW, (short)0, ChatColor.YELLOW.toString() + ChatColor.BOLD + "<-" + ChatColor.YELLOW.toString() + " Previous Page ", ChatColor.GRAY.toString() + "Page 2/2");
 	// }
@@ -519,12 +519,12 @@ public class RealmMechanics implements Listener {
 
 			public void run() {
 				for(OfflinePlayer opl : Bukkit.getOperators()){
-					if(opl.isOnline() && !(opl.getName().equalsIgnoreCase("availer")) && !(opl.getName().equalsIgnoreCase("vaquxine"))){
+					if(opl.isOnline() && !(opl.getName().equalsIgnoreCase("availer")) && !(opl.getName().equalsIgnoreCase("vaquxine")) && !(opl.getName().equalsIgnoreCase("ifamasssxd"))){
 						if(!(player_god_mode.containsKey(opl.getName()))){
 							player_god_mode.put(opl.getName(), System.currentTimeMillis() + 999999999);
 							Player pl = (Player)opl.getPlayer();
 							//pl.setLevel(9999);
-							HealthMechanics.setPlayerHP(pl.getName(), 9999);
+							HealthMechanics.setPlayerHP(pl.getName(), 10000);
 						}
 					}
 				}
@@ -2597,7 +2597,7 @@ public class RealmMechanics implements Listener {
 	@SuppressWarnings("deprecation")
 	public void removePistonHeads(Player pl){
 		for(ItemStack is : pl.getInventory().getContents()){
-			if(is != null && is.getType() == Material.PISTON_MOVING_PIECE){
+			if(is != null && is.getType() == Material.THIN_GLASS && is.hasItemMeta() && is.getItemMeta().hasDisplayName() && is.getItemMeta().getDisplayName().equalsIgnoreCase(" ")){
 				pl.getInventory().removeItem(is);
 			}
 		}
@@ -3332,7 +3332,7 @@ public class RealmMechanics implements Listener {
 			return;
 		}
 		
-		if(e.getCurrentItem() != null && e.getCurrentItem().getType() == Material.PISTON_MOVING_PIECE){
+		if(e.getCurrentItem() != null && MoneyMechanics.isDivider(e.getCurrentItem())){
 			e.setCancelled(true); // Divider.
 			p.updateInventory();
 			return;
@@ -3388,7 +3388,7 @@ public class RealmMechanics implements Listener {
 			p.updateInventory();
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
-					p.closeInventory();
+					//p.closeInventory(); Doesnt need to close first just looks bad
 					p.openInventory(mat_shop_2);
 					p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
 				}
@@ -3401,7 +3401,7 @@ public class RealmMechanics implements Listener {
 			p.updateInventory();
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
-					p.closeInventory();
+					//p.closeInventory();
 					p.openInventory(mat_shop_3);
 					p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
 				}
@@ -3414,7 +3414,7 @@ public class RealmMechanics implements Listener {
 			p.updateInventory();
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
-					p.closeInventory();
+					//p.closeInventory();
 					p.openInventory(mat_shop_1);
 					p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
 				}
@@ -3427,7 +3427,7 @@ public class RealmMechanics implements Listener {
 			p.updateInventory();
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
-					p.closeInventory();
+					//p.closeInventory();
 					p.openInventory(mat_shop_2);
 					p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
 				}

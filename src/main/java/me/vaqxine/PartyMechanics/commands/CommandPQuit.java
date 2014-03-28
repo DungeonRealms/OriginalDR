@@ -1,5 +1,6 @@
 package me.vaqxine.PartyMechanics.commands;
 
+import me.vaqxine.PartyMechanics.Party;
 import me.vaqxine.PartyMechanics.PartyMechanics;
 
 import org.bukkit.ChatColor;
@@ -19,13 +20,13 @@ public class CommandPQuit implements CommandExecutor {
 			return true;
 		}
 
-		if(!(PartyMechanics.inv_party_map.containsKey(p.getName()))){
+		if(!(PartyMechanics.party_map.containsKey(p.getName()))){
 			p.sendMessage(ChatColor.RED + "You are not in a party.");
 			return true;
 		}
 
-		String party_name = PartyMechanics.inv_party_map.get(p.getName());
-		PartyMechanics.removePlayerFromParty(p, party_name);
+		Party party_name = PartyMechanics.party_map.get(p.getName());
+		party_name.removePlayer(p);
 		p.sendMessage(ChatColor.RED.toString() + "You have left the party.");
 		return true;
 	}
