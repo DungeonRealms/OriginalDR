@@ -3957,6 +3957,10 @@ public class MonsterMechanics implements Listener {
 			}
 
 			if(boss_type.equalsIgnoreCase("unholy_priest")){
+			    if(!max_mob_health.containsKey(ent)){
+			       e.setCancelled(true);
+			       return; 
+			    }
 				double max_hp = max_mob_health.get(ent);
 				double cur_hp = mob_health.get(ent);
 

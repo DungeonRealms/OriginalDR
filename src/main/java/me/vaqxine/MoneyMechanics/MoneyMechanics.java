@@ -21,6 +21,7 @@ import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
+import me.vaqxine.MerchantMechanics.MerchantMechanics;
 import me.vaqxine.MoneyMechanics.commands.CommandMNote;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
@@ -1588,6 +1589,9 @@ public class MoneyMechanics implements Listener {
             e.setCancelled(true);
             p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED
                     + " perform that action while splitting a bank note. Type 'cancel' and try again.");
+            if(MerchantMechanics.in_npc_shop.contains(p.getName())){
+                MerchantMechanics.in_npc_shop.remove(p.getName());
+            }
         }
     }
 

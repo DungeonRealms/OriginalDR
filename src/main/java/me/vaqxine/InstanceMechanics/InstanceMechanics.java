@@ -265,7 +265,7 @@ public class InstanceMechanics implements Listener {
 
 
 		// Ticks teleport_on_complete to teleport users out of dungeon after boss is downed.
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				for(Entry<String, Integer> data : teleport_on_complete.entrySet()){
 					String i_name = data.getKey();
@@ -447,7 +447,7 @@ public class InstanceMechanics implements Listener {
 		}, 10 * 20L, 1 * 20L);
 
 		// Non-main thread playerMove() event.
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				for(final Player pl : Main.plugin.getServer().getOnlinePlayers()){
 					if(teleport_on_load.contains(pl.getName())){
@@ -688,7 +688,7 @@ public class InstanceMechanics implements Listener {
 	}
 
 	public String getGrade(double percent){
-		/*if(percent >= 30){
+		if(percent >= 30){
 			return "A";
 		}
 		else if(percent >= 15){
@@ -702,7 +702,7 @@ public class InstanceMechanics implements Listener {
 		}
 		else if(percent < -30){
 			return "F";
-		}*/
+		}
 		return "C";
 	}
 
@@ -764,11 +764,11 @@ public class InstanceMechanics implements Listener {
 
 		if(percent >= 30 && tokens_to_give == 0){
 			// A
-			tokens_to_give = 1750 + new Random().nextInt(250);
+			tokens_to_give = 1300 + new Random().nextInt(250);
 		}
 		else if(percent >= 15 && tokens_to_give == 0){
 			// B
-			tokens_to_give = 1000 + new Random().nextInt(333);
+			tokens_to_give = 800 + new Random().nextInt(333);
 		}
 		else if(percent >= -15 && tokens_to_give == 0){
 			// C
@@ -824,9 +824,11 @@ public class InstanceMechanics implements Listener {
 			}
 			avg_val = total_val / total_timing.size();
 			avg_timing.put(instance_template, avg_val);
+			System.out.print("Average time for instance: " + instance_template + " is " + avg_val + "s.");
 		}
 		else{
 			// We have no timings... -1 seconds.
+		    System.out.print("There is not instance time for the template " + instance_template);
 			avg_timing.put(instance_template, -1);
 		}
 	}

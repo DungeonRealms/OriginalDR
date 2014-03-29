@@ -417,21 +417,21 @@ public class RealmMechanics implements Listener {
 							Player pl = Bukkit.getPlayer(p_name);
 							if(pl.isOp()){
 								try{
-									ParticleEffect.sendToLocation(ParticleEffect.ENCHANTMENT_TABLE, loc.add(0.5, 2, 0.5), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.25F, 75);
+									ParticleEffect.sendToLocation(ParticleEffect.ENCHANTMENT_TABLE, loc.add(0.5, 2, 0.5), 0, 0, 0, 0.25F, 75);
 								} catch(Exception err){err.printStackTrace();}
 								//loc.getWorld().spawnParticle(loc.add(0.5, 2, 0.5), Particle.ENCHANTMENT_TABLE, 0.25F, 75);
 								loc.subtract(0.5, 2, 0.5);
 							}
 							if(!(uploading_realms.contains(pl.getName())) && safe_realms.containsKey(pl.getName())){
 								try{
-									ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, loc.add(0.5, 1.5, 0.5), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.02F, 20);
+									ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, loc.add(0.5, 1.5, 0.5), 0, 0, 0, 0.02F, 20);
 								} catch(Exception err){err.printStackTrace();}
 								//loc.getWorld().spawnParticle(loc.add(0.5, 1.5, 0.5), Particle.HAPPY_VILLAGER, 0.02F, 20);
 								loc.subtract(0.5, 1.5, 0.5);
 							}
 							if(!(uploading_realms.contains(pl.getName())) && flying_realms.containsKey(pl.getName())){
 								try{
-									ParticleEffect.sendToLocation(ParticleEffect.CLOUD, loc.add(0.5, 1.5, 0.5), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.02F, 20);
+									ParticleEffect.sendToLocation(ParticleEffect.CLOUD, loc.add(0.5, 1.5, 0.5), 0, 0,0 , 0.02F, 20);
 								} catch(Exception err){err.printStackTrace();}
 								//loc.getWorld().spawnParticle(loc.add(0.5, 1.5, 0.5), Particle.CLOUD, 0.02F, 20);
 								loc.subtract(0.5, 1.5, 0.5);
@@ -455,7 +455,7 @@ public class RealmMechanics implements Listener {
 			}
 		}, 5 * 20L, 1 * 20L);
 
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				if(block_process_list.isEmpty()){return;}
 				for (Map.Entry<String, List<Location>> entry : block_process_list.entrySet()) {
@@ -848,44 +848,45 @@ public class RealmMechanics implements Listener {
 		mat_shop_2.setItem(20, new ItemStack(Material.STAINED_CLAY, 8, (short)13));
 		mat_shop_2.setItem(21, new ItemStack(Material.STAINED_CLAY, 8, (short)14));
 
-		mat_shop_2.setItem(22, new ItemStack(Material.PISTON_BASE, 64, (short)80));
-		mat_shop_2.setItem(23, new ItemStack(Material.PISTON_STICKY_BASE, 64, (short)120));
-		mat_shop_2.setItem(24, new ItemStack(Material.SAPLING, 15, (short)1));
-		mat_shop_2.setItem(25, new ItemStack(Material.SAPLING, 15, (short)2));
-		mat_shop_2.setItem(26, new ItemStack(Material.SAPLING, 15, (short)3));
+		//mat_shop_2.setItem(22, new ItemStack(Material.PISTON_BASE, 64, (short)80));
+		//mat_shop_2.setItem(23, new ItemStack(Material.PISTON_STICKY_BASE, 64, (short)120));
+		mat_shop_2.setItem(22, new ItemStack(Material.SAPLING, 15, (short)1));
+		mat_shop_2.setItem(23, new ItemStack(Material.SAPLING, 15, (short)2));
+		mat_shop_2.setItem(24, new ItemStack(Material.SAPLING, 15, (short)3));
 
 
-		mat_shop_2.setItem(27, new ItemStack(Material.QUARTZ_BLOCK, 50, (short)0));
-		mat_shop_2.setItem(28, new ItemStack(Material.QUARTZ_BLOCK, 55, (short)1));
-		mat_shop_2.setItem(29, new ItemStack(Material.QUARTZ_BLOCK, 60, (short)2));
-		mat_shop_2.setItem(30, new ItemStack(Material.QUARTZ_BLOCK, 60, (short)3));
-		mat_shop_2.setItem(31, new ItemStack(Material.QUARTZ_BLOCK, 60, (short)4));
+		mat_shop_2.setItem(25, new ItemStack(Material.QUARTZ_BLOCK, 50, (short)0));
+		mat_shop_2.setItem(26, new ItemStack(Material.QUARTZ_BLOCK, 55, (short)1));
+		mat_shop_2.setItem(27, new ItemStack(Material.QUARTZ_BLOCK, 60, (short)2));
+		mat_shop_2.setItem(28, new ItemStack(Material.QUARTZ_BLOCK, 60, (short)3));
+		mat_shop_2.setItem(29, new ItemStack(Material.QUARTZ_BLOCK, 60, (short)4));
 
-		mat_shop_2.setItem(32, new ItemStack(397, 50, (short)0));
-		mat_shop_2.setItem(33, new ItemStack(397, 50, (short)1));
-		mat_shop_2.setItem(34, new ItemStack(397, 50, (short)2));
-		mat_shop_2.setItem(35, new ItemStack(397, 50, (short)4));
+		mat_shop_2.setItem(30, new ItemStack(397, 50, (short)0));
+		mat_shop_2.setItem(31, new ItemStack(397, 50, (short)1));
+		mat_shop_2.setItem(32, new ItemStack(397, 50, (short)2));
+		mat_shop_2.setItem(33, new ItemStack(397, 50, (short)4));
 		
-		mat_shop_2.setItem(36, new ItemStack(Material.HAY_BLOCK, 30, (short)0));
-		mat_shop_2.setItem(37, new ItemStack(Material.CARPET, 30, (short)0));
-		mat_shop_2.setItem(38, new ItemStack(Material.HARD_CLAY, 55, (short)0));
-		mat_shop_2.setItem(38, new ItemStack(Material.COAL_BLOCK, 45, (short)0));
-		mat_shop_2.setItem(39, new ItemStack(Material.DAYLIGHT_DETECTOR, 200, (short)0));
-		mat_shop_2.setItem(40, new ItemStack(Material.FLOWER_POT_ITEM, 45, (short)0));
-		mat_shop_2.setItem(41, new ItemStack(Material.REDSTONE_LAMP_OFF, 55, (short)0));
-		mat_shop_2.setItem(42, new ItemStack(Material.VINE, 50, (short)0));
-		mat_shop_2.setItem(43, new ItemStack(Material.STAINED_CLAY, 8, (short)0));
+		mat_shop_2.setItem(34, new ItemStack(Material.HAY_BLOCK, 30, (short)0));
+		mat_shop_2.setItem(35, new ItemStack(Material.CARPET, 30, (short)0));
+		mat_shop_2.setItem(36, new ItemStack(Material.HARD_CLAY, 55, (short)0));
+		mat_shop_2.setItem(37, new ItemStack(Material.COAL_BLOCK, 45, (short)0));
+		mat_shop_2.setItem(38, new ItemStack(Material.DAYLIGHT_DETECTOR, 200, (short)0));
+		mat_shop_2.setItem(39, new ItemStack(Material.FLOWER_POT_ITEM, 45, (short)0));
+		mat_shop_2.setItem(40, new ItemStack(Material.REDSTONE_LAMP_OFF, 55, (short)0));
+		mat_shop_2.setItem(41, new ItemStack(Material.VINE, 50, (short)0));
+		mat_shop_2.setItem(42, new ItemStack(Material.STAINED_CLAY, 8, (short)0));
 		
-		mat_shop_2.setItem(44, new ItemStack(Material.STAINED_CLAY, 8, (short)1));
-		mat_shop_2.setItem(45, new ItemStack(Material.STAINED_CLAY, 8, (short)2));
-		mat_shop_2.setItem(46, new ItemStack(Material.STAINED_CLAY, 8, (short)3));
-		mat_shop_2.setItem(47, new ItemStack(Material.STAINED_CLAY, 8, (short)4));
-		mat_shop_2.setItem(48, new ItemStack(Material.STAINED_CLAY, 8, (short)5));
-		mat_shop_2.setItem(49, new ItemStack(Material.STAINED_CLAY, 8, (short)6));
-		mat_shop_2.setItem(50, new ItemStack(Material.STAINED_CLAY, 8, (short)7));
-		mat_shop_2.setItem(51, new ItemStack(Material.STAINED_CLAY, 8, (short)8));
-		mat_shop_2.setItem(52, new ItemStack(Material.STAINED_CLAY, 8, (short)9));
-		mat_shop_2.setItem(53, new ItemStack(Material.STAINED_CLAY, 8, (short)10));
+		mat_shop_2.setItem(43, new ItemStack(Material.STAINED_CLAY, 8, (short)1));
+		mat_shop_2.setItem(44, new ItemStack(Material.STAINED_CLAY, 8, (short)2));
+		mat_shop_2.setItem(45, new ItemStack(Material.STAINED_CLAY, 8, (short)3));
+		mat_shop_2.setItem(46, new ItemStack(Material.STAINED_CLAY, 8, (short)4));
+		mat_shop_2.setItem(47, new ItemStack(Material.STAINED_CLAY, 8, (short)5));
+		mat_shop_2.setItem(48, new ItemStack(Material.STAINED_CLAY, 8, (short)6));
+		mat_shop_2.setItem(49, new ItemStack(Material.STAINED_CLAY, 8, (short)7));
+		mat_shop_2.setItem(50, new ItemStack(Material.STAINED_CLAY, 8, (short)8));
+		mat_shop_2.setItem(51, new ItemStack(Material.STAINED_CLAY, 8, (short)9));
+		mat_shop_2.setItem(52, new ItemStack(Material.STAINED_CLAY, 8, (short)10));
+		mat_shop_2.setItem(53, new ItemStack(Material.getMaterial(100), 15, (short)14));
 		
 		mat_shop_3.setItem(0, new ItemStack(Material.STAINED_CLAY, 8, (short)11));
 		mat_shop_3.setItem(1, new ItemStack(Material.STAINED_CLAY, 8, (short)12));
@@ -899,7 +900,6 @@ public class RealmMechanics implements Listener {
 		mat_shop_3.setItem(8, new ItemStack(Material.getMaterial(99), 15, (short)0));
 		mat_shop_3.setItem(9, new ItemStack(Material.getMaterial(99), 15, (short)15));
 		mat_shop_3.setItem(10, new ItemStack(Material.getMaterial(99), 15, (short)14));
-		mat_shop_3.setItem(11, new ItemStack(Material.getMaterial(100), 15, (short)14));
 		//mat_shop_3.setItem(8, new ItemStack(Material.COAL_ORE, 10, (short)0));
 		//mat_shop_3.setItem(9, new ItemStack(Material.IRON_ORE, 15, (short)0));
 		//mat_shop_3.setItem(10, new ItemStack(Material.EMERALD_ORE, 20, (short)0));
@@ -934,12 +934,6 @@ public class RealmMechanics implements Listener {
 			}
 			if(is.getType() == Material.JUKEBOX){
 				price_each = 1200;
-			}
-			if(is.getType() == Material.PISTON_BASE){
-				price_each = 80;
-			}
-			if(is.getType() == Material.PISTON_STICKY_BASE){
-				price_each = 120;
 			}
 			if(is.getType() == Material.DAYLIGHT_DETECTOR){
 				price_each = 200;
@@ -2069,7 +2063,7 @@ public class RealmMechanics implements Listener {
 			pl.getWorld().playSound(pl.getLocation(), Sound.LEVEL_UP, 1F, 1F);
 			
 			try{
-				ParticleEffect.sendToLocation(ParticleEffect.CLOUD, pl.getLocation().add(0, 1, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.05F, 20);
+				ParticleEffect.sendToLocation(ParticleEffect.CLOUD, pl.getLocation().add(0, 1, 0), 0, 0, 0, 0.05F, 20);
 			} catch(Exception err){err.printStackTrace();}
 			
 			/*pl.getWorld().spawnParticle(pl.getLocation().add(0, 1, 0), Particle.CLOUD, 0.05F, 20);
@@ -2112,7 +2106,7 @@ public class RealmMechanics implements Listener {
 			pl.sendMessage(ChatColor.GRAY + "All damage in your realm will be disabled for this time period.");
 			pl.getWorld().playEffect(pl.getLocation(), Effect.ENDER_SIGNAL, 10);
 			try{
-				ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, pl.getWorld().getSpawnLocation().add(0.5, 1.5, 0.5), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.05F, 20);
+				ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, pl.getWorld().getSpawnLocation().add(0.5, 1.5, 0.5), 0, 0,0 , 0.05F, 20);
 			} catch(Exception err){err.printStackTrace();}
 			//pl.getWorld().spawnParticle(pl.getWorld().getSpawnLocation().add(0.5, 1.5, 0.5), Particle.HAPPY_VILLAGER, 0.05F, 20);
 		}
@@ -2546,7 +2540,7 @@ public class RealmMechanics implements Listener {
 			Location safe_loc = e.getFrom();
 
 			try{
-				ParticleEffect.sendToLocation(ParticleEffect.CLOUD, p.getLocation(), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.05F, 20);
+				ParticleEffect.sendToLocation(ParticleEffect.CLOUD, p.getLocation(), 0, 0, 0, 0.05F, 20);
 			} catch(Exception err){err.printStackTrace();}
 			//p.getWorld().spawnParticle(p.getLocation(), Particle.CLOUD, 0.05F, 20);
 

@@ -860,6 +860,9 @@ public class MerchantMechanics implements Listener {
 			e.setCancelled(true);
 
 			p.playSound(p.getLocation(), Sound.WOOD_CLICK, 1.0F, 1.0F);
+			if(in_npc_shop.contains(p.getName())){
+			    in_npc_shop.remove(p.getName());
+			}
 			in_npc_shop.add(p.getName());
 
 			p.openInventory(shardMerchant);
@@ -882,7 +885,9 @@ public class MerchantMechanics implements Listener {
 			TradeWindow.setItem(0, TradeMechanics.setIinfo(new ItemStack(Material.INK_SACK, 1, (short) 8), ChatColor.YELLOW.toString() + "Click to ACCEPT Trade", ""));
 			//TradeWindow.setItem(8, TradeMechanics.setIinfo(new ItemStack(Material.INK_SACK, 1, (short) 8), ChatColor.YELLOW.toString() + "Click to ACCEPT Trade", ""));
 			p.playSound(p.getLocation(), Sound.WOOD_CLICK, 1.0F, 1.0F);
-
+			if(in_npc_shop.contains(p.getName())){
+                in_npc_shop.remove(p.getName());
+            }
 			in_npc_shop.add(p.getName());
 			p.openInventory(TradeWindow);
 		}
@@ -903,7 +908,9 @@ public class MerchantMechanics implements Listener {
 			TradeWindow.setItem(2, ShopMechanics.setPrice(CraftItemStack.asCraftCopy(GuildMechanics.guild_dye), 1000));
 			//TradeWindow.setItem(8, TradeMechanics.setIinfo(new ItemStack(Material.INK_SACK, 1, (short) 8), ChatColor.YELLOW.toString() + "Click to ACCEPT Trade", ""));
 			p.playSound(p.getLocation(), Sound.WOOD_CLICK, 1.0F, 1.0F);
-
+			if(in_npc_shop.contains(p.getName())){
+                in_npc_shop.remove(p.getName());
+            }
 			in_npc_shop.add(p.getName());
 			p.openInventory(TradeWindow);
 		}
@@ -924,7 +931,9 @@ public class MerchantMechanics implements Listener {
 			//TradeWindow.setItem(2, CraftItemStack.asCraftCopy(ProfessionMechanics.hoe_example));
 			//TradeWindow.setItem(8, TradeMechanics.setIinfo(new ItemStack(Material.INK_SACK, 1, (short) 8), ChatColor.YELLOW.toString() + "Click to ACCEPT Trade", ""));
 			p.playSound(p.getLocation(), Sound.WOOD_CLICK, 1.0F, 1.0F);
-
+			if(in_npc_shop.contains(p.getName())){
+                in_npc_shop.remove(p.getName());
+            }
 			in_npc_shop.add(p.getName());
 			p.openInventory(TradeWindow);
 		}
@@ -959,6 +968,9 @@ public class MerchantMechanics implements Listener {
 				        }
 				    }
 				}
+				if(in_npc_shop.contains(p.getName())){
+	                in_npc_shop.remove(p.getName());
+	            }
 				in_npc_shop.add(p.getName());
 				p.openInventory(ecash_inv);
 			}
@@ -971,6 +983,9 @@ public class MerchantMechanics implements Listener {
 				// First time.
 				Inventory ecash_inv = Bukkit.createInventory(null, 54, "E-Cash Storage");
 				p.playSound(p.getLocation(), Sound.WOOD_CLICK, 1.0F, 1.0F);
+				if(in_npc_shop.contains(p.getName())){
+	                in_npc_shop.remove(p.getName());
+	            }
 				in_npc_shop.add(p.getName());
 				p.openInventory(ecash_inv);
 			}
@@ -987,7 +1002,9 @@ public class MerchantMechanics implements Listener {
 			e.setCancelled(true);
 
 			p.playSound(p.getLocation(), Sound.WOOD_CLICK, 1.0F, 1.0F);
-
+			if(in_npc_shop.contains(p.getName())){
+                in_npc_shop.remove(p.getName());
+            }
 			in_npc_shop.add(p.getName());
 			p.openInventory(eCashVendor);
 		}
