@@ -1430,7 +1430,10 @@ public class DuelMechanics implements Listener {
 	@EventHandler(ignoreCancelled = false, priority = EventPriority.HIGHEST)
 	public void DuelManager(EntityDamageEvent e){
 		if(!(e.getEntity().getType() == EntityType.PLAYER)){return;}
-		if(e.getEntity().hasMetadata("NPC")){return;}
+		if(e.getEntity().hasMetadata("NPC")){
+			e.setCancelled(true);
+			return;
+		}
 
 		final Player attacked = (Player) e.getEntity();
 
