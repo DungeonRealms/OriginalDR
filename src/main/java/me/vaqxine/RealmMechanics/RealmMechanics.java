@@ -349,7 +349,7 @@ public class RealmMechanics implements Listener {
 						if(Bukkit.getWorld(r_name) != null){
 							World w = Bukkit.getWorld(r_name);
 							try{
-								ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, w.getSpawnLocation().add(0.5, 1.5, 0.5), 0, 0, 0, 0.02F, 20);
+								ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, w.getSpawnLocation().add(0.5D, 1.5D, 0.5D), 0, 0, 0, 0.02F, 20);
 							} catch(Exception err){err.printStackTrace();}
 							//w.spawnParticle(w.getSpawnLocation().add(0.5, 1.5, 0.5), Particle.HAPPY_VILLAGER, 0.02F, 20);
 						}
@@ -385,7 +385,7 @@ public class RealmMechanics implements Listener {
 							if(Bukkit.getWorld(r_name) != null){
 								World w = Bukkit.getWorld(r_name);
 								try{
-									ParticleEffect.sendToLocation(ParticleEffect.CLOUD, w.getSpawnLocation().add(0.5, 1.5, 0.5), 0, 0, 0, 0.02F, 20);
+									ParticleEffect.sendToLocation(ParticleEffect.CLOUD, w.getSpawnLocation().add(0.5D, 1.5D, 0.5D), 0, 0, 0, 0.02F, 20);
 								} catch(Exception err){err.printStackTrace();}
 								//w.spawnParticle(w.getSpawnLocation().add(0.5, 1.5, 0.5), Particle.CLOUD, 0.02F, 20);
 							}
@@ -410,31 +410,31 @@ public class RealmMechanics implements Listener {
 					double y = Double.parseDouble(loc_string.split(",")[1]);
 					double z = Double.parseDouble(loc_string.split(",")[2]);
 					
-					Location loc = new Location(Main.plugin.getServer().getWorld(main_world_name), x, y, z);
+					Location loc = new Location(Main.plugin.getServer().getWorld(main_world_name), x, y, z).clone();
 					final Location f_loc = loc.clone();
 					try{
 						if(Bukkit.getPlayer(p_name) != null){
 							Player pl = Bukkit.getPlayer(p_name);
 							if(pl.isOp()){
 								try{
-									ParticleEffect.sendToLocation(ParticleEffect.ENCHANTMENT_TABLE, loc.add(0.5, 2, 0.5), 0, 0, 0, 0.25F, 75);
+									ParticleEffect.sendToLocation(ParticleEffect.ENCHANTMENT_TABLE, loc.add(0.5D, 2D, 0.5D), 0, 0, 0, 0.25F, 75);
 								} catch(Exception err){err.printStackTrace();}
 								//loc.getWorld().spawnParticle(loc.add(0.5, 2, 0.5), Particle.ENCHANTMENT_TABLE, 0.25F, 75);
-								loc.subtract(0.5, 2, 0.5);
 							}
 							if(!(uploading_realms.contains(pl.getName())) && safe_realms.containsKey(pl.getName())){
+							   loc.subtract(.5D, 2D, .5D);
 								try{
-									ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, loc.add(0.5, 1.5, 0.5), 0, 0, 0, 0.02F, 20);
+									ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, loc.add(0.5D, 1.5D, 0.5D), 0, 0, 0, 0.02F, 20);
+									
 								} catch(Exception err){err.printStackTrace();}
 								//loc.getWorld().spawnParticle(loc.add(0.5, 1.5, 0.5), Particle.HAPPY_VILLAGER, 0.02F, 20);
-								loc.subtract(0.5, 1.5, 0.5);
 							}
 							if(!(uploading_realms.contains(pl.getName())) && flying_realms.containsKey(pl.getName())){
+							    loc.subtract(.5D, 1.5D, .5D);
 								try{
-									ParticleEffect.sendToLocation(ParticleEffect.CLOUD, loc.add(0.5, 1.5, 0.5), 0, 0,0 , 0.02F, 20);
+									ParticleEffect.sendToLocation(ParticleEffect.CLOUD, loc.add(0.5D, 1.5D, 0.5D), 0, 0,0 , 0.02F, 20);
 								} catch(Exception err){err.printStackTrace();}
 								//loc.getWorld().spawnParticle(loc.add(0.5, 1.5, 0.5), Particle.CLOUD, 0.02F, 20);
-								loc.subtract(0.5, 1.5, 0.5);
 							}
 						}
 						

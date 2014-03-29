@@ -58,7 +58,7 @@ public class CommandBossTP implements CommandExecutor {
 							alive_mobs++;
 						}
 					}
-
+					//0 alive and 106 total so (106 - 0) -> 106 / 106 -> 1 * 100 -> 100 - 100
 					double percent_alive = 100 - (((double)(total_mobs - alive_mobs) / ((double)total_mobs)) * 100.0D);
 
 					if(percent_alive >= 25.0D && !instance_name.equalsIgnoreCase("OneWolfeDungeon")){
@@ -72,8 +72,8 @@ public class CommandBossTP implements CommandExecutor {
 						}
 					}
 
-					/*if(mob_kill_count.containsKey(cb.getBlock().getWorld().getName())){
-						int mobs_killed = mob_kill_count.get(cb.getBlock().getWorld().getName());
+					if(InstanceMechanics.mob_kill_count.containsKey(cb.getBlock().getWorld().getName())){
+						int mobs_killed = InstanceMechanics.mob_kill_count.get(cb.getBlock().getWorld().getName());
 						if((mobs_killed * 1.90) < total_mobs){
 							// They killed less than 75% of the mobs in the dungeon, yet they're somehow despawned. BUG ABUSEEEE.
 							int mobs_to_kill = (int)(total_mobs - (Math.round(((mobs_killed * 1.90) / 100.0D) * (double)total_mobs)));
@@ -84,7 +84,7 @@ public class CommandBossTP implements CommandExecutor {
 							}
 							return true;
 						}
-					}*/
+					}
 
 					for(final Player pl : cb.getBlock().getWorld().getPlayers()){
 						pl.teleport(new Location(pl.getWorld(), x, y + 2, z));

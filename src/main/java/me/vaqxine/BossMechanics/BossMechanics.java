@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import me.vaqxine.Main;
 import me.vaqxine.BossMechanics.commands.CommandSpawnBoss;
+import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
@@ -272,7 +273,7 @@ public class BossMechanics implements Listener {
 						}
 						im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
 						im.removeEnchant(Enchantment.KNOCKBACK);
-						im.removeEnchant(Enchantment.PROTECTION_FALL);
+						im.removeEnchant(EnchantMechanics.getCustomEnchant());
 						is.setItemMeta(im);
 						
 						possible_drops.add(is);
@@ -287,7 +288,7 @@ public class BossMechanics implements Listener {
 					}
 					im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
 					im.removeEnchant(Enchantment.KNOCKBACK);
-					im.removeEnchant(Enchantment.PROTECTION_FALL);
+					im.removeEnchant(EnchantMechanics.getCustomEnchant());
 					weapon.setItemMeta(im);
 					
 					possible_drops.add(weapon);
@@ -357,7 +358,7 @@ public class BossMechanics implements Listener {
 								}
 								im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
 								im.removeEnchant(Enchantment.KNOCKBACK);
-								im.removeEnchant(Enchantment.PROTECTION_FALL);
+								im.removeEnchant(EnchantMechanics.getCustomEnchant());
 								is.setItemMeta(im);
 								
 								possible_drops.add(is);
@@ -372,7 +373,7 @@ public class BossMechanics implements Listener {
 							}
 							im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
 							im.removeEnchant(Enchantment.KNOCKBACK);
-							im.removeEnchant(Enchantment.PROTECTION_FALL);
+							im.removeEnchant(EnchantMechanics.getCustomEnchant());
 							weapon.setItemMeta(im);
 							
 							possible_drops.add(weapon);
@@ -442,7 +443,7 @@ public class BossMechanics implements Listener {
 					}
 					im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
 					im.removeEnchant(Enchantment.KNOCKBACK);
-					im.removeEnchant(Enchantment.PROTECTION_FALL);
+					im.removeEnchant(EnchantMechanics.getCustomEnchant());
 					is.setItemMeta(im);
 					
 					possible_drops.add(is);
@@ -460,7 +461,7 @@ public class BossMechanics implements Listener {
 				
 				im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
 				im.removeEnchant(Enchantment.KNOCKBACK);
-				im.removeEnchant(Enchantment.PROTECTION_FALL);
+				im.removeEnchant(EnchantMechanics.getCustomEnchant());
 				weapon.setItemMeta(im);
 				
 				possible_drops.add(weapon);

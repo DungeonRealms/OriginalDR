@@ -5374,7 +5374,7 @@ public class MonsterMechanics implements Listener {
 						ent.getLocation().getWorld().dropItemNaturally(ent.getLocation(), mask);*/
 						
 					// Orb of Peace DROP CODE
-					int do_i_drop_oop = new Random().nextInt(100);
+					/*int do_i_drop_oop = new Random().nextInt(100);
 					if(mob_tier == 2){
 						if(do_i_drop_oop <= 1){
 							Location loc = ent.getLocation();
@@ -5398,7 +5398,7 @@ public class MonsterMechanics implements Listener {
 							Location loc = ent.getLocation();
 							loc.getWorld().dropItemNaturally(loc, CraftItemStack.asCraftCopy(ItemMechanics.orb_of_peace));
 						}
-					}
+					}*/
 					
 					if(mob_tier == 5 && !is_elite){ //  
 						int chance = new Random().nextInt(1000);
@@ -5472,7 +5472,7 @@ public class MonsterMechanics implements Listener {
 							}
 							im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
 							im.removeEnchant(Enchantment.KNOCKBACK);
-							im.removeEnchant(Enchantment.PROTECTION_FALL);
+							im.removeEnchant(EnchantMechanics.getCustomEnchant());
 						} catch(NullPointerException npe){
 							npe.printStackTrace();
 						}
@@ -5896,16 +5896,16 @@ public class MonsterMechanics implements Listener {
 			weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
 
 			if(boots != null){
-				boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				boots.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 			if(helmet != null){
-				helmet.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				helmet.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 			if(chest != null){
-				chest.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 			if(legs != null){
-				legs.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				legs.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 
 			ent.setEquipment(0, CraftItemStack.asNMSCopy(weapon));
@@ -5938,16 +5938,16 @@ public class MonsterMechanics implements Listener {
 			weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
 
 			if(boots != null){
-				boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				boots.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 			if(helmet != null){
-				helmet.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				helmet.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 			if(chest != null){
-				chest.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 			if(legs != null){
-				legs.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				legs.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 
 			ent.setEquipment(0, CraftItemStack.asNMSCopy(weapon));
@@ -5982,16 +5982,16 @@ public class MonsterMechanics implements Listener {
 			weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
 
 			if(boots != null){
-				boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				boots.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 			if(helmet != null){
-				helmet.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				helmet.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 			if(chest != null){
-				chest.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 			if(legs != null){
-				legs.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				legs.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 
 			ent.setEquipment(0, CraftItemStack.asNMSCopy(weapon));
@@ -6022,16 +6022,16 @@ public class MonsterMechanics implements Listener {
 			weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
 
 			if(boots != null){
-				boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				boots.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 			if(helmet != null){
-				helmet.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				helmet.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 			if(chest != null){
-				chest.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 			if(legs != null){
-				legs.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+				legs.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 			}
 
 			ent.setEquipment(0, CraftItemStack.asNMSCopy(weapon));
@@ -6254,7 +6254,7 @@ public class MonsterMechanics implements Listener {
 			if(larmor_type == 1 && boots == null){
 				boots = ItemGenerators.BootGenerator(tier, false, null);
 				if (elite == true) {
-					boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+					boots.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 				}
 				gear_list.set(1, boots);
 				gear_check = gear_check-1;
@@ -6262,7 +6262,7 @@ public class MonsterMechanics implements Listener {
 			if(larmor_type == 2 && legs == null){
 				legs = ItemGenerators.LeggingsGenerator(tier, false, null);
 				if (elite == true) {
-					legs.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+					legs.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 				}
 				gear_list.set(2, legs);
 				gear_check = gear_check-1;
@@ -6270,7 +6270,7 @@ public class MonsterMechanics implements Listener {
 			if(larmor_type == 3 && chest == null){
 				chest = ItemGenerators.ChestPlateGenerator(tier, false, null);
 				if (elite == true) {
-					chest.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+					chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 				}
 				gear_list.set(3, chest);
 				gear_check = gear_check-1;
@@ -6278,7 +6278,7 @@ public class MonsterMechanics implements Listener {
 			if(larmor_type == 4 && helmet == null){
 				helmet = ItemGenerators.HelmetGenerator(tier, false, null);
 				if (elite == true) {
-					helmet.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+					helmet.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 				}
 				gear_list.set(4, helmet);
 				gear_check = gear_check-1;
@@ -6298,28 +6298,28 @@ public class MonsterMechanics implements Listener {
 				if(mat_name.contains("helmet") && !ItemMechanics.getArmorData(is).equalsIgnoreCase("no")){
 					helmet = is;
 					if (elite == true) {
-						helmet.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+						helmet.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 					}
 					gear_list.set(4, helmet);
 				}
 				if(mat_name.contains("chestplate") && !ItemMechanics.getArmorData(is).equalsIgnoreCase("no")){
 					chest = is;
 					if (elite == true) {
-						chest.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+						chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 					}
 					gear_list.set(4, chest);
 				}
 				if(mat_name.contains("leggings") && !ItemMechanics.getArmorData(is).equalsIgnoreCase("no")){
 					legs = is;
 					if (elite == true) {
-						legs.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+						legs.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 					}
 					gear_list.set(4, legs);
 				}
 				if(mat_name.contains("boots") && !ItemMechanics.getArmorData(is).equalsIgnoreCase("no")){
 					boots = is;
 					if (elite == true) {
-						boots.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+						boots.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 					}
 					gear_list.set(4, boots);
 				}
@@ -6327,7 +6327,7 @@ public class MonsterMechanics implements Listener {
 				if(!ItemMechanics.getDamageData(is).equalsIgnoreCase("no")){
 					is_weapon = is;
 					if (elite == true) {
-						is_weapon.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+						is_weapon.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 					}
 					gear_list.set(0, is_weapon);
 				}
@@ -6378,7 +6378,7 @@ public class MonsterMechanics implements Listener {
 				if (chest == null) { // They don't normally have the torso.
 					chest = ItemGenerators.ChestPlateGenerator(tier, false, null);
 					if (elite == true) {
-						chest.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+						chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
 					}
 					gear_list.set(3, chest);
 				}
