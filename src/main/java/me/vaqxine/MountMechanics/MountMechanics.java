@@ -1357,7 +1357,7 @@ public class MountMechanics implements Listener {
 			// PROBLEM: If they mount a mule, then dismount, never removed from mount_map.
 			if(horse instanceof Horse && mount_map.containsKey(pl.getName())){
 				Entity ent = mount_map.get(pl.getName());
-				ent.eject();
+				//ent.eject();
 				ent.remove();
 				mount_map.remove(pl.getName());
 				inv_mount_map.remove(ent);

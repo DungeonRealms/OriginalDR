@@ -3,6 +3,9 @@ package me.vaqxine.MonsterMechanics;
 import java.lang.reflect.Field;
 import java.util.Random;
 
+import org.bukkit.craftbukkit.v1_7_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_7_R1.util.UnsafeList;
+
 import net.minecraft.server.v1_7_R1.EntityArrow;
 import net.minecraft.server.v1_7_R1.EntityHuman;
 import net.minecraft.server.v1_7_R1.EntityLiving;
@@ -18,9 +21,6 @@ import net.minecraft.server.v1_7_R1.PathfinderGoalRandomLookaround;
 import net.minecraft.server.v1_7_R1.PathfinderGoalRandomStroll;
 import net.minecraft.server.v1_7_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R1.World;
-
-import org.bukkit.craftbukkit.v1_7_R1.event.CraftEventFactory;
-import org.bukkit.craftbukkit.v1_7_R1.util.UnsafeList;
 
 public class ZombieArcher extends EntityZombie implements IRangedEntity{
 

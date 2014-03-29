@@ -454,6 +454,10 @@ commands:
     description: Kills player.
     usage: /<command>
     aliases: [killself]
+  setalignment:
+    description: Sets the players alignment.
+    usage: /<command>
+    aliases: [alignmentset]
   profile:
     description: Spits out link to player profile on website.
     usage: /<command>

@@ -4303,6 +4303,7 @@ public class MonsterMechanics implements Listener {
 
 			if((System.currentTimeMillis() - last_hit) < Delay.MELEE.delay){
 			    e.setCancelled(true);
+			    e.setDamage(0);
 				return; // A half-second hasn't passed since the mob last hit someone. 1/5th of a second
 			}
 		}
@@ -4386,7 +4387,6 @@ public class MonsterMechanics implements Listener {
 		e.setDamage(dmg);
 
 	}
-
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerDamageMonsterEvent(EntityDamageByEntityEvent e) {
 		if (!(e.getDamager() instanceof Player) && !(e.getDamager() instanceof Projectile)) {
@@ -6214,7 +6214,7 @@ public class MonsterMechanics implements Listener {
 		else if(et == EntityType.PIG_ZOMBIE){
 			is_weapon = spawnRandomMeleeWeapon(tier, true, false);
 		}else{
-			is_weapon = spawnRandomMeleeWeapon(tier, true, false);
+			is_weapon = spawnRandomMeleeWeapon(tier, false, false);
 		}
 		if (elite == true) {
 			is_weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
@@ -6522,7 +6522,7 @@ public class MonsterMechanics implements Listener {
 		    net.minecraft.server.v1_7_R1.World ws = ((CraftWorld)l.getWorld()).getHandle();
 		    ZombieArcher za = new ZombieArcher(ws);
 		    ws.addEntity(za, SpawnReason.CUSTOM);
-		    za.setLocation(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
+		    za.teleportTo(l, true);
 		    e = za.getBukkitEntity();
 		    //((LivingEntity)e).getEquipment().setItemInHand(is_weapon);
 		}else if(et == EntityType.IRON_GOLEM){

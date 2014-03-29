@@ -3236,7 +3236,7 @@ public class ProfessionMechanics implements Listener {
 								treasure = CraftItemStack.asCraftCopy(ItemMechanics.orb_of_flight);
 							}
 							if(treasure_type == 2){
-								// OOF
+								// OOP
 								treasure = CraftItemStack.asCraftCopy(ItemMechanics.orb_of_peace);
 							}
 
