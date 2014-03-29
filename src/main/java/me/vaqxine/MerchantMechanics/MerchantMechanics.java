@@ -746,11 +746,6 @@ public class MerchantMechanics implements Listener {
 			merchant_offer.add(scrap);
 		}
 		if(t3_scraps > 0){
-			while(t3_scraps >= 120){
-				t3_scraps -= 120;
-				ItemStack orb = CraftItemStack.asCraftCopy(orb_of_alteration);
-				merchant_offer.add(orb);
-			}
 
 			while(t3_scraps >= 110){
 				t3_scraps -= 110;
@@ -789,8 +784,8 @@ public class MerchantMechanics implements Listener {
 				merchant_offer.add(scroll);
 			}
 
-			while(t4_scraps >= 60){
-				t4_scraps -= 60;
+			while(t4_scraps >= 120){
+				t4_scraps -= 120;
 				ItemStack orb = CraftItemStack.asCraftCopy(orb_of_alteration);
 				merchant_offer.add(orb);
 			}
@@ -819,8 +814,8 @@ public class MerchantMechanics implements Listener {
 				merchant_offer.add(scroll);
 			}
 
-			while(t5_scraps >= 20){
-				t5_scraps -= 20;
+			while(t5_scraps >= 30){
+				t5_scraps -= 30;
 				ItemStack orb = CraftItemStack.asCraftCopy(orb_of_alteration);
 				merchant_offer.add(orb);
 			}
