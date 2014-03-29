@@ -71,9 +71,12 @@ public class Party {
 		// Removes the party only chat
 		PartyMechanics.party_only.remove(p.getName());
 		KarmaMechanics.sendAlignColor(p, p);
+		ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.SIDEBAR).unregister();
 		
+		String name = (p == leader ? ChatColor.BOLD : "") + "" + p.getName();
+		if(name.length() > 16) name = name.substring(0, 16);
 		for(Player x : getPartyMembers()){
-			ScoreboardMechanics.getBoard(x).resetScores(p);
+			ScoreboardMechanics.getBoard(x).resetScores(Bukkit.getOfflinePlayer(name));
 		}
 		
 		InstanceMechanics.teleport_on_load.remove(p.getName());
@@ -100,7 +103,9 @@ public class Party {
 				remaining_members.add(s);
 			}
 			leader = Bukkit.getPlayer(remaining_members.get(party_index));
-			
+			for(Player x : getPartyMembers()){
+				ScoreboardMechanics.getBoard(x).resetScores(leader);
+			}
 			// TODO MOVES THIS
 			
 			for(String s : remaining_members) {
