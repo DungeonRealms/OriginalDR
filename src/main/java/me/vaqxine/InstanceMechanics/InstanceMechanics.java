@@ -644,6 +644,9 @@ public class InstanceMechanics implements Listener {
 	}
 
 	public void tickMobCounter(String dungeon_name, int amount){
+		if(dungeon_name == null) return;
+		if(amount == 0) return;
+		if(!mob_kill_count.containsKey(dungeon_name)) mob_kill_count.put(dungeon_name, 0);
 		int i = mob_kill_count.get(dungeon_name);
 		i += amount;
 		mob_kill_count.put(dungeon_name, i);
