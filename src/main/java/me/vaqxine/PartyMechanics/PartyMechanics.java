@@ -12,7 +12,6 @@ import me.vaqxine.Main;
 import me.vaqxine.ChatMechanics.ChatMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
-import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.PartyMechanics.Party.Update;
 import me.vaqxine.PartyMechanics.commands.CommandP;
 import me.vaqxine.PartyMechanics.commands.CommandPAccept;
@@ -41,10 +40,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 public class PartyMechanics implements Listener {
@@ -324,23 +319,23 @@ public class PartyMechanics implements Listener {
          * if(!p_owner.getName().equals("Notch")){ p_owner.sendMessage(ChatColor.RED + "Parties are temporarily disabled due to a 1.7.2 conflict."); return; }
          */
 
-        String p_owner_name = p_owner.getName();
+        //String p_owner_name = p_owner.getName();
 
-        if (p_owner.getName().length() > 13) {
-            p_owner_name = p_owner.getName().substring(0, 13);
-        }
-        Scoreboard party_ui = p_owner.getScoreboard();
-        p_owner.sendMessage(ChatColor.DARK_AQUA + "SCOREBOARD SET!");
-        Objective obj = party_ui.registerNewObjective("player_data", "dummy");
-        obj.setDisplayName(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Party");
-        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+        //if (p_owner.getName().length() > 13) {
+        //    p_owner_name = p_owner.getName().substring(0, 13);
+        //}
+        //Scoreboard party_ui = p_owner.getScoreboard();
+        ///p_owner.sendMessage(ChatColor.DARK_AQUA + "SCOREBOARD SET!");
+        //Objective obj = party_ui.registerNewObjective("player_data", "dummy");
+        //obj.setDisplayName(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Party");
+        //obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         /*
          * party_ui.setType(Scoreboard.Type.SIDEBAR); party_ui.setScoreboardName(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Party");
          */
-        Score hp = obj.getScore(Bukkit.getOfflinePlayer(ChatColor.BOLD + p_owner_name));
-        hp.setScore(HealthMechanics.getPlayerHP(p_owner.getName()));
+        //Score hp = obj.getScore(Bukkit.getOfflinePlayer(ChatColor.BOLD + p_owner_name));
+        //hp.setScore(HealthMechanics.getPlayerHP(p_owner.getName()));
 
-        p_owner.setScoreboard(party_ui);
+        //p_owner.setScoreboard(party_ui);
         //final Player p_test = p_owner;
         // party_ui.setItem(ChatColor.BOLD + p_owner_name, HealthMechanics.getPlayerHP(p_owner.getName()), false);
         // party_ui.showToPlayer(p_owner);
@@ -368,10 +363,10 @@ public class PartyMechanics implements Listener {
                         p_name = p_name.substring(0, 14);
                     }
 
-                    hp = obj.getScore(Bukkit.getOfflinePlayer(p_name));
-                    hp.setScore(HealthMechanics.getPlayerHP(p_owner.getName()));
-                    System.out.print("SET SCOREBOARD TO " + pl.getName() + " FROM LINE 377 OBJECTIVES SIZE: " + party_ui.getObjectives().size() + "OBJECTIVES 1: " + party_ui.getObjectives().toArray());
-                    pl.setScoreboard(party_ui);
+                    //hp = obj.getScore(Bukkit.getOfflinePlayer(p_name));
+                    //hp.setScore(HealthMechanics.getPlayerHP(p_owner.getName()));
+                    //System.out.print("SET SCOREBOARD TO " + pl.getName() + " FROM LINE 377 OBJECTIVES SIZE: " + party_ui.getObjectives().size() + "OBJECTIVES 1: " + party_ui.getObjectives().toArray());
+                    //pl.setScoreboard(party_ui);
                 }
             }
 

@@ -33,6 +33,7 @@ import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
+import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.database.ConnectionPool;
@@ -80,6 +81,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Score;
 
 import de.kumpelblase2.remoteentities.EntityManager;
@@ -212,9 +214,9 @@ public class ShopMechanics implements Listener {
 					if(pl == null){
 						continue;
 					}
-					if(HealthMechanics.objective.getScore(pl).getScore() > 0){
-						continue;
-					}
+					//if(HealthMechanics.objective.getScore(pl).getScore() > 0){
+					//	continue;
+					//}
 					if(MonsterMechanics.getNPCTier(pl.getInventory().getArmorContents()) == 1){
 						hp = 200;
 					}
@@ -261,14 +263,17 @@ public class ShopMechanics implements Listener {
 	}
 
 	public void setStockCount(Player shop_tag, int stock){
-		Score s = HealthMechanics.objective.getScore(shop_tag);
-		s.setScore(stock);
+		for(Player p : Bukkit.getOnlinePlayers()){
+			ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.BELOW_NAME).getScore(shop_tag).setScore(stock);
+		}
 	}
 
 	public void incrementViewCount(Player shop_tag){
-		Score s = HealthMechanics.objective.getScore(shop_tag);
-		int new_score = s.getScore() + 1;
-		s.setScore(new_score);
+		for(Player p : Bukkit.getOnlinePlayers()){
+			Score c = ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.BELOW_NAME).getScore(shop_tag);
+			int new_score = c.getScore() + 1;
+			c.setScore(new_score);
+		}
 	}
 
 	public void cleanupNullNPC(){

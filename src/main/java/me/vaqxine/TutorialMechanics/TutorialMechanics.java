@@ -10,7 +10,6 @@ import me.vaqxine.Main;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
-import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.MerchantMechanics.MerchantMechanics;
@@ -79,7 +78,7 @@ public class TutorialMechanics implements Listener {
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		tutorialSpawn = new Location(Bukkit.getWorlds().get(0), 824, 48, -103, 124F, 1F);
-		TI = HealthMechanics.board.registerNewTeam("TI");
+		TI = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("TI");
 		TI.setCanSeeFriendlyInvisibles(true);
 		TI.setDisplayName("TI");
 

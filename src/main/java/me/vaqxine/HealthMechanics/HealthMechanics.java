@@ -24,6 +24,7 @@ import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
+import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import net.minecraft.server.v1_7_R1.EntityLiving;
@@ -68,10 +69,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import de.kumpelblase2.remoteentities.api.DespawnReason;
 import de.kumpelblase2.remoteentities.api.RemoteEntity;
@@ -122,9 +119,9 @@ public class HealthMechanics implements Listener {
 	// Just need to process what they keep.
 
 	// Overhead HP stuff. {
-	public static ScoreboardManager manager;
-	public static Scoreboard board;
-	public static Objective objective;
+	//public static ScoreboardManager manager;
+	//public static Scoreboard board;
+	//public static Objective objective;
 	// }
 
 	public static List<String> noob_players = new ArrayList<String>();
@@ -138,12 +135,12 @@ public class HealthMechanics implements Listener {
 
 		plugin = this;
 
-		manager = Bukkit.getScoreboardManager();
-		board = manager.getNewScoreboard();
-		objective = board.registerNewObjective("hpdisplay", "dummy");
-		objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
-		objective.setDisplayName("§c" + "❤");
-
+		//manager = Bukkit.getScoreboardManager();
+		//board = manager.getNewScoreboard();
+		//objective = board.registerNewObjective("hpdisplay", "dummy");
+		//objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+		//objective.setDisplayName("§c" + "❤");
+		
 		// "in combat" Handler, removes players from the in_combat list after 'HealthRegenCombatDelay' is over.
 		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
@@ -160,6 +157,7 @@ public class HealthMechanics implements Listener {
 		}, 40L, 20L); 
 
 		// Refreshes overhead HP values
+		/*
 		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				for(Player pl : Bukkit.getServer().getOnlinePlayers()){
@@ -173,7 +171,7 @@ public class HealthMechanics implements Listener {
 					}
 				}
 			}
-		}, 11  * 20L, 1L); 
+		}, 11  * 20L, 1L); */ 
 
 		// Refreshes SQL Connection Pool.
 		/*this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
@@ -321,8 +319,9 @@ public class HealthMechanics implements Listener {
 	}
 
 	public static void setOverheadHP(Player pl, int hp){
-		Score score = objective.getScore(pl);
-		score.setScore(hp);
+		for(Player p : Bukkit.getOnlinePlayers()){
+			ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.BELOW_NAME).getScore(pl).setScore(hp);;
+		}
 		if(!pl.hasMetadata("NPC") && !pl.getPlayerListName().equalsIgnoreCase("")){
 			double max_hp = HealthMechanics.getMaxHealthValue(pl.getName());
 			double health_percent = (hp / max_hp);

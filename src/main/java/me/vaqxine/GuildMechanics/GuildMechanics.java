@@ -31,7 +31,6 @@ import me.vaqxine.GuildMechanics.commands.CommandGMotd;
 import me.vaqxine.GuildMechanics.commands.CommandGPromote;
 import me.vaqxine.GuildMechanics.commands.CommandGQuit;
 import me.vaqxine.GuildMechanics.commands.CommandGuild;
-import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
@@ -1697,14 +1696,14 @@ public class GuildMechanics implements Listener {
 			fixed_gname = fixed_gname.substring(0, 8);
 		}
 
-		if(HealthMechanics.board.getTeam(fixed_gname + ".default") != null){
+		if(Bukkit.getScoreboardManager().getMainScoreboard().getTeam(fixed_gname + ".default") != null){
 			return; // Already exists.
 		}
 
-		Team default_g = HealthMechanics.board.registerNewTeam(fixed_gname + ".default");
-		Team neutral_g = HealthMechanics.board.registerNewTeam(fixed_gname + ".neutral");
-		Team chaotic_g = HealthMechanics.board.registerNewTeam(fixed_gname + ".chaotic");
-		Team gm_g = HealthMechanics.board.registerNewTeam(fixed_gname + ".gm");
+		Team default_g = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(fixed_gname + ".default");
+		Team neutral_g = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(fixed_gname + ".neutral");
+		Team chaotic_g = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(fixed_gname + ".chaotic");
+		Team gm_g = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(fixed_gname + ".gm");
 
 		String g_handle = "[" + guild_handle_map.get(g_name) + "]";
 

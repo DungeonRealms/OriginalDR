@@ -381,7 +381,7 @@ public class DuelMechanics implements Listener {
 				fixed_gname = g_name.substring(0, 8);
 			}
 
-			t = HealthMechanics.board.getTeam(fixed_gname + ".chaotic");
+			t = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(fixed_gname + ".chaotic");
 			if(t.hasPlayer(p1)){
 				t.removePlayer(p1);
 			}
@@ -399,7 +399,7 @@ public class DuelMechanics implements Listener {
 				fixed_gname = g_name.substring(0, 8);
 			}
 
-			t = HealthMechanics.board.getTeam(fixed_gname + ".chaotic");
+			t = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(fixed_gname + ".chaotic");
 			if(t.hasPlayer(p2)){
 				t.removePlayer(p2);
 			}

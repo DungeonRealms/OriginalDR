@@ -88,6 +88,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 public class CommunityMechanics implements Listener {
@@ -162,6 +163,7 @@ public class CommunityMechanics implements Listener {
 	public static Team purple;
 	public static Team aqua;
 	public static Team white;
+	public static Scoreboard board;
 
 	public Thread message_listener;
 	public static CommunityMechanics instance;
@@ -196,28 +198,30 @@ public class CommunityMechanics implements Listener {
 		
 		TipMechanics.loadTips();
 		
-		green = HealthMechanics.board.registerNewTeam("green");
+		board = Bukkit.getScoreboardManager().getMainScoreboard();
+		
+		green = board.registerNewTeam("green");
 		green.setPrefix(ChatColor.GREEN.toString());
 
-		dark_green = HealthMechanics.board.registerNewTeam("dark_green");
+		dark_green = board.registerNewTeam("dark_green");
 		dark_green.setPrefix(ChatColor.DARK_GREEN.toString());
 
-		yellow = HealthMechanics.board.registerNewTeam("yellow");
+		yellow = board.registerNewTeam("yellow");
 		yellow.setPrefix(ChatColor.YELLOW.toString());
 
-		red = HealthMechanics.board.registerNewTeam("red");
+		red = board.registerNewTeam("red");
 		red.setPrefix(ChatColor.RED.toString());
 
-		dark_red = HealthMechanics.board.registerNewTeam("dark_red");
+		dark_red = board.registerNewTeam("dark_red");
 		dark_red.setPrefix(ChatColor.DARK_RED.toString());
 
-		purple = HealthMechanics.board.registerNewTeam("purple");
+		purple = board.registerNewTeam("purple");
 		purple.setPrefix(ChatColor.LIGHT_PURPLE.toString());
 
-		white = HealthMechanics.board.registerNewTeam("white");
+		white = board.registerNewTeam("white");
 		white.setPrefix(ChatColor.WHITE.toString());
 
-		aqua = HealthMechanics.board.registerNewTeam("aqua");
+		aqua = board.registerNewTeam("aqua");
 		aqua.setPrefix(ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "GM" + ChatColor.AQUA.toString() + " ");
 		
 		new BukkitRunnable(){
@@ -470,14 +474,14 @@ public class CommunityMechanics implements Listener {
 			}
 
 			if(c == ChatColor.WHITE){
-				t = HealthMechanics.board.getTeam(fixed_gname + ".default");
+				t = board.getTeam(fixed_gname + ".default");
 				if(!(t.hasPlayer(pl))){
 					t.addPlayer(pl);
 				}
 			}
 
 			if(c == ChatColor.RED){
-				t = HealthMechanics.board.getTeam(fixed_gname + ".chaotic");
+				t = board.getTeam(fixed_gname + ".chaotic");
 				if(!(t.hasPlayer(pl))){
 					t.addPlayer(pl);
 				}
@@ -488,7 +492,7 @@ public class CommunityMechanics implements Listener {
 				}
 			}
 			if(c == ChatColor.YELLOW){
-				t = HealthMechanics.board.getTeam(fixed_gname + ".neutral");
+				t = board.getTeam(fixed_gname + ".neutral");
 				if(!(t.hasPlayer(pl))){
 					t.addPlayer(pl);
 				}
@@ -504,7 +508,7 @@ public class CommunityMechanics implements Listener {
 				}
 			}
 			if(c == ChatColor.AQUA){
-				t = HealthMechanics.board.getTeam(fixed_gname + ".gm");
+				t = board.getTeam(fixed_gname + ".gm");
 
 				if(!(t.hasPlayer(pl))){
 					t.addPlayer(pl);
