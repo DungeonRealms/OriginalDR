@@ -6,7 +6,6 @@ import java.util.Map;
 
 import net.minecraft.server.v1_7_R1.BiomeBase;
 import net.minecraft.server.v1_7_R1.BiomeMeta;
-import net.minecraft.server.v1_7_R1.EntityEnderman;
 import net.minecraft.server.v1_7_R1.EntityInsentient;
 import net.minecraft.server.v1_7_R1.EntityIronGolem;
 import net.minecraft.server.v1_7_R1.EntityTypes;

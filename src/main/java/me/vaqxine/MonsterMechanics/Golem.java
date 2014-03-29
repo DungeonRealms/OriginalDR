@@ -2,8 +2,6 @@ package me.vaqxine.MonsterMechanics;
 
 import java.lang.reflect.Field;
 
-import org.bukkit.craftbukkit.v1_7_R1.util.UnsafeList;
-
 import net.minecraft.server.v1_7_R1.EntityHuman;
 import net.minecraft.server.v1_7_R1.EntityIronGolem;
 import net.minecraft.server.v1_7_R1.PathfinderGoalHurtByTarget;
@@ -16,6 +14,8 @@ import net.minecraft.server.v1_7_R1.PathfinderGoalRandomStroll;
 import net.minecraft.server.v1_7_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R1.PathfinderGoalTarget;
 import net.minecraft.server.v1_7_R1.World;
+
+import org.bukkit.craftbukkit.v1_7_R1.util.UnsafeList;
 
 public class Golem extends EntityIronGolem {
 

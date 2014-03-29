@@ -43,6 +43,7 @@ import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RecordMechanics.RecordMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
 import me.vaqxine.TeleportationMechanics.TeleportationMechanics;
+import me.vaqxine.enums.Delay;
 import net.minecraft.server.v1_7_R1.DataWatcher;
 import net.minecraft.server.v1_7_R1.EntityCreature;
 import net.minecraft.server.v1_7_R1.EntityLiving;
@@ -4300,7 +4301,7 @@ public class MonsterMechanics implements Listener {
 			long last_hit = mob_last_hit.get(ent);
 			mob_last_hit.put(ent, System.currentTimeMillis());
 
-			if((System.currentTimeMillis() - last_hit) < 100){
+			if((System.currentTimeMillis() - last_hit) < Delay.MELEE.delay){
 			    e.setCancelled(true);
 				return; // A half-second hasn't passed since the mob last hit someone. 1/5th of a second
 			}
@@ -4385,6 +4386,7 @@ public class MonsterMechanics implements Listener {
 		e.setDamage(dmg);
 
 	}
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerDamageMonsterEvent(EntityDamageByEntityEvent e) {
 		if (!(e.getDamager() instanceof Player) && !(e.getDamager() instanceof Projectile)) {
@@ -6212,7 +6214,7 @@ public class MonsterMechanics implements Listener {
 		else if(et == EntityType.PIG_ZOMBIE){
 			is_weapon = spawnRandomMeleeWeapon(tier, true, false);
 		}else{
-			is_weapon = spawnRandomMeleeWeapon(tier, false, false);
+			is_weapon = spawnRandomMeleeWeapon(tier, true, false);
 		}
 		if (elite == true) {
 			is_weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
@@ -6520,7 +6522,7 @@ public class MonsterMechanics implements Listener {
 		    net.minecraft.server.v1_7_R1.World ws = ((CraftWorld)l.getWorld()).getHandle();
 		    ZombieArcher za = new ZombieArcher(ws);
 		    ws.addEntity(za, SpawnReason.CUSTOM);
-		    za.teleportTo(l, true);
+		    za.setLocation(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
 		    e = za.getBukkitEntity();
 		    //((LivingEntity)e).getEquipment().setItemInHand(is_weapon);
 		}else if(et == EntityType.IRON_GOLEM){
