@@ -15,6 +15,7 @@ import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
+import me.vaqxine.enums.ArmorPosition;
 import net.minecraft.server.v1_7_R1.Packet;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
 
@@ -62,6 +63,7 @@ public class RepairMechanics implements Listener {
 	public static int attempts_per_pickaxe = 1000;
 	public static int hits_per_weapon = 1500;
 	public static int blocks_per_armor = 1500;
+	private static HashMap<Player, HashMap<ArmorPosition, ItemStack>> playerArmor = new HashMap<Player, HashMap<ArmorPosition, ItemStack>>();
 
 	static RepairMechanics instance = null;
 
@@ -682,7 +684,19 @@ public class RepairMechanics implements Listener {
 		return 0.0D;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+	public void onHitEvent(EntityDamageEvent e){
+		if(!(e.getEntity() instanceof Player)) return;
+		Player p = (Player) e.getEntity();
+		if(!playerArmor.containsKey(p)) playerArmor.put(p, new HashMap<ArmorPosition, ItemStack>());
+		HashMap<ArmorPosition, ItemStack> armor = playerArmor.get(p);
+		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getType() != Material.AIR) armor.put(ArmorPosition.HEAD, p.getInventory().getHelmet());
+		if(p.getInventory().getChestplate() != null && p.getInventory().getChestplate().getType() != Material.AIR) armor.put(ArmorPosition.CHEST, p.getInventory().getChestplate());
+		if(p.getInventory().getLeggings() != null && p.getInventory().getLeggings().getType() != Material.AIR) armor.put(ArmorPosition.LEGS, p.getInventory().getLeggings());
+		if(p.getInventory().getBoots() != null && p.getInventory().getBoots().getType() != Material.AIR) armor.put(ArmorPosition.BOOTS, p.getInventory().getBoots());
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
 	public void onArmorDamageEvent(EntityDamageEvent e){
 		if(!(e.getEntity() instanceof Player)){return;}
 		Player p = (Player)e.getEntity();
@@ -690,6 +704,11 @@ public class RepairMechanics implements Listener {
 			return;
 		}
 		if(e.getDamage() <= 1){return;}
+
+		if(playerArmor.get(p).containsKey(ArmorPosition.HEAD)) p.getInventory().setHelmet(playerArmor.get(p).get(ArmorPosition.HEAD));
+		if(playerArmor.get(p).containsKey(ArmorPosition.CHEST)) p.getInventory().setChestplate(playerArmor.get(p).get(ArmorPosition.CHEST));
+		if(playerArmor.get(p).containsKey(ArmorPosition.LEGS)) p.getInventory().setLeggings(playerArmor.get(p).get(ArmorPosition.LEGS));
+		if(playerArmor.get(p).containsKey(ArmorPosition.BOOTS)) p.getInventory().setBoots(playerArmor.get(p).get(ArmorPosition.BOOTS));
 
 		if(p.getInventory().getBoots() != null && p.getInventory().getBoots().getType() != Material.AIR){
 			ItemStack boots = p.getInventory().getBoots();
