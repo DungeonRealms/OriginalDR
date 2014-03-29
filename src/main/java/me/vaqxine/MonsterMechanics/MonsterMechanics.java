@@ -62,6 +62,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftSkeleton;
@@ -278,10 +279,10 @@ public class MonsterMechanics implements Listener {
 		Main.plugin.getCommand("monspawn").setExecutor(new CommandMonSpawn());
 		Main.plugin.getCommand("showms").setExecutor(new CommandShowMS());
 		
-		Main.plugin.getServer().getWorld("DungeonRealms").setGameRuleValue("doLoot", "false");
+		Main.plugin.getServer().getWorld("DungeonRealms").setGameRuleValue("doMobLoot", "false");
 		Main.plugin.getServer().getWorld("DungeonRealms").setGameRuleValue("mobGriefing", "false");
 		// TODO: See if this even works.
-
+		CustomEntityType.registerEntities();
 		loadMobSpawnerData();
 		loadMobMessageTemplates();
 		loadCustomMobDrops();
@@ -6516,8 +6517,17 @@ public class MonsterMechanics implements Listener {
 		max_dmg += ((double)max_dmg * (double)total_armor_dmg);
 		dmg_range.add((int) Math.round(min_dmg));
 		dmg_range.add((int) Math.round(max_dmg));
-
+		//Spawns the custom zombie if they have a bow
+		if(et == EntityType.ZOMBIE && is_weapon != null && is_weapon.getType() == Material.BOW){
+		    System.out.print("SPAWNED A ZOMBIE WITH THE NEW RANGED DATA: " + l.getBlockX() + " Y: " + l.getBlockY() + " Z: " + l.getBlockZ());
+		    net.minecraft.server.v1_7_R1.World ws = ((CraftWorld)l.getWorld()).getHandle();
+		    ZombieArcher za = new ZombieArcher(ws);
+		    ws.addEntity(za);
+		    za.teleportTo(l, true);
+		    e = za.getBukkitEntity();
+		}else{
 		e = l.getWorld().spawnEntity(l, et);
+		}
 		EntityLiving ent = ((CraftLivingEntity) e).getHandle();
 
 		if(((meta_data.equalsIgnoreCase("wither") || (elite == true && (meta_data.equalsIgnoreCase("bandit") || meta_data.equalsIgnoreCase("monk")))) && e instanceof CraftSkeleton)){

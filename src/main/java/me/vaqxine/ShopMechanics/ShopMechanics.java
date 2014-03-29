@@ -313,12 +313,12 @@ public class ShopMechanics implements Listener {
 			String shop_owner_n = "";
 
 			try{
-				/*final Block b2 = chest_partners.get(b1);
+				final Block b2 = chest_partners.get(b1);
 				b1.setType(Material.AIR);
 				b2.setType(Material.AIR);
 
-				NPC n = shop_nameplates.get(b1);
-				n.removeFromWorld();*/
+				RemoteEntity n = shop_nameplates.get(b1);
+				n.despawn(DespawnReason.CUSTOM);
 
 				shop_owner_n = shop_owners.get(b1);
 

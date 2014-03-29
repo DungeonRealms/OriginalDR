@@ -40,6 +40,7 @@ import me.vaqxine.ModerationMechanics.commands.CommandRealmClone;
 import me.vaqxine.ModerationMechanics.commands.CommandReport;
 import me.vaqxine.ModerationMechanics.commands.CommandSayAll;
 import me.vaqxine.ModerationMechanics.commands.CommandSendPacket;
+import me.vaqxine.ModerationMechanics.commands.CommandSetAlignment;
 import me.vaqxine.ModerationMechanics.commands.CommandStuck;
 import me.vaqxine.ModerationMechanics.commands.CommandUnBankSee;
 import me.vaqxine.ModerationMechanics.commands.CommandUnban;
@@ -133,6 +134,7 @@ public class ModerationMechanics implements Listener {
 		Main.plugin.getCommand("drvanish").setExecutor(new CommandDRVanish());
 		Main.plugin.getCommand("unbanksee").setExecutor(new CommandUnBankSee());
 		Main.plugin.getCommand("sendpacket").setExecutor(new CommandSendPacket());
+		Main.plugin.getCommand("setalignment").setExecutor(new CommandSetAlignment());
 	}
 
 	public void onDisable() {
