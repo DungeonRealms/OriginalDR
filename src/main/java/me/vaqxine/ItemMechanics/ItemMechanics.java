@@ -5419,6 +5419,7 @@ public class ItemMechanics implements Listener {
 		projectile_map.remove(proj);
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerCancelled(InventoryClickEvent e){
 	    if(e.isCancelled()){

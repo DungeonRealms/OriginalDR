@@ -1,5 +1,6 @@
 package me.vaqxine.MoneyMechanics.commands;
 
+import me.vaqxine.Main;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 
@@ -15,7 +16,7 @@ public class CommandMNote implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player p = (Player)sender;
-		if(!(p.getName().equalsIgnoreCase("Vaquxine")) && !(p.getName().equalsIgnoreCase("Availer"))){
+		if(!(Main.isDev(p.getName()))){
 			return true;
 		}
 

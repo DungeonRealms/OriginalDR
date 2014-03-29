@@ -1,5 +1,7 @@
 package me.vaqxine;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
@@ -89,6 +91,8 @@ public class Main extends JavaPlugin {
 	
 	public static Main plugin;
 	public static Logger log;
+	
+	public static List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine", "Availer");
 	
 	public void onEnable(){
 		plugin = this;
@@ -229,6 +233,10 @@ public class Main extends JavaPlugin {
 	 */
 	public static void d(Object o){
 		Main.plugin.getLogger().info(CC.CYAN + o.toString() + CC.WHITE);
+	}
+	
+	public static boolean isDev(String s){
+		return devs.contains(s);
 	}
 	
 }

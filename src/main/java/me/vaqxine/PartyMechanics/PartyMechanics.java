@@ -76,7 +76,6 @@ public class PartyMechanics implements Listener {
     // public static HashMap<String, Integer> party_name_incr = new HashMap<String, Integer>();
     // Player_name, increment -- this is used to prevent crashes from players reciving same scoreboard twice.
 
-    @SuppressWarnings("deprecation")
     public void onEnable() {
         Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
         manager = Bukkit.getScoreboardManager();
@@ -342,7 +341,7 @@ public class PartyMechanics implements Listener {
         hp.setScore(HealthMechanics.getPlayerHP(p_owner.getName()));
 
         p_owner.setScoreboard(party_ui);
-        final Player p_test = p_owner;
+        //final Player p_test = p_owner;
         // party_ui.setItem(ChatColor.BOLD + p_owner_name, HealthMechanics.getPlayerHP(p_owner.getName()), false);
         // party_ui.showToPlayer(p_owner);
         Party party = new Party(p_owner);

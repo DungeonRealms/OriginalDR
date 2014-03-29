@@ -1,5 +1,7 @@
 package me.vaqxine.RestrictionMechanics.commands;
 
+import me.vaqxine.Main;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,7 +13,7 @@ public class CommandList implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player p = (Player)sender;
-		if(!(p.getName().equalsIgnoreCase("Vaquxine")) && !(p.getName().equalsIgnoreCase("Availer"))){
+		if(!(Main.isDev(p.getName()))){
 			return true;
 		}
 		if(p.isOp()){

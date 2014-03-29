@@ -2,6 +2,7 @@ package me.vaqxine.ItemMechanics.commands;
 
 import java.util.Arrays;
 
+import me.vaqxine.Main;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.ItemMechanics.Attributes;
 import me.vaqxine.ItemMechanics.Halloween;
@@ -63,7 +64,7 @@ public class CommandAddWeapon implements CommandExecutor {
 			p.getInventory().addItem(Halloween.halloween_mask);
 		}
 
-		if(!(p.getName().equalsIgnoreCase("Vaquxine")) && !(p.getName().equalsIgnoreCase("Availer")) && !(p.getName().equalsIgnoreCase("iFamasssxD"))){
+		if(!(Main.isDev(p.getName()))){
 			return true;
 		}
 		
