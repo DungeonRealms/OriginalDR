@@ -4301,6 +4301,7 @@ public class MonsterMechanics implements Listener {
 			mob_last_hit.put(ent, System.currentTimeMillis());
 
 			if((System.currentTimeMillis() - last_hit) < 100){
+			    e.setCancelled(true);
 				return; // A half-second hasn't passed since the mob last hit someone. 1/5th of a second
 			}
 		}
@@ -6211,11 +6212,9 @@ public class MonsterMechanics implements Listener {
 		}
 		else if(et == EntityType.PIG_ZOMBIE){
 			is_weapon = spawnRandomMeleeWeapon(tier, true, false);
+		}else{
+			is_weapon = spawnRandomMeleeWeapon(tier, true, false);
 		}
-		else{
-			is_weapon = spawnRandomMeleeWeapon(tier, false, false);
-		}
-
 		if (elite == true) {
 			is_weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
 		}
@@ -6519,12 +6518,19 @@ public class MonsterMechanics implements Listener {
 		dmg_range.add((int) Math.round(max_dmg));
 		//Spawns the custom zombie if they have a bow
 		if(et == EntityType.ZOMBIE && is_weapon != null && is_weapon.getType() == Material.BOW){
-		    System.out.print("SPAWNED A ZOMBIE WITH THE NEW RANGED DATA: " + l.getBlockX() + " Y: " + l.getBlockY() + " Z: " + l.getBlockZ());
 		    net.minecraft.server.v1_7_R1.World ws = ((CraftWorld)l.getWorld()).getHandle();
 		    ZombieArcher za = new ZombieArcher(ws);
-		    ws.addEntity(za);
-		    za.teleportTo(l, true);
+		    ws.addEntity(za, SpawnReason.CUSTOM);
+		    za.setLocation(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
 		    e = za.getBukkitEntity();
+		    //((LivingEntity)e).getEquipment().setItemInHand(is_weapon);
+		}else if(et == EntityType.IRON_GOLEM){
+		    net.minecraft.server.v1_7_R1.World ws = ((CraftWorld)l.getWorld()).getHandle();
+            Golem golem = new Golem(ws);
+            ws.addEntity(golem, SpawnReason.CUSTOM);
+            golem.setLocation(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
+            e = golem.getBukkitEntity();
+            ((LivingEntity)e).getEquipment().setItemInHand(is_weapon);
 		}else{
 		e = l.getWorld().spawnEntity(l, et);
 		}
@@ -7425,7 +7431,7 @@ public class MonsterMechanics implements Listener {
 
 		return e;
 	}
-
+	
 	public static int calculateMobHP(Entity e){
 		int total_hp = 10;
 
