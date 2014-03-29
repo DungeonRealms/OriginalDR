@@ -1429,7 +1429,6 @@ public class DuelMechanics implements Listener {
 
 	@EventHandler(ignoreCancelled = false, priority = EventPriority.HIGHEST)
 	public void DuelManager(EntityDamageEvent e){
-		//if(!(e.isCancelled())){return;} 
 		if(!(e.getEntity().getType() == EntityType.PLAYER)){return;}
 		if(e.getEntity().hasMetadata("NPC")){return;}
 
@@ -1672,28 +1671,18 @@ public class DuelMechanics implements Listener {
 		duel_stake.remove(looser.getName());
 	}
 
-	/*public boolean InWGRegion(Player p) { 
+	public boolean InWGRegion(Player p) { 
 		try {			
 			Class<?> bukkitUtil = wg.getClass().getClassLoader().loadClass("com.sk89q.worldguard.bukkit.BukkitUtil");
 			Method toVector = bukkitUtil.getMethod("toVector", Block.class);
 			Vector blockVector = (Vector) toVector.invoke(null, p.getLocation().getBlock());
 
 			List<String> regionSet = wg.getGlobalRegionManager().get(p.getWorld()).getApplicableRegionsIDs(blockVector);
-
-			if (regionSet.size() < 1) {
-				return false;
-			}
-
-			for (String region : regionSet) {
-				if (regionSet.contains(region)) {						
-					return true;						
-				} else { return false;}
-			}			
+			return regionSet.size() > 0;
 		} catch (Exception e) {
-
 		}
 		return false;
-	}*/
+	}
 
 
 	public static boolean isRestrictedArea(Location l) { 

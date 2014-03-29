@@ -2,7 +2,6 @@ package me.vaqxine.ItemMechanics.commands;
 
 import java.util.Arrays;
 
-import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.ItemMechanics.Attributes;
 import me.vaqxine.ItemMechanics.Halloween;

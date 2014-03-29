@@ -41,6 +41,7 @@ import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.WeatherMechanics.WeatherMechanics;
 import me.vaqxine.database.ConnectionPool;
+import me.vaqxine.enums.CC;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -221,6 +222,13 @@ public class Main extends JavaPlugin {
 		weatherMechanics.onDisable();
 		hive.onDisable();
 		hiveServer.onDisable();
+	}
+	
+	/**
+	 * Debug
+	 */
+	public static void d(Object o){
+		Main.plugin.getLogger().info(CC.CYAN + o.toString() + CC.WHITE);
 	}
 	
 }

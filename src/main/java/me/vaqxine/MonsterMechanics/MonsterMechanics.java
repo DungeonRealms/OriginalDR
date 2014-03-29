@@ -3496,6 +3496,7 @@ public class MonsterMechanics implements Listener {
 		Entity ent = e.getEntity();
 		double dmg = e.getDamage();
 		Entity attacker = null;
+		if(e.getEntity() instanceof Player) return;
 
 		/*if(ent.isInsideVehicle()){ // Riding an entity?
 			Entity r_ent = ent.getVehicle();
@@ -3506,7 +3507,7 @@ public class MonsterMechanics implements Listener {
 			Entity r_ent = ent.getPassenger();
 			ent = r_ent;
 		}
-
+		
 		if (!(mob_health.containsKey(ent)) && !(PetMechanics.inv_pet_map.containsKey(ent))) {
 			e.setCancelled(false);
 			return;

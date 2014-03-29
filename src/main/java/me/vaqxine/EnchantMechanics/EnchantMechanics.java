@@ -12,8 +12,6 @@ import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
-import net.minecraft.server.v1_7_R1.NBTTagCompound;
-import net.minecraft.server.v1_7_R1.NBTTagList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,7 +22,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
