@@ -108,6 +108,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -147,7 +148,10 @@ public class RealmMechanics implements Listener {
 
 	static HashMap<Item, String> dropped_item_ownership = new HashMap<Item, String>();
 	// Prevents using realm as a mule for items -- on player death any items with a certain player's ownership are deleted.
-
+	static HashMap<Item, Long> dropped_item_timer = new HashMap<Item, Long>();
+	//The timer for a dropped item
+	static HashMap<Item, String> dropped_item_owner = new HashMap<Item, String>();
+	//Dropped item owner
 	public static HashMap<String, Integer> current_item_being_bought = new HashMap<String, Integer>();
 	// Item being bought from the realm shop.
 
@@ -3221,8 +3225,27 @@ public class RealmMechanics implements Listener {
 			Item it = e.getItemDrop();
 			dropped_item_ownership.put(it, p.getName());
 		}
+		
 	}
-
+	@EventHandler
+	public void onPlayerDropAddOwner(PlayerDropItemEvent e){
+	    Player p = e.getPlayer();
+	    dropped_item_owner.put(e.getItemDrop(), p.getName());
+	    //Add a 5 second delay
+	    dropped_item_timer.put(e.getItemDrop(), System.currentTimeMillis() + 5000);
+	}
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onPlayerPickup(PlayerPickupItemEvent event){
+	    Player p = event.getPlayer();
+	    Item i = event.getItem();
+	    if(dropped_item_timer.containsKey(i) && dropped_item_timer.get(i) >= System.currentTimeMillis()){
+	        //The timer hasnt expired so check the player
+	        if(!dropped_item_owner.containsKey(i) && !dropped_item_owner.get(i).equalsIgnoreCase(p.getName())){
+	            event.setCancelled(true);
+	            return;
+	        }
+	    }
+	}
 	@EventHandler(priority = EventPriority.HIGHEST) // Should fire AFTER KarmaMechanic's processing Permenant Untradeables.
 	public void onPlayerDeathEvent(PlayerDeathEvent e){
 		List<ItemStack> li = e.getDrops();

@@ -3,6 +3,7 @@ package me.vaqxine.InstanceMechanics.commands;
 import me.vaqxine.BossMechanics.BossMechanics;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
+import net.minecraft.server.v1_7_R1.Enchantment;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -77,7 +78,7 @@ public class CommandBossTP implements CommandExecutor {
 						if((mobs_killed * 1.90) < total_mobs){
 							// They killed less than 75% of the mobs in the dungeon, yet they're somehow despawned. BUG ABUSEEEE.
 							int mobs_to_kill = (int)(total_mobs - (Math.round(((mobs_killed * 1.90) / 100.0D) * (double)total_mobs)));
-
+							
 							for(Player pl : cb.getBlock().getWorld().getPlayers()){
 								pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " move on to the boss room of this instance until you kill at least " + ChatColor.BOLD + mobs_to_kill + ChatColor.RED + " more monsters.");
 								pl.sendMessage(ChatColor.GRAY + "The system has also detected that some mobs were forcibly despawned rather than slain. If this is the case, you will need to reset the instance.");

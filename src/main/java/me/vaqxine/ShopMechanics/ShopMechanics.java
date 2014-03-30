@@ -210,6 +210,7 @@ public class ShopMechanics implements Listener {
 					net.citizensnpcs.api.npc.NPC cnpc = (net.citizensnpcs.api.npc.NPC) itr.next();
 
 					int hp = 50;
+					if(!(cnpc.getBukkitEntity() instanceof Player))continue;
 					Player pl = (Player)cnpc.getBukkitEntity();
 					if(pl == null){
 						continue;
