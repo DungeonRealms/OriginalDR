@@ -383,7 +383,7 @@ public class Hive implements Listener {
     // All SQL queries to run on ThreadPool.
 
     public static EntityManager npc_manager = null;
-
+    
     @SuppressWarnings("deprecation")
     public void onEnable() {
         instance = this;
@@ -2084,6 +2084,7 @@ public class Hive implements Listener {
     }
 
     public boolean hasAccountData(String p_name){
+    	log.info("WHAT THE FUCK IS GOING ON?");
         PreparedStatement pst;
 
         try {
@@ -2093,7 +2094,7 @@ public class Hive implements Listener {
             pst.execute();
             ResultSet rs = pst.getResultSet();
 
-            if(!(rs.next())){
+            if(!(rs.next()) || rs.getString("location") == null){
                 log.info("[HIVE (Slave Edition)] No PLAYER DATA found for " + p_name + ", return null.");
                 return false;
             }
@@ -2745,8 +2746,9 @@ public class Hive implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority=EventPriority.LOWEST)
     public void onPlayerPreLogin(AsyncPlayerPreLoginEvent e){
+    	
         String p_name = e.getName();
 
         if(e.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED || e.getKickMessage().length() > 0){
@@ -3133,7 +3135,7 @@ public class Hive implements Listener {
         }
         else if(!(first_login.contains(p.getName()))){
             e.setResult(Result.KICK_OTHER);
-            e.setKickMessage(ChatColor.RED.toString() + "Failed to LOAD player data from database." + "\n" + ChatColor.GRAY.toString() + "Please try again later. " + "\n\n" + ChatColor.BOLD.toString() + "ERROR CODE: 065");
+            e.setKickMessage(ChatColor.RED.toString() + "Failed to LOAD player data from database." + "\n" + ChatColor.GRAY.toString() + "Please try again later. " + "\n\n" + ChatColor.BOLD.toString() + "ERROR CODE: 065 XXXX");
             return;
         }
 
