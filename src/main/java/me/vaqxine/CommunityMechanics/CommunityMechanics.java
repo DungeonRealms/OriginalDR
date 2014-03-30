@@ -469,6 +469,10 @@ public class CommunityMechanics implements Listener {
 	}
 
 	public static void setColor(Player pl, ChatColor c){
+	    if(pl == null){
+	        System.out.print("Player was null! chatcolor > " + c.toString());
+	        return;
+	    }
 		if(GuildMechanics.inGuild(pl.getName())){
 			String g_prefix = GuildMechanics.guild_handle_map.get(GuildMechanics.getGuild(pl.getName()));
 			Team t = null;

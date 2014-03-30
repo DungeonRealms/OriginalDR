@@ -243,7 +243,7 @@ public class ShopMechanics implements Listener {
 		}, 10 * 20L, 5 * 20L);
 		
 		// Cleanup all fake entities which are visual glitches
-		new BukkitRunnable() {
+		/*new BukkitRunnable() {
 			@Override
 			public void run() {
 				if(packet_resend.isEmpty()) return;
@@ -258,12 +258,12 @@ public class ShopMechanics implements Listener {
 				}
 				packet_resend.clear();
 			}
-		}.runTaskTimer(Main.plugin, 100L, 100L);
+		}.runTaskTimer(Main.plugin, 100L, 100L);*/
 
 		log.info("[ShopMechanics] has been enabled.");
 	}
 	
-	public static PacketPlayOutEntityDestroy getDestroyPacket(int[] entities) {
+	/*public static PacketPlayOutEntityDestroy getDestroyPacket(int[] entities) {
 		PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy();
 		
 		try {
@@ -275,7 +275,7 @@ public class ShopMechanics implements Listener {
 		}
 		
 		return destroyPacket;
-	}
+	}*/
 	
 	public static Field getField(Class<?> cl, String field_name) {
 		try {
@@ -2330,7 +2330,7 @@ public class ShopMechanics implements Listener {
 				p.sendMessage(ChatColor.RED + "Invalid character '@' in name.");
 				return;
 			}
-
+			msg = "[S] " + msg;
 			if(shop_name_list.contains(msg)){
 				// Already exists.
 				p.sendMessage(ChatColor.RED + "A shop already exists on this server with the name '" + ChatColor.GRAY + msg + ChatColor.RED + "'.");
@@ -3178,7 +3178,6 @@ public class ShopMechanics implements Listener {
 		re.setStationary(true, true);
 		re.getMind().clearMovementDesires();
 		re.getMind().clearBehaviours();
-		
 		CraftPlayer p = (CraftPlayer) re.getBukkitEntity();
 		p.setGameMode(GameMode.CREATIVE);
 		p.setPlayerListName("");

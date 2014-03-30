@@ -268,12 +268,12 @@ public class BossMechanics implements Listener {
 						ItemMeta im = is.getItemMeta();
 						if(im.hasEnchants()){
 							for (Map.Entry<Enchantment, Integer> data : im.getEnchants().entrySet()) {
-								im.removeEnchant(data.getKey());
+								is.removeEnchantment(data.getKey());
 							}
 						}
-						im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
-						im.removeEnchant(Enchantment.KNOCKBACK);
-						im.removeEnchant(EnchantMechanics.getCustomEnchant());
+						is.removeEnchantment(Enchantment.LOOT_BONUS_MOBS);
+						is.removeEnchantment(Enchantment.KNOCKBACK);
+						is.removeEnchantment(EnchantMechanics.getCustomEnchant());
 						is.setItemMeta(im);
 						
 						possible_drops.add(is);
@@ -286,9 +286,9 @@ public class BossMechanics implements Listener {
 							im.removeEnchant(data.getKey());
 						}
 					}
-					im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
-					im.removeEnchant(Enchantment.KNOCKBACK);
-					im.removeEnchant(EnchantMechanics.getCustomEnchant());
+					weapon.removeEnchantment(Enchantment.LOOT_BONUS_MOBS);
+					weapon.removeEnchantment(Enchantment.KNOCKBACK);
+					weapon.removeEnchantment(EnchantMechanics.getCustomEnchant());
 					weapon.setItemMeta(im);
 					
 					possible_drops.add(weapon);
@@ -353,11 +353,11 @@ public class BossMechanics implements Listener {
 								ItemMeta im = is.getItemMeta();
 								if(im.hasEnchants()){
 									for (Map.Entry<Enchantment, Integer> data : im.getEnchants().entrySet()) {
-										im.removeEnchant(data.getKey());
+										is.removeEnchantment(data.getKey());
 									}
 								}
-								im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
-								im.removeEnchant(Enchantment.KNOCKBACK);
+								is.removeEnchantment(Enchantment.LOOT_BONUS_MOBS);
+								is.removeEnchantment(Enchantment.KNOCKBACK);
 								im.removeEnchant(EnchantMechanics.getCustomEnchant());
 								is.setItemMeta(im);
 								
@@ -368,12 +368,12 @@ public class BossMechanics implements Listener {
 							ItemMeta im = weapon.getItemMeta();
 							if(im.hasEnchants()){
 								for (Map.Entry<Enchantment, Integer> data : im.getEnchants().entrySet()) {
-									im.removeEnchant(data.getKey());
+									weapon.removeEnchantment(data.getKey());
 								}
 							}
-							im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
-							im.removeEnchant(Enchantment.KNOCKBACK);
-							im.removeEnchant(EnchantMechanics.getCustomEnchant());
+							weapon.removeEnchantment(Enchantment.LOOT_BONUS_MOBS);
+							weapon.removeEnchantment(Enchantment.KNOCKBACK);
+							weapon.removeEnchantment(EnchantMechanics.getCustomEnchant());
 							weapon.setItemMeta(im);
 							
 							possible_drops.add(weapon);
@@ -438,12 +438,12 @@ public class BossMechanics implements Listener {
 					ItemMeta im = is.getItemMeta();
 					if(im.hasEnchants()){
 						for (Map.Entry<Enchantment, Integer> data : im.getEnchants().entrySet()) {
-							im.removeEnchant(data.getKey());
+							is.removeEnchantment(data.getKey());
 						}
 					}
-					im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
-					im.removeEnchant(Enchantment.KNOCKBACK);
-					im.removeEnchant(EnchantMechanics.getCustomEnchant());
+					is.removeEnchantment(Enchantment.LOOT_BONUS_MOBS);
+					is.removeEnchantment(Enchantment.KNOCKBACK);
+					is.removeEnchantment(EnchantMechanics.getCustomEnchant());
 					is.setItemMeta(im);
 					
 					possible_drops.add(is);
@@ -455,13 +455,13 @@ public class BossMechanics implements Listener {
 				ItemMeta im = weapon.getItemMeta();
 				if(im.hasEnchants()){
 					for (Map.Entry<Enchantment, Integer> data : im.getEnchants().entrySet()) {
-						im.removeEnchant(data.getKey());
+						weapon.removeEnchantment(data.getKey());
 					}
 				}
 				
 				weapon.removeEnchantment(Enchantment.LOOT_BONUS_MOBS);
-				im.removeEnchant(Enchantment.KNOCKBACK);
-				im.removeEnchant(EnchantMechanics.getCustomEnchant());
+				weapon.removeEnchantment(Enchantment.KNOCKBACK);
+				weapon.removeEnchantment(EnchantMechanics.getCustomEnchant());
 				weapon.setItemMeta(im);
 				
 				possible_drops.add(weapon);
