@@ -355,11 +355,13 @@ public class RestrictionMechanics implements Listener {
 
 		if(pl.getLastDamageCause() != null && (pl.getLastDamageCause().getCause() == DamageCause.SUFFOCATION || pl.getLastDamageCause().getCause() == DamageCause.VOID)){
 			// They need to be tp'd up.
-			if(pl.isInsideVehicle()){
-				e.setCancelled(true);
-			}else{
-				return;
-			}
+	          if(pl.isInsideVehicle()){
+	                e.setCancelled(true);
+	            }else{
+	                return;
+	            }
+
+			return;
 		}
 
 		Location to = e.getTo();

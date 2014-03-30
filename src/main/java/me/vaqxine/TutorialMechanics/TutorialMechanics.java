@@ -338,7 +338,11 @@ public class TutorialMechanics implements Listener {
 	        is.setRotation(Rotation.NONE);
 	        event.setCancelled(true);
 	        if(event.getDamager() instanceof Player){
+	            if(is.getItem().getType() != Material.MAP)return;
 	        	Player plr = (Player) event.getDamager();
+	        	if(plr.getInventory().contains(is.getItem())){
+	        	    return;
+	        	}
 	        	plr.getInventory().addItem(is.getItem());
 	        }
 	        return;

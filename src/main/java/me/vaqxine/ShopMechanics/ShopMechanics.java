@@ -40,6 +40,7 @@ import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.database.ConnectionPool;
 import net.citizensnpcs.api.CitizensAPI;
 import net.minecraft.server.v1_7_R1.Packet;
+import net.minecraft.server.v1_7_R1.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -843,6 +844,7 @@ public class ShopMechanics implements Listener {
 				b2.setType(Material.AIR);
 
 				RemoteEntity n = shop_nameplates.get(b1);
+				Main.d("Removing shop of " + p.getName());
 				packet_resend.add(n.getBukkitEntity().getEntityId());
 				n.despawn(DespawnReason.CUSTOM);
 

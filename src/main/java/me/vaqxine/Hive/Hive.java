@@ -383,7 +383,7 @@ public class Hive implements Listener {
     // All SQL queries to run on ThreadPool.
 
     public static EntityManager npc_manager = null;
-    
+
     @SuppressWarnings("deprecation")
     public void onEnable() {
         instance = this;
@@ -2084,7 +2084,6 @@ public class Hive implements Listener {
     }
 
     public boolean hasAccountData(String p_name){
-    	log.info("WHAT THE FUCK IS GOING ON?");
         PreparedStatement pst;
 
         try {
@@ -2681,10 +2680,9 @@ public class Hive implements Listener {
     }
 
     @SuppressWarnings("deprecation")
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerAsyncChatEvent(AsyncPlayerChatEvent e){
         Player pl = e.getPlayer();
-
         if(player_bio.containsKey(pl.getName())){
             // They're writing their guild bio!
             e.setCancelled(true);
@@ -2746,11 +2744,9 @@ public class Hive implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority=EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerPreLogin(AsyncPlayerPreLoginEvent e){
-    	
         String p_name = e.getName();
-
         if(e.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED || e.getKickMessage().length() > 0){
             return; // They failed a login check.
         }
@@ -3135,7 +3131,7 @@ public class Hive implements Listener {
         }
         else if(!(first_login.contains(p.getName()))){
             e.setResult(Result.KICK_OTHER);
-            e.setKickMessage(ChatColor.RED.toString() + "Failed to LOAD player data from database." + "\n" + ChatColor.GRAY.toString() + "Please try again later. " + "\n\n" + ChatColor.BOLD.toString() + "ERROR CODE: 065 XXXX");
+            e.setKickMessage(ChatColor.RED.toString() + "Failed to LOAD player data from database." + "\n" + ChatColor.GRAY.toString() + "Please try again later. " + "\n\n" + ChatColor.BOLD.toString() + "ERROR CODE: 065");
             return;
         }
 

@@ -106,7 +106,7 @@ public class ModerationMechanics implements Listener {
 					}
 				}
 			}
-		}.runTaskTimerAsynchronously(Main.plugin, 5 * 20L, 1L);
+		}.runTaskTimer(Main.plugin, 5 * 20L, 1L);
 		
 		initializeCommands();
 		
