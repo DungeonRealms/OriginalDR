@@ -1414,7 +1414,7 @@ public class MountMechanics implements Listener {
 		}	
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDamage(EntityDamageEvent e){
 		if(e.getEntity() instanceof Player && e.getDamage() > 0 && !(e.isCancelled())){
 			Player pl = (Player)e.getEntity();
