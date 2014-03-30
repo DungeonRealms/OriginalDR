@@ -200,28 +200,36 @@ public class CommunityMechanics implements Listener {
 		
 		board = Bukkit.getScoreboardManager().getMainScoreboard();
 		
-		green = board.registerNewTeam("green");
+		green = board.getTeam("green");
+		if(green == null) green = board.registerNewTeam("green");
 		green.setPrefix(ChatColor.GREEN.toString());
 
-		dark_green = board.registerNewTeam("dark_green");
+		dark_green = board.getTeam("dark_green");
+		if(dark_green == null) dark_green = board.registerNewTeam("dark_green");
 		dark_green.setPrefix(ChatColor.DARK_GREEN.toString());
 
-		yellow = board.registerNewTeam("yellow");
+		yellow = board.getTeam("yellow");
+		if(yellow == null) yellow = board.registerNewTeam("yellow");
 		yellow.setPrefix(ChatColor.YELLOW.toString());
 
-		red = board.registerNewTeam("red");
+		red = board.getTeam("red");
+		if(red == null) red = board.registerNewTeam("red");
 		red.setPrefix(ChatColor.RED.toString());
 
-		dark_red = board.registerNewTeam("dark_red");
+		dark_red = board.getTeam("dark_red");
+		if(dark_red == null) dark_red = board.registerNewTeam("dark_red");
 		dark_red.setPrefix(ChatColor.DARK_RED.toString());
 
-		purple = board.registerNewTeam("purple");
+		purple = board.getTeam("purple");
+		if(purple == null) purple = board.registerNewTeam("purple");
 		purple.setPrefix(ChatColor.LIGHT_PURPLE.toString());
 
-		white = board.registerNewTeam("white");
+		white = board.getTeam("white");
+		if(white == null) white = board.registerNewTeam("white");
 		white.setPrefix(ChatColor.WHITE.toString());
 
-		aqua = board.registerNewTeam("aqua");
+		aqua = board.getTeam("aqua");
+		if(aqua == null) aqua = board.registerNewTeam("aqua");
 		aqua.setPrefix(ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "GM" + ChatColor.AQUA.toString() + " ");
 		
 		new BukkitRunnable(){
