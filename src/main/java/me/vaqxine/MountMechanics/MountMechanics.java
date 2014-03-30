@@ -1492,7 +1492,7 @@ public class MountMechanics implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onVehicleDamageEvent(VehicleDamageEvent e){
 		if(e.getVehicle() instanceof Horse){
 			Horse h = (Horse)e.getVehicle();
