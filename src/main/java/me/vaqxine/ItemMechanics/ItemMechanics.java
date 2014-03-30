@@ -92,6 +92,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class ItemMechanics implements Listener {
@@ -5421,9 +5422,15 @@ public class ItemMechanics implements Listener {
 
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerCancelled(InventoryClickEvent e){
+	public void onPlayerCancelled(final InventoryClickEvent e){
 	    if(e.isCancelled()){
-	        ((Player)e.getWhoClicked()).updateInventory();
+	        new BukkitRunnable() {
+                public void run() {
+                    // TODO Auto-generated method stub
+                    ((Player)e.getWhoClicked()).updateInventory();
+                }
+            }.runTaskLater(Main.plugin, 1);
+	        
 	    }
 	}
 	@SuppressWarnings("deprecation")
