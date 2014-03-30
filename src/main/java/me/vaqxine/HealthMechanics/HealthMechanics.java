@@ -1768,7 +1768,6 @@ public class HealthMechanics implements Listener {
 			}
 
 			p.setLastDamageCause(e);
-			Main.d("Health - 1771");
 			p.teleport(p_loc);
 		}
 

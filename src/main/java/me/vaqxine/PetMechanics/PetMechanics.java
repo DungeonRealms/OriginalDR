@@ -1423,6 +1423,10 @@ public class PetMechanics implements Listener {
 				inv_pet_map.remove(ent);
 				ent.remove();
 				removePetFromSpawnedList(p.getName(), ent);
+				if(!e.getEventName().equalsIgnoreCase("DungeonRealms")){
+				    //Dont respawn the mob since its not in the real world
+				    return;
+				}
 				Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 					public void run() {
 						// After a second passes and they're in the new world, give them a new pet.

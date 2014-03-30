@@ -1193,7 +1193,6 @@ public class MonsterMechanics implements Listener {
 							if(distance <= 6){
 								// Ok so, no hits in last 2 seconds, and player is within 9 (not counting Y) blocks. This could be an issue.
 								Location ploc = pl.getLocation().add(0, 0.25, 0);
-								Main.d("Monster - 1196");
 								ent.teleport(ploc);
 								ent.setFallDistance(0.0F);
 							}
@@ -1767,6 +1766,7 @@ public class MonsterMechanics implements Listener {
 			String f_name = f.getName().replaceAll(".dat", "");
 			if(f_name.equalsIgnoreCase(instance_template)){
 				// It's the one we want.
+			    System.out.print("Found " + instance_template + " mob spawns");
 				HashMap<Location, String> local_mob_spawns = new HashMap<Location, String>();
 				try{
 					BufferedReader reader = new BufferedReader(new FileReader(f));
@@ -6540,8 +6540,9 @@ public class MonsterMechanics implements Listener {
 		}else{
 		e = l.getWorld().spawnEntity(l, et);
 		}
+		LivingEntity le = (LivingEntity)e;
+		le.setRemoveWhenFarAway(false);
 		EntityLiving ent = ((CraftLivingEntity) e).getHandle();
-
 		if(((meta_data.equalsIgnoreCase("wither") || (elite == true && (meta_data.equalsIgnoreCase("bandit") || meta_data.equalsIgnoreCase("monk")))) && e instanceof CraftSkeleton)){
 			// Make it a wither skeleton.
 			((CraftSkeleton)e).getHandle().setSkeletonType(1);
@@ -6752,7 +6753,6 @@ public class MonsterMechanics implements Listener {
 		}
 
 		e.teleport(l);
-		LivingEntity le = (LivingEntity)e;
 
 		String mob_name = "";
 		if(meta_data != null && meta_data.length() > 1){
