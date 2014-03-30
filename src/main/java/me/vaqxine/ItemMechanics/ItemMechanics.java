@@ -2968,6 +2968,7 @@ public class ItemMechanics implements Listener {
 
 		if(e.getCause() == DamageCause.ENTITY_ATTACK || e.getCause() == DamageCause.PROJECTILE){	
 			Entity e_attacker = ((EntityDamageByEntityEvent)e).getDamager();
+			if(((EntityDamageByEntityEvent)e).isCancelled())return;
 			if(e_attacker instanceof Projectile){
 				if(e_attacker instanceof WitherSkull){
 					e.setCancelled(true);

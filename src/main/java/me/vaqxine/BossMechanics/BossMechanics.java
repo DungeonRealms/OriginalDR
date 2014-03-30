@@ -459,7 +459,7 @@ public class BossMechanics implements Listener {
 					}
 				}
 				
-				im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
+				weapon.removeEnchantment(Enchantment.LOOT_BONUS_MOBS);
 				im.removeEnchant(Enchantment.KNOCKBACK);
 				im.removeEnchant(EnchantMechanics.getCustomEnchant());
 				weapon.setItemMeta(im);

@@ -23,6 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Rotation;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
@@ -34,6 +35,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -47,6 +49,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
+
+import com.sk89q.worldguard.blacklist.events.ItemDropBlacklistEvent;
 
 public class TutorialMechanics implements Listener {
 	Logger log = Logger.getLogger("Minecraft");
@@ -78,7 +82,10 @@ public class TutorialMechanics implements Listener {
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		tutorialSpawn = new Location(Bukkit.getWorlds().get(0), 824, 48, -103, 124F, 1F);
+		TI = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("TI");
+		if(TI == null){
 		TI = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("TI");
+		}
 		TI.setCanSeeFriendlyInvisibles(true);
 		TI.setDisplayName("TI");
 
@@ -325,7 +332,26 @@ public class TutorialMechanics implements Listener {
 		}
 		}
 	}
-
+	 @EventHandler(priority = EventPriority.HIGHEST)
+	public void onEntityDamageEvent(EntityDamageByEntityEvent event){
+	    if(event.getEntity().getType() == EntityType.ITEM_FRAME){
+	        ItemFrame is = (ItemFrame)event.getEntity();
+	        is.setItem(is.getItem());
+	        is.setRotation(Rotation.NONE);
+	        event.setCancelled(true);
+	        return;
+	    }
+	}
+	   @EventHandler(priority = EventPriority.HIGHEST)
+	    public void onEntityInteract(PlayerInteractEntityEvent event){
+	        if(event.getRightClicked().getType() == EntityType.ITEM_FRAME){ 
+	            event.setCancelled(true);
+	            ItemFrame is = (ItemFrame)event.getRightClicked();
+	            is.setItem(is.getItem());
+	            is.setRotation(Rotation.NONE);
+	            return;
+	        }
+	    }
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerInteractNPC(PlayerInteractEntityEvent e){
 		final Player pl = e.getPlayer();

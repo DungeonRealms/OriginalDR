@@ -284,7 +284,8 @@ public class PartyMechanics implements Listener {
 
     public static boolean arePartyMembers(String p1, String p2) {
         if (party_map.containsKey(p1) && party_map.containsKey(p2)) {
-            if (party_map.get(p1).equals(party_map.get(p2))) {
+            //They are in the same hashmap
+            if (party_map.get(p1).getPartyList().contains(p2) && party_map.get(p2).getPartyList().contains(p1)) {
                 return true;
             }
         }

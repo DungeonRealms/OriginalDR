@@ -1331,8 +1331,6 @@ public class InstanceMechanics implements Listener {
 			}
 		}
 
-		Thread unload = new Thread(new Runnable(){
-			public void run(){
 
 				log.info("[InstanceMechanics] AsyncUnloading Instance: " + world_name);
 
@@ -1374,10 +1372,7 @@ public class InstanceMechanics implements Listener {
 				total_mobs.remove(world_name);
 				mob_kill_count.remove(world_name);
 				log.info("[InstanceMechanics] Unloaded Instance: " + world_name);
-			}
-		});
 
-		unload.start();
 
 	}
 
