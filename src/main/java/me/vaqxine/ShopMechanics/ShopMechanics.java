@@ -1,5 +1,6 @@
 package me.vaqxine.ShopMechanics;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,6 +40,7 @@ import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.database.ConnectionPool;
 import net.citizensnpcs.api.CitizensAPI;
 import net.minecraft.server.v1_7_R1.Packet;
+import net.minecraft.server.v1_7_R1.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -170,6 +172,8 @@ public class ShopMechanics implements Listener {
 
 	public static boolean all_collection_bins_uploaded = false;
 	
+	public static CopyOnWriteArrayList<Integer> packet_resend = new CopyOnWriteArrayList<Integer>();
+	
 	Thread store_backup;
 
 	static ShopMechanics sm = null;
@@ -237,8 +241,50 @@ public class ShopMechanics implements Listener {
 				}
 			}
 		}, 10 * 20L, 5 * 20L);
+		
+		// Cleanup all fake entities which are visual glitches
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if(packet_resend.isEmpty()) return;
+				int[] id = new int[packet_resend.size()];
+				for(int x = 0; x < packet_resend.size(); x++){
+					id[x] = packet_resend.get(x);
+				}
+				PacketPlayOutEntityDestroy packet = getDestroyPacket(id);
+				for(Player p : Bukkit.getOnlinePlayers()){
+					Main.d("Sent to " + p.getName() + " : " + id);
+					((CraftPlayer)p).getHandle().playerConnection.sendPacket(packet);
+				}
+				packet_resend.clear();
+			}
+		}.runTaskTimer(Main.plugin, 100L, 100L);
 
 		log.info("[ShopMechanics] has been enabled.");
+	}
+	
+	public static PacketPlayOutEntityDestroy getDestroyPacket(int[] entities) {
+		PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy();
+		
+		try {
+			Field a = getField(destroyPacket.getClass(), "a");
+			a.setAccessible(true);
+			a.set(destroyPacket, entities);
+		} catch(IllegalArgumentException | IllegalAccessException e1) {
+			e1.printStackTrace();
+		}
+		
+		return destroyPacket;
+	}
+	
+	public static Field getField(Class<?> cl, String field_name) {
+		try {
+			Field field = cl.getDeclaredField(field_name);
+			return field;
+		} catch(SecurityException | NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public void onDisable() {
@@ -798,6 +844,8 @@ public class ShopMechanics implements Listener {
 				b2.setType(Material.AIR);
 
 				RemoteEntity n = shop_nameplates.get(b1);
+				Main.d("Removing shop of " + p.getName());
+				packet_resend.add(n.getBukkitEntity().getEntityId());
 				n.despawn(DespawnReason.CUSTOM);
 
 				shop_nameplates.remove(b1);
