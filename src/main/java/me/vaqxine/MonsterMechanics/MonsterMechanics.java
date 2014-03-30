@@ -1193,6 +1193,7 @@ public class MonsterMechanics implements Listener {
 							if(distance <= 6){
 								// Ok so, no hits in last 2 seconds, and player is within 9 (not counting Y) blocks. This could be an issue.
 								Location ploc = pl.getLocation().add(0, 0.25, 0);
+								Main.d("Monster - 1196");
 								ent.teleport(ploc);
 								ent.setFallDistance(0.0F);
 							}

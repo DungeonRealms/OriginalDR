@@ -3080,6 +3080,7 @@ public class Hive implements Listener {
             p.getInventory().clear();
             Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable(){
                 public void run(){
+                	Main.d("Hive - 3083");
                     p.teleport(loc.add(0,1,0));
                     // Run TP after a second.
                 }
@@ -3406,6 +3407,7 @@ public class Hive implements Listener {
         }
         if(server_swap_location.containsKey(p.getName())){
             e.setCancelled(true);
+            Main.d("Hive - 3409");
             p.teleport(server_swap_location.get(p.getName()));
         }
     }
@@ -4283,7 +4285,7 @@ public class Hive implements Listener {
                         else{
                             safe = SpawnMechanics.getRandomSpawnPoint(pl.getName());
                         }
-
+                        Main.d("Hive - 4286");
                         pl.teleport(safe);
                     }
 

@@ -1268,6 +1268,7 @@ public class MountMechanics implements Listener {
 				}
 				else if(leashedToGround(mule_map.get(pl.getName())) && isMule(e.getItem())){
 					// Unleash from ground, teleport to player.
+					Main.d("Mount - 1271");
 					mule_map.get(pl.getName()).teleport(pl.getLocation().add(0, 1, 0));
 					setLeash(mule_map.get(pl.getName()), pl);
 					tied_to_ground.remove(mule_map.get(pl.getName()));
