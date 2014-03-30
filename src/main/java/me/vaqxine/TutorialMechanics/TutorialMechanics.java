@@ -50,8 +50,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
 
-import com.sk89q.worldguard.blacklist.events.ItemDropBlacklistEvent;
-
 public class TutorialMechanics implements Listener {
 	Logger log = Logger.getLogger("Minecraft");
 
@@ -339,6 +337,10 @@ public class TutorialMechanics implements Listener {
 	        is.setItem(is.getItem());
 	        is.setRotation(Rotation.NONE);
 	        event.setCancelled(true);
+	        if(event.getDamager() instanceof Player){
+	        	Player plr = (Player) event.getDamager();
+	        	plr.getInventory().addItem(is.getItem());
+	        }
 	        return;
 	    }
 	}
