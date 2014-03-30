@@ -757,9 +757,10 @@ public class ChatMechanics implements Listener {
 
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent e){
 		if(e.getMessage().equalsIgnoreCase("server") || e.getMessage().equalsIgnoreCase("/server")) {
+		    e.setMessage("suicide");
 		    e.setCancelled(true);
 		}
 	}

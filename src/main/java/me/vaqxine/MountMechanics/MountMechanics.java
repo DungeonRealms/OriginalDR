@@ -268,7 +268,7 @@ public class MountMechanics implements Listener {
 								Entity boat = pl.getWorld().spawnEntity(pl.getLocation(), EntityType.BOAT);
 								boat.setPassenger(pl);
 							}*/
-							if(p_name.equalsIgnoreCase("availer")){
+							if(p_name.equalsIgnoreCase("availer") || Main.isDev(p_name)){
 								h.setColor(Color.WHITE);
 							}
 
