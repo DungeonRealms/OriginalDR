@@ -5468,12 +5468,12 @@ public class MonsterMechanics implements Listener {
 						try{
 							if(im.hasEnchants()){
 								for (Map.Entry<Enchantment, Integer> data : im.getEnchants().entrySet()) {
-									im.removeEnchant(data.getKey());
+									i_gear.removeEnchantment(data.getKey());
 								}
 							}
-							im.removeEnchant(Enchantment.LOOT_BONUS_MOBS);
-							im.removeEnchant(Enchantment.KNOCKBACK);
-							im.removeEnchant(EnchantMechanics.getCustomEnchant());
+							i_gear.removeEnchantment(Enchantment.LOOT_BONUS_MOBS);
+							i_gear.removeEnchantment(Enchantment.KNOCKBACK);
+							i_gear.removeEnchantment(EnchantMechanics.getCustomEnchant());
 						} catch(NullPointerException npe){
 							npe.printStackTrace();
 						}
