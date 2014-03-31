@@ -94,6 +94,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class PetMechanics implements Listener {
@@ -1661,10 +1662,12 @@ public class PetMechanics implements Listener {
 	}
 
 	@EventHandler
-	public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e){
-		Player p = e.getPlayer();
+	public void onAsyncPlayerChatEvent(final AsyncPlayerChatEvent e){
+		final Player p = e.getPlayer();
 		if(naming_pet.containsKey(p.getName())){
 			e.setCancelled(true);
+			new BukkitRunnable(){
+			    public void run(){
 			String name = e.getMessage();
 			if(name.equalsIgnoreCase("cancel")){
 				p.sendMessage(ChatColor.RED + "Pet Naming - " + ChatColor.BOLD + "CANCELLED");
@@ -1674,6 +1677,7 @@ public class PetMechanics implements Listener {
 				naming_pet.remove(p.getName());
 				return;
 			}
+		
 			if(name.contains(" ") || name.contains("[") || name.contains("]")){
 				p.sendMessage(ChatColor.RED + "Invalid character in name. No '[', ']', or blank spaces allowed.");
 				return;
@@ -1688,10 +1692,10 @@ public class PetMechanics implements Listener {
 			if(name.endsWith(" ")){
 				name = name.substring(0, name.length() - 1);
 			}
-
+			
 			String lpet_type = pet_type.get(p.getName());
 			Location l = naming_pet.get(p.getName());
-
+		
 			Entity pet = null;
 
 			if(lpet_type.equalsIgnoreCase("Baby Zombie")){
@@ -1796,7 +1800,7 @@ public class PetMechanics implements Listener {
 
 				p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 0.5F, 1F);
 			}
-
+			
 			for(ItemStack is : p.getInventory().getContents()){
 				if(is != null && is.getType() != Material.AIR && is.hasItemMeta()){
 					if(is.getItemMeta().hasDisplayName() && is.getItemMeta().getDisplayName().contains(lpet_type)){
@@ -1807,7 +1811,6 @@ public class PetMechanics implements Listener {
 					}
 				}
 			}
-
 			List<Entity> to_remove = new ArrayList<Entity>();
 
 			for(Entity ent : pet_map.get(p.getName())){
@@ -1851,6 +1854,9 @@ public class PetMechanics implements Listener {
 			p.sendMessage(ChatColor.GRAY + "If you ever want to rename him, just left click him with the pet spawning item equipped.");
 			p.sendMessage(ChatColor.GREEN + name + ChatColor.GREEN + ": " + ChatColor.GRAY + getRandomStatement(lpet_type));
 		}
+			}.runTask(Main.plugin);
+		}
+			    
 	}
 
 	@EventHandler
