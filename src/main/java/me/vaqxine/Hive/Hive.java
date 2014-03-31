@@ -1152,9 +1152,14 @@ public class Hive implements Listener {
             out = new PrintWriter(kkSocket.getOutputStream(), true);
 
             out.println("@population@" + prefix + ":" + Main.plugin.getServer().getOnlinePlayers().length + "/" + Main.plugin.getServer().getMaxPlayers());
-            kkSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+        	try {
+				kkSocket.close();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
         }
 
         if(out != null){
