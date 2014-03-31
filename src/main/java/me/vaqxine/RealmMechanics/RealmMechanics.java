@@ -3632,7 +3632,7 @@ public class RealmMechanics implements Listener {
 				}
 			}, 10 * 20L);
 
-			Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
 					if(p.getWorld().getName().equalsIgnoreCase(main_world_name)){
 						return;

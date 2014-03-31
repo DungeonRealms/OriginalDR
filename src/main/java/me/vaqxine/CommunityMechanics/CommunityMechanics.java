@@ -35,6 +35,7 @@ import me.vaqxine.CommunityMechanics.commands.CommandToggleFF;
 import me.vaqxine.CommunityMechanics.commands.CommandToggleFilter;
 import me.vaqxine.CommunityMechanics.commands.CommandToggleGlobal;
 import me.vaqxine.CommunityMechanics.commands.CommandToggleGuild;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleIndicator;
 import me.vaqxine.CommunityMechanics.commands.CommandToggleParty;
 import me.vaqxine.CommunityMechanics.commands.CommandToggleProfile;
 import me.vaqxine.CommunityMechanics.commands.CommandTogglePvP;
@@ -193,6 +194,7 @@ public class CommunityMechanics implements Listener {
 		Main.plugin.getCommand("toggletells").setExecutor(new CommandToggleTells());
 		Main.plugin.getCommand("toggletips").setExecutor(new CommandToggleTips());
 		Main.plugin.getCommand("toggletradechat").setExecutor(new CommandToggleTradeChat());
+		Main.plugin.getCommand("toggleindicator").setExecutor(new CommandToggleIndicator());
 		
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		
@@ -292,6 +294,7 @@ public class CommunityMechanics implements Listener {
 		toggle_map.add("toggletips");
 		toggle_map.add("toggleprofile");
 		toggle_map.add("togglestarterpack");
+		toggle_map.add("toggleindicator");
 		
 		CrossServerPacketThread = new CrossServerPacketThread();
 		CrossServerPacketThread.start();
@@ -1625,6 +1628,9 @@ public class CommunityMechanics implements Listener {
 		}
 		if(toggle.equalsIgnoreCase("togglestarterpack")){
 			desc += "Toggles recieving starter bread and potions on respawn.";
+		}
+		if(toggle.equalsIgnoreCase("toggleindicator")){
+		    desc += "Toggles damage indicators when in combat.";
 		}
 		return desc;
 	}

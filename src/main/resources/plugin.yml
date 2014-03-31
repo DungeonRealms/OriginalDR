@@ -10,6 +10,10 @@ commands:
     description: Toggle accepting duel requests.
     usage: /<command>
     aliases: [toggleduels, duel]
+  toggleindicator:
+    description: Toggle indicators.
+    usage: /<command>
+    aliases: [toggleindicators]
   achievment:
     description: Root command.
     usage: /<command>

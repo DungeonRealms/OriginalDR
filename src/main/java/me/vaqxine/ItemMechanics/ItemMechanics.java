@@ -25,6 +25,7 @@ import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.ItemMechanics.commands.CommandAddWeapon;
 import me.vaqxine.ModerationMechanics.ModerationMechanics;
+import me.vaqxine.MonsterMechanics.Hologram;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PartyMechanics.PartyMechanics;
@@ -3395,6 +3396,7 @@ public class ItemMechanics implements Listener {
 					//p.sendMessage(ChatColor.GRAY + "DEBUG: " + damage_to_reduce + " DMG (original: " + damage + ")"); -50HP [-5%A -> -25DMG]
 					p.sendMessage(ChatColor.RED + "        " + ChatColor.BOLD + "-" + ChatColor.RED + (int)e.getDamage() + ChatColor.RED + ChatColor.BOLD + "HP" + ChatColor.GRAY + " [-" + calculateArmorVal(p) + "%A -> -" + damage_to_reduce + ChatColor.BOLD + "DMG" + ChatColor.GRAY + "] " + ChatColor.GREEN + "[" + (int)(HealthMechanics.getPlayerHP(p.getName()) - e.getDamage()) + ChatColor.BOLD + "HP" + ChatColor.GREEN + "]");
 				}
+				
 			}
 		}
 	}
@@ -3573,13 +3575,23 @@ public class ItemMechanics implements Listener {
 			final boolean f_is_player = is_player;
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
+				    Hologram hg = new Hologram(Main.plugin,ChatColor.RED.toString() + ChatColor.BOLD + "-" + ChatColor.RED + (int)dmg + ChatColor.RED + ChatColor.BOLD + " DMG");
+                    boolean toggled = (CommunityMechanics.toggle_list.containsKey(p_attacker.getName()) && CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("indicator"));
+                        
 					if(f_is_player == true){
 						p_attacker.sendMessage(ChatColor.RED + "        " + (int)dmg + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> " + ((Player)le).getName());
+						if(toggled){
+						hg.show(le.getLocation().clone().add(new Random().nextFloat(), 2, new Random().nextFloat()),(long)1.5, p_attacker);
+						}
 					}
 					if(f_is_player == false){
 						String mob_name = MonsterMechanics.getMobType(ent, false);
 						p_attacker.sendMessage(ChatColor.RED + "        " + (int)dmg + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> "  + mob_name + " [" + ((int)MonsterMechanics.getMHealth(ent)) + "HP]");
+						if(toggled){
+						hg.show(ent.getLocation().clone().add(new Random().nextFloat(), 1, new Random().nextFloat()), (long)1.5,p_attacker);
+						}
 					}
+					
 				}
 			},  1L);
 		}

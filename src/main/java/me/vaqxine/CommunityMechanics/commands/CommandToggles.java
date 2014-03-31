@@ -34,9 +34,9 @@ public class CommandToggles implements CommandExecutor {
 			return true;
 		}
 		
-		int toggle_count = 14;
+		int toggle_count = 15;
 		Inventory toggle_menu = Bukkit.createInventory(null, 18, "Toggle Menu");
-		ItemStack divider = ItemMechanics.signCustomItem(Material.PISTON_MOVING_PIECE, (short) 0, " ", "");
+		ItemStack divider = ItemMechanics.signCustomItem(Material.THIN_GLASS, (short) 0, " ", "");
 		
 		if(!(CommunityMechanics.toggle_list.containsKey(p.getName()))) {
 			// No toggles, show all red.
