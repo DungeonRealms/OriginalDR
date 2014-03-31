@@ -3,7 +3,6 @@ package me.vaqxine.InstanceMechanics.commands;
 import me.vaqxine.BossMechanics.BossMechanics;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
-import net.minecraft.server.v1_7_R1.Enchantment;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

@@ -39,6 +39,8 @@ public class Party {
 			return;
 		}
 		
+		updateScoreboard(Update.HEALTH);
+		
 		int party_count = getPartyMembers().size();
 		
 		for(String s : getPartyList()) {
@@ -167,17 +169,6 @@ public class Party {
 					ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.SIDEBAR).getScore(Bukkit.getOfflinePlayer(name)).setScore(HealthMechanics.getPlayerHP(ChatColor.stripColor(t.getName())));
 				}
 			}
-			/*
-			Scoreboard sb = party_ui;
-			Objective obj = sb.getObjective("player_data");
-			if(obj != null) obj.unregister();
-			obj = sb.registerNewObjective("player_data", "dummy");
-			obj.setDisplayName(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Party");
-	        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-			for(Player p : getPartyMembers()) {
-				sb.resetScores(Bukkit.getOfflinePlayer(getPlayerName(p)));
-				obj.getScore(Bukkit.getOfflinePlayer(getPlayerName(p))).setScore(HealthMechanics.getPlayerHP(ChatColor.stripColor(p.getName())));
-			} */
 		}
 	}
 	

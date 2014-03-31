@@ -40,7 +40,6 @@ import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.database.ConnectionPool;
 import net.citizensnpcs.api.CitizensAPI;
 import net.minecraft.server.v1_7_R1.Packet;
-import net.minecraft.server.v1_7_R1.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
 
 import org.apache.commons.lang.StringEscapeUtils;

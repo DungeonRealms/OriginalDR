@@ -4,8 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import me.vaqxine.CommunityMechanics.CommunityMechanics;
-import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.database.ConnectionPool;
 
 import org.bukkit.Location;
