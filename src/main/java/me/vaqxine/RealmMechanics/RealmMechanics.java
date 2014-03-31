@@ -2479,7 +2479,7 @@ public class RealmMechanics implements Listener {
 
 				t.start();*/
 
-				Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+				Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 					public void run() {
 						realmHandler(p, p.getName());
 					}

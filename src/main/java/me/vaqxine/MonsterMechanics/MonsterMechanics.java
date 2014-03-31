@@ -346,7 +346,7 @@ public class MonsterMechanics implements Listener {
 			}
 		}, 15 * 20L, 40L);
 
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				for(Entity ent : approaching_mage_list){
 					try{
