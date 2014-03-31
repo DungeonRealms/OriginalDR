@@ -494,7 +494,7 @@ public class MonsterMechanics implements Listener {
 		}, 15 * 20L, 20L);
 
 		Main.plugin.getServer().getScheduler()
-		.scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		.scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				cleanupMonsters();
 				// Add mobs who have no target, null target, etc. to entities_to_remove

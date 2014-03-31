@@ -1215,6 +1215,10 @@ public class ShopMechanics implements Listener {
 	public static void setStoreColor(Block b, ChatColor c) {
 		// Player owner = getShopOwner(b);
 		RemotePlayer re = (RemotePlayer) shop_nameplates.get(b);
+		if(re == null){
+		    npc_to_remove.add(re);
+		    return;
+		}
 		CraftPlayer p = (CraftPlayer) re.getBukkitEntity();
 		CommunityMechanics.setColor(p, c);
 	}
