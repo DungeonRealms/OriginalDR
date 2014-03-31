@@ -518,7 +518,7 @@ public class RealmMechanics implements Listener {
 			}
 		}, 2 * 20L, 10L);
 
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 
 			public void run() {
 				for(OfflinePlayer opl : Bukkit.getOperators()){
@@ -1258,7 +1258,7 @@ public class RealmMechanics implements Listener {
 
 		setRealmLoadStatusSQL(p_name, true);
 
-		Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {
 				if(Bukkit.getServer().getWorld(p_name) == null){
 					return; // World ain't loaded anymore.
@@ -1646,7 +1646,14 @@ public class RealmMechanics implements Listener {
 			}
 
 			subtractMoney(p, cost);
-			upgradeRealm(p, new_tier, true);
+			final int tier = new_tier;
+			final Player player = p;
+			new BukkitRunnable(){
+			    public void run(){
+			        upgradeRealm(player, tier, true);
+			    }
+			}.runTask(Main.plugin);
+			
 			realm_upgrade_codes.remove(p);
 			p.sendMessage("");
 			/*p.sendMessage(ChatColor.LIGHT_PURPLE + "*** REALM UPGRADE TO TIER " + new_tier + " ACTIVATED ***");

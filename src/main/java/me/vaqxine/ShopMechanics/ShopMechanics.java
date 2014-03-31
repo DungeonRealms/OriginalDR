@@ -1562,7 +1562,7 @@ public class ShopMechanics implements Listener {
 				assignShopNameplate(p.getName(), b1.getLocation(), b2.getLocation());
 				setStoreColor(b1, ChatColor.RED);
 			}
-		}.runTaskLaterAsynchronously(Main.plugin, 1L);
+		}.runTaskLater(Main.plugin, 1L);
 
 	}
 
