@@ -1143,28 +1143,21 @@ public class Hive implements Listener {
 
         CommunityMechanics.sendPacketCrossServer("@population@" + prefix + ":" + players_on + "/" + players_max, -1, true);
 
-        Socket kkSocket = null;
+        /*Socket kkSocket = null;
         PrintWriter out = null;
         try {
-
             kkSocket = new Socket();
             kkSocket.connect(new InetSocketAddress(Proxy_IP, Hive.transfer_port), 1000);
             out = new PrintWriter(kkSocket.getOutputStream(), true);
 
             out.println("@population@" + prefix + ":" + Main.plugin.getServer().getOnlinePlayers().length + "/" + Main.plugin.getServer().getMaxPlayers());
+            kkSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-        	try {
-				kkSocket.close();
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
-        }
-
-        if(out != null){
+        }finally{
             out.close();
-        }
+        }*/
+
 
         /*int lserver_num = Integer.parseInt(MOTD.substring(MOTD.indexOf("-") + 1, MOTD.indexOf(" ")));
 		if(MOTD.contains("EU-")){

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
@@ -50,6 +52,7 @@ import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
@@ -2536,6 +2539,7 @@ public class ItemMechanics implements Listener {
 			convertVanillaArrows(e.getInventory());
 		}
 		addRarityToOldItems(e.getInventory());
+		checkEnchants(e.getInventory());
 		fixBuggedDurability(e.getInventory());
 		if(removeMagmaCream(e.getInventory())){
 			Player pl = (Player)e.getPlayer();
@@ -2546,6 +2550,17 @@ public class ItemMechanics implements Listener {
 		removeAttributes(e.getInventory());
 	}
 
+	public void checkEnchants(Inventory inv){
+	    for(ItemStack is : inv.getContents()){
+	        if(is == null || is.getType() == Material.AIR)continue;
+	        for(Enchantment enc : is.getEnchantments().keySet()){
+	            if(enc.equals(EnchantMechanics.getCustomEnchant()))continue;
+	            //No items should have anything other then special enchants
+	            is.removeEnchantment(enc);
+	        }
+	    }
+	    
+	}
 	//@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerAnimation(PlayerAnimationEvent e){
 		Player pl = e.getPlayer();
