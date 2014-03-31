@@ -147,10 +147,16 @@ public class TeleportationMechanics implements Listener {
 
 					if(seconds_left <= 0){
 						if(Bukkit.getPlayer(p_name) != null){
-							Player pl = Bukkit.getPlayer(p_name);
-							try{
-								ParticleEffect.sendToLocation(ParticleEffect.WITCH_MAGIC, pl.getLocation().add(0, 1, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.20F, 200);
-							} catch(Exception err){err.printStackTrace();}
+							final Player pl = Bukkit.getPlayer(p_name);
+							
+							    new BukkitRunnable(){
+                                    public void run() {
+                                        try{
+                                        ParticleEffect.sendToLocation(ParticleEffect.WITCH_MAGIC, pl.getLocation().add(0, 1, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.20F, 200);
+                                        } catch(Exception err){err.printStackTrace();}
+                                    }
+							    }.runTaskAsynchronously(Main.plugin);
+							
 							//pl.getWorld().spawnParticle(pl.getLocation().add(0, 1, 0), Particle.WITCH_MAGIC, 0.20F, 500);
 						}
 						

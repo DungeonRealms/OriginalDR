@@ -432,7 +432,7 @@ public class MonsterMechanics implements Listener {
 
 		// REPEATING TASKS:
 		Main.plugin.getServer().getScheduler()
-		.scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		.scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				logRecentChunks();
 				processChunks();
@@ -440,7 +440,7 @@ public class MonsterMechanics implements Listener {
 		}, 20 * 20L, 10 * 20L);
 
 		Main.plugin.getServer().getScheduler()
-		.scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		.scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				processPossibleMobSpawns();
 				MobSpawnEvent();
@@ -3348,7 +3348,6 @@ public class MonsterMechanics implements Listener {
 					mob_spawns.remove(loc);
 					mob_to_spawn.remove(loc);
 				}
-
 
 				p.sendMessage(ChatColor.GREEN + "MOB SPAWNER LOCATION UNREGISTERED.");
 				p.sendMessage(ChatColor.GRAY + "DEBUG: " + mob_spawns.get(loc));

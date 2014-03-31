@@ -2315,10 +2315,12 @@ public class ShopMechanics implements Listener {
 
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW)
-	public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e) {
+	public void onAsyncPlayerChatEvent(final AsyncPlayerChatEvent e) {
 		final Player p = e.getPlayer();
-
-		if(openning_shop.contains(p.getName())){
+		Bukkit.getScheduler().runTask(Main.plugin, new Runnable(){
+		    public void run(){
+		        
+		    if(openning_shop.contains(p.getName())){
 			e.setCancelled(true);
 
 			String msg = e.getMessage();
@@ -2770,6 +2772,8 @@ public class ShopMechanics implements Listener {
 				need_sql_update.add(p.getName()); // Update SQL after a new item is added to stock.
 			}
 		}
+		    }
+        });
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

@@ -229,7 +229,7 @@ public class ItemMechanics implements Listener {
 		}, 5 * 20L, 20L);
 
 
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				no_negation.clear();
 
@@ -3575,13 +3575,13 @@ public class ItemMechanics implements Listener {
 			final boolean f_is_player = is_player;
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
-				    Hologram hg = new Hologram(Main.plugin,ChatColor.RED.toString() + ChatColor.BOLD + "-" + ChatColor.RED + (int)dmg + ChatColor.RED + ChatColor.BOLD + " DMG");
+				    Hologram hg = new Hologram(Main.plugin, ChatColor.RED.toString() + (int)dmg + ChatColor.RED + ChatColor.BOLD + " DMG");
                     boolean toggled = (CommunityMechanics.toggle_list.containsKey(p_attacker.getName()) && CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("indicator"));
                         
 					if(f_is_player == true){
 						p_attacker.sendMessage(ChatColor.RED + "        " + (int)dmg + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> " + ((Player)le).getName());
 						if(toggled){
-						hg.show(le.getLocation().clone().add(new Random().nextFloat(), 2, new Random().nextFloat()),(long)1.5, p_attacker);
+						hg.show(le.getLocation().clone().add(new Random().nextFloat(), 1, new Random().nextFloat()),(long)1.5, p_attacker);
 						}
 					}
 					if(f_is_player == false){
