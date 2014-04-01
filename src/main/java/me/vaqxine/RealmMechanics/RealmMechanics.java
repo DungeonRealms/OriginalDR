@@ -28,6 +28,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import me.Bogdacutu.VoidGenerator.VoidGeneratorGenerator;
 import me.vaqxine.Main;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.ChatMechanics.ChatMechanics;
@@ -117,9 +118,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
-
-import com.github.pocketkid2.generator.VoidGenerator;
-import com.github.pocketkid2.generator.chunkgenerators.VoidChunkGenerator;
 
 public class RealmMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
@@ -4473,7 +4471,7 @@ public class RealmMechanics implements Listener {
 		WorldCreator wc = new WorldCreator(realm_name);
 		wc.type(WorldType.FLAT);
 		wc.generateStructures(false);
-		wc.generator(new VoidChunkGenerator());
+		wc.generator(new VoidGeneratorGenerator());
 		World w = Bukkit.createWorld(wc);
 		//w.setAnimalSpawnLimit(0);
 		//w.setAutoSave(true);
