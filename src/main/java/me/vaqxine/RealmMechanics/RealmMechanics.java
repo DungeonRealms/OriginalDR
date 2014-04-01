@@ -118,6 +118,9 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 
+import com.github.pocketkid2.generator.VoidGenerator;
+import com.github.pocketkid2.generator.chunkgenerators.VoidChunkGenerator;
+
 public class RealmMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
 
@@ -4470,7 +4473,7 @@ public class RealmMechanics implements Listener {
 		WorldCreator wc = new WorldCreator(realm_name);
 		wc.type(WorldType.FLAT);
 		wc.generateStructures(false);
-
+		wc.generator(new VoidChunkGenerator());
 		World w = Bukkit.createWorld(wc);
 		//w.setAnimalSpawnLimit(0);
 		//w.setAutoSave(true);
@@ -4486,7 +4489,6 @@ public class RealmMechanics implements Listener {
 
 		log.info("[RealmMechanics] Blank realm " + realm_name + " created.");
 
-		/*World w = mvwm.getMVWorld(realm_name).getCBWorld();
 		 int x=0,y=128,z=0;
 
 		 log.info("d1");
@@ -4531,51 +4533,7 @@ public class RealmMechanics implements Listener {
 			// 16x16 editable area, woot!
 
 			// [START] Grass Trim Task.
-			for (x = 0; x < 128; x++)
-			{
-				for (y = -1; y < 5; y++)
-				{
-					for (z = 0; z < 128; z++)
-					{
-						w.getBlockAt(new Location(w, x, y, z)).setType(Material.AIR);
-					}
-				}
-			}
-
-			for (x = -128; x < 0; x++)
-			{
-				for (y = -1; y < 5; y++)
-				{
-					for (z = -128; z < 0; z++)
-					{
-						w.getBlockAt(new Location(w, x, y, z)).setType(Material.AIR);
-					}
-				}
-			}
-			for (x = 0; x < 128; x++)
-			{
-				for (y = -1; y < 5; y++)
-				{
-					for (z = -128; z < 0; z++)
-					{
-						w.getBlockAt(new Location(w, x, y, z)).setType(Material.AIR);
-					}
-				}
-			}
-
-			for (x = -128; x < 0; x++)
-			{
-				for (y = -1; y < 5; y++)
-				{
-					for (z = 0; z < 128; z++)
-					{
-						w.getBlockAt(new Location(w, x, y, z)).setType(Material.AIR);
-					}
-				}
-			}
 			// [END] Grass Trim Task
-
-			 log.info("d3");*/
 
 	}
 
