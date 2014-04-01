@@ -2,20 +2,20 @@ package me.vaqxine.MonsterMechanics;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.server.v1_7_R1.EntityHuman;
-import net.minecraft.server.v1_7_R1.EntityIronGolem;
-import net.minecraft.server.v1_7_R1.PathfinderGoalHurtByTarget;
-import net.minecraft.server.v1_7_R1.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_7_R1.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_7_R1.PathfinderGoalMoveTowardsTarget;
-import net.minecraft.server.v1_7_R1.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.server.v1_7_R1.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_7_R1.PathfinderGoalRandomStroll;
-import net.minecraft.server.v1_7_R1.PathfinderGoalSelector;
-import net.minecraft.server.v1_7_R1.PathfinderGoalTarget;
-import net.minecraft.server.v1_7_R1.World;
+import net.minecraft.server.v1_7_R2.EntityHuman;
+import net.minecraft.server.v1_7_R2.EntityIronGolem;
+import net.minecraft.server.v1_7_R2.PathfinderGoalHurtByTarget;
+import net.minecraft.server.v1_7_R2.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_7_R2.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_7_R2.PathfinderGoalMoveTowardsTarget;
+import net.minecraft.server.v1_7_R2.PathfinderGoalNearestAttackableTarget;
+import net.minecraft.server.v1_7_R2.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_7_R2.PathfinderGoalRandomStroll;
+import net.minecraft.server.v1_7_R2.PathfinderGoalSelector;
+import net.minecraft.server.v1_7_R2.PathfinderGoalTarget;
+import net.minecraft.server.v1_7_R2.World;
 
-import org.bukkit.craftbukkit.v1_7_R1.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_7_R2.util.UnsafeList;
 
 public class Golem extends EntityIronGolem {
 

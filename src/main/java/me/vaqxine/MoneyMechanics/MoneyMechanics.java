@@ -39,7 +39,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -703,14 +703,14 @@ public class MoneyMechanics implements Listener {
     }
 
     public ItemStack setCountMeta(ItemStack is, int amount) {
-        net.minecraft.server.v1_7_R1.ItemStack nmsstack = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_7_R2.ItemStack nmsstack = CraftItemStack.asNMSCopy(is);
         nmsstack.tag.setInt("count", amount);
         org.bukkit.inventory.ItemStack i = CraftItemStack.asCraftMirror(nmsstack);
         return i;
     }
 
     public static int getCountMeta(ItemStack is) {
-        net.minecraft.server.v1_7_R1.ItemStack nmsstack = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_7_R2.ItemStack nmsstack = CraftItemStack.asNMSCopy(is);
 
         int amount = 0;
         try {

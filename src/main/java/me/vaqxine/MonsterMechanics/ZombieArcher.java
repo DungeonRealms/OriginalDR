@@ -3,24 +3,24 @@ package me.vaqxine.MonsterMechanics;
 import java.lang.reflect.Field;
 import java.util.Random;
 
-import net.minecraft.server.v1_7_R1.EntityArrow;
-import net.minecraft.server.v1_7_R1.EntityHuman;
-import net.minecraft.server.v1_7_R1.EntityLiving;
-import net.minecraft.server.v1_7_R1.EntityZombie;
-import net.minecraft.server.v1_7_R1.IRangedEntity;
-import net.minecraft.server.v1_7_R1.ItemStack;
-import net.minecraft.server.v1_7_R1.Items;
-import net.minecraft.server.v1_7_R1.PathfinderGoal;
-import net.minecraft.server.v1_7_R1.PathfinderGoalArrowAttack;
-import net.minecraft.server.v1_7_R1.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_7_R1.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_7_R1.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_7_R1.PathfinderGoalRandomStroll;
-import net.minecraft.server.v1_7_R1.PathfinderGoalSelector;
-import net.minecraft.server.v1_7_R1.World;
+import net.minecraft.server.v1_7_R2.EntityArrow;
+import net.minecraft.server.v1_7_R2.EntityHuman;
+import net.minecraft.server.v1_7_R2.EntityLiving;
+import net.minecraft.server.v1_7_R2.EntityZombie;
+import net.minecraft.server.v1_7_R2.IRangedEntity;
+import net.minecraft.server.v1_7_R2.ItemStack;
+import net.minecraft.server.v1_7_R2.Items;
+import net.minecraft.server.v1_7_R2.PathfinderGoal;
+import net.minecraft.server.v1_7_R2.PathfinderGoalArrowAttack;
+import net.minecraft.server.v1_7_R2.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_7_R2.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_7_R2.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_7_R2.PathfinderGoalRandomStroll;
+import net.minecraft.server.v1_7_R2.PathfinderGoalSelector;
+import net.minecraft.server.v1_7_R2.World;
 
-import org.bukkit.craftbukkit.v1_7_R1.event.CraftEventFactory;
-import org.bukkit.craftbukkit.v1_7_R1.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_7_R2.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_7_R2.util.UnsafeList;
 
 public class ZombieArcher extends EntityZombie implements IRangedEntity{
 
@@ -57,7 +57,7 @@ public class ZombieArcher extends EntityZombie implements IRangedEntity{
         super.setEquipment(i, itemstack);
         this.bZ();
     }
-    public void bZ() {
+    public boolean bZ() {
         this.goalSelector.a((PathfinderGoal) this.bq);
         this.goalSelector.a((PathfinderGoal) this.bp);
         ItemStack itemstack = this.getEquipment(0);
@@ -67,6 +67,7 @@ public class ZombieArcher extends EntityZombie implements IRangedEntity{
         } else {
             this.goalSelector.a(4, this.bq);
         }
+		return false;
     }
     @Override
     public void a(EntityLiving entityliving, float f) {

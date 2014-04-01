@@ -44,11 +44,11 @@ import me.vaqxine.RecordMechanics.RecordMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
 import me.vaqxine.TeleportationMechanics.TeleportationMechanics;
 import me.vaqxine.enums.Delay;
-import net.minecraft.server.v1_7_R1.DataWatcher;
-import net.minecraft.server.v1_7_R1.EntityCreature;
-import net.minecraft.server.v1_7_R1.EntityLiving;
-import net.minecraft.server.v1_7_R1.EntityPlayer;
-import net.minecraft.server.v1_7_R1.NBTTagCompound;
+import net.minecraft.server.v1_7_R2.DataWatcher;
+import net.minecraft.server.v1_7_R2.EntityCreature;
+import net.minecraft.server.v1_7_R2.EntityLiving;
+import net.minecraft.server.v1_7_R2.EntityPlayer;
+import net.minecraft.server.v1_7_R2.NBTTagCompound;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,11 +63,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftSkeleton;
-import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
@@ -4643,7 +4643,7 @@ public class MonsterMechanics implements Listener {
 				LivingEntity le = (LivingEntity)e;
 				if(le.getEquipment().getHelmet() != null && le.getEquipment().getHelmet().getType() == Material.SKULL_ITEM){
 					ItemStack h = le.getEquipment().getHelmet();
-					net.minecraft.server.v1_7_R1.ItemStack mItem = CraftItemStack.asNMSCopy(h);
+					net.minecraft.server.v1_7_R2.ItemStack mItem = CraftItemStack.asNMSCopy(h);
 					NBTTagCompound tag = mItem.tag;
 					String skin_name = tag.getString("SkullOwner");
 					if(skin_name.equalsIgnoreCase("dEr_t0d") || skin_name.equalsIgnoreCase("niv330")){
@@ -4719,7 +4719,7 @@ public class MonsterMechanics implements Listener {
 				LivingEntity le = (LivingEntity)e;
 				if(le.getEquipment().getHelmet() != null && le.getEquipment().getHelmet().getType() == Material.SKULL_ITEM){
 					ItemStack h = le.getEquipment().getHelmet();
-					net.minecraft.server.v1_7_R1.ItemStack mItem = CraftItemStack.asNMSCopy(h);
+					net.minecraft.server.v1_7_R2.ItemStack mItem = CraftItemStack.asNMSCopy(h);
 					NBTTagCompound tag = mItem.tag;
 					String skin_name = tag.getString("SkullOwner");
 					if(skin_name.equalsIgnoreCase("dEr_t0d") || skin_name.equalsIgnoreCase("niv330")){
@@ -5605,7 +5605,7 @@ public class MonsterMechanics implements Listener {
 	public static ItemStack getHead(String player_name) {
 
 		ItemStack c_mask = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-		net.minecraft.server.v1_7_R1.ItemStack mItem = CraftItemStack
+		net.minecraft.server.v1_7_R2.ItemStack mItem = CraftItemStack
 				.asNMSCopy(c_mask);
 		NBTTagCompound tag = mItem.tag = new NBTTagCompound();
 		tag.setString("SkullOwner", player_name);
@@ -6209,7 +6209,7 @@ public class MonsterMechanics implements Listener {
 		CopyOnWriteArrayList<ItemStack> gear_list = new CopyOnWriteArrayList<ItemStack>(Arrays.asList(new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)));
 
 		int gear_check = new Random().nextInt(3) + 1; // 1, 2, 3, 4
-		net.minecraft.server.v1_7_R1.ItemStack weapon = null;
+		net.minecraft.server.v1_7_R2.ItemStack weapon = null;
 		ItemStack is_weapon = null;
 
 		if(et == EntityType.WOLF || et == EntityType.IRON_GOLEM || et == EntityType.ENDERMAN || et == EntityType.BLAZE || et == EntityType.SILVERFISH || et == EntityType.WITCH || et == EntityType.MAGMA_CUBE || et == EntityType.SPIDER || et == EntityType.CAVE_SPIDER){
@@ -6523,14 +6523,14 @@ public class MonsterMechanics implements Listener {
 		dmg_range.add((int) Math.round(max_dmg));
 		//Spawns the custom zombie if they have a bow
 		if(et == EntityType.ZOMBIE && is_weapon != null && is_weapon.getType() == Material.BOW){
-		    net.minecraft.server.v1_7_R1.World ws = ((CraftWorld)l.getWorld()).getHandle();
+		    net.minecraft.server.v1_7_R2.World ws = ((CraftWorld)l.getWorld()).getHandle();
 		    ZombieArcher za = new ZombieArcher(ws);
 		    ws.addEntity(za, SpawnReason.CUSTOM);
 		    za.teleportTo(l, true);
 		    e = za.getBukkitEntity();
 		    //((LivingEntity)e).getEquipment().setItemInHand(is_weapon);
 		}else if(et == EntityType.IRON_GOLEM){
-		    net.minecraft.server.v1_7_R1.World ws = ((CraftWorld)l.getWorld()).getHandle();
+		    net.minecraft.server.v1_7_R2.World ws = ((CraftWorld)l.getWorld()).getHandle();
             Golem golem = new Golem(ws);
             ws.addEntity(golem, SpawnReason.CUSTOM);
             golem.setLocation(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());

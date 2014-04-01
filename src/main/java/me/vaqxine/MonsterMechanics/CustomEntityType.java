@@ -4,12 +4,12 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.server.v1_7_R1.BiomeBase;
-import net.minecraft.server.v1_7_R1.BiomeMeta;
-import net.minecraft.server.v1_7_R1.EntityInsentient;
-import net.minecraft.server.v1_7_R1.EntityIronGolem;
-import net.minecraft.server.v1_7_R1.EntityTypes;
-import net.minecraft.server.v1_7_R1.EntityZombie;
+import net.minecraft.server.v1_7_R2.BiomeBase;
+import net.minecraft.server.v1_7_R2.BiomeMeta;
+import net.minecraft.server.v1_7_R2.EntityInsentient;
+import net.minecraft.server.v1_7_R2.EntityIronGolem;
+import net.minecraft.server.v1_7_R2.EntityTypes;
+import net.minecraft.server.v1_7_R2.EntityZombie;
 
 import org.bukkit.entity.EntityType;
 

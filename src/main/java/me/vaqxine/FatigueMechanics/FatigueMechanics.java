@@ -20,7 +20,7 @@ import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
-import net.minecraft.server.v1_7_R1.NBTTagCompound;
+import net.minecraft.server.v1_7_R2.NBTTagCompound;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,7 +28,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -150,7 +150,7 @@ public class FatigueMechanics implements Listener {
 	}
 
 	public ItemStack clearModifiers(ItemStack item) {
-		net.minecraft.server.v1_7_R1.ItemStack is = CraftItemStack.asNMSCopy(item);
+		net.minecraft.server.v1_7_R2.ItemStack is = CraftItemStack.asNMSCopy(item);
 		if (!is.hasTag()) {
 			return item;
 		}

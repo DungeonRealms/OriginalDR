@@ -72,9 +72,9 @@ import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.database.ConnectionPool;
 import me.vaqxine.enums.CC;
-import net.minecraft.server.v1_7_R1.EntityPlayer;
-import net.minecraft.server.v1_7_R1.Packet;
-import net.minecraft.server.v1_7_R1.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_7_R2.EntityPlayer;
+import net.minecraft.server.v1_7_R2.Packet;
+import net.minecraft.server.v1_7_R2.PacketPlayOutEntityEquipment;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -86,9 +86,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -3577,7 +3577,7 @@ public class Hive implements Listener {
                     Player playerNPC = ((Player)ent);
 
                     EntityPlayer origin_p = ((CraftPlayer) p).getHandle();
-                    net.minecraft.server.v1_7_R1.ItemStack weapon = null, boots = null, legs = null, chest = null, head = null;
+                    net.minecraft.server.v1_7_R2.ItemStack weapon = null, boots = null, legs = null, chest = null, head = null;
 
                     if(origin_p.getEquipment(0) != null){
                         weapon = origin_p.getEquipment(0);

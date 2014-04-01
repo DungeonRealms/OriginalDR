@@ -55,10 +55,10 @@ import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
-import net.minecraft.server.v1_7_R1.DataWatcher;
-import net.minecraft.server.v1_7_R1.Packet;
-import net.minecraft.server.v1_7_R1.PacketPlayOutEntityMetadata;
-import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_7_R2.DataWatcher;
+import net.minecraft.server.v1_7_R2.Packet;
+import net.minecraft.server.v1_7_R2.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -75,12 +75,12 @@ import org.bukkit.WorldType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -3140,7 +3140,7 @@ public class RealmMechanics implements Listener {
 	public static void disableAllEffects(Player player, final LivingEntity entity){
 		CraftEntity ce = (CraftEntity)((Entity)entity);
 		
-		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R1.Entity)ce.getHandle());
+		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R2.Entity)ce.getHandle());
 		dw.a(8, Byte.valueOf((byte)0));
 		dw.watch(8, Byte.valueOf((byte)0x00FF00));
 
@@ -3156,7 +3156,7 @@ public class RealmMechanics implements Listener {
 	public static void playPotionEffect(final Player player, final LivingEntity entity, int color, int duration) {
 		CraftEntity ce = (CraftEntity)((Entity)entity);
 		
-		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R1.Entity)ce.getHandle());
+		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R2.Entity)ce.getHandle());
 		dw.a(8, Byte.valueOf((byte)0));
 		dw.watch(8, Byte.valueOf((byte)color));
 

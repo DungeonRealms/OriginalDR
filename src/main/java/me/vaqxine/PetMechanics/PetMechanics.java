@@ -31,9 +31,9 @@ import me.vaqxine.PetMechanics.commands.CommandPet;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.TeleportationMechanics.TeleportationMechanics;
 import me.vaqxine.database.ConnectionPool;
-import net.minecraft.server.v1_7_R1.EntityCreature;
-import net.minecraft.server.v1_7_R1.EntityCreeper;
-import net.minecraft.server.v1_7_R1.EntityInsentient;
+import net.minecraft.server.v1_7_R2.EntityCreature;
+import net.minecraft.server.v1_7_R2.EntityCreeper;
+import net.minecraft.server.v1_7_R2.EntityInsentient;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -45,11 +45,11 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftCreeper;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftCreeper;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Chicken;
@@ -412,7 +412,7 @@ public class PetMechanics implements Listener {
 										}
 										EntityCreeper ec = (EntityCreeper)(((CraftCreeper)le).getHandle());
 										CraftPlayer cp = (CraftPlayer)p_ent;
-										ec.setTarget((net.minecraft.server.v1_7_R1.Entity)cp.getHandle());
+										ec.setTarget((net.minecraft.server.v1_7_R2.Entity)cp.getHandle());
 										creeper_chase.put(e, ent);
 										walkTo(le, p_ent.getLocation().getX(), p_ent.getLocation().getY(), p_ent.getLocation().getZ(), 2.0F);
 										break;
@@ -425,7 +425,7 @@ public class PetMechanics implements Listener {
 							speed = 1.20F;
 							EntityCreature ec = (EntityCreature) ((CraftEntity) e).getHandle();
 							CraftPlayer cp = (CraftPlayer)p;
-							ec.setTarget((net.minecraft.server.v1_7_R1.Entity)cp.getHandle());
+							ec.setTarget((net.minecraft.server.v1_7_R2.Entity)cp.getHandle());
 						}
 
 						if(lptt.equalsIgnoreCase("Beta Slime")){
@@ -584,7 +584,7 @@ public class PetMechanics implements Listener {
 							EntityCreature ec = (EntityCreature) ((CraftEntity) pet).getHandle();
 							CraftPlayer cp = (CraftPlayer)partner;
 							if(!pet.isInsideVehicle() && !(cp.isInsideVehicle())){
-								ec.mount((net.minecraft.server.v1_7_R1.Entity)cp.getHandle());
+								ec.mount((net.minecraft.server.v1_7_R2.Entity)cp.getHandle());
 							}
 
 							//double x = partner.getLocation().getX(); //(pet.getLocation().getX() + partner.getLocation().getX()) / 2;
@@ -1641,7 +1641,7 @@ public class PetMechanics implements Listener {
 			if(((CraftEntity)ent).getHandle() instanceof EntityCreature){
 				EntityCreature ec = (EntityCreature) ((CraftEntity) ent).getHandle();
 				CraftPlayer cp = (CraftPlayer)p;
-				ec.setTarget((net.minecraft.server.v1_7_R1.Entity)cp.getHandle());
+				ec.setTarget((net.minecraft.server.v1_7_R2.Entity)cp.getHandle());
 			}
 
 			e.setCancelled(true);
@@ -1845,7 +1845,7 @@ public class PetMechanics implements Listener {
 			if(((CraftEntity)pet).getHandle() instanceof EntityCreature){
 				EntityCreature ec = (EntityCreature) ((CraftEntity) pet).getHandle();
 				CraftPlayer cp = (CraftPlayer)p;
-				ec.setTarget((net.minecraft.server.v1_7_R1.Entity)cp.getHandle());
+				ec.setTarget((net.minecraft.server.v1_7_R2.Entity)cp.getHandle());
 			}
 
 
@@ -2259,7 +2259,7 @@ public class PetMechanics implements Listener {
 						if(((CraftEntity)pet).getHandle() instanceof EntityCreature){
 							EntityCreature ec = (EntityCreature) ((CraftEntity) pet).getHandle();
 							CraftPlayer cp = (CraftPlayer)p;
-							ec.setTarget((net.minecraft.server.v1_7_R1.Entity)cp.getHandle());
+							ec.setTarget((net.minecraft.server.v1_7_R2.Entity)cp.getHandle());
 						}
 
 						p.sendMessage(ChatColor.GREEN + ChatMechanics.censorMessage(pet_name) + ": " + ChatColor.GRAY + getRandomStatement(pet_type));

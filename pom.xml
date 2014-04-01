@@ -30,13 +30,13 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.7.2-R0.4-SNAPSHOT</version>
+			<version>1.7.5-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
-			<version>1.7.2-R0.4-SNAPSHOT</version>
+			<version>1.7.5-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -54,7 +54,7 @@
 		<dependency>
 			<groupId>de.kumpelblase2</groupId>
 			<artifactId>remoteentities</artifactId>
-			<version>1.8</version>
+			<version>1.8.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
