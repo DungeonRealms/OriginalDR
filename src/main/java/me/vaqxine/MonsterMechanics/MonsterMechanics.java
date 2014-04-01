@@ -72,6 +72,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Blaze;
+import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Enderman;
@@ -107,6 +108,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -3089,7 +3091,24 @@ public class MonsterMechanics implements Listener {
 		}
 		player_locations.remove(p.getName());
 	}
-
+	@EventHandler
+	public void onEntityCombus(EntityCombustEvent event){
+	    if(!(event.getEntity() instanceof Player)){
+	        event.setCancelled(true);
+	    }
+	}
+	
+	@EventHandler
+	public void onChickenLay(ItemSpawnEvent event){
+	    if(event.getEntity().getItemStack().getType() == Material.EGG){
+	        for(Entity e : event.getEntity().getNearbyEntities(.5, .5, .5)){
+	            if(e instanceof Chicken){
+	                //Chicken laid it so cancel
+	                event.setCancelled(true);
+	            }
+	        }
+	    }
+	}
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		// @zombie:1-1,skeleton:1-2,skeleton:2-3@30#1-5$

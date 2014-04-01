@@ -4476,7 +4476,7 @@ public class RealmMechanics implements Listener {
 		//w.setAnimalSpawnLimit(0);
 		//w.setAutoSave(true);
 		//w.setKeepSpawnInMemory(false);
-		w.setSpawnLocation(24, 130, 24);
+		w.setSpawnLocation(7, 130, 8);
 
 		//fixchunks(w);
 		//w.save();
@@ -4486,7 +4486,8 @@ public class RealmMechanics implements Listener {
 		//owner.updateInventory();
 
 		log.info("[RealmMechanics] Blank realm " + realm_name + " created.");
-
+		//Void generator makes that.
+		w.getBlockAt(0, 64, 0).setType(Material.AIR);
 		 int x=0,y=128,z=0;
 
 		 log.info("d1");

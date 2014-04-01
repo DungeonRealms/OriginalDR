@@ -466,7 +466,7 @@ public class LootMechanics implements Listener {
 
 		for (Map.Entry<Location, String> entry : loot_chests_to_spawn.entrySet()){
 			try{
-				Location loc = entry.getKey();
+				final Location loc = entry.getKey();
 
 				if(InstanceMechanics.isInstance(loc.getWorld().getName())){
 					continue;
@@ -747,13 +747,15 @@ public class LootMechanics implements Listener {
 					//log.info("loot_chest_inventory: " + String.valueOf(loot_chest_inventory.getContents().length));
 					continue; // We won't say we've respawned this chest yet, cause it's empty. We'll try again.
 				}
-				
+				new BukkitRunnable(){
+				    public void run(){
 				for(Entity e : loc.getChunk().getEntities()){
 					if(e instanceof EnderCrystal && e.getLocation().distanceSquared(loc) <= 4){
 						e.remove();
-					}
-				}
-				
+					        }
+				        }
+				    }
+				}.runTask(Main.plugin);
 				to_remove.add(loc.getBlock().getLocation());
 				sync_block_place.put(loc.getBlock().getLocation(), loot_chest_inventory);
 
