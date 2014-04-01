@@ -584,7 +584,7 @@ public class InstanceMechanics implements Listener {
 
 						pl.sendMessage(ChatColor.GRAY + "Loading Instance: '" + ChatColor.UNDERLINE + formal_dungeon_name + ChatColor.GRAY + "' -- Please wait...");
 
-						asyncLoadNewInstance(new_instance, false, false); // Load new instance.
+						syncLoadNewInstance(new_instance, false, false); // Load new instance.
 						continue;
 					}
 
@@ -1190,7 +1190,7 @@ public class InstanceMechanics implements Listener {
 
 	}
 
-	public static void asyncLoadNewInstance(final String instance, final boolean load_template, boolean new_template){
+	public static void syncLoadNewInstance(final String instance, final boolean load_template, boolean new_template){
 		String instance_template = "";
 		if(load_template == false){
 			instance_template = instance.substring(0, instance.lastIndexOf("."));
@@ -1218,10 +1218,6 @@ public class InstanceMechanics implements Listener {
 			return;
 		}
 
-
-		Thread load = new Thread(new Runnable(){
-			public void run(){
-
 				instance_loaded.put(instance, false);
 				log.info("[InstanceMechanics] CREATING INSTANCE: " + instance);
 
@@ -1242,8 +1238,6 @@ public class InstanceMechanics implements Listener {
 					} catch (IOException e) {e.printStackTrace();}
 				}
 
-				try {Thread.sleep(100);} catch (InterruptedException e) {}
-
 				WorldCreator wc = new WorldCreator(instance);
 				wc.generateStructures(false);
 				Main.plugin.getServer().createWorld(wc);
@@ -1252,9 +1246,6 @@ public class InstanceMechanics implements Listener {
 				/*CraftWorld cw = (CraftWorld)w;
 				cw.viewDistance = 4;*/
 				// TODO
-
-
-				try {Thread.sleep(200);} catch (InterruptedException e) {}
 
 				if(!(instance_loot.containsKey(instance))){
 					LootMechanics.loadInstancelootSpawnerData(instance);
@@ -1274,18 +1265,13 @@ public class InstanceMechanics implements Listener {
 					instance_mob_spawns.put(instance, new HashMap<Location, String>());
 				}
 
-				try {Thread.sleep(200);} catch (InterruptedException e) {}
-
 				LootMechanics.SpawnInstanceLootChests(instance);
 				// Spawns in actual chests and decides on each inventory, stores in memory buffer.
 
 				//instance_loaded.put(instance, true);
 				open_instances.add(instance);
 				log.info("[InstanceMechanics] LOADED INSTANCE: " + instance);
-			}
-		});
-
-		load.start();
+		
 	}
 
 	public static void asyncUnloadWorld(final String world_name){
