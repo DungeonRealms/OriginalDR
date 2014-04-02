@@ -38,7 +38,7 @@ public class CommandShard implements CommandExecutor {
             p.sendMessage(ChatColor.GRAY + "Try again in about " + seconds_left + ChatColor.BOLD + "s");
             return true;
         }
-        if(!DuelMechanics.isDamageDisabled(p.getLocation()) && LootMechanics.isMonsterNearPlayer(p, 16)){
+        if(!DuelMechanics.isDamageDisabled(p.getLocation()) && LootMechanics.isMonsterNearPlayer(p, 16) && !p.isOp()){
             p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " change shards with hostile monsters nearby.");
             p.sendMessage(ChatColor.GRAY + "Eliminate all monsters in a 16x16 area and try again.");
             return true;

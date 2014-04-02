@@ -632,9 +632,9 @@ public class ItemGenerators {
 			max_armor = 1;
 		}
 
-		int regen_type = r.nextInt(2); // 0, 1.
+		int regen_type = r.nextInt(4); // 0, 1.
 
-		if(regen_type == 0){  // HP/s HP REGEN
+		if(regen_type >= 1){  // HP/s HP REGEN
 			hp_regen = true;
 		//hp_regen_max = (int) Math.round((hp_increase_amount / 10) + (hp_increase_amount * 0.05));
 		//if(hp_regen_max < 1){hp_regen_max = 1;}
@@ -646,7 +646,7 @@ public class ItemGenerators {
 			//hp_regen_percent = r.nextInt(real_hp_regen_max) + 1;
 			hp_regen_percent = r.nextInt(hp_regen_max - hp_regen_min) + hp_regen_min;
 		}
-		else if(regen_type == 1){
+		else if(regen_type == 0){
 			energy_regen = true;
 			energy_regen_percent = r.nextInt(energy_regen_max - energy_regen_min) + energy_regen_min; 
 			energy_regen_percent = energy_regen_percent / 2;

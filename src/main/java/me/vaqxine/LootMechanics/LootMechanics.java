@@ -124,14 +124,15 @@ public class LootMechanics implements Listener {
 			}
 		}.runTaskTimerAsynchronously(Main.plugin, 12 * 20L, 3 * 20L);
 		
-		if(Bukkit.getMotd().contains("US-0")){
 			new BukkitRunnable(){
 				@Override
 				public void run() {
+				    if(!Bukkit.getMotd().contains("US-0")){
+				        cancel();
+				    }
 					savelootSpawnerData();
 				}
-			}.runTaskTimerAsynchronously(Main.plugin, 600 * 20L, 600 * 20L);
-		}
+			}.runTaskTimer(Main.plugin, 600 * 20L, 600 * 20L);
 
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {

@@ -192,7 +192,7 @@ public class HealthMechanics implements Listener {
 		}, 5 * 20L, 5L); 
 
 		// Handles auto health regeneration event.
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				HealthAutoRegen();
 			}

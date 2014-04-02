@@ -104,10 +104,6 @@ public class TradeMechanics implements Listener {
 			try{
 				if(Bukkit.getPlayer(s) != null){
 					Player pl = Bukkit.getPlayer(s);
-					if(pl.getOpenInventory() == null){
-					    MerchantMechanics.in_npc_shop.remove(pl.getName());
-					   continue;
-					}
 					ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, pl.getLocation().add(0, 2, 0),new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 2F, 1);
 					//pl.getWorld().spawnParticle(pl.getLocation().add(0, 2, 0), Particle.HAPPY_VILLAGER, 2F, 1);
 				}

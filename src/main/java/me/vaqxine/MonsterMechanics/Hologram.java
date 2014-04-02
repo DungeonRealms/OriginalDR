@@ -21,6 +21,7 @@ import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -28,9 +29,9 @@ public class Hologram {
     private static final double distance = 0.23;
     static String name;
     static Location location_return;
+    static EntityHorse eh;
     private static List<Integer> showLine(final Location loc, String text, final Player single_target) {
         name = text;
-        location_return = loc;
         WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
         final EntityWitherSkull skull = new EntityWitherSkull(world);
         skull.setLocation(loc.getX(), loc.getY() + 1 + 55, loc.getZ(), 0, 0);
@@ -38,10 +39,12 @@ public class Hologram {
         final PacketPlayOutSpawnEntity packet_skull = new PacketPlayOutSpawnEntity(skull, 66);
 
         final EntityHorse horse = new EntityHorse(world);
+        eh = horse;
         horse.setLocation(loc.getX(), loc.getY() + 55, loc.getZ(), 0, 0);
         horse.setAge(-1700000);
         horse.setCustomName(text);
         horse.setCustomNameVisible(true);
+        world.addEntity(horse, SpawnReason.CUSTOM);
         final PacketPlayOutSpawnEntityLiving packedt = new PacketPlayOutSpawnEntityLiving(horse);
 
         Main.plugin.getServer().getScheduler().runTaskAsynchronously(Main.plugin, new Runnable(){
@@ -71,9 +74,6 @@ public class Hologram {
     public String getName(){
         return name;
     }
-    public Location getLocation(){
-        return location;
-    }
     private List<String> lines = new ArrayList<String>();
     private final List<Integer> ids = new ArrayList<Integer>();
     private boolean showing = false;
@@ -96,7 +96,9 @@ public class Hologram {
         this.lines = Arrays.asList(lines);
         show(this.location);
     }*/
-
+    public List<Integer> getIds(){
+        return ids;
+    }
     public void destroy() {
 
         if (this.showing == false) {
@@ -124,7 +126,7 @@ public class Hologram {
         }
 
         final PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(ints);
-
+        
         Main.plugin.getServer().getScheduler().runTaskAsynchronously(Main.plugin, new Runnable(){
             public void run(){
                 for (Player player : Bukkit.getOnlinePlayers()) {
@@ -132,7 +134,8 @@ public class Hologram {
                 }
             }
         });
-
+        ((CraftWorld)location.getWorld()).getHandle().removeEntity(eh);
+        System.out.print("REMOVED THE ENTITIY!");
         this.showing = false;
         this.location = null;
 

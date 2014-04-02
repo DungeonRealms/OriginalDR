@@ -1131,7 +1131,7 @@ public class MonsterMechanics implements Listener {
 
 								int dmg = new Random().nextInt(max_dmg - min_dmg) + min_dmg;
 								dmg = dmg * 4;
-
+								if(pl == null || ent == null)continue;
 								pl.damage(dmg, ent);
 								pushAwayPlayer(ent, pl, 3.0F);
 							}
@@ -1165,7 +1165,7 @@ public class MonsterMechanics implements Listener {
 			special_attack.remove(ent);
 		}
 	}
-
+	
 	public void logRecentChunks(){
 		for(Location l : player_locations.values()){
 			recent_loaded_chunks.put(l.getChunk().getBlock(0, 0, 0).getLocation(), System.currentTimeMillis());
@@ -1964,7 +1964,7 @@ public class MonsterMechanics implements Listener {
 		for(Entity ent : Main.plugin.getServer().getWorlds().get(0).getLivingEntities()){
 			if(ent instanceof Player){continue;}
 			if(ent.getType() == EntityType.DROPPED_ITEM || ent.getType() == EntityType.ARROW || ent.getType() == EntityType.BOAT
-					|| ent.getType() == EntityType.WEATHER || ent.getType() == EntityType.THROWN_EXP_BOTTLE || ent.getType() == EntityType.EGG){continue;}
+					|| ent.getType() == EntityType.WEATHER || ent.getType() == EntityType.HORSE || ent.getType() == EntityType.THROWN_EXP_BOTTLE || ent.getType() == EntityType.EGG){continue;}
 			alive_ents.add(ent);
 		}
 		for(Entity ent : alive_ents){
@@ -2226,7 +2226,15 @@ public class MonsterMechanics implements Listener {
 		recent_loaded_chunks.put(loc, System.currentTimeMillis());
 		chunks_to_unload.remove(loc);
 	}
-
+	@EventHandler
+	public void onEntityDamageLAva(EntityDamageEvent event){
+	    if(event.getEntity() instanceof Player)return;
+	    if(event.getCause() == DamageCause.LAVA){
+	        event.setCancelled(true);
+	        event.setDamage(0);
+	        return;
+	    }
+	}
 	@EventHandler
 	public void onFireballExplodeEvent(ProjectileHitEvent e){
 		if(e.getEntity() instanceof LargeFireball){
