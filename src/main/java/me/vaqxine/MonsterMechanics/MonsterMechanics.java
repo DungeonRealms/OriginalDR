@@ -72,6 +72,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Blaze;
+import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Enderman;
@@ -107,6 +108,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -3089,7 +3091,24 @@ public class MonsterMechanics implements Listener {
 		}
 		player_locations.remove(p.getName());
 	}
-
+	@EventHandler
+	public void onEntityCombus(EntityCombustEvent event){
+	    if(!(event.getEntity() instanceof Player)){
+	        event.setCancelled(true);
+	    }
+	}
+	
+	@EventHandler
+	public void onChickenLay(ItemSpawnEvent event){
+	    if(event.getEntity().getItemStack().getType() == Material.EGG){
+	        for(Entity e : event.getEntity().getNearbyEntities(.5, .5, .5)){
+	            if(e instanceof Chicken){
+	                //Chicken laid it so cancel
+	                event.setCancelled(true);
+	            }
+	        }
+	    }
+	}
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		// @zombie:1-1,skeleton:1-2,skeleton:2-3@30#1-5$
@@ -6212,7 +6231,7 @@ public class MonsterMechanics implements Listener {
 		net.minecraft.server.v1_7_R2.ItemStack weapon = null;
 		ItemStack is_weapon = null;
 
-		if(et == EntityType.WOLF || et == EntityType.IRON_GOLEM || et == EntityType.ENDERMAN || et == EntityType.BLAZE || et == EntityType.SILVERFISH || et == EntityType.WITCH || et == EntityType.MAGMA_CUBE || et == EntityType.SPIDER || et == EntityType.CAVE_SPIDER){
+		if(et == EntityType.WOLF || et == EntityType.IRON_GOLEM || et == EntityType.ENDERMAN || et == EntityType.BLAZE || et == EntityType.SILVERFISH || et == EntityType.WITCH || et == EntityType.MAGMA_CUBE || et == EntityType.SPIDER || et == EntityType.ZOMBIE||et == EntityType.CAVE_SPIDER){
 			is_weapon = spawnRandomMeleeWeapon(tier, false, true);
 		}
 		else if(et == EntityType.PIG_ZOMBIE){
@@ -6522,14 +6541,7 @@ public class MonsterMechanics implements Listener {
 		dmg_range.add((int) Math.round(min_dmg));
 		dmg_range.add((int) Math.round(max_dmg));
 		//Spawns the custom zombie if they have a bow
-		if(et == EntityType.ZOMBIE && is_weapon != null && is_weapon.getType() == Material.BOW){
-		    net.minecraft.server.v1_7_R2.World ws = ((CraftWorld)l.getWorld()).getHandle();
-		    ZombieArcher za = new ZombieArcher(ws);
-		    ws.addEntity(za, SpawnReason.CUSTOM);
-		    za.teleportTo(l, true);
-		    e = za.getBukkitEntity();
-		    //((LivingEntity)e).getEquipment().setItemInHand(is_weapon);
-		}else if(et == EntityType.IRON_GOLEM){
+		 if(et == EntityType.IRON_GOLEM){
 		    net.minecraft.server.v1_7_R2.World ws = ((CraftWorld)l.getWorld()).getHandle();
             Golem golem = new Golem(ws);
             ws.addEntity(golem, SpawnReason.CUSTOM);

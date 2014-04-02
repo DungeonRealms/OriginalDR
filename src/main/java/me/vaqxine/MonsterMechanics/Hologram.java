@@ -26,8 +26,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Hologram {
     private static final double distance = 0.23;
-
+    static String name;
+    static Location location_return;
     private static List<Integer> showLine(final Location loc, String text, final Player single_target) {
+        name = text;
+        location_return = loc;
         WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
         final EntityWitherSkull skull = new EntityWitherSkull(world);
         skull.setLocation(loc.getX(), loc.getY() + 1 + 55, loc.getZ(), 0, 0);
@@ -65,7 +68,12 @@ public class Hologram {
 
         return Arrays.asList(skull.getId(), horse.getId());
     }
-
+    public String getName(){
+        return name;
+    }
+    public Location getLocation(){
+        return location;
+    }
     private List<String> lines = new ArrayList<String>();
     private final List<Integer> ids = new ArrayList<Integer>();
     private boolean showing = false;

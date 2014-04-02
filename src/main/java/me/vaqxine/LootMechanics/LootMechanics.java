@@ -462,11 +462,11 @@ public class LootMechanics implements Listener {
 	public void LootChestSpawnEvent(){
 		if(loot_chests_to_spawn.size() <= 0){return;}
 		String loot_template_s = "";
-		List<Location> to_remove = new ArrayList<Location>();
+		final List<Location> to_remove = new ArrayList<Location>();
 
 		for (Map.Entry<Location, String> entry : loot_chests_to_spawn.entrySet()){
 			try{
-				Location loc = entry.getKey();
+				final Location loc = entry.getKey();
 
 				if(InstanceMechanics.isInstance(loc.getWorld().getName())){
 					continue;
@@ -526,7 +526,7 @@ public class LootMechanics implements Listener {
 				}
 				loot_template_s = spawn_data.substring(1, spawn_data.lastIndexOf("@"));
 
-				Inventory loot_chest_inventory = Bukkit.createInventory(null, 27, "Loot Chest");
+				final Inventory loot_chest_inventory = Bukkit.createInventory(null, 27, "Loot Chest");
 				double delay_multiplier = getLootSpawnDelayMultiplier();
 				long spawn_delay = Math.round(Double.parseDouble(spawn_data.substring(spawn_data.lastIndexOf("@") + 1, spawn_data.indexOf("#"))) * (double)delay_multiplier); // Multiplier to make the delay TWICE as long.
 				long last_spawn = 0;
@@ -747,15 +747,18 @@ public class LootMechanics implements Listener {
 					//log.info("loot_chest_inventory: " + String.valueOf(loot_chest_inventory.getContents().length));
 					continue; // We won't say we've respawned this chest yet, cause it's empty. We'll try again.
 				}
-				
+				new BukkitRunnable(){
+				    public void run(){
 				for(Entity e : loc.getChunk().getEntities()){
 					if(e instanceof EnderCrystal && e.getLocation().distanceSquared(loc) <= 4){
 						e.remove();
-					}
-				}
-				
+					        }
+				        }
 				to_remove.add(loc.getBlock().getLocation());
 				sync_block_place.put(loc.getBlock().getLocation(), loot_chest_inventory);
+				    }
+				}.runTask(Main.plugin);
+				
 
 			} catch (IndexOutOfBoundsException e){
 				log.info("[LootMechanics] Corrupt loot template at " + loot_template_s + ".");

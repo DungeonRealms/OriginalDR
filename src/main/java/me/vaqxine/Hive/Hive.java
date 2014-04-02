@@ -2679,7 +2679,13 @@ public class Hive implements Listener {
 
     @SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerAsyncChatEvent(AsyncPlayerChatEvent e){
+    public void onPlayerAsyncChatEvent(final AsyncPlayerChatEvent e){
+        Bukkit.getScheduler().runTask(Main.plugin, new Runnable(){
+
+            public void run() {
+                // TODO Auto-generated method stub
+                
+  
         Player pl = e.getPlayer();
         if(player_bio.containsKey(pl.getName())){
             // They're writing their guild bio!
@@ -2740,6 +2746,9 @@ public class Hive implements Listener {
                 killing_self.remove(pl.getName());
             }
         }
+      
+        }
+            });
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -4106,7 +4115,10 @@ public class Hive implements Listener {
         }
         return false;
     }
-
+    
+    public void sendConsoleMessage(String message){
+        Bukkit.getConsoleSender().sendMessage(message);
+    }
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e){
         if(e.getInventory().getName().equalsIgnoreCase("Shard Selection")){

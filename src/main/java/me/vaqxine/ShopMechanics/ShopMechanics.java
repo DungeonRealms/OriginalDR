@@ -29,6 +29,7 @@ import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.LootMechanics.LootMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
+import me.vaqxine.MonsterMechanics.Hologram;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
@@ -100,7 +101,7 @@ public class ShopMechanics implements Listener {
 
 	public static EntityManager npc_manager = null;
 	
-	static HashMap<Block, RemoteEntity> shop_nameplates = new HashMap<Block, RemoteEntity>();
+	static HashMap<Block, Hologram> shop_nameplates = new HashMap<Block, Hologram>();
 	// NPC linked list that assigns an NPC to a given shop block.
 
 	public static HashMap<String, Integer> shop_level = new HashMap<String, Integer>();
@@ -196,7 +197,6 @@ public class ShopMechanics implements Listener {
 				if(npc_to_remove.size() <= 0){return;}
 				for(RemoteEntity re : npc_to_remove){
 					if(re == null){
-						npc_to_remove.remove(re);
 						continue;
 					}
 					
@@ -363,9 +363,8 @@ public class ShopMechanics implements Listener {
 				b1.setType(Material.AIR);
 				b2.setType(Material.AIR);
 
-				RemoteEntity n = shop_nameplates.get(b1);
-				n.despawn(DespawnReason.CUSTOM);
-
+				Hologram n = shop_nameplates.get(b1);
+				n.destroy();
 				shop_owner_n = shop_owners.get(b1);
 
 				if(!collection_bin.containsKey(shop_owner_n)){
@@ -842,10 +841,8 @@ public class ShopMechanics implements Listener {
 				b1.setType(Material.AIR);
 				b2.setType(Material.AIR);
 
-				RemoteEntity n = shop_nameplates.get(b1);
-				Main.d("Removing shop of " + p.getName());
-				packet_resend.add(n.getBukkitEntity().getEntityId());
-				n.despawn(DespawnReason.CUSTOM);
+				Hologram n = shop_nameplates.get(b1);
+				n.destroy();
 
 				shop_nameplates.remove(b1);
 				shop_name_list.remove(ChatColor.stripColor(shop_names.get(b1).substring(shop_names.get(b1).indexOf(" ") + 1, shop_names.get(b1).length())));
@@ -1214,16 +1211,22 @@ public class ShopMechanics implements Listener {
 
 	public static void setStoreColor(Block b, ChatColor c) {
 		// Player owner = getShopOwner(b);
-		RemotePlayer re = (RemotePlayer) shop_nameplates.get(b);
+		Hologram re = shop_nameplates.get(b);
 		if(re == null){
-		    npc_to_remove.add(re);
 		    return;
 		}
-		CraftPlayer p = (CraftPlayer) re.getBukkitEntity();
-		CommunityMechanics.setColor(p, c);
+		String name = re.getName();
+		Location l = re.getLocation().clone();
+		re.destroy();
+		Hologram new_shop = new Hologram(Main.plugin, c + name);
+		for(Player p : Bukkit.getOnlinePlayers()){
+		    new_shop.show(l, p);
+		}
+		
+		shop_nameplates.put(b, new_shop);
 	}
 
-
+	
 	public static boolean hasCollectionBinItems(String p_name){
 		if(collection_bin.containsKey(p_name)){
 			return true;
@@ -2223,9 +2226,8 @@ public class ShopMechanics implements Listener {
 					}
 
 					if(shop_nameplates.containsKey(chest)){
-						RemoteEntity re = shop_nameplates.get(chest);
-						re.despawn(DespawnReason.CUSTOM);
-						Hive.npc_manager.removeEntity(re.getID(), true);
+						Hologram re = shop_nameplates.get(chest);
+						re.destroy();
 						/*NPC n = shop_nameplates.get(chest);
 						n.removeFromWorld();*/
 					}
@@ -2304,7 +2306,16 @@ public class ShopMechanics implements Listener {
 		}
 	}
 
-
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerJoinShowShopNames(PlayerJoinEvent e){
+	    for(Hologram shop_hg : shop_nameplates.values()){
+	        try{
+	        shop_hg.show(shop_hg.getLocation(), e.getPlayer());
+	        }catch(Exception can_see){
+	            continue;
+	        }
+	    }
+	}
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onEntityDamagEvent(EntityDamageEvent e) {
 		if (e.getEntity() != null && e.getEntity() instanceof LivingEntity && npc_manager.isRemoteEntity((LivingEntity)e.getEntity())) {
@@ -2345,14 +2356,13 @@ public class ShopMechanics implements Listener {
 
 			Block b = inverse_shop_owners.get(p.getName());
 
-			RemotePlayer re = (RemotePlayer) shop_nameplates.get(b);
-			try{
-				re.setName(msg);
-			} catch(Exception err){
-				err.printStackTrace();
-				npc_to_remove.add(re);
+			Hologram re = shop_nameplates.get(b);
+			Location l = re.getLocation().clone();
+			re.destroy();
+			Hologram hg = new Hologram(Main.plugin, msg);
+			for(Player p : Bukkit.getOnlinePlayers()){
+			   hg.show(l, p);
 			}
-
 			//Location l1 = b.getLocation();
 			//Location l2 = chest_partners.get(b).getLocation();
 			shop_name_list.add(msg);
@@ -2661,9 +2671,8 @@ public class ShopMechanics implements Listener {
 				}
 
 				if(shop_nameplates.containsKey(chest)){
-					RemoteEntity re = shop_nameplates.get(chest);
-					re.despawn(DespawnReason.CUSTOM);
-					Hive.npc_manager.removeEntity(re.getID(), true);
+					Hologram re = shop_nameplates.get(chest);
+					re.destroy();
 					/*NPC n = shop_nameplates.get(chest);
 					n.removeFromWorld();*/
 				}
@@ -2883,9 +2892,8 @@ public class ShopMechanics implements Listener {
 				}
 
 				if(shop_nameplates.containsKey(b)){
-					RemotePlayer re = (RemotePlayer) shop_nameplates.get(b);
-					re.despawn(DespawnReason.CUSTOM);
-					Hive.npc_manager.removeEntity(re.getID(), true);
+					Hologram re = shop_nameplates.get(b);
+					re.destroy();
 					/*NPC n = shop_nameplates.get(chest);
 					n.removeFromWorld();*/
 				}
@@ -2953,7 +2961,6 @@ public class ShopMechanics implements Listener {
 					if(collection_bin.containsKey(p.getName())){
 						p.sendMessage(ChatColor.YELLOW + "Your shop's contents have been moved to your bank chest.");
 					}
-
 					if(!(need_sql_update.contains(p.getName()))){
 						need_sql_update.add(p.getName()); // Update SQL after an item is sold from the shop.
 					}
@@ -3089,10 +3096,11 @@ public class ShopMechanics implements Listener {
 				Block shop_block = inverse_shop_owners.get(owner.getName());
 
 				//NPC nshop_tag = shop_nameplates.get(shop_block);
-				RemoteEntity nshop_tag = shop_nameplates.get(shop_block);
+				/*RemoteEntity nshop_tag = shop_nameplates.get(shop_block);
 				Player pshop_tag = (Player)nshop_tag.getBukkitEntity();
 				incrementViewCount(pshop_tag);
-
+                */
+				//TODO: MAKE THE HAVE THE INCREMENTS IN THEIR NAME
 				last_shop_open.put(p.getName(), System.currentTimeMillis());
 			}
 		}
@@ -3120,9 +3128,8 @@ public class ShopMechanics implements Listener {
 
 			/*NPC n = shop_nameplates.get(b1);
 			n.removeFromWorld();*/
-			RemoteEntity re = shop_nameplates.get(b1);
-			re.despawn(DespawnReason.CUSTOM);
-			Hive.npc_manager.removeEntity(re.getID(), true);
+			Hologram re = shop_nameplates.get(b1);
+			re.destroy();
 			
 			shop_nameplates.remove(b1);
 			shop_name_list.remove(ChatColor.stripColor(shop_names.get(b1).substring(shop_names.get(b1).indexOf(" ") + 1, shop_names.get(b1).length())));
@@ -3173,21 +3180,17 @@ public class ShopMechanics implements Listener {
 		Block chest2 = chest_loc2.getBlock();
 		Location loc;
 		if(chest1.getLocation().getX() > chest2.getLocation().getX()){
-			loc = chest_loc1.subtract(0.0, 1.1, -0.5);
+			loc = chest_loc1.subtract(0.0, 1.7, -0.5);
 		}
 		else{
-			loc = chest_loc1.subtract(-1.0, 1.1, -0.5);
+			loc = chest_loc1.subtract(-1.0, 1.7, -0.5);
 		}
 		
-		RemotePlayer re = (RemotePlayer) ((de.kumpelblase2.remoteentities.EntityManager) npc_manager).createNamedEntity(RemoteEntityType.Human, loc, name);
+		Hologram re = new Hologram(Main.plugin, name);
+		for(Player p : Bukkit.getOnlinePlayers()){
+		re.show(loc, p);
+		}
 		//NPC n = m.spawnHumanNPC(name, loc);
-		re.setPushable(false);
-		re.setStationary(true, true);
-		re.getMind().clearMovementDesires();
-		re.getMind().clearBehaviours();
-		CraftPlayer p = (CraftPlayer) re.getBukkitEntity();
-		p.setGameMode(GameMode.CREATIVE);
-		p.setPlayerListName("");
 		shop_nameplates.put(chest1, re);
 		shop_nameplates.put(chest2, re);
 		shop_names.put(chest1, name);

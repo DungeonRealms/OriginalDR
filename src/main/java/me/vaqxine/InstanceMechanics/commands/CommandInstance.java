@@ -46,7 +46,7 @@ public class CommandInstance implements CommandExecutor {
 			if(!(InstanceMechanics.teleport_on_load.contains(p.getName()))){
 				InstanceMechanics.teleport_on_load.add(p.getName());
 			}
-			InstanceMechanics.asyncLoadNewInstance(new_instance, false, false); // Load new instance.
+			InstanceMechanics.syncLoadNewInstance(new_instance, false, false); // Load new instance.
 			p.sendMessage(ChatColor.GRAY + "Loading: " + new_instance + " . . .");
 		}
 		if(sub_cmd.equalsIgnoreCase("unload")){
@@ -59,7 +59,7 @@ public class CommandInstance implements CommandExecutor {
 			if(!(InstanceMechanics.teleport_on_load.contains(p.getName()))){
 				InstanceMechanics.teleport_on_load.add(p.getName());
 			}
-			InstanceMechanics.asyncLoadNewInstance(new_instance, true, false); // Load new instance.
+			InstanceMechanics.syncLoadNewInstance(new_instance, true, false); // Load new instance.
 			p.sendMessage(ChatColor.GRAY + "Loading Template: " + new_instance + " . . .");
 		}
 		if(sub_cmd.equalsIgnoreCase("shards")){

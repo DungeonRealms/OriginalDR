@@ -181,7 +181,7 @@ public class HealthMechanics implements Listener {
 		}, 20 * 20L, 200 * 20L);*/ 
 
 		// Handles setting overhead HP value.
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				for(Player pl : Bukkit.getServer().getOnlinePlayers()){
 					if(getPlayerHP(pl.getName()) > 0){

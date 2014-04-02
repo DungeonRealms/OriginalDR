@@ -50,6 +50,7 @@ import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_7_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftSkeleton;
 import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
@@ -5297,7 +5298,7 @@ public class ItemMechanics implements Listener {
 		}
 
 		if(projectile_map.containsKey(proj)){
-			if(projectile_map.get(proj) == null && ((CraftWorld) proj.getShooter()).hasMetadata("boss_type")){
+			if(projectile_map.get(proj) == null && ((CraftSkeleton) proj.getShooter()).hasMetadata("boss_type")){
 				// TNT_bandit shot this.
 				Location target_loc = proj.getLocation();
 				//target_loc.getWorld().createExplosion(target_loc.getX(), target_loc.getY() + 2, target_loc.getZ(), 5.0F, false, false);
