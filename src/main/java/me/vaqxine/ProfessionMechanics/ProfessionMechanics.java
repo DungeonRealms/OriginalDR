@@ -2059,7 +2059,7 @@ public class ProfessionMechanics implements Listener {
 		fish_lore.add(ChatColor.RED + "-" + hunger_to_heal + "% HUNGER " + ChatColor.GRAY.toString() + "(instant)");
 		fish_lore.add(getFishLore(fish_name));
 
-		short ran_dur = (short)new Random().nextInt(32767);
+		//short ran_dur = (short)new Random().nextInt(32767);
 		// Helps prevent stackability.
 
 		if(fish_name.contains(ChatColor.WHITE.toString())){
@@ -2078,7 +2078,8 @@ public class ProfessionMechanics implements Listener {
 			fish_name = ChatColor.YELLOW.toString() + "Raw " + fish_name; 
 		}
 
-		ItemStack fish = new ItemStack(Material.RAW_FISH, 1, ran_dur);
+		//ItemStack fish = new ItemStack(Material.RAW_FISH, 1, ran_dur);
+		ItemStack fish = new ItemStack(Material.RAW_FISH, 1);
 		ItemMeta im = fish.getItemMeta();
 		im.setDisplayName(fish_name);
 		im.setLore(fish_lore);
