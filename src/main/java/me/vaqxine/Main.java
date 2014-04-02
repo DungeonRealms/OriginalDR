@@ -92,7 +92,7 @@ public class Main extends JavaPlugin {
 	public static Main plugin;
 	public static Logger log;
 	
-	public static List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine", "Availer");
+	public static List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine", "felipepcjr");
 	
 	public void onEnable(){
 		plugin = this;

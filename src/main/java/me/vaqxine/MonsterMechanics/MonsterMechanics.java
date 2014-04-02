@@ -6231,7 +6231,7 @@ public class MonsterMechanics implements Listener {
 		net.minecraft.server.v1_7_R2.ItemStack weapon = null;
 		ItemStack is_weapon = null;
 
-		if(et == EntityType.WOLF || et == EntityType.IRON_GOLEM || et == EntityType.ENDERMAN || et == EntityType.BLAZE || et == EntityType.SILVERFISH || et == EntityType.WITCH || et == EntityType.MAGMA_CUBE || et == EntityType.SPIDER || et == EntityType.CAVE_SPIDER){
+		if(et == EntityType.WOLF || et == EntityType.IRON_GOLEM || et == EntityType.ENDERMAN || et == EntityType.BLAZE || et == EntityType.SILVERFISH || et == EntityType.WITCH || et == EntityType.MAGMA_CUBE || et == EntityType.SPIDER || et == EntityType.ZOMBIE||et == EntityType.CAVE_SPIDER){
 			is_weapon = spawnRandomMeleeWeapon(tier, false, true);
 		}
 		else if(et == EntityType.PIG_ZOMBIE){
@@ -6541,14 +6541,7 @@ public class MonsterMechanics implements Listener {
 		dmg_range.add((int) Math.round(min_dmg));
 		dmg_range.add((int) Math.round(max_dmg));
 		//Spawns the custom zombie if they have a bow
-		if(et == EntityType.ZOMBIE && is_weapon != null && is_weapon.getType() == Material.BOW){
-		    net.minecraft.server.v1_7_R2.World ws = ((CraftWorld)l.getWorld()).getHandle();
-		    ZombieArcher za = new ZombieArcher(ws);
-		    ws.addEntity(za, SpawnReason.CUSTOM);
-		    za.teleportTo(l, true);
-		    e = za.getBukkitEntity();
-		    //((LivingEntity)e).getEquipment().setItemInHand(is_weapon);
-		}else if(et == EntityType.IRON_GOLEM){
+		 if(et == EntityType.IRON_GOLEM){
 		    net.minecraft.server.v1_7_R2.World ws = ((CraftWorld)l.getWorld()).getHandle();
             Golem golem = new Golem(ws);
             ws.addEntity(golem, SpawnReason.CUSTOM);
