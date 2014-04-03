@@ -4478,7 +4478,7 @@ public class RealmMechanics implements Listener {
 		//w.setAnimalSpawnLimit(0);
 		//w.setAutoSave(true);
 		//w.setKeepSpawnInMemory(false);
-		w.setSpawnLocation(7, 130, 8);
+		w.setSpawnLocation(24, 130, 24);
 
 		//fixchunks(w);
 		//w.save();
