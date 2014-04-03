@@ -2059,7 +2059,6 @@ public class ProfessionMechanics implements Listener {
 		fish_lore.add(ChatColor.RED + "-" + hunger_to_heal + "% HUNGER " + ChatColor.GRAY.toString() + "(instant)");
 		fish_lore.add(getFishLore(fish_name));
 
-		//short ran_dur = (short)new Random().nextInt(32767);
 		// Helps prevent stackability.
 
 		if(fish_name.contains(ChatColor.WHITE.toString())){
@@ -2078,7 +2077,6 @@ public class ProfessionMechanics implements Listener {
 			fish_name = ChatColor.YELLOW.toString() + "Raw " + fish_name; 
 		}
 
-		//ItemStack fish = new ItemStack(Material.RAW_FISH, 1, ran_dur);
 		ItemStack fish = new ItemStack(Material.RAW_FISH, 1);
 		ItemMeta im = fish.getItemMeta();
 		im.setDisplayName(fish_name);
@@ -2469,7 +2467,7 @@ public class ProfessionMechanics implements Listener {
 					pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "      " + ChatColor.GREEN + (int)amount_to_regen_per_interval + ChatColor.BOLD + " HP/s" + ChatColor.GREEN + " FROM " + is.getItemMeta().getDisplayName() + ChatColor.GRAY + " [" + regen_interval + "s]");
 
 					fish_health_regen.put(pl.getName(), amount_to_regen_per_interval);
-					pl.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, (int) (regen_interval * 20), 0));
+					pl.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, (int) (regen_interval * 20), 1));
 					Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 						public void run() {
 							pl.removePotionEffect(PotionEffectType.REGENERATION);
@@ -2483,8 +2481,11 @@ public class ProfessionMechanics implements Listener {
 					// Speed effect.
 					String tier_symbol = s.substring(s.indexOf("(") + 1, s.indexOf(")"));
 					int effect_tier = 0;
-					if(tier_symbol.equalsIgnoreCase("II")){
+					if(tier_symbol.equalsIgnoreCase("I")){
 						effect_tier = 1;
+					}
+					if(tier_symbol.equalsIgnoreCase("II")){
+						effect_tier = 2;
 					}
 
 					int effect_time = Integer.parseInt(s.substring(s.lastIndexOf("(") + 1, s.lastIndexOf("s")));
@@ -2495,8 +2496,11 @@ public class ProfessionMechanics implements Listener {
 					// Night vision effect
 					String tier_symbol = s.substring(s.indexOf("(") + 1, s.indexOf(")"));
 					int effect_tier = 0;
-					if(tier_symbol.equalsIgnoreCase("II")){
+					if(tier_symbol.equalsIgnoreCase("I")){
 						effect_tier = 1;
+					}
+					if(tier_symbol.equalsIgnoreCase("II")){
+						effect_tier = 2;
 					}
 
 					int effect_time = Integer.parseInt(s.substring(s.lastIndexOf("(") + 1, s.lastIndexOf("s")));
@@ -2733,7 +2737,7 @@ public class ProfessionMechanics implements Listener {
 						pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "      " + ChatColor.GREEN + (int)amount_to_regen_per_interval + ChatColor.BOLD + " HP/s" + ChatColor.GREEN + " FROM " + is.getItemMeta().getDisplayName() + ChatColor.GRAY + " [" + regen_interval + "s]");
 
 						fish_health_regen.put(pl.getName(), amount_to_regen_per_interval);
-						pl.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, (int) (regen_interval + (regen_interval * 0.25)), 0));
+						pl.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, (int) (regen_interval + (regen_interval * 0.25)), 1));
 						Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 							public void run() {
 								pl.removePotionEffect(PotionEffectType.REGENERATION);
@@ -2747,8 +2751,11 @@ public class ProfessionMechanics implements Listener {
 						// Speed effect.
 						String tier_symbol = s.substring(s.indexOf("(") + 1, s.indexOf(")"));
 						int effect_tier = 0;
-						if(tier_symbol.equalsIgnoreCase("II")){
+						if(tier_symbol.equalsIgnoreCase("I")){
 							effect_tier = 1;
+						}
+						if(tier_symbol.equalsIgnoreCase("II")){
+							effect_tier = 2;
 						}
 
 						int effect_time = Integer.parseInt(s.substring(s.lastIndexOf("(") + 1, s.lastIndexOf("s")));
@@ -2759,8 +2766,11 @@ public class ProfessionMechanics implements Listener {
 						// Night vision effect
 						String tier_symbol = s.substring(s.indexOf("(") + 1, s.indexOf(")"));
 						int effect_tier = 0;
-						if(tier_symbol.equalsIgnoreCase("II")){
+						if(tier_symbol.equalsIgnoreCase("I")){
 							effect_tier = 1;
+						}
+						if(tier_symbol.equalsIgnoreCase("II")){
+							effect_tier = 2;
 						}
 
 						int effect_time = Integer.parseInt(s.substring(s.lastIndexOf("(") + 1, s.lastIndexOf("s")));

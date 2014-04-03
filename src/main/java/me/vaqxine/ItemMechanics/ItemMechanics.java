@@ -2553,7 +2553,9 @@ public class ItemMechanics implements Listener {
 	public void checkEnchants(Inventory inv){
 	    for(ItemStack is : inv.getContents()){
 	        if(is == null || is.getType() == Material.AIR)continue;
+	        if(is.getEnchantments().isEmpty())return;
 	        for(Enchantment enc : is.getEnchantments().keySet()){
+	           
 	            if(enc.equals(EnchantMechanics.getCustomEnchant()))continue;
 	            //No items should have anything other then special enchants
 	            is.removeEnchantment(enc);

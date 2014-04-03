@@ -2606,11 +2606,17 @@ public class Hive implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerRespawn(PlayerRespawnEvent e){
-        Player pl = e.getPlayer();
-        Location loc = pl.getLocation();
+        final Player pl = e.getPlayer();
+        final Location loc = pl.getLocation();
         if(HealthMechanics.getPlayerHP(pl.getName()) > 0 || pl.getHealth() > 0){
             // Invalid death, so let's not drop ANYTHING, and just spawn them back.
-            e.setRespawnLocation(loc); // Set location back to where they are.
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable(){
+                public void run(){
+                  pl.teleport(loc); // Set location back to where they are.
+                  Main.plugin.getServer().getConsoleSender().sendMessage("Player had an invalid death! Location: " + loc);
+                }
+            }, 5L);
+          
             /*pl.setHealth(20);
 			pl.setLevel(HealthMechanics.getMaxHealthValue(pl.getName()));*/
         }
