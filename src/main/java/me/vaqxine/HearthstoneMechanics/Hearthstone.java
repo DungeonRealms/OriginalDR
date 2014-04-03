@@ -61,6 +61,7 @@ public class Hearthstone {
     /**
      * This saves all their data in an Async task
      */
+   
     public void saveData() {
         new BukkitRunnable() {
             public void run() {
@@ -81,7 +82,9 @@ public class Hearthstone {
     public Location getLocation() {
         return tp_loc;
     }
-
+public void setTimer(int timer){
+    timer_seconds = timer;
+}
     public void setLocationName(String name) {
         this.tp_name = name;
     }

@@ -48,7 +48,10 @@ public class HearthstoneMechanics implements Listener {
                     Player p = Bukkit.getPlayer(p_name);
                     if(!isLocationsEqual(p.getLocation(), hearthstone_location.get(p_name))){
                         p.sendMessage(ChatColor.LIGHT_PURPLE + "Hearthstone " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "cancelled");
-                        p.sendMessage(ChatColor.GRAY + "");
+                        p.sendMessage(ChatColor.GRAY + "Your Hearthstone has been put on a 5 minute timer.");
+                        //5 minutes
+                        getHearthStone(p_name).setTimer(60 * 5);
+                        
                     }
                     time_left -= 1;
                     if(time_left <= 0){
@@ -118,10 +121,12 @@ public class HearthstoneMechanics implements Listener {
             ioe.printStackTrace();
         }
     }
+    
     public void removeHearthstoneTimer(String p_name){
         hearthstone_location.remove(p_name);
         hearthstone_timer.get(p_name);
     }
+    
     public boolean isLocationsEqual(Location first, Location second) {
         if ((first.getBlockX() == second.getBlockX()) && (first.getBlockY() == second.getBlockY()) && (first.getBlockZ() == second.getBlockZ()) && first.getWorld().getName().equalsIgnoreCase(second.getWorld().getName())) {
             return true;
@@ -129,4 +134,7 @@ public class HearthstoneMechanics implements Listener {
         return false;
     }
 
+    public Hearthstone getHearthStone(String p_name){
+        return hearthstone_map.get(p_name);
+    }
 }
