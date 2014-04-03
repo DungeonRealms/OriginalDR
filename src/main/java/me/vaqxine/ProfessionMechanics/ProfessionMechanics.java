@@ -2469,7 +2469,7 @@ public class ProfessionMechanics implements Listener {
 					pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "      " + ChatColor.GREEN + (int)amount_to_regen_per_interval + ChatColor.BOLD + " HP/s" + ChatColor.GREEN + " FROM " + is.getItemMeta().getDisplayName() + ChatColor.GRAY + " [" + regen_interval + "s]");
 
 					fish_health_regen.put(pl.getName(), amount_to_regen_per_interval);
-					pl.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, (int) (regen_interval * 20), 1));
+					pl.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, (int) (regen_interval * 20), 0));
 					Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 						public void run() {
 							pl.removePotionEffect(PotionEffectType.REGENERATION);
@@ -2483,11 +2483,8 @@ public class ProfessionMechanics implements Listener {
 					// Speed effect.
 					String tier_symbol = s.substring(s.indexOf("(") + 1, s.indexOf(")"));
 					int effect_tier = 0;
-					if(tier_symbol.equalsIgnoreCase("I")){
-						effect_tier = 1;
-					}
 					if(tier_symbol.equalsIgnoreCase("II")){
-						effect_tier = 2;
+						effect_tier = 1;
 					}
 
 					int effect_time = Integer.parseInt(s.substring(s.lastIndexOf("(") + 1, s.lastIndexOf("s")));
@@ -2498,11 +2495,8 @@ public class ProfessionMechanics implements Listener {
 					// Night vision effect
 					String tier_symbol = s.substring(s.indexOf("(") + 1, s.indexOf(")"));
 					int effect_tier = 0;
-					if(tier_symbol.equalsIgnoreCase("I")){
-						effect_tier = 1;
-					}
 					if(tier_symbol.equalsIgnoreCase("II")){
-						effect_tier = 2;
+						effect_tier = 1;
 					}
 
 					int effect_time = Integer.parseInt(s.substring(s.lastIndexOf("(") + 1, s.lastIndexOf("s")));
@@ -2739,7 +2733,7 @@ public class ProfessionMechanics implements Listener {
 						pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "      " + ChatColor.GREEN + (int)amount_to_regen_per_interval + ChatColor.BOLD + " HP/s" + ChatColor.GREEN + " FROM " + is.getItemMeta().getDisplayName() + ChatColor.GRAY + " [" + regen_interval + "s]");
 
 						fish_health_regen.put(pl.getName(), amount_to_regen_per_interval);
-						pl.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, (int) (regen_interval + (regen_interval * 0.25)), 1));
+						pl.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, (int) (regen_interval + (regen_interval * 0.25)), 0));
 						Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 							public void run() {
 								pl.removePotionEffect(PotionEffectType.REGENERATION);
@@ -2753,11 +2747,8 @@ public class ProfessionMechanics implements Listener {
 						// Speed effect.
 						String tier_symbol = s.substring(s.indexOf("(") + 1, s.indexOf(")"));
 						int effect_tier = 0;
-						if(tier_symbol.equalsIgnoreCase("I")){
-							effect_tier = 1;
-						}
 						if(tier_symbol.equalsIgnoreCase("II")){
-							effect_tier = 2;
+							effect_tier = 1;
 						}
 
 						int effect_time = Integer.parseInt(s.substring(s.lastIndexOf("(") + 1, s.lastIndexOf("s")));
@@ -2768,11 +2759,8 @@ public class ProfessionMechanics implements Listener {
 						// Night vision effect
 						String tier_symbol = s.substring(s.indexOf("(") + 1, s.indexOf(")"));
 						int effect_tier = 0;
-						if(tier_symbol.equalsIgnoreCase("I")){
-							effect_tier = 1;
-						}
 						if(tier_symbol.equalsIgnoreCase("II")){
-							effect_tier = 2;
+							effect_tier = 1;
 						}
 
 						int effect_time = Integer.parseInt(s.substring(s.lastIndexOf("(") + 1, s.lastIndexOf("s")));
