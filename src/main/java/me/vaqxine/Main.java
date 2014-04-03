@@ -35,6 +35,7 @@ import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RecordMechanics.RecordMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
 import me.vaqxine.RestrictionMechanics.RestrictionMechanics;
+import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.SubscriberMechanics.SubscriberMechanics;
@@ -97,6 +98,9 @@ public class Main extends JavaPlugin {
 	public void onEnable(){
 		plugin = this;
 		log = this.getLogger();
+		
+		getServer().getPluginManager().registerEvents(new ScoreboardMechanics(), this);
+		
 		achievmentMechanics = new AchievmentMechanics();
 		bossMechanics = new BossMechanics();
 		chatMechanics = new ChatMechanics();

@@ -4,13 +4,18 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-public class ScoreboardMechanics {
+public class ScoreboardMechanics implements Listener {
 	
 	private static HashMap<Player, Scoreboard> boards = new HashMap<Player, Scoreboard>();
 	
@@ -58,6 +63,35 @@ public class ScoreboardMechanics {
 	public static Team getTeam(Scoreboard board, String name){
 		if(board.getTeam(name) == null) return board.registerNewTeam(name);
 		return board.getTeam(name);
+	}
+	
+	public static void cloneScoreboard(Player forp){
+		if(boards.size() == 0) return;
+		Scoreboard b = boards.values().iterator().next();
+		Scoreboard board = getBoard(forp);
+		for(Team t : b.getTeams()){
+			Team x = getTeam(board, t.getName());
+			x.setAllowFriendlyFire(t.allowFriendlyFire());
+			x.setCanSeeFriendlyInvisibles(t.canSeeFriendlyInvisibles());
+			x.setDisplayName(t.getDisplayName());
+			x.setPrefix(t.getPrefix());
+			x.setSuffix(t.getPrefix());
+			for(OfflinePlayer o : t.getPlayers()) x.addPlayer(o);
+		}
+	}
+	
+	private void removeBoard(Player p){
+		if(boards.containsKey(p)) boards.remove(p);
+	}
+	
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent e){
+		removeBoard(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onPlayerJoinEvent(PlayerJoinEvent e){
+		cloneScoreboard(e.getPlayer());
 	}
 	
 }
