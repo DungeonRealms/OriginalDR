@@ -118,6 +118,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
+import org.bukkit.util.Vector;
 
 public class RealmMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
@@ -4489,13 +4490,14 @@ public class RealmMechanics implements Listener {
 		//Void generator makes that.
 		w.getBlockAt(0, 64, 0).setType(Material.AIR);
 		 int x=0,y=128,z=0;
+		 Vector s = new Vector(16, 128, 16);
 
 		 log.info("d1");
 
 			// GRASS
-			for (x = 0; x < 16; x++)
+			for (x = s.getBlockX(); x < 32; x++)
 			{
-				for (z = 0; z < 16; z++)
+				for (z = s.getBlockZ(); z < 32; z++)
 				{
 					w.getBlockAt(new Location(w, x, y, z)).setType(Material.GRASS);
 				}
@@ -4503,11 +4505,11 @@ public class RealmMechanics implements Listener {
 
 
 			// DIRT
-			for (x = 0; x < 16; x++)
+			for (x = s.getBlockX(); x < 32; x++)
 			{
 				for (y = 127; y >= 112; y--)
 				{
-					for (z = 0; z < 16; z++)
+					for (z = s.getBlockZ(); z < 32; z++)
 					{
 						w.getBlockAt(new Location(w, x, y, z)).setType(Material.DIRT);
 					}
@@ -4515,9 +4517,9 @@ public class RealmMechanics implements Listener {
 			}
 
 		 	// BEDROCK
-			for (x = 0; x < 16; x++)
+			for (x = s.getBlockX(); x < 32; x++)
 			{
-				for (z = 0; z < 16; z++)
+				for (z = s.getBlockZ(); z < 32; z++)
 				{
 					w.getBlockAt(new Location(w, x, y, z)).setType(Material.BEDROCK);
 				}
