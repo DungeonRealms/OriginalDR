@@ -212,7 +212,7 @@ public class RepairMechanics implements Listener {
 		if(new_dur < 1 && new_percent < 99){
 			new_dur = 1; // Prevent item from buggging out.
 		}
-		//log.info("AAA - " + new_dur);
+		log.info("AAA - " + new_dur);
 		i.setDurability((short)new_dur);
 	}
 

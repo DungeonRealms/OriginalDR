@@ -1221,6 +1221,7 @@ public class MonsterMechanics implements Listener {
 			}
 
 			final Chunk c = l.getChunk();
+			if(c == null)continue;
 			for(Entity ent : c.getEntities()){
 				if(!(ent instanceof LivingEntity) || !ent.hasMetadata("mobname")){
 					continue;
@@ -3123,8 +3124,13 @@ public class MonsterMechanics implements Listener {
 	            if(e instanceof Chicken){
 	                //Chicken laid it so cancel
 	                event.setCancelled(true);
+	                return;
 	            }
 	        }
+	    }
+	    if(event.getEntity().getItemStack().getType() == Material.LEASH){
+	        //Should never really drop these items
+	        event.setCancelled(true);
 	    }
 	}
 	@EventHandler

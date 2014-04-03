@@ -3235,20 +3235,21 @@ public class RealmMechanics implements Listener {
 		}
 		
 	}
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerDropAddOwner(PlayerDropItemEvent e){
 	    Player p = e.getPlayer();
 	    dropped_item_owner.put(e.getItemDrop(), p.getName());
 	    //Add a 5 second delay
 	    dropped_item_timer.put(e.getItemDrop(), System.currentTimeMillis() + 5000);
 	}
+	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerPickup(PlayerPickupItemEvent event){
 	    Player p = event.getPlayer();
 	    Item i = event.getItem();
 	    if(dropped_item_timer.containsKey(i) && dropped_item_timer.get(i) >= System.currentTimeMillis()){
 	        //The timer hasnt expired so check the player
-	        if(!dropped_item_owner.containsKey(i) && !dropped_item_owner.get(i).equalsIgnoreCase(p.getName())){
+	        if(dropped_item_owner.containsKey(i) && !dropped_item_owner.get(i).equalsIgnoreCase(p.getName())){
 	            event.setCancelled(true);
 	            return;
 	        }
