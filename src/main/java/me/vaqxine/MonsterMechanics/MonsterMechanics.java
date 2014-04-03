@@ -4947,6 +4947,16 @@ public class MonsterMechanics implements Listener {
 		}
 	}*/
 
+	@EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
+	public void onDeathCleanupEnchants(EntityDeathEvent e){
+		if(e.getEntity() instanceof Player) return;
+		for(ItemStack i : e.getDrops()){
+			for(Enchantment n : Enchantment.values()){
+				i.removeEnchantment(n);
+			}
+		}
+	}
+	
 	@SuppressWarnings("deprecation")
 	@EventHandler(ignoreCancelled = false)
 	public void onEntityDeathEvent(final EntityDeathEvent e) {
