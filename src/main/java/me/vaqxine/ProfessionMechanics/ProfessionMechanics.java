@@ -3453,15 +3453,17 @@ public class ProfessionMechanics implements Listener {
 		Block b = null;
 
 		// TODO: This event really only needs to fire is slow_digging isn't on the player...
-		try{
-			b = pl.getTargetBlock(transparent, 8);
-		} catch(Exception err){
-			if(slow_mining.containsKey(pl.getName())){
-				if(slow_mining.get(pl.getName()) == 4){
-					e.setCancelled(true);
+		if(!e.getPlayer().isDead()){
+			try{
+				b = pl.getTargetBlock(transparent, 8);
+			} catch(Exception err){
+				if(slow_mining.containsKey(pl.getName())){
+					if(slow_mining.get(pl.getName()) == 4){
+						e.setCancelled(true);
+					}
 				}
+				return;
 			}
-			return;
 		}
 
 		if(b == null){
