@@ -632,9 +632,9 @@ public class ItemGenerators {
 			max_armor = 1;
 		}
 
-		int regen_type = r.nextInt(4); // 0, 1.
+		int regen_type = r.nextInt(1); // 0, 1.
 
-		if(regen_type >= 1){  // HP/s HP REGEN
+		if(regen_type == 1){  // HP/s HP REGEN
 			hp_regen = true;
 		//hp_regen_max = (int) Math.round((hp_increase_amount / 10) + (hp_increase_amount * 0.05));
 		//if(hp_regen_max < 1){hp_regen_max = 1;}

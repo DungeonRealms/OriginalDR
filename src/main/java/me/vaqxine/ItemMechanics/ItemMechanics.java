@@ -3572,30 +3572,33 @@ public class ItemMechanics implements Listener {
 
 		final double dmg = e.getDamage();
 
-		if(CommunityMechanics.toggle_list.containsKey(p_attacker.getName()) && CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("debug")){
+		
 			final boolean f_is_player = is_player;
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
 				    Hologram hg = new Hologram(Main.plugin, ChatColor.RED.toString() + (int)dmg + ChatColor.RED + ChatColor.BOLD + " DMG");
                     boolean toggled = (CommunityMechanics.toggle_list.containsKey(p_attacker.getName()) && CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("indicator"));
-                        
 					if(f_is_player == true){
+					    if(CommunityMechanics.toggle_list.containsKey(p_attacker.getName()) && CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("debug")){
 						p_attacker.sendMessage(ChatColor.RED + "        " + (int)dmg + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> " + ((Player)le).getName());
-						if(toggled){
+					    }
+					    if(toggled){
 						hg.show(le.getLocation().clone().add(new Random().nextFloat(), 1, new Random().nextFloat()),(long)1.5, p_attacker);
 						}
 					}
 					if(f_is_player == false){
-						String mob_name = MonsterMechanics.getMobType(ent, false);
-						p_attacker.sendMessage(ChatColor.RED + "        " + (int)dmg + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> "  + mob_name + " [" + ((int)MonsterMechanics.getMHealth(ent)) + "HP]");
-						if(toggled){
+	                       if(CommunityMechanics.toggle_list.containsKey(p_attacker.getName()) && CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("debug")){
+	                           String mob_name = MonsterMechanics.getMobType(ent, false);
+	                           p_attacker.sendMessage(ChatColor.RED + "        " + (int)dmg + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> "  + mob_name + " [" + ((int)MonsterMechanics.getMHealth(ent)) + "HP]");
+						
+	                       }
+					    }
+					if(toggled){
 						hg.show(ent.getLocation().clone().add(new Random().nextFloat(), 1, new Random().nextFloat()), (long)1.5,p_attacker);
-						}
 					}
 					
 				}
 			},  1L);
-		}
 	}
 
 	//@EventHandler(priority = EventPriority.HIGHEST)

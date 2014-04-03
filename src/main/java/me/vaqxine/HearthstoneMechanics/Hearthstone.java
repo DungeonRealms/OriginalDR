@@ -27,8 +27,10 @@ public class Hearthstone {
     public void setPlayer(Player p) {
         this.p = p;
     }
+
     /**
      * This is called AsyncPlayerLoginEvent so no need to make it Async
+     * 
      * @param p_name
      */
     public void loadData(String p_name) {
@@ -36,8 +38,8 @@ public class Hearthstone {
             pst.setString(1, p_name);
             ResultSet rst = pst.executeQuery();
             if (!rst.next()) {
-                tp_loc = HearthstoneMechanics.spawn_map.get("Spawn");
-                tp_name = "Spawn";
+                tp_loc = HearthstoneMechanics.spawn_map.get("Cyrennica");
+                tp_name = "Cyrennica";
                 return;
             }
             tp_name = rst.getString("location_name");
@@ -58,10 +60,11 @@ public class Hearthstone {
     public void setLocation(Location l) {
         this.tp_loc = l;
     }
+
     /**
      * This saves all their data in an Async task
      */
-   
+
     public void saveData() {
         new BukkitRunnable() {
             public void run() {
@@ -82,9 +85,13 @@ public class Hearthstone {
     public Location getLocation() {
         return tp_loc;
     }
-public void setTimer(int timer){
-    timer_seconds = timer;
-}
+
+    public void setTimer(int timer) {
+        timer_seconds = timer;
+    }
+    public int getTimer(){
+        return timer_seconds;
+    }
     public void setLocationName(String name) {
         this.tp_name = name;
     }
