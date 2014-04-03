@@ -2227,12 +2227,22 @@ public class MonsterMechanics implements Listener {
 		chunks_to_unload.remove(loc);
 	}
 	@EventHandler
-	public void onEntityDamageLAva(EntityDamageEvent event){
+	public void onEntityDamageLava(EntityDamageEvent event){
 	    if(event.getEntity() instanceof Player)return;
-	    if(event.getCause() == DamageCause.LAVA){
+	    if(event.getCause() == DamageCause.LAVA || event.getCause() == DamageCause.FIRE){
 	        event.setCancelled(true);
 	        event.setDamage(0);
 	        return;
+	    }
+	    if(event.getCause() == DamageCause.WITHER){
+	        if(InstanceMechanics.isInstance(event.getEntity().getWorld().getName()))return;
+	        event.setCancelled(true);
+	        for(PotionEffect effect : ((LivingEntity)event.getEntity()).getActivePotionEffects()){
+	            if(effect.getType() == PotionEffectType.WITHER){
+	                ((LivingEntity)event.getEntity()).removePotionEffect(effect.getType());
+	                break;
+	            }
+	        }
 	    }
 	}
 	@EventHandler
