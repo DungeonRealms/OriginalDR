@@ -36,6 +36,7 @@ import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
+import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.database.ConnectionPool;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -108,7 +109,7 @@ public class GuildMechanics implements Listener {
 	// Player Name, Server String
 	// This is used for the TAB menu to show what server they're on if not local.
 
-	public static HashMap<String, Team> guild_teams = new HashMap<String, Team>();
+	//public static HashMap<String, Team> guild_teams = new HashMap<String, Team>();
 	// Guild Name, Leather "color" NBT.
 
 	public static HashMap<String, List<String>> guild_map = new HashMap<String, List<String>>();
@@ -1695,29 +1696,29 @@ public class GuildMechanics implements Listener {
 			// .default = 8
 			fixed_gname = fixed_gname.substring(0, 8);
 		}
+		
+		for(Player p : Bukkit.getOnlinePlayers()){
+			if(ScoreboardMechanics.getBoard(p).getTeam(fixed_gname + ".default") != null) continue;
+			
+			Scoreboard board = ScoreboardMechanics.getBoard(p);
+			Team default_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".default");
+			Team neutral_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".neutral");
+			Team chaotic_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".chaotic");
+			Team gm_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".gm");
 
-		if(Bukkit.getScoreboardManager().getMainScoreboard().getTeam(fixed_gname + ".default") != null){
-			return; // Already exists.
+			String g_handle = "[" + guild_handle_map.get(g_name) + "]";
+	
+			default_g.setPrefix(g_handle + ChatColor.RESET.toString() + " ");
+			default_g.setDisplayName(fixed_gname + ".default");
+			neutral_g.setPrefix(ChatColor.YELLOW.toString() + g_handle + ChatColor.YELLOW.toString() + " ");
+			neutral_g.setDisplayName(fixed_gname + ".neutral");
+			chaotic_g.setPrefix(ChatColor.RED.toString() + g_handle + ChatColor.RED.toString() + " ");
+			chaotic_g.setDisplayName(fixed_gname + ".chaotic");
+			gm_g.setPrefix(ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "GM " + ChatColor.AQUA.toString() + g_handle + " ");
+			gm_g.setDisplayName(fixed_gname + ".gm");
 		}
 
-		Team default_g = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(fixed_gname + ".default");
-		Team neutral_g = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(fixed_gname + ".neutral");
-		Team chaotic_g = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(fixed_gname + ".chaotic");
-		Team gm_g = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(fixed_gname + ".gm");
-
-		String g_handle = "[" + guild_handle_map.get(g_name) + "]";
-
-		default_g.setPrefix(g_handle + ChatColor.RESET.toString() + " ");
-		default_g.setDisplayName(fixed_gname + ".default");
-		neutral_g.setPrefix(ChatColor.YELLOW.toString() + g_handle + ChatColor.YELLOW.toString() + " ");
-		neutral_g.setDisplayName(fixed_gname + ".neutral");
-		chaotic_g.setPrefix(ChatColor.RED.toString() + g_handle + ChatColor.RED.toString() + " ");
-		chaotic_g.setDisplayName(fixed_gname + ".chaotic");
-		gm_g.setPrefix(ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "GM " + ChatColor.AQUA.toString() + g_handle + " ");
-		gm_g.setDisplayName(fixed_gname + ".gm");
-
 		//team.setAllowFriendlyFire(false);
-		guild_teams.put(g_name, default_g);
 	}
 
 	public static void setOverheadGuildTag(String p_name){
@@ -1728,14 +1729,13 @@ public class GuildMechanics implements Listener {
 
 		String g_name = getGuild(p_name);
 
-		if(!(guild_teams.containsKey(g_name))){
-			setupGuildTeam(g_name);
-		}
+		setupGuildTeam(g_name);
 
-		Team t = guild_teams.get(g_name);
-		OfflinePlayer op = Bukkit.getOfflinePlayer(p_name);
-		t.addPlayer(op);
-		guild_teams.put(g_name, t); // Do I need this line?
+		for(Player p : Bukkit.getOnlinePlayers()){
+			Team t = ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), g_name);
+			OfflinePlayer op = Bukkit.getPlayer(p_name);
+			t.addPlayer(op);
+		}
 	}
 
 	public static void setupGuildData(String p_name, String guild_name){

@@ -15,6 +15,7 @@ import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.MerchantMechanics.MerchantMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
+import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.TutorialMechanics.commands.CommandSkip;
 import me.vaqxine.TutorialMechanics.commands.CommandTutorial;
@@ -48,7 +49,6 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.Team;
 
 public class TutorialMechanics implements Listener {
 	Logger log = Logger.getLogger("Minecraft");
@@ -74,18 +74,12 @@ public class TutorialMechanics implements Listener {
 	List<String> got_enchant_scroll = new ArrayList<String>();
 	// Already got an enchant scroll.
 
-	public static Team TI = null;
-
+	public static List<String> onIsland = new ArrayList<String>();
+	
 	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		tutorialSpawn = new Location(Bukkit.getWorlds().get(0), 824, 48, -103, 124F, 1F);
-		TI = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("TI");
-		if(TI == null){
-		TI = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("TI");
-		}
-		TI.setCanSeeFriendlyInvisibles(true);
-		TI.setDisplayName("TI");
 
 		Main.plugin.getCommand("skip").setExecutor(new CommandSkip());
 		Main.plugin.getCommand("tutorial").setExecutor(new CommandTutorial());
@@ -120,9 +114,8 @@ public class TutorialMechanics implements Listener {
 			public void run() {
 				for(Player pl : Main.plugin.getServer().getOnlinePlayers()){
 					if(onTutorialIsland(pl)){
-						if(!(TI.hasPlayer(pl))){
-							TI.addPlayer(pl);
-						}
+						if(!onIsland.contains(pl.getName())) onIsland.add(pl.getName());
+						for(Player p : Bukkit.getOnlinePlayers()) if(ScoreboardMechanics.getBoard(p).getTeam("TI").hasPlayer(pl)) ScoreboardMechanics.getBoard(p).getTeam("TI").addPlayer(pl);
 						if(!(pl.hasPotionEffect(PotionEffectType.INVISIBILITY))){
 							pl.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
 						}
@@ -174,7 +167,7 @@ public class TutorialMechanics implements Listener {
 		Player pl = e.getPlayer();
 		Location from = e.getFrom();
 		Location to = e.getTo();
-		if(TI.hasPlayer(pl) && !DuelMechanics.getRegionName(to).equalsIgnoreCase(tutorialRegion)){
+		if(onIsland.contains(pl.getName()) && !DuelMechanics.getRegionName(to).equalsIgnoreCase(tutorialRegion)){
 			// Don't let them off the island!
 			e.setCancelled(true);
 			pl.teleport(from);
@@ -206,7 +199,9 @@ public class TutorialMechanics implements Listener {
 			}
 			pl.updateInventory();
 
-			TI.addPlayer(pl);
+			for(Player p : Bukkit.getOnlinePlayers()){
+				ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), "TI").addPlayer(pl);
+			}
 			pl.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
 			pl.setSneaking(true);
 
@@ -262,7 +257,9 @@ public class TutorialMechanics implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent e){
 		Player pl = e.getPlayer();
 		if(onTutorialIsland(pl)){
-			TI.removePlayer(pl);
+			for(Player p : Bukkit.getOnlinePlayers()){
+				ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), "TI").removePlayer(pl);
+			}
 			pl.removePotionEffect(PotionEffectType.INVISIBILITY);
 		}
 	}
@@ -617,7 +614,9 @@ public class TutorialMechanics implements Listener {
 		completion_delay.remove(pl.getName());
 		leave_confirm.remove(pl.getName());
 		skip_confirm.remove(pl.getName());
-		TI.removePlayer(pl);
+		for(Player p : Bukkit.getOnlinePlayers()){
+			ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), "TI").removePlayer(pl);
+		}
 		pl.setSneaking(false);
 
 		try{

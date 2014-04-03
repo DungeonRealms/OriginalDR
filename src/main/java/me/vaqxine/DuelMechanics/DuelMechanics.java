@@ -22,6 +22,7 @@ import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RecordMechanics.RecordMechanics;
 import me.vaqxine.RestrictionMechanics.RestrictionMechanics;
+import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
@@ -366,8 +367,10 @@ public class DuelMechanics implements Listener {
 	}
 
 	public void restoreColors(Player p1, Player p2){
-		CommunityMechanics.red.removePlayer(p1);
-		CommunityMechanics.red.removePlayer(p2);
+		for(Player p : Bukkit.getOnlinePlayers()){
+			ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), "red").removePlayer(p1);
+			ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), "red").removePlayer(p2);
+		}
 
 		if(GuildMechanics.inGuild(p1.getName())){
 			String g_name = GuildMechanics.guild_handle_map.get(GuildMechanics.getGuild(p1.getName()));
@@ -381,10 +384,11 @@ public class DuelMechanics implements Listener {
 				fixed_gname = g_name.substring(0, 8);
 			}
 
-			t = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(fixed_gname + ".chaotic");
-			if(t.hasPlayer(p1)){
-				t.removePlayer(p1);
+			for(Player p : Bukkit.getOnlinePlayers()){
+				t = ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), fixed_gname + ".chaotic");
+				if(t.hasPlayer(p1)) t.removePlayer(p1);
 			}
+			
 			return;
 		}
 		if(GuildMechanics.inGuild(p2.getName())){
@@ -399,10 +403,11 @@ public class DuelMechanics implements Listener {
 				fixed_gname = g_name.substring(0, 8);
 			}
 
-			t = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(fixed_gname + ".chaotic");
-			if(t.hasPlayer(p2)){
-				t.removePlayer(p2);
+			for(Player p : Bukkit.getOnlinePlayers()){
+				t = ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), fixed_gname + ".chaotic");
+				if(t.hasPlayer(p1)) t.removePlayer(p1);
 			}
+			
 			return;
 		}
 

@@ -53,6 +53,7 @@ import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
+import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.database.ConnectionPool;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
@@ -156,16 +157,6 @@ public class CommunityMechanics implements Listener {
 	Thread CrossServerPacketThread;
 	// SocialQueries
 
-	public static Team green;
-	public static Team dark_green;
-	public static Team yellow;
-	public static Team red;
-	public static Team dark_red;
-	public static Team purple;
-	public static Team aqua;
-	public static Team white;
-	public static Scoreboard board;
-
 	public Thread message_listener;
 	public static CommunityMechanics instance;
 	public TipMechanics TipMechanics = new TipMechanics(this);
@@ -199,40 +190,6 @@ public class CommunityMechanics implements Listener {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		
 		TipMechanics.loadTips();
-		
-		board = Bukkit.getScoreboardManager().getMainScoreboard();
-		
-		green = board.getTeam("green");
-		if(green == null) green = board.registerNewTeam("green");
-		green.setPrefix(ChatColor.GREEN.toString());
-
-		dark_green = board.getTeam("dark_green");
-		if(dark_green == null) dark_green = board.registerNewTeam("dark_green");
-		dark_green.setPrefix(ChatColor.DARK_GREEN.toString());
-
-		yellow = board.getTeam("yellow");
-		if(yellow == null) yellow = board.registerNewTeam("yellow");
-		yellow.setPrefix(ChatColor.YELLOW.toString());
-
-		red = board.getTeam("red");
-		if(red == null) red = board.registerNewTeam("red");
-		red.setPrefix(ChatColor.RED.toString());
-
-		dark_red = board.getTeam("dark_red");
-		if(dark_red == null) dark_red = board.registerNewTeam("dark_red");
-		dark_red.setPrefix(ChatColor.DARK_RED.toString());
-
-		purple = board.getTeam("purple");
-		if(purple == null) purple = board.registerNewTeam("purple");
-		purple.setPrefix(ChatColor.LIGHT_PURPLE.toString());
-
-		white = board.getTeam("white");
-		if(white == null) white = board.registerNewTeam("white");
-		white.setPrefix(ChatColor.WHITE.toString());
-
-		aqua = board.getTeam("aqua");
-		if(aqua == null) aqua = board.registerNewTeam("aqua");
-		aqua.setPrefix(ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "GM" + ChatColor.AQUA.toString() + " ");
 		
 		new BukkitRunnable(){
 			@Override
@@ -488,83 +445,70 @@ public class CommunityMechanics implements Listener {
 				fixed_gname = g_prefix.substring(0, 8);
 			}
 
-			if(c == ChatColor.WHITE){
-				t = board.getTeam(fixed_gname + ".default");
-				if(!(t.hasPlayer(pl))){
-					t.addPlayer(pl);
+			for(Player p : Bukkit.getOnlinePlayers()){
+				Scoreboard board = ScoreboardMechanics.getBoard(p);
+				if(c == ChatColor.WHITE){
+					t = ScoreboardMechanics.getTeam(board, fixed_gname + ".default");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
-			}
-
-			if(c == ChatColor.RED){
-				t = board.getTeam(fixed_gname + ".chaotic");
-				if(!(t.hasPlayer(pl))){
-					t.addPlayer(pl);
+	
+				if(c == ChatColor.RED){
+					t = ScoreboardMechanics.getTeam(board, fixed_gname + ".chaotic");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
-			}
-			if(c == ChatColor.DARK_RED){
-				if(!dark_red.hasPlayer(pl)){
-					dark_red.addPlayer(pl);
+				if(c == ChatColor.DARK_RED){
+					t = ScoreboardMechanics.getTeam(board, "dark_red");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
-			}
-			if(c == ChatColor.YELLOW){
-				t = board.getTeam(fixed_gname + ".neutral");
-				if(!(t.hasPlayer(pl))){
-					t.addPlayer(pl);
+				if(c == ChatColor.YELLOW){
+					t = ScoreboardMechanics.getTeam(board, fixed_gname + ".neutral");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
-			}
-			if(c == ChatColor.GREEN){
-				if(!green.hasPlayer(pl)){
-					green.addPlayer(pl);
+				if(c == ChatColor.GREEN){
+					t = ScoreboardMechanics.getTeam(board, "green");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
-			}
-			if(c == ChatColor.LIGHT_PURPLE){
-				if(!purple.hasPlayer(pl)){
-					purple.addPlayer(pl);
+				if(c == ChatColor.LIGHT_PURPLE){
+					t = ScoreboardMechanics.getTeam(board, "purple");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
-			}
-			if(c == ChatColor.AQUA){
-				t = board.getTeam(fixed_gname + ".gm");
-
-				if(!(t.hasPlayer(pl))){
-					t.addPlayer(pl);
+				if(c == ChatColor.AQUA){
+					t = ScoreboardMechanics.getTeam(board, fixed_gname + ".gm");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
 			}
 			return;
-		}
-		else if(!(GuildMechanics.inGuild(pl.getName()))){
-			if(c == ChatColor.WHITE){
-				if(!white.hasPlayer(pl)){
-					white.addPlayer(pl);
+		}else if(!(GuildMechanics.inGuild(pl.getName()))){
+			Team t = null;
+			for(Player p : Bukkit.getOnlinePlayers()){
+				Scoreboard board = ScoreboardMechanics.getBoard(p);
+				if(c == ChatColor.WHITE){
+					t = ScoreboardMechanics.getTeam(board, "white");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
-			}
-			if(c == ChatColor.RED){
-				if(!red.hasPlayer(pl)){
-					red.addPlayer(pl);
+				if(c == ChatColor.RED){
+					t = ScoreboardMechanics.getTeam(board, "red");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
-			}
-			if(c == ChatColor.DARK_RED){
-				if(!dark_red.hasPlayer(pl)){
-					dark_red.addPlayer(pl);
+				if(c == ChatColor.DARK_RED){
+					t = ScoreboardMechanics.getTeam(board, "dark_red");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
-			}
-			if(c == ChatColor.YELLOW){
-				if(!yellow.hasPlayer(pl)){
-					yellow.addPlayer(pl);
+				if(c == ChatColor.YELLOW){
+					t = ScoreboardMechanics.getTeam(board, "yellow");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
-			}
-			if(c == ChatColor.GREEN){
-				if(!green.hasPlayer(pl)){
-					green.addPlayer(pl);
+				if(c == ChatColor.GREEN){
+					t = ScoreboardMechanics.getTeam(board, "green");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
-			}
-			if(c == ChatColor.LIGHT_PURPLE){
-				if(!purple.hasPlayer(pl)){
-					purple.addPlayer(pl);
+				if(c == ChatColor.LIGHT_PURPLE){
+					t = ScoreboardMechanics.getTeam(board, "purple");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
-			}
-			if(c == ChatColor.AQUA){
-				if(!aqua.hasPlayer(pl)){
-					aqua.addPlayer(pl);
+				if(c == ChatColor.AQUA){
+					t = ScoreboardMechanics.getTeam(board, "aqua");
+					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
 				}
 			}
 		}

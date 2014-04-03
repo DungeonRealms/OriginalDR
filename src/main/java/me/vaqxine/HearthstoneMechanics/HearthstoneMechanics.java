@@ -23,8 +23,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import de.kumpelblase2.remoteentities.api.thinking.DeathBehavior;
-
 public class HearthstoneMechanics implements Listener {
     public static ConcurrentHashMap<String, Hearthstone> hearthstone_map = new ConcurrentHashMap<String, Hearthstone>();
     

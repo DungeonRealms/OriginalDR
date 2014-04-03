@@ -109,14 +109,7 @@ public class FatigueMechanics implements Listener {
 			public void run() {
 				for(Player p : Bukkit.getOnlinePlayers()){
 					if(p.isSprinting()){
-						if(DuelMechanics
-								.isDamageDisabled(p
-										.getLocation()) && !(DuelMechanics
-												.duel_map
-												.containsKey(p
-														.getName())) && !(TutorialMechanics
-																.TI
-																.hasPlayer(p))){
+						if(DuelMechanics.isDamageDisabled(p.getLocation()) && !(DuelMechanics.duel_map.containsKey(p.getName())) && !(TutorialMechanics.onIsland.contains(p.getName()))){
 							continue; 
 						}
 						removeEnergy(p, 0.15F); // ORIGINAL: 0.15F
@@ -770,14 +763,14 @@ public class FatigueMechanics implements Listener {
 
 		boolean dmg_disabled = DuelMechanics.isDamageDisabled(p.getLocation());
 
-		if(p.getExp() <= 0.0F && (!dmg_disabled || TutorialMechanics.TI.hasPlayer(p))){ //fatigue_effect.containsKey(p)
+		if(p.getExp() <= 0.0F && (!dmg_disabled || TutorialMechanics.onIsland.contains(p))){ //fatigue_effect.containsKey(p)
 			disableSprint(p);
 			sprinting.remove(p);
 			return;
 		}
 		else if(e.isSprinting()){
 			sprinting.add(p);
-			if(!dmg_disabled || TutorialMechanics.TI.hasPlayer(p)){
+			if(!dmg_disabled || TutorialMechanics.onIsland.contains(p)){
 				removeEnergy(p, 0.15F);
 			}
 		}
