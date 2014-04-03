@@ -1697,27 +1697,8 @@ public class GuildMechanics implements Listener {
 			fixed_gname = fixed_gname.substring(0, 8);
 		}
 		
-		for(Player p : Bukkit.getOnlinePlayers()){
-			if(ScoreboardMechanics.getBoard(p).getTeam(fixed_gname + ".default") != null) continue;
-			
-			Scoreboard board = ScoreboardMechanics.getBoard(p);
-			Team default_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".default");
-			Team neutral_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".neutral");
-			Team chaotic_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".chaotic");
-			Team gm_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".gm");
-
-			String g_handle = "[" + guild_handle_map.get(g_name) + "]";
-	
-			default_g.setPrefix(g_handle + ChatColor.RESET.toString() + " ");
-			default_g.setDisplayName(fixed_gname + ".default");
-			neutral_g.setPrefix(ChatColor.YELLOW.toString() + g_handle + ChatColor.YELLOW.toString() + " ");
-			neutral_g.setDisplayName(fixed_gname + ".neutral");
-			chaotic_g.setPrefix(ChatColor.RED.toString() + g_handle + ChatColor.RED.toString() + " ");
-			chaotic_g.setDisplayName(fixed_gname + ".chaotic");
-			gm_g.setPrefix(ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "GM " + ChatColor.AQUA.toString() + g_handle + " ");
-			gm_g.setDisplayName(fixed_gname + ".gm");
-		}
-
+		ScoreboardMechanics.setupGuildTeam(fixed_gname, guild_handle_map.get(g_name));
+		
 		//team.setAllowFriendlyFire(false);
 	}
 
@@ -1731,11 +1712,7 @@ public class GuildMechanics implements Listener {
 
 		setupGuildTeam(g_name);
 
-		for(Player p : Bukkit.getOnlinePlayers()){
-			Team t = ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), g_name);
-			OfflinePlayer op = Bukkit.getPlayer(p_name);
-			t.addPlayer(op);
-		}
+		ScoreboardMechanics.addPlayerToTeam(g_name, Bukkit.getPlayer(p_name));
 	}
 
 	public static void setupGuildData(String p_name, String guild_name){

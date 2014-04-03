@@ -283,17 +283,11 @@ public class ShopMechanics implements Listener {
     }
  
     public void setStockCount(Player shop_tag, int stock){
-        for(Player p : Bukkit.getOnlinePlayers()){
-            ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.BELOW_NAME).getScore(shop_tag).setScore(stock);
-        }
+        ScoreboardMechanics.setStockCount(shop_tag, stock);
     }
  
     public void incrementViewCount(Player shop_tag){
-        for(Player p : Bukkit.getOnlinePlayers()){
-            Score c = ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.BELOW_NAME).getScore(shop_tag);
-            int new_score = c.getScore() + 1;
-            c.setScore(new_score);
-        }
+        ScoreboardMechanics.incrementViewCount(shop_tag);
     }
  
     public void cleanupNullNPC(){

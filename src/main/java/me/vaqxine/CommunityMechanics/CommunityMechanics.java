@@ -435,7 +435,6 @@ public class CommunityMechanics implements Listener {
 	    }
 		if(GuildMechanics.inGuild(pl.getName())){
 			String g_prefix = GuildMechanics.guild_handle_map.get(GuildMechanics.getGuild(pl.getName()));
-			Team t = null;
 
 			String fixed_gname = g_prefix;
 
@@ -445,71 +444,50 @@ public class CommunityMechanics implements Listener {
 				fixed_gname = g_prefix.substring(0, 8);
 			}
 
-			for(Player p : Bukkit.getOnlinePlayers()){
-				Scoreboard board = ScoreboardMechanics.getBoard(p);
-				if(c == ChatColor.WHITE){
-					t = ScoreboardMechanics.getTeam(board, fixed_gname + ".default");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
-	
-				if(c == ChatColor.RED){
-					t = ScoreboardMechanics.getTeam(board, fixed_gname + ".chaotic");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
-				if(c == ChatColor.DARK_RED){
-					t = ScoreboardMechanics.getTeam(board, "dark_red");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
-				if(c == ChatColor.YELLOW){
-					t = ScoreboardMechanics.getTeam(board, fixed_gname + ".neutral");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
-				if(c == ChatColor.GREEN){
-					t = ScoreboardMechanics.getTeam(board, "green");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
-				if(c == ChatColor.LIGHT_PURPLE){
-					t = ScoreboardMechanics.getTeam(board, "purple");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
-				if(c == ChatColor.AQUA){
-					t = ScoreboardMechanics.getTeam(board, fixed_gname + ".gm");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
+			if(c == ChatColor.WHITE){
+				ScoreboardMechanics.addPlayerToTeam(fixed_gname + ".default", pl);
+			}
+
+			if(c == ChatColor.RED){
+				ScoreboardMechanics.addPlayerToTeam(fixed_gname + ".chaotic", pl);
+			}
+			if(c == ChatColor.DARK_RED){
+				ScoreboardMechanics.addPlayerToTeam("dark_red", pl);
+			}
+			if(c == ChatColor.YELLOW){
+				ScoreboardMechanics.addPlayerToTeam(fixed_gname + ".neutral", pl);
+			}
+			if(c == ChatColor.GREEN){
+				ScoreboardMechanics.addPlayerToTeam("green", pl);
+			}
+			if(c == ChatColor.LIGHT_PURPLE){
+				ScoreboardMechanics.addPlayerToTeam("purple", pl);
+			}
+			if(c == ChatColor.AQUA){
+				ScoreboardMechanics.addPlayerToTeam(fixed_gname + ".gm", pl);
 			}
 			return;
 		}else if(!(GuildMechanics.inGuild(pl.getName()))){
-			Team t = null;
-			for(Player p : Bukkit.getOnlinePlayers()){
-				Scoreboard board = ScoreboardMechanics.getBoard(p);
-				if(c == ChatColor.WHITE){
-					t = ScoreboardMechanics.getTeam(board, "white");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
-				if(c == ChatColor.RED){
-					t = ScoreboardMechanics.getTeam(board, "red");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
-				if(c == ChatColor.DARK_RED){
-					t = ScoreboardMechanics.getTeam(board, "dark_red");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
-				if(c == ChatColor.YELLOW){
-					t = ScoreboardMechanics.getTeam(board, "yellow");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
-				if(c == ChatColor.GREEN){
-					t = ScoreboardMechanics.getTeam(board, "green");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
-				if(c == ChatColor.LIGHT_PURPLE){
-					t = ScoreboardMechanics.getTeam(board, "purple");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
-				if(c == ChatColor.AQUA){
-					t = ScoreboardMechanics.getTeam(board, "aqua");
-					if(!(t.hasPlayer(pl))) t.addPlayer(pl);
-				}
+			if(c == ChatColor.WHITE){
+				ScoreboardMechanics.addPlayerToTeam("white", pl);
+			}
+			if(c == ChatColor.RED){
+				ScoreboardMechanics.addPlayerToTeam("red", pl);
+			}
+			if(c == ChatColor.DARK_RED){
+				ScoreboardMechanics.addPlayerToTeam("dark_red", pl);
+			}
+			if(c == ChatColor.YELLOW){
+				ScoreboardMechanics.addPlayerToTeam("yellow", pl);
+			}
+			if(c == ChatColor.GREEN){
+				ScoreboardMechanics.addPlayerToTeam("green", pl);
+			}
+			if(c == ChatColor.LIGHT_PURPLE){
+				ScoreboardMechanics.addPlayerToTeam("purple", pl);
+			}
+			if(c == ChatColor.AQUA){
+				ScoreboardMechanics.addPlayerToTeam("aqua", pl);
 			}
 		}
 	}

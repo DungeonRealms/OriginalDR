@@ -319,9 +319,7 @@ public class HealthMechanics implements Listener {
 	}
 
 	public static void setOverheadHP(Player pl, int hp){
-		for(Player p : Bukkit.getOnlinePlayers()){
-			ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.BELOW_NAME).getScore(pl).setScore(hp);;
-		}
+		ScoreboardMechanics.setOverheadHP(pl, hp);
 		if(!pl.hasMetadata("NPC") && !pl.getPlayerListName().equalsIgnoreCase("")){
 			double max_hp = HealthMechanics.getMaxHealthValue(pl.getName());
 			double health_percent = (hp / max_hp);

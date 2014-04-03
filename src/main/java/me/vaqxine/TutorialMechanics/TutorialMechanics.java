@@ -115,7 +115,7 @@ public class TutorialMechanics implements Listener {
 				for(Player pl : Main.plugin.getServer().getOnlinePlayers()){
 					if(onTutorialIsland(pl)){
 						if(!onIsland.contains(pl.getName())) onIsland.add(pl.getName());
-						for(Player p : Bukkit.getOnlinePlayers()) if(ScoreboardMechanics.getBoard(p).getTeam("TI").hasPlayer(pl)) ScoreboardMechanics.getBoard(p).getTeam("TI").addPlayer(pl);
+						ScoreboardMechanics.addPlayerToTeam("TI", pl);
 						if(!(pl.hasPotionEffect(PotionEffectType.INVISIBILITY))){
 							pl.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
 						}
@@ -199,9 +199,7 @@ public class TutorialMechanics implements Listener {
 			}
 			pl.updateInventory();
 
-			for(Player p : Bukkit.getOnlinePlayers()){
-				ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), "TI").addPlayer(pl);
-			}
+			ScoreboardMechanics.addPlayerToTeam("TI", pl);
 			pl.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
 			pl.setSneaking(true);
 
@@ -257,9 +255,7 @@ public class TutorialMechanics implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent e){
 		Player pl = e.getPlayer();
 		if(onTutorialIsland(pl)){
-			for(Player p : Bukkit.getOnlinePlayers()){
-				ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), "TI").removePlayer(pl);
-			}
+			ScoreboardMechanics.removePlayerFromTeam("TI", pl);
 			pl.removePotionEffect(PotionEffectType.INVISIBILITY);
 		}
 	}
@@ -614,9 +610,7 @@ public class TutorialMechanics implements Listener {
 		completion_delay.remove(pl.getName());
 		leave_confirm.remove(pl.getName());
 		skip_confirm.remove(pl.getName());
-		for(Player p : Bukkit.getOnlinePlayers()){
-			ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), "TI").removePlayer(pl);
-		}
+		ScoreboardMechanics.removePlayerFromTeam("TI", pl);
 		pl.setSneaking(false);
 
 		try{

@@ -367,10 +367,8 @@ public class DuelMechanics implements Listener {
 	}
 
 	public void restoreColors(Player p1, Player p2){
-		for(Player p : Bukkit.getOnlinePlayers()){
-			ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), "red").removePlayer(p1);
-			ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), "red").removePlayer(p2);
-		}
+		ScoreboardMechanics.removePlayerFromTeam("red", p1);
+		ScoreboardMechanics.removePlayerFromTeam("red", p2);
 
 		if(GuildMechanics.inGuild(p1.getName())){
 			String g_name = GuildMechanics.guild_handle_map.get(GuildMechanics.getGuild(p1.getName()));
@@ -384,10 +382,7 @@ public class DuelMechanics implements Listener {
 				fixed_gname = g_name.substring(0, 8);
 			}
 
-			for(Player p : Bukkit.getOnlinePlayers()){
-				t = ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), fixed_gname + ".chaotic");
-				if(t.hasPlayer(p1)) t.removePlayer(p1);
-			}
+			ScoreboardMechanics.removePlayerFromTeam(fixed_gname + ".chaotic", p1);
 			
 			return;
 		}
@@ -403,10 +398,7 @@ public class DuelMechanics implements Listener {
 				fixed_gname = g_name.substring(0, 8);
 			}
 
-			for(Player p : Bukkit.getOnlinePlayers()){
-				t = ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), fixed_gname + ".chaotic");
-				if(t.hasPlayer(p1)) t.removePlayer(p1);
-			}
+			ScoreboardMechanics.removePlayerFromTeam(fixed_gname + ".chaotic", p2);
 			
 			return;
 		}
