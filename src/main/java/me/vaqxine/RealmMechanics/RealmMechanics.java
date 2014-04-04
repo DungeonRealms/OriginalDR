@@ -779,7 +779,7 @@ public class RealmMechanics implements Listener {
 		mat_shop_1.setItem(22, new ItemStack(Material.ICE, 3));
 		mat_shop_1.setItem(23, new ItemStack(Material.OBSIDIAN, 55));
 		mat_shop_1.setItem(24, new ItemStack(Material.LAPIS_BLOCK, 40));
-		mat_shop_1.setItem(25, new ItemStack(Material.QUARTZ, 50));
+		//mat_shop_1.setItem(25, new ItemStack(Material.QUARTZ, 50));
 		mat_shop_1.setItem(26, new ItemStack(Material.FIRE, 10));
 		
 		mat_shop_1.setItem(27, new ItemStack(Material.WOOL, 6, (short) 6));
