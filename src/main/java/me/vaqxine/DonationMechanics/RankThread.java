@@ -26,7 +26,6 @@ public class RankThread extends Thread {
 					pst = con.prepareStatement("INSERT INTO player_database (p_name, rank)" + " VALUES" + "('" + p_name + "', '" + rank + "') ON DUPLICATE KEY UPDATE rank='" + rank + "'");
 					
 					pst.executeUpdate();
-					DonationMechanics.sendMessageToProxy("[rank]" + p_name + "@" + rank);
 					DonationMechanics.log.info("[DonationMechanics] Set rank of player " + p_name + " to " + rank);
 					
 				} catch(SQLException ex) {
