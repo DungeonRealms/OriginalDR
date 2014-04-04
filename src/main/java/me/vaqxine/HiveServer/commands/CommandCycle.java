@@ -31,10 +31,8 @@ public class CommandCycle implements CommandExecutor {
 			if(ip.equalsIgnoreCase("*")) {
 				//send8008Packet("@restart@", null, true);
 				CommunityMechanics.sendPacketCrossServer("@restart@", -1, true);
-				HiveServer.sendProxyShutdown();
 				return true;
 			} else if(ip.equalsIgnoreCase("proxy")) {
-				HiveServer.sendProxyShutdown();
 				return true;
 			} else {
 				CommunityMechanics.sendPacketCrossServer("@rollout@", args[0]);

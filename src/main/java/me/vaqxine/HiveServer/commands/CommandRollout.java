@@ -33,7 +33,6 @@ public class CommandRollout implements CommandExecutor {
 			if(ip.equalsIgnoreCase("*")) {
 				//send8008Packet("@rollout@", null, true);
 				CommunityMechanics.sendPacketCrossServer("@rollout@", -1, true);
-				HiveServer.sendProxyShutdown();
 			} else {
 				CommunityMechanics.sendPacketCrossServer("@rollout@", args[0]);
 				//send8008Packet("@rollout@", args[0], false);

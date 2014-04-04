@@ -112,27 +112,6 @@ public class HiveServer {
 		}
 	}
 	
-	public static void sendProxyShutdown() {
-		Socket kkSocket = null;
-		PrintWriter out = null;
-		try {
-			
-			kkSocket = new Socket();
-			//kkSocket.bind(new InetSocketAddress(Hive.local_IP, Hive.transfer_port+1));
-			kkSocket.connect(new InetSocketAddress(Hive.Proxy_IP, Hive.transfer_port), 2000);
-			out = new PrintWriter(kkSocket.getOutputStream(), true);
-			
-			out.println("[cycle]");
-			kkSocket.close();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		
-		if(out != null) {
-			out.close();
-		}
-	}
-	
 	public static void deleteFolder(File folder) {
 		File[] files = folder.listFiles();
 		if(files != null) { //some JVMs return null for empty dirs

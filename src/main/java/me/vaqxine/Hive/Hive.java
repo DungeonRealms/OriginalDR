@@ -143,18 +143,13 @@ public class Hive implements Listener {
 	public static final int FTP_port = 21;
 	public static final int SQL_port = 7447; // 9834 11451
 	public static final int transfer_port = 6427; // 10521
-	public static final int SITE_SQL_PORT = 9108; // 21413
+	//public static final int SITE_SQL_PORT = 9108; // 21413
 	
-	public static final String Proxy_IP = "69.197.31.34"; // Frontend login server IP.
-	public static final String Site_IP = "192.169.82.62"; // Website IP for SQL.
+	//public static final String Proxy_IP = "69.197.31.34"; // Frontend login server IP.
 	public static final String Hive_IP = "72.20.40.38"; // Player database backend IP (used for SQL). 72.20.40.38
 	
 	public static final String sql_user = "slave_3XNZvi"; // k7ENqtenbZH3
 	public static final String sql_password = "SgUmxYSJSFmOdro3"; // S?v<W>JN+XPt{ g04h@Is4F1Uz
-	
-	public static final String site_sql_url = "jdbc:mysql://" + Site_IP + ":" + SITE_SQL_PORT + "/vbforum";
-	public static final String site_sql_user = "forum_G31FS2"; // website_fIX3vzpw
-	public static final String site_sql_password = "9UEAXHK90GmFBwjL"; // 2CvkQ8WcSseR"
 	
 	public static final String version = "1.5";
 	
@@ -426,25 +421,6 @@ public class Hive implements Listener {
 				
 				CommunityMechanics.sendPacketCrossServer("[online]" + MOTD.substring(0, MOTD.indexOf(" ")), -1, true);
 				
-				Socket kkSocket = null;
-				PrintWriter out = null;
-				try {
-					
-					kkSocket = new Socket();
-					//kkSocket.bind(new InetSocketAddress(Hive.local_IP, Hive.transfer_port+1));
-					kkSocket.connect(new InetSocketAddress(Proxy_IP, Hive.transfer_port), 2000);
-					out = new PrintWriter(kkSocket.getOutputStream(), true);
-					
-					out.println("[online]" + MOTD.substring(0, MOTD.indexOf(" ")));
-					kkSocket.close();
-				} catch(IOException e) {
-					System.err.println(CC.RED + "Can't connect to the proxy! Server not whitelisted!");
-				}
-				
-				if(out != null) {
-					out.close();
-				}
-				
 			}
 		});
 		echo_online.start();
@@ -593,12 +569,6 @@ public class Hive implements Listener {
 				player_count = Bukkit.getServer().getOnlinePlayers().length;
 			}
 		}, 10 * 20L, 5 * 20L);
-		
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
-			public void run() {
-				WebsiteConnectionPool.refresh = true;
-			}
-		}, 300 * 20L, 300 * 20L);
 		
 		// TODO: Is this needed?
 		/*this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
@@ -857,25 +827,6 @@ public class Hive implements Listener {
 						server_frozen = true;
 						uploadDataOnCrash();
 						
-						Socket kkSocket = null;
-						PrintWriter out = null;
-						try {
-							
-							kkSocket = new Socket();
-							//kkSocket.bind(new InetSocketAddress(Hive.local_IP, Hive.transfer_port+1));
-							kkSocket.connect(new InetSocketAddress(Proxy_IP, Hive.transfer_port), 2000);
-							out = new PrintWriter(kkSocket.getOutputStream(), true);
-							
-							out.println("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")));
-							kkSocket.close();
-						} catch(IOException e) {
-							System.err.println(CC.RED + "Not connected to proxy!" + CC.DEFAULT);
-						}
-						
-						if(out != null) {
-							out.close();
-						}
-						
 						CommunityMechanics.sendPacketCrossServer("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")), -1, true);
 						
 						crashed = true;
@@ -949,25 +900,6 @@ public class Hive implements Listener {
 		}*/
 		
 		//CommunityMechanics.sendPacketCrossServer("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")), -1, true); // TODO Wtf? A crash packet on shutdown?
-		
-		Socket kkSocket = null;
-		PrintWriter out = null;
-		try {
-			
-			kkSocket = new Socket();
-			//kkSocket.bind(new InetSocketAddress(Hive.local_IP, Hive.transfer_port+1));
-			kkSocket.connect(new InetSocketAddress(Proxy_IP, Hive.transfer_port), 2000);
-			out = new PrintWriter(kkSocket.getOutputStream(), true);
-			
-			out.println("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")));
-			kkSocket.close();
-		} catch(IOException e) {
-			System.err.println(CC.RED + "Not connected to proxy!" + CC.DEFAULT);
-		}
-		
-		if(out != null) {
-			out.close();
-		}
 		
 		log.info(Ansi.ansi().fg(Ansi.Color.RED).boldOff().toString() + "**************************");
 		log.info(Ansi.ansi().fg(Ansi.Color.RED).boldOff().toString() + "[HIVE (SLAVE Edition)] has been disabled.");
