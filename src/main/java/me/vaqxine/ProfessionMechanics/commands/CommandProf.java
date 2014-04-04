@@ -9,16 +9,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandProf implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		Player p = (Player)sender;
-
-		if(!(p.isOp())){
-			return true;
-		}
+		Player p = (Player) sender;
 		
-		if(args.length == 1 && args[0].equalsIgnoreCase("fish")){
+		if(!(p.isOp())) { return true; }
+		
+		if(args.length == 1 && args[0].equalsIgnoreCase("fish")) {
 			p.getInventory().addItem(ProfessionMechanics.t1_fishing);
 			p.getInventory().addItem(ProfessionMechanics.t3_fishing);
 			p.getInventory().addItem(ProfessionMechanics.getFishDrop(1));
@@ -28,11 +26,11 @@ public class CommandProf implements CommandExecutor {
 			p.getInventory().addItem(ProfessionMechanics.getFishDrop(5));
 			return true;
 		}
-		if(args.length == 1 && args[0].equalsIgnoreCase("addexp")){
+		if(args.length == 1 && args[0].equalsIgnoreCase("addexp")) {
 			ProfessionMechanics.addEXP(p, p.getItemInHand(), 5000, "fishing");
 			return true;
 		}
-		if(args.length == 1){
+		if(args.length == 1) {
 			p.getInventory().addItem(MerchantMechanics.t1_s_pot);
 			p.getInventory().addItem(MerchantMechanics.t2_s_pot);
 			p.getInventory().addItem(MerchantMechanics.t3_s_pot);
@@ -46,7 +44,7 @@ public class CommandProf implements CommandExecutor {
 		p.getInventory().addItem(ProfessionMechanics.t3_pickaxe);
 		p.getInventory().addItem(ProfessionMechanics.t4_pickaxe);
 		p.getInventory().addItem(ProfessionMechanics.t5_pickaxe);
-
+		
 		p.getInventory().addItem(ProfessionMechanics.coal_ore);
 		p.getInventory().addItem(ProfessionMechanics.emerald_ore);
 		p.getInventory().addItem(ProfessionMechanics.iron_ore);

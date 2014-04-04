@@ -6,7 +6,7 @@ public enum Delay {
 	
 	public int delay;
 	
-	private Delay(int delay){
+	private Delay(int delay) {
 		this.delay = delay;
 	}
 	

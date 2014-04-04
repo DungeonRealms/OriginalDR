@@ -12,17 +12,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class CommandLoot implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		Player p = (Player)sender;
+		Player p = (Player) sender;
 		if(!p.isOp()) return true;
-		if(args.length > 0 && args[0].equalsIgnoreCase("chunk")){
-			p.getInventory().addItem(ItemMechanics.signNewCustomItem(Material.MAGMA_CREAM, (short)0, ChatColor.LIGHT_PURPLE.toString() + "Orb of Alteration", ChatColor.GRAY.toString() + "Randomizes bonus stats of selected equipment"));
-			if(MonsterMechanics.loaded_chunks.contains(p.getLocation().getChunk().getBlock(0, 0, 0).getLocation())){
+		if(args.length > 0 && args[0].equalsIgnoreCase("chunk")) {
+			p.getInventory().addItem(ItemMechanics.signNewCustomItem(Material.MAGMA_CREAM, (short) 0, ChatColor.LIGHT_PURPLE.toString() + "Orb of Alteration", ChatColor.GRAY.toString() + "Randomizes bonus stats of selected equipment"));
+			if(MonsterMechanics.loaded_chunks.contains(p.getLocation().getChunk().getBlock(0, 0, 0).getLocation())) {
 				p.sendMessage("LOADED");
-			}
-			else{
+			} else {
 				p.sendMessage("NOT LOADED");
 			}
 			return true;

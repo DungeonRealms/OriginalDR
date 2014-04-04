@@ -11,20 +11,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandHideFish implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		Player p = (Player)sender;
-
-		if(!(p.isOp())){
-			return true;
-		}
+		Player p = (Player) sender;
 		
-		if(args.length != 1){
+		if(!(p.isOp())) { return true; }
+		
+		if(args.length != 1) {
 			p.sendMessage("/hidefish <radius>");
 			return true;
 		}
-
+		
 		int radius = Integer.parseInt(args[0]);
 		Location loc = p.getLocation();
 		World w = loc.getWorld();
@@ -32,12 +30,12 @@ public class CommandHideFish implements CommandExecutor {
 		int x = (int) loc.getX();
 		int y = (int) loc.getY();
 		int z = (int) loc.getZ();
-
-		for (i = -radius; i <= radius; i++) {
-			for (j = -radius; j <= radius; j++) {
-				for (k = -radius; k <= radius; k++) {
+		
+		for(i = -radius; i <= radius; i++) {
+			for(j = -radius; j <= radius; j++) {
+				for(k = -radius; k <= radius; k++) {
 					loc = w.getBlockAt(x + i, y + j, z + k).getLocation();
-					if (ProfessionMechanics.fishing_location.containsKey(loc)) {
+					if(ProfessionMechanics.fishing_location.containsKey(loc)) {
 						loc.getBlock().setType(Material.AIR);
 					}
 				}

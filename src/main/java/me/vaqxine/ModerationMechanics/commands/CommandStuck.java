@@ -7,12 +7,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandStuck implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player p = null;
-		if(sender instanceof Player){
-			p = (Player)sender;
+		if(sender instanceof Player) {
+			p = (Player) sender;
 		}
 		
 		/*if(args.length != 0){
@@ -28,10 +28,10 @@ public class CommandStuck implements CommandExecutor {
 			p.sendMessage(ChatColor.RED + "You cannot use " + ChatColor.BOLD + "/stuck" + ChatColor.RED + " in a player owned realm.");
 			return true;
 		}*/
-
+		
 		p.sendMessage(ChatColor.RED + "This command has been " + ChatColor.BOLD + "DISABLED" + ChatColor.RED + " due to abuse.");
 		p.sendMessage(ChatColor.GRAY + "If you are still in need of assistance, please contact a GM ingame, on the forums or teamspeak; or, submit a /report and " + ChatColor.UNDERLINE + "be sure to include your coordinates.");
-
+		
 		/*if(!HealthMechanics.in_combat.containsKey(p.getName())){
 			if(used_stuck.contains(p.getName())){
 				p.sendMessage(ChatColor.RED + "You have already used " + ChatColor.BOLD + "/stuck" + ChatColor.RED + " in this session.");
@@ -63,8 +63,8 @@ public class CommandStuck implements CommandExecutor {
 				p.sendMessage(ChatColor.GREEN + "* UNSTUCK! *");
 				return true;
 		}*/
-
+		
 		return true;
 	}
-
+	
 }

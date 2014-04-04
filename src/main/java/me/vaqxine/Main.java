@@ -51,7 +51,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin {
-
+	
 	public static AchievmentMechanics achievmentMechanics;
 	public static BossMechanics bossMechanics;
 	public static ChatMechanics chatMechanics;
@@ -97,7 +97,7 @@ public class Main extends JavaPlugin {
 	
 	public static List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine", "felipepcjr");
 	
-	public void onEnable(){
+	public void onEnable() {
 		plugin = this;
 		log = this.getLogger();
 		
@@ -182,19 +182,19 @@ public class Main extends JavaPlugin {
 		tutorialMechanics.onEnable();
 		weatherMechanics.onEnable();
 		
-		new BukkitRunnable(){
+		new BukkitRunnable() {
 			@Override
 			public void run() {
-				try{
+				try {
 					ConnectionPool.refresh = true;
-				} catch (NoClassDefFoundError e){
+				} catch(NoClassDefFoundError e) {
 					System.err.println("Couldn't refresh connection. Class not found!");
 				}
 			}
 		}.runTaskTimerAsynchronously(Main.plugin, 240 * 20L, 240 * 20L);
 	}
 	
-	public void onDisable(){
+	public void onDisable() {
 		ConnectionPool.refresh = false;
 		achievmentMechanics.onDisable();
 		bossMechanics.onDisable();
@@ -238,11 +238,11 @@ public class Main extends JavaPlugin {
 	/**
 	 * Debug
 	 */
-	public static void d(Object o){
+	public static void d(Object o) {
 		Main.plugin.getLogger().info(CC.CYAN + o.toString() + CC.WHITE);
 	}
 	
-	public static boolean isDev(String s){
+	public static boolean isDev(String s) {
 		return devs.contains(s);
 	}
 	

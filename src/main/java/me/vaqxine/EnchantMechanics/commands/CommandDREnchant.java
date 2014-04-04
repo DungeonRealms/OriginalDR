@@ -8,13 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandDREnchant implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		Player p = (Player)sender;
-		if(!p.isOp()){
-			return true;
-		}
+		Player p = (Player) sender;
+		if(!p.isOp()) { return true; }
 		p.getInventory().addItem(EnchantMechanics.t1_wep_scroll);
 		p.getInventory().addItem(EnchantMechanics.t2_wep_scroll);
 		p.getInventory().addItem(EnchantMechanics.t3_wep_scroll);

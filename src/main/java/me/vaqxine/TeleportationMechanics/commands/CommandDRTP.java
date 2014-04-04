@@ -9,13 +9,11 @@ import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 public class CommandDRTP implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		Player p = (Player)sender;
-		if(!(p.isOp())){
-			return true;
-		}
+		Player p = (Player) sender;
+		if(!(p.isOp())) { return true; }
 		
 		p.getInventory().addItem(CraftItemStack.asCraftCopy(TeleportationMechanics.makeUnstackable(TeleportationMechanics.Cyrennica_scroll)));
 		p.getInventory().addItem(CraftItemStack.asCraftCopy(TeleportationMechanics.makeUnstackable(TeleportationMechanics.Dark_Oak_Tavern_scroll)));

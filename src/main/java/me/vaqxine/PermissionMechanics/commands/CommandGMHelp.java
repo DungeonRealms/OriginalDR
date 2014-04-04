@@ -9,22 +9,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandGMHelp implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		Player p = (Player)sender;
-
-		if(!PermissionMechanics.getRank(p.getName()).equalsIgnoreCase("gm") && !(p.isOp())){
-			return true;
-		}
-
-		if(args.length != 0){
+		Player p = (Player) sender;
+		
+		if(!PermissionMechanics.getRank(p.getName()).equalsIgnoreCase("gm") && !(p.isOp())) { return true; }
+		
+		if(args.length != 0) {
 			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax");
 			p.sendMessage(ChatColor.RED + "/gmhelp");
 			p.sendMessage(ChatColor.GRAY + "Displays a list of Game Master commands.");
 			return true;
 		}
-
+		
 		p.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "              " + " *** Game Master Commands ***");
 		p.sendMessage(ChatColor.AQUA + "/mute <PLAYER> <TIME(minutes)>" + ChatColor.GRAY + " Mutes PLAYER for TIME minutes from local and global chat.");
 		p.sendMessage(ChatColor.AQUA + "/kick <PLAYER> <REASON>" + ChatColor.GRAY + " Kicks PLAYER and displays REASON to them.");

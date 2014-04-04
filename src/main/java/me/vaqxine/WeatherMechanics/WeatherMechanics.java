@@ -23,41 +23,40 @@ public class WeatherMechanics implements Listener {
 	
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
-
+		
 		Main.plugin.getCommand("drweather").setExecutor(new CommandDRWeather());
 		
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				for(Player pl : Main.plugin.getServer().getOnlinePlayers()){
-					if(getRegionName(pl.getLocation()).startsWith("rain_") && pl.getPlayerWeather() != WeatherType.DOWNFALL){
+				for(Player pl : Main.plugin.getServer().getOnlinePlayers()) {
+					if(getRegionName(pl.getLocation()).startsWith("rain_") && pl.getPlayerWeather() != WeatherType.DOWNFALL) {
 						pl.setPlayerWeather(WeatherType.DOWNFALL);
 						continue;
-					}
-					else if(!(getRegionName(pl.getLocation()).startsWith("rain_")) && pl.getPlayerWeather() == WeatherType.DOWNFALL){
+					} else if(!(getRegionName(pl.getLocation()).startsWith("rain_")) && pl.getPlayerWeather() == WeatherType.DOWNFALL) {
 						pl.setPlayerWeather(WeatherType.CLEAR);
 						continue;
 					}
 				}
 			}
 		}.runTaskTimer(Main.plugin, 10L * 20L, 20L);
-
+		
 		log.info("[WeatherMechanics] has been enabled.");
 	}
-
+	
 	public void onDisable() {
 		log.info("[WeatherMechanics] has been disabled.");
 	}
 	
-	public static String getRegionName(Location loc){
+	public static String getRegionName(Location loc) {
 		return DuelMechanics.getRegionName(loc);
 	}
 	
 	@EventHandler
-	public void onWorldChange(PlayerChangedWorldEvent e){
+	public void onWorldChange(PlayerChangedWorldEvent e) {
 		Player pl = e.getPlayer();
-		if(!pl.getWorld().getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName())){
-			if(pl.getPlayerWeather() == WeatherType.DOWNFALL){
+		if(!pl.getWorld().getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName())) {
+			if(pl.getPlayerWeather() == WeatherType.DOWNFALL) {
 				pl.setPlayerWeather(WeatherType.CLEAR);
 			}
 		}
