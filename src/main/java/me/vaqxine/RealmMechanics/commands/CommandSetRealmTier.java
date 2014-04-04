@@ -10,18 +10,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandSetRealmTier implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player pl = null;
-		if(sender instanceof Player){
-			pl = (Player)sender;
-			if(!(pl.isOp())){
-				return true;
-			}
+		if(sender instanceof Player) {
+			pl = (Player) sender;
+			if(!(pl.isOp())) { return true; }
 		}
 		
-		if(args.length != 2 && pl != null){
+		if(args.length != 2 && pl != null) {
 			pl.sendMessage("/setrealmtier <player> <tier>");
 			return true;
 		}
@@ -29,7 +27,7 @@ public class CommandSetRealmTier implements CommandExecutor {
 		String p_name = args[0];
 		int tier = Integer.parseInt(args[1]);
 		
-		if(Bukkit.getPlayer(p_name) == null){
+		if(Bukkit.getPlayer(p_name) == null) {
 			pl.sendMessage(ChatColor.RED + "The player '" + p_name + "' is not online.");
 			return true;
 		}

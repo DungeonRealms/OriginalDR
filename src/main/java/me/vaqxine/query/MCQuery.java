@@ -13,8 +13,7 @@ import java.net.UnknownHostException;
  * 
  * @author Ryan McCann
  */
-public class MCQuery
-{
+public class MCQuery {
 	final static byte HANDSHAKE = 9;
 	final static byte STAT = 0;
 	
@@ -26,20 +25,19 @@ public class MCQuery
 	private DatagramSocket socket = null; //prevent socket already bound exception
 	private int token;
 	
-	public MCQuery(){} // for testing, defaults to "localhost:25565"
-	public MCQuery(String address)
-	{
+	public MCQuery() {} // for testing, defaults to "localhost:25565"
+	
+	public MCQuery(String address) {
 		this(address, 25565);
 	}
-	public MCQuery(String address, int port)
-	{
+	
+	public MCQuery(String address, int port) {
 		serverAddress = address;
 		queryPort = port;
 	}
 	
 	// used to get a session token
-	private void handshake()
-	{
+	private void handshake() {
 		QueryRequest req = new QueryRequest();
 		req.type = HANDSHAKE;
 		req.sessionID = generateSessionID();
@@ -50,15 +48,15 @@ public class MCQuery
 		
 		token = Integer.parseInt(new String(result).trim());
 	}
-
+	
 	/**
 	 * Use this to get basic status information from the server.
+	 * 
 	 * @return a <code>QueryResponse</code> object
 	 */
-	public QueryResponse basicStat()
-	{
+	public QueryResponse basicStat() {
 		handshake(); //get the session token first
-
+		
 		QueryRequest req = new QueryRequest(); //create a request
 		req.type = STAT;
 		req.sessionID = generateSessionID();
@@ -73,13 +71,13 @@ public class MCQuery
 	
 	/**
 	 * Use this to get more information, including players, from the server.
+	 * 
 	 * @return a <code>QueryResponse</code> object
 	 */
-	public QueryResponse fullStat()
-	{
-//		basicStat() calls handshake()
-//		QueryResponse basicResp = this.basicStat();
-//		int numPlayers = basicResp.onlinePlayers; //TODO use to determine max length of full stat
+	public QueryResponse fullStat() {
+		//		basicStat() calls handshake()
+		//		QueryResponse basicResp = this.basicStat();
+		//		int numPlayers = basicResp.onlinePlayers; //TODO use to determine max length of full stat
 		
 		handshake();
 		
@@ -101,15 +99,12 @@ public class MCQuery
 		return res;
 	}
 	
-	private byte[] sendUDP(byte[] input)
-	{
-		try
-		{
-			while(socket == null)
-			{
+	private byte[] sendUDP(byte[] input) {
+		try {
+			while(socket == null) {
 				try {
 					socket = new DatagramSocket(localPort); //create the socket
-				} catch (BindException e) {
+				} catch(BindException e) {
 					++localPort; // increment if port is already in use
 				}
 			}
@@ -126,25 +121,18 @@ public class MCQuery
 			socket.receive(packet);
 			
 			return packet.getData();
-		}
-		catch (SocketException e)
-		{
+		} catch(SocketException e) {
 			e.printStackTrace();
-		}
-		catch (SocketTimeoutException e)
-		{
+		} catch(SocketTimeoutException e) {
 			//System.err.println("Socket Timeout! Is the server offline?");
 			//System.exit(1);
 			// throw exception
-		}
-		catch (UnknownHostException e)
-		{
+		} catch(UnknownHostException e) {
 			System.err.println("Unknown host!");
 			e.printStackTrace();
 			//System.exit(1);
 			// throw exception
-		}
-		catch (Exception e) //any other exceptions that may occur
+		} catch(Exception e) //any other exceptions that may occur
 		{
 			e.printStackTrace();
 		}
@@ -152,8 +140,7 @@ public class MCQuery
 		return null;
 	}
 	
-	private int generateSessionID()
-	{
+	private int generateSessionID() {
 		/*
 		 * Can be anything, so we'll just use 1 for now. Apparently it can be omitted altogether.
 		 * TODO: increment each time, or use a random int
@@ -162,34 +149,31 @@ public class MCQuery
 	}
 	
 	@Override
-	public void finalize()
-	{
+	public void finalize() {
 		socket.close();
 	}
 	
 	//debug
-	static void printBytes(byte[] arr)
-	{
-		for(byte b : arr) System.out.print(b + " ");
+	static void printBytes(byte[] arr) {
+		for(byte b : arr)
+			System.out.print(b + " ");
 		System.out.println();
 	}
-	static void printHex(byte[] arr)
-	{
+	
+	static void printHex(byte[] arr) {
 		System.out.println(toHex(arr));
 	}
-	static String toHex(byte[] b)
-	{
+	
+	static String toHex(byte[] b) {
 		String out = "";
-		for(byte bb : b)
-		{
+		for(byte bb : b) {
 			out += String.format("%02X ", bb);
 		}
 		return out;
 	}
 	
 	//Testing
-	public static void main(String args[])
-	{
+	public static void main(String args[]) {
 		MCQuery mc = new MCQuery();
 		
 		System.out.println(mc.basicStat().toString());

@@ -9,40 +9,39 @@ import java.util.logging.Level;
 
 public class RankThread extends Thread {
 	@Override
-	public void run(){
-		while(true){
-			try{Thread.sleep(1000);}catch(Exception err){}
-			for(Entry<String, String> data : DonationMechanics.async_set_rank.entrySet()){
+	public void run() {
+		while(true) {
+			try {
+				Thread.sleep(1000);
+			} catch(Exception err) {}
+			for(Entry<String, String> data : DonationMechanics.async_set_rank.entrySet()) {
 				String p_name = data.getKey();
 				String rank = data.getValue();
-
+				
 				Connection con = null;
 				PreparedStatement pst = null;
-
+				
 				try {
 					con = DriverManager.getConnection(DonationMechanics.sql_url, DonationMechanics.sql_user, DonationMechanics.sql_password);
-					pst = con.prepareStatement( 
-							"INSERT INTO player_database (p_name, rank)"
-									+ " VALUES"
-									+ "('"+ p_name + "', '"+ rank +"') ON DUPLICATE KEY UPDATE rank='" + rank + "'");
-
+					pst = con.prepareStatement("INSERT INTO player_database (p_name, rank)" + " VALUES" + "('" + p_name + "', '" + rank + "') ON DUPLICATE KEY UPDATE rank='" + rank + "'");
+					
 					pst.executeUpdate();
 					DonationMechanics.sendMessageToProxy("[rank]" + p_name + "@" + rank);
 					DonationMechanics.log.info("[DonationMechanics] Set rank of player " + p_name + " to " + rank);
-
-				} catch (SQLException ex) {
+					
+				} catch(SQLException ex) {
 					DonationMechanics.log.log(Level.SEVERE, ex.getMessage(), ex);
-
+					
 				} finally {
 					try {
-						if (pst != null) {
+						if(pst != null) {
 							pst.close();
 						}
-						if (con != null) {
+						if(con != null) {
 							con.close();
 						}
-
-					} catch (SQLException ex) {
+						
+					} catch(SQLException ex) {
 						DonationMechanics.log.log(Level.WARNING, ex.getMessage(), ex);
 					}
 				}

@@ -12,28 +12,26 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class CommandSetFish implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		Player p = (Player)sender;
-
-		if(!(p.isOp())){
-			return true;
-		}
+		Player p = (Player) sender;
 		
-		if(args.length != 1){
+		if(!(p.isOp())) { return true; }
+		
+		if(args.length != 1) {
 			p.sendMessage("/setfish [none, t1, t2, t3, t4, t5]");
 			return true;
 		}
-
+		
 		String fish_type = args[0];
-
-		if(fish_type.equalsIgnoreCase("none")){
+		
+		if(fish_type.equalsIgnoreCase("none")) {
 			ProfessionMechanics.fishing_place.remove(p.getName());
 			p.sendMessage(ChatColor.RED + "Your block placements will no longer be recorded as fishing locations.");
 			return true;
 		}
-
+		
 		ProfessionMechanics.fishing_place.put(p.getName(), fish_type);
 		p.setItemInHand(new ItemStack(Material.WATER_LILY, -1));
 		p.setGameMode(GameMode.CREATIVE);

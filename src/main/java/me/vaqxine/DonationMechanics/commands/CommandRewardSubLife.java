@@ -9,22 +9,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandRewardSubLife implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		//
-		if(sender != null){
+		if(sender != null) {
 			sender.sendMessage("Donation Mechanics currently disabled!");
 			return true;
 		}
 		//
 		
 		Player ps = null;
-		if(sender instanceof Player){
-			ps = (Player)sender;
-			if(!(ps.isOp())){
-				return true;
-			}
+		if(sender instanceof Player) {
+			ps = (Player) sender;
+			if(!(ps.isOp())) { return true; }
 		}
 		
 		DonationMechanics.tickLifetimeSubEcash();

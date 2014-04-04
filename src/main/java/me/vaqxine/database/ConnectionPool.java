@@ -15,7 +15,7 @@ public class ConnectionPool {
 	public static Connection getConnection() {
 		try {
 			if(refresh || con == null || con.isClosed()) {
-				refresh = false;				
+				refresh = false;
 				if(con != null) con.close();
 				con = DriverManager.getConnection(Hive.sql_url, Hive.sql_user, Hive.sql_password);
 			}

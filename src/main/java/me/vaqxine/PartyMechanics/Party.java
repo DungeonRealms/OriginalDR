@@ -77,7 +77,7 @@ public class Party {
 		
 		String name = (p == leader ? ChatColor.BOLD : "") + "" + p.getName();
 		if(name.length() > 16) name = name.substring(0, 16);
-		for(Player x : getPartyMembers()){
+		for(Player x : getPartyMembers()) {
 			ScoreboardMechanics.getBoard(x).resetScores(Bukkit.getOfflinePlayer(name));
 		}
 		
@@ -105,7 +105,7 @@ public class Party {
 				remaining_members.add(s);
 			}
 			leader = Bukkit.getPlayer(remaining_members.get(party_index));
-			for(Player x : getPartyMembers()){
+			for(Player x : getPartyMembers()) {
 				ScoreboardMechanics.getBoard(x).resetScores(leader);
 			}
 			// TODO MOVES THIS
@@ -157,13 +157,13 @@ public class Party {
 	
 	public void updateScoreboard(Update update) {
 		if(update == Update.HEALTH) {
-			for(Player p : getPartyMembers()){
-				if(ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.SIDEBAR) == null){
+			for(Player p : getPartyMembers()) {
+				if(ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.SIDEBAR) == null) {
 					Objective obj = ScoreboardMechanics.getBoard(p).registerNewObjective("player_data", "dummy");
 					obj.setDisplayName(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "Party");
-			        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+					obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 				}
-				for(Player t : getPartyMembers()){
+				for(Player t : getPartyMembers()) {
 					String name = (t == leader ? ChatColor.BOLD : "") + "" + t.getName();
 					if(name.length() > 16) name = name.substring(0, 16);
 					ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.SIDEBAR).getScore(Bukkit.getOfflinePlayer(name)).setScore(HealthMechanics.getPlayerHP(ChatColor.stripColor(t.getName())));

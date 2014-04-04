@@ -12,27 +12,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class CommandHQuery implements CommandExecutor {
-
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(sender instanceof Player){
-            Player p = (Player)sender;
-            if(!(p.isOp())){
-                return true;
-            }
-            if(args.length == 2){
-                CommunityMechanics.sendPacketCrossServer("[toggleshard]", -1, true);
-                p.sendMessage(ChatColor.RED + "Send toggleshard to all servers.");
-            }
-            if(args.length == 1){
-                ItemStack helm = new ItemStack(Material.getMaterial(Integer.parseInt(args[0])), 1);
-                p.getInventory().setHelmet(helm);
-            }
-            if(args.length == 3){
-                Hive.restoreCorruptShops(true);
-                // Wipes all IP banned players.
-                /*PreparedStatement pst = null;
+		if(sender instanceof Player) {
+			Player p = (Player) sender;
+			if(!(p.isOp())) { return true; }
+			if(args.length == 2) {
+				CommunityMechanics.sendPacketCrossServer("[toggleshard]", -1, true);
+				p.sendMessage(ChatColor.RED + "Send toggleshard to all servers.");
+			}
+			if(args.length == 1) {
+				ItemStack helm = new ItemStack(Material.getMaterial(Integer.parseInt(args[0])), 1);
+				p.getInventory().setHelmet(helm);
+			}
+			if(args.length == 3) {
+				Hive.restoreCorruptShops(true);
+				// Wipes all IP banned players.
+				/*PreparedStatement pst = null;
 				try{
 					pst = ConnectionPool.getConneciton().prepareStatement( 
 							"SELECT pname FROM ban_list WHERE ip IS NOT NULL && pname IS NOT NULL");
@@ -85,9 +83,9 @@ public class CommandHQuery implements CommandExecutor {
 						Hive.log.log(Level.WARNING, ex.getMessage(), ex);
 					}
 				}*/
-            }
-        }
-        /*Thread t = new Thread(new Runnable() {
+			}
+		}
+		/*Thread t = new Thread(new Runnable() {
 			public void run() {
 				List<String> reported_offline = new ArrayList<String>();
 				PreparedStatement pst = null;

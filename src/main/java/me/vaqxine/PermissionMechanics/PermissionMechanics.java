@@ -34,13 +34,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PermissionMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
-
+	
 	public static HashMap<String, String> rank_map = new HashMap<String, String>();
-
+	
 	public static HashMap<String, Integer> rank_forumgroup = new HashMap<String, Integer>();
+	
 	// Rank name, Forum group ID.
-
-	public void onEnable() {    
+	
+	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		
 		Main.plugin.getCommand("setrank").setExecutor(new CommandSetRank());
@@ -54,173 +55,167 @@ public class PermissionMechanics implements Listener {
 		rank_forumgroup.put("sub++", 79);
 		rank_forumgroup.put("gm", 72);
 		rank_forumgroup.put("wd", 72);
-
+		
 		log.info("[PermissionMechanics] has been enabled.");
 	}
-
+	
 	public void onDisable() {
 		log.info("[PermissionMechanics] has been disabled.");
 	}
-
+	
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerJoin(final PlayerJoinEvent e){
+	public void onPlayerJoin(final PlayerJoinEvent e) {
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {
-
+				
 				final Player p = e.getPlayer();
 				String p_name = p.getName();
-				if(p_name.length() > 13){
+				if(p_name.length() > 13) {
 					p_name = p_name.substring(0, 13);
 				}
-				if(!(rank_map.containsKey(p.getName()))){return;}
+				if(!(rank_map.containsKey(p.getName()))) { return; }
 				final String rank = getRank(p.getName());
 				boolean set = false;
-
-				if(rank.equalsIgnoreCase("pmod")){
+				
+				if(rank.equalsIgnoreCase("pmod")) {
 					p.setPlayerListName(ChatColor.WHITE.toString() + p_name);
 					set = true;
 				}
-				if(p.isOp() || rank.equalsIgnoreCase("gm")){
+				if(p.isOp() || rank.equalsIgnoreCase("gm")) {
 					p.setPlayerListName(ChatColor.AQUA.toString() + p_name);
 					set = true;
 				}
-				if(set == false){
+				if(set == false) {
 					p.setPlayerListName(ChatColor.GRAY.toString() + p_name);
 				}
 			}
 		}, 10L);
 	}
-
-	public static void downloadRank(String p_name){
+	
+	public static void downloadRank(String p_name) {
 		Connection con = null;
 		PreparedStatement pst = null;
-
+		
 		try {
-			pst = ConnectionPool.getConnection().prepareStatement( 
-					"SELECT rank FROM player_database WHERE p_name = '" + p_name + "'");
-
+			pst = ConnectionPool.getConnection().prepareStatement("SELECT rank FROM player_database WHERE p_name = '" + p_name + "'");
+			
 			pst.execute();
 			ResultSet rs = pst.getResultSet();
-			if(!rs.next()){
+			if(!rs.next()) {
 				setRank(p_name, "default", true);
 				return;
 			}
 			String rank = rs.getString("rank");
 			setRank(p_name, rank, false);
-
-		} catch (SQLException ex) {
-			log.log(Level.SEVERE, ex.getMessage(), ex);      
-
+			
+		} catch(SQLException ex) {
+			log.log(Level.SEVERE, ex.getMessage(), ex);
+			
 		} finally {
 			try {
-				if (pst != null) {
+				if(pst != null) {
 					pst.close();
 				}
-				if (con != null) {
+				if(con != null) {
 					con.close();
 				}
-
-			} catch (SQLException ex) {
+				
+			} catch(SQLException ex) {
 				log.log(Level.WARNING, ex.getMessage(), ex);
 			}
 		}
 	}
-
-	public static void uploadRank(final String pname){
-
+	
+	public static void uploadRank(final String pname) {
+		
 		String rank = getRank(pname);
-
-		Hive.sql_query.add("INSERT INTO player_database (p_name, rank)"
-				+ " VALUES"
-				+ "('"+ pname + "', '"+ rank +"') ON DUPLICATE KEY UPDATE rank ='" + rank + "'");
-
+		
+		Hive.sql_query.add("INSERT INTO player_database (p_name, rank)" + " VALUES" + "('" + pname + "', '" + rank + "') ON DUPLICATE KEY UPDATE rank ='" + rank + "'");
+		
 	}
-
-	public static void setRank(String p_name, String rank, boolean upload_sql){
+	
+	public static void setRank(String p_name, String rank, boolean upload_sql) {
 		Player p = null;
-		if(Bukkit.getPlayer(p_name) != null && Bukkit.getPlayer(p_name).isOnline()){
+		if(Bukkit.getPlayer(p_name) != null && Bukkit.getPlayer(p_name).isOnline()) {
 			p = Bukkit.getPlayer(p_name);
 			p_name = p.getName(); // Correct the name if we can.
 		}
-
-		if(rank == null){
+		
+		if(rank == null) {
 			rank = "default";
 		}
-
-		if(rank_map.containsKey(p_name)){
+		
+		if(rank_map.containsKey(p_name)) {
 			String current_rank = rank_map.get(p_name);
-			if(current_rank == null){
+			if(current_rank == null) {
 				current_rank = "default";
 			}
-			if(current_rank != null){
-				if((current_rank.equalsIgnoreCase("pmod") && !rank.equalsIgnoreCase("gm") && !rank.equalsIgnoreCase("default")) 
-						|| current_rank.equalsIgnoreCase("gm") && !rank.equalsIgnoreCase("default")){
+			if(current_rank != null) {
+				if((current_rank.equalsIgnoreCase("pmod") && !rank.equalsIgnoreCase("gm") && !rank.equalsIgnoreCase("default")) || current_rank.equalsIgnoreCase("gm") && !rank.equalsIgnoreCase("default")) {
 					// Not demote, not promote, ignore sub.
 					return;
-				}
-				else{
+				} else {
 					rank_map.put(p_name, rank);
 				}
 			}
-		}
-		else{
+		} else {
 			rank_map.put(p_name, rank);
 		}
-
+		
 		final String frank = rank;
-
-		if(upload_sql){
+		
+		if(upload_sql) {
 			uploadRank(p_name);
 			final String fp_name = p_name;
-			Thread t = new Thread(new Runnable(){
-				public void run(){
+			Thread t = new Thread(new Runnable() {
+				public void run() {
 					int user_id = DonationMechanics.getForumUserID(fp_name);
 					DonationMechanics.addForumGroup(user_id, rank_forumgroup.get(frank.toLowerCase()));
 					Socket kkSocket = null;
 					PrintWriter out = null;
 					try {
-
+						
 						kkSocket = new Socket();
 						//kkSocket.bind(new InetSocketAddress(Hive.local_IP, Hive.transfer_port+1));
 						kkSocket.connect(new InetSocketAddress(Hive.Proxy_IP, Hive.transfer_port), 250);
 						out = new PrintWriter(kkSocket.getOutputStream(), true);
-
+						
 						out.println("[rank]" + fp_name + "@" + frank);
 						kkSocket.close();
-					} catch (IOException e) {
+					} catch(IOException e) {
 						//e.printStackTrace();
 						System.err.println(CC.RED + "Not connected to proxy!" + CC.DEFAULT);
 					}
-
-					if(out != null){
+					
+					if(out != null) {
 						out.close();
 					}
 				}
 			});
 			t.start();
 		}
-
-		if(p != null){
+		
+		if(p != null) {
 			String format_rank = rank;
-			if(rank.equalsIgnoreCase("sub")){
+			if(rank.equalsIgnoreCase("sub")) {
 				format_rank = ChatColor.GREEN + "Subscriber";
 			}
-			if(rank.equalsIgnoreCase("sub+")){
+			if(rank.equalsIgnoreCase("sub+")) {
 				format_rank = ChatColor.GOLD + "Subscriber+";
 			}
-			if(rank.equalsIgnoreCase("sub++")){
+			if(rank.equalsIgnoreCase("sub++")) {
 				format_rank = ChatColor.DARK_AQUA + "Subscriber++";
 			}
-			if(rank.equalsIgnoreCase("pmod")){
+			if(rank.equalsIgnoreCase("pmod")) {
 				format_rank = ChatColor.WHITE + "Player Moderator";
 			}
-			if(rank.equalsIgnoreCase("gm")){
+			if(rank.equalsIgnoreCase("gm")) {
 				format_rank = ChatColor.AQUA + "Game Master";
 			}
-			if(rank.equalsIgnoreCase("wd")){
+			if(rank.equalsIgnoreCase("wd")) {
 				format_rank = ChatColor.AQUA + "World Designer";
 			}
-
+			
 			p.sendMessage("");
 			p.sendMessage(ChatColor.YELLOW + "" + "Your Dungeon Realms rank has changed to '" + ChatColor.BOLD + format_rank + ChatColor.YELLOW + "'");
 			p.sendMessage("");
@@ -228,32 +223,27 @@ public class PermissionMechanics implements Listener {
 		
 		log.info("[PermissionMechanics] Set " + p_name + "'s RANK to " + rank);
 	}
-
-	public static String getRank(String p_name){
+	
+	public static String getRank(String p_name) {
 		p_name = p_name.replaceAll("'", "''");
-
-		if(!(rank_map.containsKey(p_name))){
+		
+		if(!(rank_map.containsKey(p_name))) {
 			PreparedStatement pst = null;
-
+			
 			try {
-				pst = ConnectionPool.getConnection().prepareStatement( 
-						"SELECT rank FROM player_database WHERE p_name = '" + p_name + "'");
-
+				pst = ConnectionPool.getConnection().prepareStatement("SELECT rank FROM player_database WHERE p_name = '" + p_name + "'");
+				
 				pst.execute();
 				ResultSet rs = pst.getResultSet();
 				
-				if(!rs.next()){
-					return "default";
-				}
+				if(!rs.next()) { return "default"; }
 				
 				final String rank = rs.getString("rank");
 				final String fp_name = p_name;
 				
-				if(rank == null || rank.equalsIgnoreCase("null")){
-					return "default";
-				}
+				if(rank == null || rank.equalsIgnoreCase("null")) { return "default"; }
 				
-				if(rank != null){
+				if(rank != null) {
 					// Send rank cross-server so it's locally saved.
 					List<Object> qdata = new ArrayList<Object>();
 					qdata.add("[rank_map]" + fp_name + ":" + rank);
@@ -262,37 +252,37 @@ public class PermissionMechanics implements Listener {
 					CommunityMechanics.social_query_list.put(p_name, qdata);
 					//CommunityMechanics.sendPacketCrossServer("[rank_map]" + fp_name + ":" + rank, -1, true);
 				}
-
+				
 				return rank;
-
-			} catch (SQLException ex) {
+				
+			} catch(SQLException ex) {
 				log.log(Level.SEVERE, ex.getMessage(), ex);
 				return "default";
-
+				
 			} finally {
 				try {
-					if (pst != null) {
+					if(pst != null) {
 						pst.close();
 					}
-
-				} catch (SQLException ex) {
+					
+				} catch(SQLException ex) {
 					log.log(Level.WARNING, ex.getMessage(), ex);
 					return "default";
 				}
 			}
 		}
-
+		
 		return rank_map.get(p_name);
 	}
 	
-	public boolean isPMOD(String p_name){
+	public boolean isPMOD(String p_name) {
 		String rank = getRank(p_name);
 		return rank.equalsIgnoreCase("GM") || rank.equalsIgnoreCase("PMOD") ? true : false;
 	}
 	
-	public static boolean isGM(String p_name){
+	public static boolean isGM(String p_name) {
 		String rank = getRank(p_name);
 		return rank.equalsIgnoreCase("GM") ? true : false;
 	}
-
+	
 }

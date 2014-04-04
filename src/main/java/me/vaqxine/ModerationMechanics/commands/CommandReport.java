@@ -9,25 +9,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandReport implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player p = null;
-		if(sender instanceof Player){
-			p = (Player)sender;
+		if(sender instanceof Player) {
+			p = (Player) sender;
 		}
 		
-		if(args.length != 0){
-			if(p != null){
+		if(args.length != 0) {
+			if(p != null) {
 				p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Invalid Syntax. " + ChatColor.RED + "/report");
 			}
 			return true;
 		}
-		if(ModerationMechanics.report_step.containsKey(p.getName())){
+		if(ModerationMechanics.report_step.containsKey(p.getName())) {
 			p.sendMessage(ChatColor.RED + "Please complete your pending REPORT before filing a new one. Type 'cancel' to void your pending report.");
 			return true;
 		}
-
+		
 		p.sendMessage("");
 		p.sendMessage(ChatColor.DARK_RED + "                " + ChatColor.BOLD + "*** NEW REPORT SUBMISSION ***");
 		p.sendMessage(ChatColor.DARK_RED + "" + ChatColor.GRAY + "Enter the " + ChatColor.BOLD + "TOPIC #" + ChatColor.GRAY + " of the report to submit.");
@@ -36,5 +36,5 @@ public class CommandReport implements CommandExecutor {
 		
 		return true;
 	}
-
+	
 }

@@ -5,7 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 public class CommandCheck implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		//Player p = null;
@@ -13,9 +13,7 @@ public class CommandCheck implements CommandExecutor {
 		//	p = (Player)sender;
 		//}
 		
-		
-		
 		return true;
 	}
-
+	
 }

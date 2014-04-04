@@ -8,7 +8,7 @@ public class SubscriberMechanics {
 	public void onEnable() {
 		log.info("[SubscriberMechanics] has been enabled.");
 	}
-
+	
 	public void onDisable() {
 		log.info("[SubscriberMechanics] has been disabled.");
 	}
