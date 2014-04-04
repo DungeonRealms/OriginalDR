@@ -15,6 +15,7 @@ import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.FatigueMechanics.FatigueMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
+import me.vaqxine.HearthstoneMechanics.HearthstoneMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.HiveServer.HiveServer;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
@@ -87,6 +88,7 @@ public class Main extends JavaPlugin {
 	public static TradeMechanics tradeMechanics;
 	public static TutorialMechanics tutorialMechanics;
 	public static WeatherMechanics weatherMechanics;
+	public static HearthstoneMechanics hearthstoneMechanics;
 	public static Hive hive;
 	public static HiveServer hiveServer;
 	
@@ -100,7 +102,7 @@ public class Main extends JavaPlugin {
 		log = this.getLogger();
 		
 		getServer().getPluginManager().registerEvents(new ScoreboardMechanics(), this);
-		
+		hearthstoneMechanics = new HearthstoneMechanics();
 		achievmentMechanics = new AchievmentMechanics();
 		bossMechanics = new BossMechanics();
 		chatMechanics = new ChatMechanics();
@@ -141,6 +143,7 @@ public class Main extends JavaPlugin {
 		hiveServer = new HiveServer();
 		
 		hive.onEnable();
+		hearthstoneMechanics.onEnable();
 		hiveServer.onEnable();
 		achievmentMechanics.onEnable();
 		bossMechanics.onEnable();

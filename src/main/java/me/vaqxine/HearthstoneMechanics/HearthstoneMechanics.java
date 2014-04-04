@@ -23,14 +23,18 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.command.defaults.ClearCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
+import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -44,10 +48,11 @@ public class HearthstoneMechanics implements Listener {
     // Countdown timer for the stone calling
     public static HashMap<String, Location> spawn_map = new HashMap<String, Location>();
     // Location Name, Location - Used to get locations fromt he name in the sql
-    String templatePath_s = "plugins/HearthstoneMechanics/spawn_locations.dat";
+    static String templatePath_s = "plugins/HearthstoneMechanics/spawn_locations.dat";
 
     public void onEnable() {
         Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
+        loadSpawnLocationTemplate();
         new BukkitRunnable() {
             public void run() {
                 for (Entry<String, Integer> timer_data : hearthstone_timer.entrySet()) {
@@ -105,7 +110,7 @@ public class HearthstoneMechanics implements Listener {
                     time_left -= 1;
                     Player p = hs.getPlayer();
                     if(p == null){
-                        hearthstone_map.remove(p.getName());
+                        hearthstone_map.remove(p_name);
                         continue;
                     }
                     
@@ -120,7 +125,20 @@ public class HearthstoneMechanics implements Listener {
             }
         }.runTaskTimerAsynchronously(Main.plugin, 0 , 20L);
     }
-
+    public void onDisable(){
+        for(Hearthstone hs : hearthstone_map.values()){
+            hs.saveData();
+        }
+        hearthstone_map.clear();
+    }
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event){
+        Player p = event.getPlayer();
+        getHearthStone(p.getName()).saveData();
+        hearthstone_location.remove(p.getName());
+        hearthstone_map.remove(p.getName());
+        hearthstone_timer.remove(p.getName());
+    }
     @EventHandler(priority = EventPriority.MONITOR)
     public void Prelogin(AsyncPlayerPreLoginEvent e) {
         // They werent able to login for some reason.
@@ -137,7 +155,30 @@ public class HearthstoneMechanics implements Listener {
             System.out.print("NO HEARTHSTONE DATA FOR " + e.getPlayer());
         }
     }
-
+    @EventHandler
+    public void onPlayerDamage(EntityDamageEvent e){
+        if(e instanceof Player){
+            Player p = ((Player) e).getPlayer();
+            if(hearthstone_timer.containsKey(p.getName())){
+                removeHearthstoneTimer(p.getName());
+                p.sendMessage(ChatColor.RED + "Hearthstone -" + ChatColor.BOLD + " CANCELLED");
+                p.sendMessage(ChatColor.GRAY + "Your Hearthstone has been put on a 3 minute cooldown timer.");
+                // 5 minutes
+                getHearthStone(p.getName()).setTimer(60 * 3);
+            }
+        }
+    }
+    @EventHandler
+    public void onPlayerAnimation(PlayerAnimationEvent e){
+        Player p = e.getPlayer();
+        if(hearthstone_location.containsKey(p.getName())){
+            removeHearthstoneTimer(p.getName());
+            p.sendMessage(ChatColor.RED + "Hearthstone -" + ChatColor.BOLD + " CANCELLED");
+            p.sendMessage(ChatColor.GRAY + "Your Hearthstone has been put on a 3 minute cooldown timer.");
+            // 5 minutes
+            getHearthStone(p.getName()).setTimer(60 * 3);
+        }
+    }
     @EventHandler
     public void onHearthStoneEvent(PlayerInteractEvent e) {
         if (!e.hasItem())
@@ -163,7 +204,7 @@ public class HearthstoneMechanics implements Listener {
                 + ChatColor.WHITE + " ... 10s");
     }
 
-    public void loadSpawnLocationTemplate() {
+    public static void loadSpawnLocationTemplate() {
         spawn_map.put("Cyrennica", Bukkit.getWorlds().get(0).getSpawnLocation());
         if (!(new File(templatePath_s).exists())) {
             try {
@@ -203,7 +244,7 @@ public class HearthstoneMechanics implements Listener {
         }
     }
 
-    public void saveSpawnLocationData() {
+    public static void saveSpawnLocationData() {
         String all_dat = "";
         int count = 0;
 
@@ -219,7 +260,7 @@ public class HearthstoneMechanics implements Listener {
 
         if (all_dat.length() > 1) {
             try {
-                DataOutputStream dos = new DataOutputStream(new FileOutputStream("plugins/HearthstoneMechanics/spawn_location.dat", false));
+                DataOutputStream dos = new DataOutputStream(new FileOutputStream(templatePath_s, false));
                 dos.writeBytes(all_dat + "\n");
                 dos.close();
                 System.out.print("[HearthstoneMechanics] Saved " + count + " spawns.");
@@ -228,8 +269,10 @@ public class HearthstoneMechanics implements Listener {
         }
     }
     public static void reloadSpawn(){
-        
+        saveSpawnLocationData();
+        loadSpawnLocationTemplate();
     }
+
     public void removeHearthstoneTimer(String p_name) {
         hearthstone_location.remove(p_name);
         hearthstone_timer.remove(p_name);

@@ -74,7 +74,8 @@ public class Hearthstone {
                     pst.setInt(2, timer_seconds);
                     pst.setString(3, p_name);
                     pst.executeUpdate();
-
+                    pst.close();
+                    System.out.print("[HeartstoneMechanics] Saved " + p.getName() + "s Hearthstone data.");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
