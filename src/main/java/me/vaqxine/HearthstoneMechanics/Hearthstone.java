@@ -40,6 +40,7 @@ public class Hearthstone {
             if (!rst.next()) {
                 tp_loc = HearthstoneMechanics.spawn_map.get("Cyrennica");
                 tp_name = "Cyrennica";
+                sendInsertQuery();
                 return;
             }
             tp_name = rst.getString("location_name");
@@ -47,11 +48,9 @@ public class Hearthstone {
                 System.out.print("Location name was null for " + p_name);
             }
             tp_loc = HearthstoneMechanics.spawn_map.get(rst.getString("location_name"));
-            if (tp_loc == null) {
-
-            }
+            setTimer(rst.getInt("timer"));
             // TODO: Download the data from tables and set their spawns
-            pst.close();
+            System.out.print("Loaded Hearthstone data for " + p_name);
         } catch (SQLException sqlE) {
             sqlE.printStackTrace();
         }
@@ -64,7 +63,18 @@ public class Hearthstone {
     /**
      * This saves all their data in an Async task
      */
-
+    public void sendInsertQuery(){
+        try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
+                "INSERT IGNORE INTO hearthstone (p_name, location_name, timer) VALUES (?, ?, 0) ON DUPLICATE KEY UPDATE p_name = ?;")) {
+            pst.setString(1, tp_name);
+            pst.setString(2, "Cyrennica");
+            pst.setString(3, p_name);
+            pst.executeUpdate();
+            System.out.print("[HeartstoneMechanics] Saved " + p_name + "s Hearthstone data for the first time.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void saveData() {
         new BukkitRunnable() {
             public void run() {
@@ -74,7 +84,6 @@ public class Hearthstone {
                     pst.setInt(2, timer_seconds);
                     pst.setString(3, p_name);
                     pst.executeUpdate();
-                    pst.close();
                     System.out.print("[HeartstoneMechanics] Saved " + p.getName() + "s Hearthstone data.");
                 } catch (Exception e) {
                     e.printStackTrace();

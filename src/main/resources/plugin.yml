@@ -305,6 +305,9 @@ commands:
   mnote:
     description: Root command.
     usage: /<command>
+  addhearthstone:
+    description: Adds a hearthstone spawn point.
+    usage: /<command>
   showms:
     description: Show mob spawners visually.
     usage: /<command>

@@ -1197,7 +1197,7 @@ public class EcashMechanics implements Listener {
 					return;
 				}
 				
-				if(x_current.getType() == Material.WRITTEN_BOOK || x_current.getType() == Material.NETHER_STAR) {
+				if(x_current.getType() == Material.WRITTEN_BOOK || x_current.getType() == Material.NETHER_STAR || x_current.getType() == Material.QUARTZ) {
 					pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " modify this item.");
 					return;
 				}
@@ -1260,7 +1260,7 @@ public class EcashMechanics implements Listener {
 					return;
 				}
 				
-				if(x_current.getType() == Material.WRITTEN_BOOK || x_current.getType() == Material.NETHER_STAR) {
+				if(x_current.getType() == Material.WRITTEN_BOOK || x_current.getType() == Material.NETHER_STAR || x_current.getType() == Material.QUARTZ) {
 					pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " modify this item.");
 					return;
 				}

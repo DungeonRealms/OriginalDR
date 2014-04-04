@@ -438,7 +438,7 @@ public class Hive implements Listener {
 					out.println("[online]" + MOTD.substring(0, MOTD.indexOf(" ")));
 					kkSocket.close();
 				} catch(IOException e) {
-					System.err.println(CC.RED + "Can't connect to the proxy! Server not whitelisted!");
+					System.err.println(CC.RED + "Can't connect to the proxy! Server not whitelisted!" + CC.WHITE);
 				}
 				
 				if(out != null) {
@@ -1991,7 +1991,6 @@ public class Hive implements Listener {
 				// Custom name!
 				im.setDisplayName(i_name);
 			}
-			
 			if(!(i_lore.equalsIgnoreCase("null"))) {
 				// Lore!
 				List<String> all_lore = new ArrayList<String>();
@@ -2788,7 +2787,7 @@ public class Hive implements Listener {
 		boolean VIP = false;
 		String rank = getServerRank(p_name);
 		
-		if(!rank.equalsIgnoreCase("default")) {
+		if(!rank.equalsIgnoreCase("default") || of.isOp()) {
 			VIP = true;
 		}
 		
@@ -3474,7 +3473,7 @@ public class Hive implements Listener {
 			List<ItemStack> armor_list = new ArrayList<ItemStack>();
 			
 			for(ItemStack is : p.getInventory().getContents()) {
-				if(is == null || is.getType() == Material.AIR || is.getType() == Material.NETHER_STAR || CommunityMechanics.isSocialBook(is) || !RealmMechanics.isItemTradeable(is)) {
+				if(is == null || is.getType() == Material.AIR || is.getType() == Material.NETHER_STAR || is.getType() == Material.QUARTZ|| CommunityMechanics.isSocialBook(is) || !RealmMechanics.isItemTradeable(is)) {
 					continue;
 				}
 				l_is.add(is);

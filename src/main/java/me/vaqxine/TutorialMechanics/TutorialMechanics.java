@@ -45,6 +45,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -159,7 +160,13 @@ public class TutorialMechanics implements Listener {
 			}
 		}
 	}
-	
+	@EventHandler
+	public void onTPOUT(PlayerTeleportEvent e){
+	    if(onIsland.contains(e.getPlayer().getName())){
+	        onIsland.remove(e.getPlayer().getName());
+	        System.out.print("Removed " + e.getPlayer().getName() + " from the onIsland HashMap!");
+	    }
+	}
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
 		Player pl = e.getPlayer();
@@ -190,7 +197,7 @@ public class TutorialMechanics implements Listener {
 		if(onTutorialIsland(pl)) {
 			
 			for(ItemStack is : pl.getInventory()) {
-				if(is == null || is.getType() == Material.AIR || is.getType() == Material.WRITTEN_BOOK || is.getType() == Material.NETHER_STAR || is.getType() == Material.MONSTER_EGG) {
+				if(is == null || is.getType() == Material.AIR || is.getType() == Material.WRITTEN_BOOK || is.getType() == Material.QUARTZ || is.getType() == Material.NETHER_STAR || is.getType() == Material.MONSTER_EGG) {
 					continue;
 				}
 				pl.getInventory().remove(is);

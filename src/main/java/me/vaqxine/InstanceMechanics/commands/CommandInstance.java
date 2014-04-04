@@ -1,5 +1,9 @@
 package me.vaqxine.InstanceMechanics.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.PartyMechanics.PartyMechanics;
 
@@ -40,7 +44,13 @@ public class CommandInstance implements CommandExecutor {
 		String sub_cmd = args[0];
 		if(sub_cmd.equalsIgnoreCase("load")) {
 			String instance_name = args[1];
-			String new_instance = InstanceMechanics.linkInstanceToParty(instance_name, PartyMechanics.party_map.get(p.getName()).getPartyList(), false); // Define new instance.
+			List<String> party_members = new ArrayList<String>();
+			if(PartyMechanics.party_map.containsKey(p.getName())){
+			    party_members = PartyMechanics.party_map.get(p.getName()).getPartyList();
+			}else{
+			    party_members = Arrays.asList(p.getName());
+			}
+			String new_instance = InstanceMechanics.linkInstanceToParty(instance_name, party_members, false); // Define new instance.
 			if(!(InstanceMechanics.teleport_on_load.contains(p.getName()))) {
 				InstanceMechanics.teleport_on_load.add(p.getName());
 			}

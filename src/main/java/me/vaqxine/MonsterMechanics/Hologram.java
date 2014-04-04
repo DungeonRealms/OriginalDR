@@ -29,7 +29,6 @@ public class Hologram {
 	private static final double distance = 0.23;
 	static String name;
 	static Location location_return;
-	static EntityHorse eh;
 	
 	private static List<Integer> showLine(final Location loc, String text, final Player single_target) {
 		name = text;
@@ -40,12 +39,10 @@ public class Hologram {
 		final PacketPlayOutSpawnEntity packet_skull = new PacketPlayOutSpawnEntity(skull, 66);
 		
 		final EntityHorse horse = new EntityHorse(world);
-		eh = horse;
 		horse.setLocation(loc.getX(), loc.getY() + 55, loc.getZ(), 0, 0);
 		horse.setAge(-1700000);
 		horse.setCustomName(text);
 		horse.setCustomNameVisible(true);
-		world.addEntity(horse, SpawnReason.CUSTOM);
 		final PacketPlayOutSpawnEntityLiving packedt = new PacketPlayOutSpawnEntityLiving(horse);
 		
 		Main.plugin.getServer().getScheduler().runTaskAsynchronously(Main.plugin, new Runnable() {
@@ -138,8 +135,6 @@ public class Hologram {
 				}
 			}
 		});
-		((CraftWorld) location.getWorld()).getHandle().removeEntity(eh);
-		System.out.print("REMOVED THE ENTITIY!");
 		this.showing = false;
 		this.location = null;
 		

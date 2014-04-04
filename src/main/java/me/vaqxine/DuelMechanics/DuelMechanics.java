@@ -923,7 +923,7 @@ public class DuelMechanics implements Listener {
 			return;
 		}
 		
-		if(e.getCurrentItem().getType() == Material.NETHER_STAR || CommunityMechanics.isSocialBook(e.getCurrentItem()) || !(RealmMechanics.isItemTradeable(e.getCursor())) || !(RealmMechanics.isItemTradeable(e.getCurrentItem()))) {
+		if(e.getCurrentItem().getType() == Material.NETHER_STAR || e.getCurrentItem().getType() == Material.QUARTZ|| CommunityMechanics.isSocialBook(e.getCurrentItem()) || !(RealmMechanics.isItemTradeable(e.getCursor())) || !(RealmMechanics.isItemTradeable(e.getCurrentItem()))) {
 			e.setCancelled(true);
 			clicker.sendMessage(ChatColor.RED + "Untradeable Item.");
 			return;
@@ -1847,7 +1847,7 @@ public class DuelMechanics implements Listener {
 		
 		if(CommunityMechanics.isSocialBook(attacker.getItemInHand())) { return; }
 		
-		if(attacker.getItemInHand().getType() == Material.NETHER_STAR) { return; }
+		if(attacker.getItemInHand().getType() == Material.NETHER_STAR || attacker.getItemInHand().getType() == Material.QUARTZ) { return; }
 		
 		if(duel_map.containsKey(attacked.getName())) {
 			if(!(duel_map.get(attacked.getName())).equalsIgnoreCase(attacker.getName())) {

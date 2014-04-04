@@ -2,7 +2,7 @@ package me.vaqxine.enums;
 
 public enum Delay {
 	
-	MELEE(500);
+	MELEE(250);
 	
 	public int delay;
 	

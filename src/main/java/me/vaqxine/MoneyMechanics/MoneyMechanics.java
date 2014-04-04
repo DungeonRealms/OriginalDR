@@ -1474,7 +1474,11 @@ public class MoneyMechanics implements Listener {
 			if(cb.contains(Material.NETHER_STAR)) {
 				cb.remove(Material.NETHER_STAR);
 			}
-			
+			if(cb.contains(Material.QUARTZ)){
+			    for(ItemStack is : cb.all(Material.QUARTZ).values()) {
+			        is.setType(Material.AIR);
+                }
+			}
 			if(cb.contains(Material.WRITTEN_BOOK)) {
 				for(ItemStack is : cb.all(Material.WRITTEN_BOOK).values()) {
 					if(CommunityMechanics.isSocialBook(is)) {
@@ -1511,6 +1515,9 @@ public class MoneyMechanics implements Listener {
 			
 			if(e.getInventory().contains(Material.NETHER_STAR)) {
 				e.getInventory().remove(Material.NETHER_STAR);
+			}
+			if(e.getInventory().contains(Material.QUARTZ)){
+			    e.getInventory().remove(Material.QUARTZ);
 			}
 			
 			if(e.getInventory().contains(Material.WRITTEN_BOOK)) {

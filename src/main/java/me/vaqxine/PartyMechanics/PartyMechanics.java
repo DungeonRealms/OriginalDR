@@ -52,7 +52,7 @@ public class PartyMechanics implements Listener {
 	public static ConcurrentHashMap<String, Long> party_invite_time = new ConcurrentHashMap<String, Long>();
 	// Player_name, Party_title
 	
-	public static HashMap<String, Party> party_map = new HashMap<String, Party>();
+	public static ConcurrentHashMap<String, Party> party_map = new ConcurrentHashMap<String, Party>();
 	// Party_name, Party_members
 	
 	public static HashMap<String, String> party_loot = new HashMap<String, String>();
@@ -115,7 +115,10 @@ public class PartyMechanics implements Listener {
 			@Override
 			public void run() {
 				for(String p_name : party_map.keySet()) {
-					if(Bukkit.getPlayer(p_name) == null) return;
+					if(Bukkit.getPlayer(p_name) == null){
+					    party_map.remove(p_name);
+					    continue;
+					}
 					if(parties_checked.contains(party_map.get(p_name))) continue;
 					//The party was already updated
 					Party party = party_map.get(p_name);

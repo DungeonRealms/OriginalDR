@@ -48,6 +48,7 @@ import net.minecraft.server.v1_7_R2.DataWatcher;
 import net.minecraft.server.v1_7_R2.EntityCreature;
 import net.minecraft.server.v1_7_R2.EntityLiving;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
+import net.minecraft.server.v1_7_R2.GenericAttributes;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
 
 import org.bukkit.Bukkit;
@@ -113,6 +114,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -510,7 +512,7 @@ public class MonsterMechanics implements Listener {
 			}
 		}, 13 * 20L, 10L);
 		
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				fixStuckEntities();
 				// Removes all entities present in entities_to_remove
@@ -2182,6 +2184,12 @@ public class MonsterMechanics implements Listener {
 			event.setDamage(0);
 			return;
 		}
+		if(event.getCause() == DamageCause.FIRE_TICK){
+		    Location l = event.getEntity().getLocation();
+		    if(l.getBlock().getType() == Material.FIRE || l.getBlock().getType() == Material.LAVA || l.clone().add(0, 1, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, 1, 0).getBlock().getType() == Material.LAVA || l.clone().add(0, -1, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, -1, 0).getBlock().getType() == Material.LAVA){
+		        event.setCancelled(true);
+		    }
+		}
 		if(event.getCause() == DamageCause.WITHER) {
 			if(InstanceMechanics.isInstance(event.getEntity().getWorld().getName())) return;
 			event.setCancelled(true);
@@ -2193,7 +2201,44 @@ public class MonsterMechanics implements Listener {
 			}
 		}
 	}
+	@EventHandler
+	public void onNPCDamage(EntityDamageEvent e){
+	    if(e.getEntity() instanceof Player){
+	        Player p = (Player) e.getEntity();
+	        if(!p.hasMetadata("NPC"))return;
+	        e.setCancelled(true);
+	    }
+	}
+	@EventHandler
+	public void onEntityTarget(EntityTargetLivingEntityEvent e){
+	    if(e.getTarget() instanceof Player && e.getTarget().hasMetadata("NPC")){
+	        e.setCancelled(true);
+	        e.setTarget(null);
+	    }
+	    if(e.getEntity() instanceof LivingEntity){
+	        LivingEntity le = (LivingEntity) e.getEntity();
+	        if(le.getType() == EntityType.ZOMBIE || le.getType() == EntityType.SKELETON || le.getType() == EntityType.SILVERFISH){
+	            ItemStack item_in_hand = le.getEquipment().getItemInHand();
+	            if(item_in_hand == null){
+	                return;
+	            }
+	            if(!isStaff(item_in_hand)){
+	                ((CraftLivingEntity)le).getHandle().getAttributeInstance(GenericAttributes.a).setValue(.35D);
+	            }
+	        }
+	    }
+	}
 	
+	public boolean isStaff(ItemStack is){
+	    if(is == null){
+	        return false;
+	    }
+	    Material m = is.getType();
+	    if(m == Material.WOOD_HOE || m == Material.STONE_HOE || m == Material.IRON_HOE || m == Material.DIAMOND_HOE || m == Material.GOLD_HOE){
+	        return true;
+	    }
+	    return false;
+	}
 	@EventHandler
 	public void onFireballExplodeEvent(ProjectileHitEvent e) {
 		if(e.getEntity() instanceof LargeFireball) {
@@ -5926,7 +5971,7 @@ public class MonsterMechanics implements Listener {
 		net.minecraft.server.v1_7_R2.ItemStack weapon = null;
 		ItemStack is_weapon = null;
 		
-		if(et == EntityType.WOLF || et == EntityType.IRON_GOLEM || et == EntityType.ENDERMAN || et == EntityType.BLAZE || et == EntityType.SILVERFISH || et == EntityType.WITCH || et == EntityType.MAGMA_CUBE || et == EntityType.SPIDER || et == EntityType.ZOMBIE || et == EntityType.CAVE_SPIDER) {
+		if(et == EntityType.WOLF || et == EntityType.IRON_GOLEM || et == EntityType.ENDERMAN || et == EntityType.BLAZE || et == EntityType.SILVERFISH || et == EntityType.WITCH || et == EntityType.MAGMA_CUBE || et == EntityType.SPIDER || et == EntityType.CAVE_SPIDER) {
 			is_weapon = spawnRandomMeleeWeapon(tier, false, true);
 		} else if(et == EntityType.PIG_ZOMBIE) {
 			is_weapon = spawnRandomMeleeWeapon(tier, true, false);
@@ -6233,11 +6278,17 @@ public class MonsterMechanics implements Listener {
 		dmg_range.add((int) Math.round(min_dmg));
 		dmg_range.add((int) Math.round(max_dmg));
 		//Spawns the custom zombie if they have a bow
-		if(et == EntityType.IRON_GOLEM) {
+		if(et == EntityType.ZOMBIE && is_weapon != null && is_weapon.getType() == Material.BOW){
+		    net.minecraft.server.v1_7_R2.World ws = ((CraftWorld) l.getWorld()).getHandle();
+		    ZombieArcher za = new ZombieArcher(ws);
+		    za.teleportTo(l, true);
+		    ws.addEntity(za);
+		    e = za.getBukkitEntity();
+		}else if(et == EntityType.IRON_GOLEM) {
 			net.minecraft.server.v1_7_R2.World ws = ((CraftWorld) l.getWorld()).getHandle();
 			Golem golem = new Golem(ws);
-			ws.addEntity(golem, SpawnReason.CUSTOM);
 			golem.setLocation(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
+			ws.addEntity(golem, SpawnReason.CUSTOM);
 			e = golem.getBukkitEntity();
 			((LivingEntity) e).getEquipment().setItemInHand(is_weapon);
 		} else {

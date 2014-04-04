@@ -1516,7 +1516,7 @@ public class ShopMechanics implements Listener {
 					if(is == null) {
 						continue;
 					}
-					if(!(RealmMechanics.isItemTradeable(is)) || PetMechanics.isPermUntradeable(is) || CommunityMechanics.isSocialBook(is) || is.getType() == Material.NETHER_STAR || InstanceMechanics.isDungeonItem(is)) {
+					if(!(RealmMechanics.isItemTradeable(is)) || PetMechanics.isPermUntradeable(is) || CommunityMechanics.isSocialBook(is) || is.getType() == Material.QUARTZ ||is.getType() == Material.NETHER_STAR || InstanceMechanics.isDungeonItem(is)) {
 						to_remove.add(is);
 					}
 				}
@@ -1752,7 +1752,7 @@ public class ShopMechanics implements Listener {
 						if(slot >= (i.getSize() - 1)) {
 							ItemStack cur_item = e.getCurrentItem();
 							
-							if(!RealmMechanics.isItemTradeable(cur_item) || CommunityMechanics.isSocialBook(cur_item) || cur_item.getType() == Material.NETHER_STAR || InstanceMechanics.isDungeonItem(cur_item)) {
+							if(!RealmMechanics.isItemTradeable(cur_item) || CommunityMechanics.isSocialBook(cur_item) || cur_item.getType() == Material.NETHER_STAR || cur_item.getType() == Material.QUARTZ|| InstanceMechanics.isDungeonItem(cur_item)) {
 								//p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " perform this action with an " + ChatColor.ITALIC + "untradeable" + ChatColor.RED + " item.");
 								e.setCancelled(true);
 								p.updateInventory();
@@ -2997,7 +2997,9 @@ public class ShopMechanics implements Listener {
 		EntityTrackerEntry entry = (EntityTrackerEntry) tracker.trackedEntities.get(entity.getEntityId());
 		
 		List<EntityPlayer> nmsPlayers = getNmsPlayers(observers);
-		
+		if(nmsPlayers == null){
+		    return;
+		}
 		entry.trackedPlayers.removeAll(nmsPlayers);
 		entry.scanPlayers(nmsPlayers);
 	}

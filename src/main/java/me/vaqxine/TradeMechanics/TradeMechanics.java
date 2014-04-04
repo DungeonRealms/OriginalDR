@@ -175,6 +175,9 @@ public class TradeMechanics implements Listener {
 		
 		Player target = null;
 		BlockIterator bItr = new BlockIterator(trader, 4);
+		if(bItr == null){
+		    return null;
+		}
 		Block block;
 		Location loc;
 		int bx, by, bz;
@@ -488,7 +491,7 @@ public class TradeMechanics implements Listener {
 		
 		if(!RealmMechanics.isItemTradeable(being_dropped)) { return; }
 		
-		if(CommunityMechanics.isSocialBook(e.getItemDrop().getItemStack()) || e.getItemDrop().getItemStack().getType() == Material.NETHER_STAR) { return; }
+		if(CommunityMechanics.isSocialBook(e.getItemDrop().getItemStack()) ||e.getItemDrop().getItemStack().getType() == Material.QUARTZ || e.getItemDrop().getItemStack().getType() == Material.NETHER_STAR) { return; }
 		
 		if(e.isCancelled()) { return; }
 		
@@ -863,7 +866,7 @@ public class TradeMechanics implements Listener {
 		Material cursor = e.getCursor().getType();
 		boolean left_side = false;
 		
-		if(e.getCurrentItem() != null && (e.getCurrentItem().getType() == Material.NETHER_STAR || CommunityMechanics.isSocialBook(e.getCurrentItem()) || !(isItemTradeable(e.getCursor())) || !(isItemTradeable(e.getCurrentItem())))) {
+		if(e.getCurrentItem() != null && (e.getCurrentItem().getType() == Material.NETHER_STAR || e.getCurrentItem().getType() == Material.QUARTZ||CommunityMechanics.isSocialBook(e.getCurrentItem()) || !(isItemTradeable(e.getCursor())) || !(isItemTradeable(e.getCurrentItem())))) {
 			e.setCancelled(true);
 			clicker.updateInventory();
 			clicker.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " perform this action with an " + ChatColor.ITALIC + "untradeable" + ChatColor.RED + " item.");
@@ -1107,7 +1110,7 @@ public class TradeMechanics implements Listener {
 							if(i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.THIN_GLASS) {
 								continue;
 							}
-							if(i.getType() == Material.NETHER_STAR || CommunityMechanics.isSocialBook(i) || !(isItemTradeable(i))) {
+							if(i.getType() == Material.NETHER_STAR || i.getType() == Material.QUARTZ||CommunityMechanics.isSocialBook(i) || !(isItemTradeable(i))) {
 								continue;
 							}
 							if(i.getType() == Material.EMERALD) {
@@ -1129,7 +1132,7 @@ public class TradeMechanics implements Listener {
 							if(i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.THIN_GLASS) {
 								continue;
 							}
-							if(i.getType() == Material.NETHER_STAR || CommunityMechanics.isSocialBook(i) || !(isItemTradeable(i))) {
+							if(i.getType() == Material.NETHER_STAR || i.getType() == Material.QUARTZ || CommunityMechanics.isSocialBook(i) || !(isItemTradeable(i))) {
 								continue;
 							}
 							if(i.getType() == Material.EMERALD) {
@@ -1184,7 +1187,7 @@ public class TradeMechanics implements Listener {
 							if(i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.THIN_GLASS) {
 								continue;
 							}
-							if(i.getType() == Material.NETHER_STAR || CommunityMechanics.isSocialBook(i) || !(isItemTradeable(i))) {
+							if(i.getType() == Material.NETHER_STAR || i.getType() == Material.QUARTZ || CommunityMechanics.isSocialBook(i) || !(isItemTradeable(i))) {
 								continue;
 							}
 							if(i.getType() == Material.EMERALD) {
@@ -1219,7 +1222,7 @@ public class TradeMechanics implements Listener {
 							if(i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.THIN_GLASS) {
 								continue;
 							}
-							if(i.getType() == Material.NETHER_STAR || CommunityMechanics.isSocialBook(i) || !(isItemTradeable(i))) {
+							if(i.getType() == Material.NETHER_STAR || i.getType() == Material.QUARTZ || CommunityMechanics.isSocialBook(i) || !(isItemTradeable(i))) {
 								continue;
 							}
 							if(i.getType() == Material.EMERALD) {
@@ -1242,7 +1245,7 @@ public class TradeMechanics implements Listener {
 							if(i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.THIN_GLASS) {
 								continue;
 							}
-							if(i.getType() == Material.NETHER_STAR || CommunityMechanics.isSocialBook(i) || !(isItemTradeable(i))) {
+							if(i.getType() == Material.NETHER_STAR || i.getType() == Material.QUARTZ || CommunityMechanics.isSocialBook(i) || !(isItemTradeable(i))) {
 								continue;
 							}
 							if(i.getType() == Material.EMERALD) {

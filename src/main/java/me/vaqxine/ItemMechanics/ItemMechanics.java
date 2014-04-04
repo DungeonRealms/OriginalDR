@@ -2454,7 +2454,6 @@ public class ItemMechanics implements Listener {
 		}
 		
 	}
-	
 	//@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerAnimation(PlayerAnimationEvent e) {
 		Player pl = e.getPlayer();

@@ -739,10 +739,6 @@ public class ChatMechanics implements Listener {
 		String msg = e.getMessage();
 		final Player p = e.getPlayer();
 		
-		if(sending_message.contains(p.getName())) {
-			sending_message.remove(p.getName());
-			return;
-		}
 		
 		if(mute_list.containsKey(p.getName())) {
 			long time_left = mute_list.get(p.getName());
