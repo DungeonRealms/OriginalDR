@@ -169,8 +169,6 @@ public class PermissionMechanics implements Listener {
 			final String fp_name = p_name;
 			Thread t = new Thread(new Runnable() {
 				public void run() {
-					int user_id = DonationMechanics.getForumUserID(fp_name);
-					DonationMechanics.addForumGroup(user_id, rank_forumgroup.get(frank.toLowerCase()));
 					Socket kkSocket = null;
 					PrintWriter out = null;
 					try {
