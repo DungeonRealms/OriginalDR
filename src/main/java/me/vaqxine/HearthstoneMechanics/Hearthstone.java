@@ -85,7 +85,9 @@ public class Hearthstone {
     public Location getLocation() {
         return tp_loc;
     }
-
+    public Player getPlayer(){
+        return p;
+    }
     public void setTimer(int timer) {
         timer_seconds = timer;
     }

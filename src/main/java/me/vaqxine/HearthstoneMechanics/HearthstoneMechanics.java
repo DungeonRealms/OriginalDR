@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import me.vaqxine.Main;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.ItemMechanics.ItemMechanics;
+import me.vaqxine.PermissionMechanics.PermissionMechanics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,8 +45,7 @@ public class HearthstoneMechanics implements Listener {
     public static HashMap<String, Location> spawn_map = new HashMap<String, Location>();
     // Location Name, Location - Used to get locations fromt he name in the sql
     String templatePath_s = "plugins/HearthstoneMechanics/spawn_locations.dat";
-    public static ItemStack hearthstone_item = 
-            createCustomItem(new ItemStack(Material.QUARTZ), ChatColor.YELLOW.toString() + ChatColor.BOLD + "Hearthstone", Arrays.asList(ChatColor.GRAY + "Teleports you to your home town.", ChatColor.GRAY + "You can change your home", ChatColor.GRAY + "by talking to Alfred in certain cities."));
+
     public void onEnable() {
         Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
         new BukkitRunnable() {
@@ -59,7 +59,7 @@ public class HearthstoneMechanics implements Listener {
                     }
                     final Player p = Bukkit.getPlayer(p_name);
                     if (!isLocationsEqual(p.getLocation(), hearthstone_location.get(p_name))) {
-                        p.sendMessage(ChatColor.RED + "Hearthstone -" + ChatColor.BOLD + "CANCELLED");
+                        p.sendMessage(ChatColor.RED + "Hearthstone -" + ChatColor.BOLD + " CANCELLED");
                         p.sendMessage(ChatColor.GRAY + "Your Hearthstone has been put on a 5 minute cooldown timer.");
                         // 5 minutes
                         getHearthStone(p_name).setTimer(60 * 5);
@@ -69,16 +69,19 @@ public class HearthstoneMechanics implements Listener {
                     if (time_left <= 0) {
                         p.playSound(p.getLocation(), Sound.WITHER_DEATH, 1, 1);
                         p.teleport(getHearthStone(p.getName()).getLocation());
-                        getHearthStone(p.getName()).setTimer(60 * 15);
+                        int timer = PermissionMechanics.getRank(p.getName()).equalsIgnoreCase("default") ? 15 : 10;
+                        getHearthStone(p.getName()).setTimer(60 * timer);
+                        p.sendMessage(ChatColor.GRAY + "Your Hearthstone has been put on a " + ChatColor.UNDERLINE + timer + ChatColor.GRAY
+                                + " minute cooldown timer.");
                     } else {
-                        p.sendMessage(ChatColor.BOLD + "TELEPORTING " + ChatColor.WHITE + "... " + time_left + "s");
+                        p.sendMessage(ChatColor.BOLD + "TELEPORTING " + ChatColor.WHITE + " ... " + time_left + "s");
                         hearthstone_timer.put(p.getName(), time_left);
-                        new BukkitRunnable(){
-                            public void run(){
+                        new BukkitRunnable() {
+                            public void run() {
                                 try {
-                                    ParticleEffect.sendToLocation(ParticleEffect.SPELL, p.getLocation().add(0, 0.15, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.5F, 80);
+                                    ParticleEffect.sendToLocation(ParticleEffect.SPELL, p.getLocation().add(0, 0.15, 0), new Random().nextFloat(),
+                                            new Random().nextFloat(), new Random().nextFloat(), 0.5F, 80);
                                 } catch (Exception e) {
-                                    // TODO Auto-generated catch block
                                     e.printStackTrace();
                                 }
                             }
@@ -87,6 +90,35 @@ public class HearthstoneMechanics implements Listener {
                 }
             }
         }.runTaskTimer(Main.plugin, 20L, 20L);
+        
+        new BukkitRunnable() {
+            public void run() {
+                // TODO Auto-generated method stub
+                for(Entry<String, Hearthstone> h_entries : hearthstone_map.entrySet()){
+                    Hearthstone hs = h_entries.getValue();
+                    String p_name = h_entries.getKey();
+                    int time_left = hs.getTimer();
+                    if(time_left == 0){
+                        //They dont need to be alerted
+                        continue;
+                    }
+                    time_left -= 1;
+                    Player p = hs.getPlayer();
+                    if(p == null){
+                        hearthstone_map.remove(p.getName());
+                        continue;
+                    }
+                    
+                    if(time_left <= 0){
+                        p.sendMessage(ChatColor.RED + "Your Hearthstone is now usable.");
+                        hs.setTimer(0);
+                    }else{
+                        //Tick down
+                        hs.setTimer(time_left);
+                    }
+                }
+            }
+        }.runTaskTimerAsynchronously(Main.plugin, 0 , 20L);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -195,7 +227,9 @@ public class HearthstoneMechanics implements Listener {
             }
         }
     }
-
+    public static void reloadSpawn(){
+        
+    }
     public void removeHearthstoneTimer(String p_name) {
         hearthstone_location.remove(p_name);
         hearthstone_timer.remove(p_name);
@@ -208,18 +242,30 @@ public class HearthstoneMechanics implements Listener {
         }
         return false;
     }
-    public static ItemStack createCustomItem(ItemStack is, String name, List<String> lore){
+
+    public static ItemStack getHearthstone(Player p) {
+        ItemStack hearthstone_item = createCustomItem(
+                new ItemStack(Material.QUARTZ),
+                ChatColor.YELLOW.toString() + ChatColor.BOLD + "Hearthstone",
+                Arrays.asList(ChatColor.GRAY + "Teleports you to your home town.", ChatColor.GRAY + "You can change your home", ChatColor.GRAY
+                        + "by talking to the Innkeeper in cities.", ChatColor.GREEN + "Location: " + getHearthStone(p.getName()).getName()));
+
+        return hearthstone_item;
+    }
+
+    public static ItemStack createCustomItem(ItemStack is, String name, List<String> lore) {
         ItemMeta im = is.getItemMeta();
-        if(name != null){
-          im.setDisplayName(name);
+        if (name != null) {
+            im.setDisplayName(name);
         }
-        if(lore != null){
+        if (lore != null) {
             im.setLore(lore);
         }
         is.setItemMeta(im);
         return is;
     }
-    public Hearthstone getHearthStone(String p_name) {
+
+    public static Hearthstone getHearthStone(String p_name) {
         return hearthstone_map.get(p_name);
     }
 }
