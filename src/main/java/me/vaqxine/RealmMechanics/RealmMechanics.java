@@ -1593,8 +1593,8 @@ public class RealmMechanics implements Listener {
 			p.sendMessage(ChatColor.RED + "You aren't authorized to build in " + block_world_name + "'s realm.");
 			p.sendMessage(ChatColor.GRAY + block_world_name + " will have to " + ChatColor.UNDERLINE + "Sneak Left Click" + ChatColor.GRAY + " you with their Realm Portal Rune to add you to their builder list.");
 		}
+		
 	}
-	
 	@EventHandler
 	public void onPlayerChatEvent(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();

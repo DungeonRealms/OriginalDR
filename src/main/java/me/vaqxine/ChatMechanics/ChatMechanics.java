@@ -975,17 +975,17 @@ public class ChatMechanics implements Listener {
 	            if(personal_msg.length() < 20){
 	                lines.add(personal_msg);
 	            }
-	            if(personal_msg.length() > 20){
+	            if(personal_msg.length() > 20 && personal_msg.length() < 40){
 	                String double_string = personal_msg;
-	                lines.add(double_string.substring(0, 21));
+	                lines.add(double_string.substring(0, personal_msg.length()));
 	            }
-	            if(personal_msg.length() > 40){
+	            if(personal_msg.length() > 40 && personal_msg.length() < 60){
 	                String otherString = personal_msg;
-	                lines.add(otherString.substring(20, 41));
+	                lines.add(otherString.substring(40, personal_msg.length()));
 	            }
-	            if(personal_msg.length() > 60){
+	            if(personal_msg.length() > 60 && personal_msg.length() < 80){
 	                String otherString = personal_msg;
-	                lines.add(otherString.substring(40, 61));
+	                lines.add(otherString.substring(40, personal_msg.length()));
 	            }
 	            hologram = new Hologram(Main.plugin, lines);
 	            hologram.show(p.getLocation().add(0, 1.2, 0), 20, null);
