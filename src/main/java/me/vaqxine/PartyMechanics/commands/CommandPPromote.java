@@ -53,7 +53,7 @@ public class CommandPPromote implements CommandExecutor {
 		String new_leader = "";
 		
 		List<String> remaining_members = new ArrayList<String>();
-		for(String s : PartyMechanics.party_map.get(p.getName()).getPartyList()) {
+		for(String s : PartyMechanics.party_map.get(p.getName()).getPartyMembers()) {
 			remaining_members.add(s);
 		}
 		new_leader = Bukkit.getPlayer(p_name).getName();

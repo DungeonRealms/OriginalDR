@@ -13,7 +13,11 @@ public class CommandParty implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player p = (Player) sender;
-		if(!(p.isOp())) { return true; }
+
+		if(PartyMechanics.isInParty(p.getName())){
+			p.sendMessage(ChatColor.RED + "You are already in a party!");
+			return true;
+		}
 		
 		PartyMechanics.createParty(p.getName(), p, null);
 		p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "Party created.");

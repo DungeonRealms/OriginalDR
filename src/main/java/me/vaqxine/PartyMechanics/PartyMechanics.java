@@ -12,7 +12,6 @@ import me.vaqxine.Main;
 import me.vaqxine.ChatMechanics.ChatMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
-import me.vaqxine.PartyMechanics.Party.Update;
 import me.vaqxine.PartyMechanics.commands.CommandP;
 import me.vaqxine.PartyMechanics.commands.CommandPAccept;
 import me.vaqxine.PartyMechanics.commands.CommandPDecline;
@@ -122,7 +121,7 @@ public class PartyMechanics implements Listener {
 					if(parties_checked.contains(party_map.get(p_name))) continue;
 					//The party was already updated
 					Party party = party_map.get(p_name);
-					party.updateScoreboard(Update.HEALTH);
+					party.updateScoreboard();
 					parties_checked.add(party);
 				}
 				//Clear it for the next go around
@@ -280,7 +279,7 @@ public class PartyMechanics implements Listener {
 	public static boolean arePartyMembers(String p1, String p2) {
 		if(party_map.containsKey(p1) && party_map.containsKey(p2)) {
 			//They are in the same hashmap
-			if(party_map.get(p1).getPartyList().contains(p2) && party_map.get(p2).getPartyList().contains(p1)) { return true; }
+			if(party_map.get(p1).getPartyMembers().contains(p2) && party_map.get(p2).getPartyMembers().contains(p1)) { return true; }
 		}
 		return false;
 	}
@@ -328,40 +327,43 @@ public class PartyMechanics implements Listener {
 		// party_ui.setItem(ChatColor.BOLD + p_owner_name, HealthMechanics.getPlayerHP(p_owner.getName()), false);
 		// party_ui.showToPlayer(p_owner);
 		Party party = new Party(p_owner);
-		if(existing_members == null) {
-			party_map.put(p_owner.getName(), party);
-			party_loot.put(p_owner.getName(), "random");
-			party_loot_index.put(p_owner.getName(), 0);
-			
-		} else {
+		party_map.put(p_owner.getName(), party);
+		party_loot.put(p_owner.getName(), "random");
+		party_loot_index.put(p_owner.getName(), 0);
+		
+		if(existing_members != null){
 			for(String s : existing_members) {
 				if(Bukkit.getPlayer(s) == null) continue;
 				party.addPlayer(Bukkit.getPlayer(s));
 			}
-			for(String s : existing_members) {
-				if(p_owner.getName().equalsIgnoreCase(s)) {
-					continue; // Prevents duplicates.
-				}
-				if(Bukkit.getPlayer(s) != null) {
-					// Set them in menu.
-					Player pl = Bukkit.getPlayer(s);
-					String p_name = pl.getName();
-					if(p_name.length() > 14) {
-						p_name = p_name.substring(0, 14);
+				for(String s : existing_members) {
+					if(p_owner.getName().equalsIgnoreCase(s)) {
+						continue; // Prevents duplicates.
 					}
-					
-					//hp = obj.getScore(Bukkit.getOfflinePlayer(p_name));
-					//hp.setScore(HealthMechanics.getPlayerHP(p_owner.getName()));
-					//System.out.print("SET SCOREBOARD TO " + pl.getName() + " FROM LINE 377 OBJECTIVES SIZE: " + party_ui.getObjectives().size() + "OBJECTIVES 1: " + party_ui.getObjectives().toArray());
-					//pl.setScoreboard(party_ui);
+					if(Bukkit.getPlayer(s) != null) {
+						// Set them in menu.
+						Player pl = Bukkit.getPlayer(s);
+						String p_name = pl.getName();
+						if(p_name.length() > 14) {
+							p_name = p_name.substring(0, 14);
+						}
+						
+						//hp = obj.getScore(Bukkit.getOfflinePlayer(p_name));
+						//hp.setScore(HealthMechanics.getPlayerHP(p_owner.getName()));
+						//System.out.print("SET SCOREBOARD TO " + pl.getName() + " FROM LINE 377 OBJECTIVES SIZE: " + party_ui.getObjectives().size() + "OBJECTIVES 1: " + party_ui.getObjectives().toArray());
+						//pl.setScoreboard(party_ui);
+					}
 				}
+				
+				// TODO: Make this inherent old loot style
+				party_loot.put(p_owner.getName(), "random");
+				party_loot_index.put(p_owner.getName(), 0);
+				// sendRawMessageToParty(p_owner.getName(), "The loot profile of this party has been set to: " + ChatColor.LIGHT_PURPLE + "RANDOM");
 			}
-			
-			// TODO: Make this inherent old loot style
-			party_loot.put(p_owner.getName(), "random");
-			party_loot_index.put(p_owner.getName(), 0);
-			// sendRawMessageToParty(p_owner.getName(), "The loot profile of this party has been set to: " + ChatColor.LIGHT_PURPLE + "RANDOM");
-		}
+	}
+	
+	public static boolean isInParty(String player){
+		return party_map.containsKey(player);
 	}
 	
 	public static void inviteToParty(Player to_invite, Player p_owner) {
@@ -370,7 +372,7 @@ public class PartyMechanics implements Listener {
 		 */
 		if(!party_map.containsKey(p_owner)) party_map.put(p_owner.getName(), new Party(p_owner));
 		if(!(isPartyLeader(p_owner.getName()))) {
-			if(party_map.containsKey(p_owner.getName())) { // In another party.
+			if(isInParty(p_owner.getName())) { // In another party.
 				p_owner.sendMessage(ChatColor.RED.toString() + "You are NOT the leader of your party.");
 				p_owner.sendMessage(ChatColor.GRAY.toString() + "Type " + ChatColor.BOLD.toString() + "/pquit" + ChatColor.GRAY + " to quit your current party.");
 				return;
@@ -381,7 +383,7 @@ public class PartyMechanics implements Listener {
 			}
 		}
 		
-		if(party_map.get(p_owner.getName()).getPartyList().size() >= 8) {
+		if(party_map.get(p_owner.getName()).getPartyMembers().size() >= 8) {
 			p_owner.sendMessage(ChatColor.RED + "You cannot have more than " + ChatColor.ITALIC + "8 players" + ChatColor.RED + " in a party.");
 			p_owner.sendMessage(ChatColor.GRAY + "You may use /pkick to kick out unwanted members.");
 		}
@@ -416,7 +418,7 @@ public class PartyMechanics implements Listener {
 		int count = 0;
 		double rad_sqr = Math.pow(radius, 2);
 		
-		for(String mem : party.getPartyList()) {
+		for(String mem : party.getPartyMembers()) {
 			if(Bukkit.getPlayer(mem) != null) {
 				Player p_mem = Bukkit.getPlayer(mem);
 				if(!p_mem.getWorld().getName().equalsIgnoreCase(center.getWorld().getName())) {
@@ -437,8 +439,9 @@ public class PartyMechanics implements Listener {
 		
 		if(party_map.get(sender.getName()) == null) { return; }
 		
-		for(Player mem : getPlayerParty(sender).getPartyMembers()) {
-			to_send.add(mem);
+		for(String memn : getPlayerParty(sender).getPartyMembers()) {
+			if(Bukkit.getPlayer(memn) == null) continue;
+			to_send.add(Bukkit.getPlayer(memn));
 		}
 		
 		for(Player pl : to_send) {
