@@ -1815,7 +1815,7 @@ public class DuelMechanics implements Listener {
 			return returning;
 			
 		} catch(Exception e) {
-			System.err.println(CC.RED + "Region error!" + CC.DEFAULT);
+			Main.d("Region error!", CC.RED);
 		}
 		return "";
 	}

@@ -74,7 +74,7 @@ public class Party {
 		PartyMechanics.party_only.remove(p.getName());
 		KarmaMechanics.sendAlignColor(p, p);
 		if(ScoreboardMechanics.getBoard(p) != null && ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.SIDEBAR) != null){
-		ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.SIDEBAR).unregister();
+			ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.SIDEBAR).unregister();
 		}
 		String name = (p == leader ? ChatColor.BOLD : "") + "" + p.getName();
 		if(name.length() > 16) name = name.substring(0, 16);
@@ -166,7 +166,7 @@ public class Party {
 					updateScoreboard(Update.HEALTH);
 				}
 				for(Player t : getPartyMembers()) {
-					String name = getPlayerName(p);
+					String name = getPlayerName(t);
 					if(name.length() > 16) name = name.substring(0, 16);
 					ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.SIDEBAR).getScore(Bukkit.getOfflinePlayer(name)).setScore(HealthMechanics.getPlayerHP(ChatColor.stripColor(t.getName())));
 				}

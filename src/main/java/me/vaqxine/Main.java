@@ -239,7 +239,11 @@ public class Main extends JavaPlugin {
 	 * Debug
 	 */
 	public static void d(Object o) {
-		Main.plugin.getLogger().info(CC.CYAN + o.toString() + CC.WHITE);
+		d(o, CC.CYAN);
+	}
+	
+	public static void d(Object o, CC color) {
+		Main.plugin.getLogger().info(color + o.toString() + CC.DEFAULT);
 	}
 	
 	public static boolean isDev(String s) {
