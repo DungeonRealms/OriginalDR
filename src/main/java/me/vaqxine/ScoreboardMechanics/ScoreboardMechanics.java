@@ -116,7 +116,6 @@ public class ScoreboardMechanics implements Listener {
 			x.setCanSeeFriendlyInvisibles(t.canSeeFriendlyInvisibles());
 			x.setDisplayName(t.getDisplayName());
 			x.setPrefix(t.getPrefix());
-			x.setSuffix(t.getPrefix());
 			for(OfflinePlayer o : t.getPlayers())
 				x.addPlayer(o);
 		}

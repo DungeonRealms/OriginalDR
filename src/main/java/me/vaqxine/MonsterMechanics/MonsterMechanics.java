@@ -807,7 +807,7 @@ public class MonsterMechanics implements Listener {
 		if(!(ent instanceof LivingEntity)) { return false; }
 		LivingEntity le = (LivingEntity) ent;
 		if(!(le.hasMetadata("mobname"))) { return false; }
-		
+		if(InstanceMechanics.isInstance(ent.getWorld().getName())){return false;}
 		String custom_name = ChatColor.stripColor(le.getMetadata("mobname").get(0).asString());
 		if(custom_mob_loot_tables.containsKey(custom_name)) { return true; }
 		return false;
