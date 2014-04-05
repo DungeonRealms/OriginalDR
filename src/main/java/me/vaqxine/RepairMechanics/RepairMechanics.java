@@ -672,22 +672,22 @@ public class RepairMechanics implements Listener {
 		if(p.getInventory().getBoots() != null && p.getInventory().getBoots().getType() != Material.AIR) {
 			ItemStack boots = p.getInventory().getBoots();
 			subtractCustomDurability(p, boots, 1, "armor");
-			//log.info("BOOTS: " + getCustomDurability(boots, "armor"));
+			log.info("BOOTS: " + getCustomDurability(boots, "armor"));
 		}
 		if(p.getInventory().getLeggings() != null && p.getInventory().getLeggings().getType() != Material.AIR) {
 			ItemStack Leggings = p.getInventory().getLeggings();
 			subtractCustomDurability(p, Leggings, 1, "armor");
-			//log.info("LEGS: " + getCustomDurability(Leggings, "armor"));
+			log.info("LEGS: " + getCustomDurability(Leggings, "armor"));
 		}
 		if(p.getInventory().getChestplate() != null && p.getInventory().getChestplate().getType() != Material.AIR) {
 			ItemStack Chestplate = p.getInventory().getChestplate();
 			subtractCustomDurability(p, Chestplate, 1, "armor");
-			//log.info("CHEST: " + getCustomDurability(Chestplate, "armor"));
+			log.info("CHEST: " + getCustomDurability(Chestplate, "armor"));
 		}
 		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getType() != Material.AIR) {
 			ItemStack Helmet = p.getInventory().getHelmet();
 			subtractCustomDurability(p, Helmet, 1, "armor");
-			//log.info("HELMET: " + getCustomDurability(Helmet, "armor"));
+			log.info("HELMET: " + getCustomDurability(Helmet, "armor"));
 		}
 	}
 	
