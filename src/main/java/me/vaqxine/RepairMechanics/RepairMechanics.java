@@ -662,14 +662,12 @@ public class RepairMechanics implements Listener {
 		if(p.getInventory().getBoots() != null && p.getInventory().getBoots().getType() != Material.AIR) armor.put(ArmorPosition.BOOTS, p.getInventory().getBoots());
 	}*/
 	
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
 	public void onArmorDamageEvent(EntityDamageEvent e) {
-	    System.out.print("Cancelled: " + e.isCancelled());   
 		if(!(e.getEntity() instanceof Player)) { return; }
 		Player p = (Player) e.getEntity();
 		if(!(p.getGameMode() == GameMode.SURVIVAL)) { return; }
 		if(e.getDamage() <= 1) { 
-		 System.out.print("DAMAGE WAS LESS THEN 1");   
 		    return; 
 		 }
 		
