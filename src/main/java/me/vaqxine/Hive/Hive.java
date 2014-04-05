@@ -204,7 +204,7 @@ public class Hive implements Listener {
     public static volatile ConcurrentHashMap<String, List<Object>> remote_player_data = new ConcurrentHashMap<String, List<Object>>();
     // Packaged version of player data, created in loadPlayerDataSQL() and accessed throughout login proceedure.
     
-    public static HashMap<Integer, List<Integer>> server_population = new HashMap<Integer, List<Integer>>();
+    public static ConcurrentHashMap<Integer, List<Integer>> server_population = new ConcurrentHashMap<Integer, List<Integer>>();
     // Contains min/max players for every server, used for shard menu.
     // US-1, Array(10,150)
     
@@ -452,11 +452,11 @@ public class Hive implements Listener {
             }
         }, 15 * 20L);
         
-        /*this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 updateServerPopulations();
             }
-        }, 10 * 20L, 10 * 20L);*/
+        }, 10 * 20L, 10 * 20L);
         
         Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
@@ -841,6 +841,7 @@ public class Hive implements Listener {
         
         crash_checker.start();
         
+        /*
         Thread update_population = new Thread(new Runnable() {
             public void run() {
                 try {
@@ -860,7 +861,7 @@ public class Hive implements Listener {
             }
         });
         
-        update_population.start();
+        update_population.start(); */
         
         /*if(!(isThisRootMachine())){
             port_listener = new ListenThread();
