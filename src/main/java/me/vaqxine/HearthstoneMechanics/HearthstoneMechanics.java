@@ -21,6 +21,7 @@ import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.HearthstoneMechanics.commands.CommandAddHearthstone;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
+import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
@@ -93,8 +94,8 @@ public class HearthstoneMechanics implements Listener {
                     if (time_left <= 0) {
                         p.playSound(p.getLocation(), Sound.WITHER_DEATH, 1, 1);
                         p.teleport(getHearthStone(p.getName()).getLocation());
-                        int timer = (PermissionMechanics.getRank(p.getName()) == null || PermissionMechanics.getRank(p.getName()).equalsIgnoreCase("default")) ? 15
-                                : 10;
+                        int timer = (PermissionMechanics.getRank(p.getName()) != null && !PermissionMechanics.getRank(p.getName()).equalsIgnoreCase("default") && !p.isOp()) ? 25
+                                : 15;
                         getHearthStone(p.getName()).setTimer(60 * timer);
                         p.sendMessage(ChatColor.GRAY + "Your Hearthstone has been put on a " + ChatColor.UNDERLINE + timer + ChatColor.GRAY
                                 + " minute cooldown timer.");
@@ -137,7 +138,7 @@ public class HearthstoneMechanics implements Listener {
                     }
 
                     if (time_left <= 0) {
-                        p.sendMessage(ChatColor.RED + "Your Hearthstone is now usable.");
+                        p.sendMessage(ChatColor.RED + "Your Hearthstone is ready.");
                         hs.setTimer(0);
                     } else {
                         // Tick down
@@ -344,6 +345,10 @@ public class HearthstoneMechanics implements Listener {
         Player p = e.getPlayer();
         if (TutorialMechanics.onTutorialIsland(e.getPlayer())) {
             p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " use this item on Tutorial Island.");
+            return;
+        }
+        if(KarmaMechanics.getAlignment(p.getName()).contains("evil")){
+            p.sendMessage(ChatColor.RED + "You cannot do this while chaotic!");
             return;
         }
         if(InstanceMechanics.isInstance(p.getWorld().getName())){

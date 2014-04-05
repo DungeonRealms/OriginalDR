@@ -21,7 +21,6 @@ import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -29,7 +28,7 @@ public class Hologram {
 	private static final double distance = 0.23;
 	static String name;
 	static Location location_return;
-	
+	static EntityHorse eh;
 	private static List<Integer> showLine(final Location loc, String text, final Player single_target) {
 		name = text;
 		WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
@@ -37,12 +36,15 @@ public class Hologram {
 		skull.setLocation(loc.getX(), loc.getY() + 1 + 55, loc.getZ(), 0, 0);
 		//        ((CraftWorld) loc.getWorld()).getHandle().addEntity(skull);
 		final PacketPlayOutSpawnEntity packet_skull = new PacketPlayOutSpawnEntity(skull, 66);
-		
 		final EntityHorse horse = new EntityHorse(world);
 		horse.setLocation(loc.getX(), loc.getY() + 55, loc.getZ(), 0, 0);
 		horse.setAge(-1700000);
+		
 		horse.setCustomName(text);
+		
 		horse.setCustomNameVisible(true);
+		
+		eh = horse;
 		final PacketPlayOutSpawnEntityLiving packedt = new PacketPlayOutSpawnEntityLiving(horse);
 		
 		Main.plugin.getServer().getScheduler().runTaskAsynchronously(Main.plugin, new Runnable() {

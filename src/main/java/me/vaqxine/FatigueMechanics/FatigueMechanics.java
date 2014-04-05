@@ -628,7 +628,7 @@ public class FatigueMechanics implements Listener {
 		Player p = (Player) event.getEntity();
 		if(event.getFoodLevel() < p.getFoodLevel()) { // Make sure they're loosing food level.
 			int r = new Random().nextInt(4); // 0, 1, 2, 3
-			if(r == 3) { // Cancel 25% of the time.
+			if(r > 2) { // Cancel 50% of the time.
 				event.setCancelled(true);
 				return;
 			}
