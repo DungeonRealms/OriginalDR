@@ -154,7 +154,7 @@ public class HearthstoneMechanics implements Listener {
                     }
                     Player p = Bukkit.getPlayer(p_name);
                     boolean inkeeper_nearby = false;
-                    for (Entity e : p.getNearbyEntities(15D, 15D, 15D)) {
+                    for (Entity e : p.getNearbyEntities(150D, 150D, 150D)) {
                         if (e instanceof Player) {
                             Player to_check = (Player) e;
                             if (isInnkeeper(to_check)) {

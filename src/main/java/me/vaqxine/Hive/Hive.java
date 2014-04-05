@@ -151,7 +151,7 @@ public class Hive implements Listener {
     public static final String sql_user = "slave_3XNZvi"; // k7ENqtenbZH3
     public static final String sql_password = "SgUmxYSJSFmOdro3"; // S?v<W>JN+XPt{ g04h@Is4F1Uz
     
-    public static final String version = "1.5";
+    public static final String version = "1.6";
     
     public static final String ftp_user = "agent";
     public static final String ftp_pass = "9bgsMKsknkJ6OY"; // $WHe4KT`l^S6sc

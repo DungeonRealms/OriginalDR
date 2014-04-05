@@ -51,6 +51,7 @@ public class Hearthstone {
             setTimer(rst.getInt("timer"));
             // TODO: Download the data from tables and set their spawns
             System.out.print("Loaded Hearthstone data for " + p_name);
+            pst.close();
         } catch (SQLException sqlE) {
             sqlE.printStackTrace();
         }
@@ -71,6 +72,7 @@ public class Hearthstone {
             pst.setString(3, p_name);
             pst.executeUpdate();
             System.out.print("[HeartstoneMechanics] Saved " + p_name + "s Hearthstone data for the first time.");
+            pst.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,6 +87,7 @@ public class Hearthstone {
                     pst.setString(3, p_name);
                     pst.executeUpdate();
                     System.out.print("[HeartstoneMechanics] Saved " + p.getName() + "s Hearthstone data.");
+                    pst.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
