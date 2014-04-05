@@ -313,25 +313,6 @@ public class ModerationMechanics implements Listener {
 		} else {
 			log.info("[ModerationMechanics] Found no additional associated accounts.");
 		}
-		
-		Socket kkSocket = null;
-		PrintWriter out = null;
-		try {
-			
-			kkSocket = new Socket();
-			//kkSocket.bind(new InetSocketAddress(Hive.local_IP, Hive.transfer_port+1));
-			kkSocket.connect(new InetSocketAddress(Hive.Proxy_IP, Hive.transfer_port), 500);
-			out = new PrintWriter(kkSocket.getOutputStream(), true);
-			out.println("[ipban]" + IP);
-			kkSocket.close();
-			
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		
-		if(out != null) {
-			out.close();
-		}
 	}
 	
 	public static void BanPlayer(final String p_name, final long unban_time, final String reason, final String banner, final boolean perm) {
@@ -351,30 +332,6 @@ public class ModerationMechanics implements Listener {
 		
 		// TODO: We need to get if the player being banned is already perma'd, and if so then ignore a temp.
 		
-		Socket kkSocket = null;
-		PrintWriter out = null;
-		try {
-			kkSocket = new Socket();
-			//kkSocket.bind(new InetSocketAddress(Hive.local_IP, Hive.transfer_port+1));
-			
-			kkSocket.connect(new InetSocketAddress(Hive.Proxy_IP, Hive.transfer_port), 5000); // 5000ms timeout
-			out = new PrintWriter(kkSocket.getOutputStream(), true);
-			
-			if(perm == true) {
-				out.println("[ban]" + p_name + "@" + "-1");
-			} else {
-				out.println("[ban]" + p_name + "@" + (unban_time - System.currentTimeMillis()));
-			}
-			kkSocket.close();
-			
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		
-		if(out != null) {
-			out.close();
-		}
-		
 		Hive.sql_query.add("INSERT INTO ban_list (pname, unban_date, ban_reason, who_banned, ban_date, rank, ban_count, perm)" + " VALUES" + "('" + p_name + "', '" + unban_time_s + "', '" + reason + "', '" + banner + "', '" + dt + "', '" + rank + "', '" + ban_count + "', '" + sperm + "') " + "ON DUPLICATE KEY UPDATE unban_date = '" + unban_time_s + "', ban_reason = '" + reason + "', who_banned = '" + banner + "', ban_date = '" + dt + "', rank = '" + rank + "', ban_count = '" + ban_count + "', unban_reason = '" + "" + "', who_unbanned = '" + "" + "', perm = '" + sperm + "'");
 		
 	}
@@ -387,25 +344,6 @@ public class ModerationMechanics implements Listener {
 		
 		Hive.sql_query.add("INSERT INTO ban_list (pname, unban_date, unban_reason, who_unbanned)" + " VALUES" + "('" + p_name + "', '" + futuredate + "', '" + reason + "', '" + unbanner + "') " + "ON DUPLICATE KEY UPDATE unban_date = '" + futuredate + "', unban_reason = '" + reason + "', who_unbanned = '" + unbanner + "'");
 		
-		Socket kkSocket = null;
-		PrintWriter out = null;
-		try {
-			
-			kkSocket = new Socket();
-			//kkSocket.bind(new InetSocketAddress(Hive.local_IP, Hive.transfer_port+1));
-			kkSocket.connect(new InetSocketAddress(Hive.Proxy_IP, Hive.transfer_port), 500);
-			out = new PrintWriter(kkSocket.getOutputStream(), true);
-			
-			out.println("[unban]" + p_name);
-			kkSocket.close();
-			
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		
-		if(out != null) {
-			out.close();
-		}
 	}
 	
 	public static String getUnbanReason(String p_name) {

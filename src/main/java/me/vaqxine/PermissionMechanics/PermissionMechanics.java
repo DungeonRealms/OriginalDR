@@ -162,37 +162,8 @@ public class PermissionMechanics implements Listener {
 			rank_map.put(p_name, rank);
 		}
 		
-		final String frank = rank;
-		
 		if(upload_sql) {
 			uploadRank(p_name);
-			final String fp_name = p_name;
-			Thread t = new Thread(new Runnable() {
-				public void run() {
-					int user_id = DonationMechanics.getForumUserID(fp_name);
-					DonationMechanics.addForumGroup(user_id, rank_forumgroup.get(frank.toLowerCase()));
-					Socket kkSocket = null;
-					PrintWriter out = null;
-					try {
-						
-						kkSocket = new Socket();
-						//kkSocket.bind(new InetSocketAddress(Hive.local_IP, Hive.transfer_port+1));
-						kkSocket.connect(new InetSocketAddress(Hive.Proxy_IP, Hive.transfer_port), 250);
-						out = new PrintWriter(kkSocket.getOutputStream(), true);
-						
-						out.println("[rank]" + fp_name + "@" + frank);
-						kkSocket.close();
-					} catch(IOException e) {
-						//e.printStackTrace();
-						System.err.println(CC.RED + "Not connected to proxy!" + CC.DEFAULT);
-					}
-					
-					if(out != null) {
-						out.close();
-					}
-				}
-			});
-			t.start();
 		}
 		
 		if(p != null) {

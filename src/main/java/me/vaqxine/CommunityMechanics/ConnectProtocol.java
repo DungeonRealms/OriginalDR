@@ -119,24 +119,6 @@ public class ConnectProtocol implements Runnable {
 					// Send it right away to prevent users from being directed
 					// to a rebooting server.
 					
-					Socket kkSocket = null;
-					PrintWriter out = null;
-					try {
-						
-						kkSocket = new Socket();
-						kkSocket.connect(new InetSocketAddress(Hive.Proxy_IP, Hive.transfer_port), 2000);
-						out = new PrintWriter(kkSocket.getOutputStream(), true);
-						
-						out.println("[crash]" + Hive.MOTD.substring(0, Hive.MOTD.indexOf(" ")));
-						kkSocket.close();
-					} catch(IOException e) {
-						e.printStackTrace();
-					}
-					
-					if(out != null) {
-						out.close();
-					}
-					
 					Hive.sendTimeout(60);
 					Thread.sleep(30000);
 					Hive.sendTimeout(30);
@@ -188,24 +170,6 @@ public class ConnectProtocol implements Runnable {
 					CommunityMechanics.sendPacketCrossServer("[crash]" + Hive.MOTD.substring(0, Hive.MOTD.indexOf(" ")), -1, true);
 					// Send it right away to prevent users from being directed
 					// to a rebooting server.
-					
-					Socket kkSocket = null;
-					PrintWriter out = null;
-					try {
-						
-						kkSocket = new Socket();
-						kkSocket.connect(new InetSocketAddress(Hive.Proxy_IP, Hive.transfer_port), 2000);
-						out = new PrintWriter(kkSocket.getOutputStream(), true);
-						
-						out.println("[crash]" + Hive.MOTD.substring(0, Hive.MOTD.indexOf(" ")));
-						kkSocket.close();
-					} catch(IOException e) {
-						e.printStackTrace();
-					}
-					
-					if(out != null) {
-						out.close();
-					}
 					
 					Hive.sendTimeout(60);
 					Thread.sleep(30000);

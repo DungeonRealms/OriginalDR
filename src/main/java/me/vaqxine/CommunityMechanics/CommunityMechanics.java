@@ -229,9 +229,7 @@ public class CommunityMechanics implements Listener {
 			ip_whitelist.add(s);
 		}
 		
-		ip_whitelist.add(Hive.Proxy_IP);
 		ip_whitelist.add(Hive.Hive_IP);
-		ip_whitelist.add(Hive.Site_IP);
 		ip_whitelist.add("72.8.157.66"); // Donation Back-end Server AND US-0
 		ip_whitelist.add("72.20.9.154");
 		ip_whitelist.add("72.20.9.158");
