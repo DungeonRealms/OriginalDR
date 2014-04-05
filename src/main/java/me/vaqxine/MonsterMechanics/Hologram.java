@@ -86,6 +86,11 @@ public class Hologram {
 		this.plugin = plugin;
 	}
 	
+	   public Hologram(JavaPlugin plugin, List<String> lines) {
+	        this.lines = lines;
+	        this.plugin = plugin;
+	    }
+	    
 	public Hologram(JavaPlugin plugin, Player chatter, String... lines) {
 		this.lines.addAll(Arrays.asList(lines));
 		this.plugin = plugin;

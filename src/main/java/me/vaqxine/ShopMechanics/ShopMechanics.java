@@ -3000,6 +3000,9 @@ public class ShopMechanics implements Listener {
 		if(nmsPlayers == null){
 		    return;
 		}
+		if(entry == null || entry.trackedPlayers == null){
+		    return;
+		}
 		entry.trackedPlayers.removeAll(nmsPlayers);
 		entry.scanPlayers(nmsPlayers);
 	}

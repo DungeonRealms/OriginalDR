@@ -893,7 +893,7 @@ public class InstanceMechanics implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDeath(EntityDeathEvent e) {
 		Entity ent = e.getEntity();
 		if(isInstance(ent.getWorld().getName())) {
@@ -941,6 +941,9 @@ public class InstanceMechanics implements Listener {
 						pl.sendMessage(ChatColor.YELLOW + "You hear a gateway open nearby.");
 					}
 				}
+			}
+			if(!(e instanceof Player)){
+			    e.getDrops().clear();
 			}
 		}
 	}

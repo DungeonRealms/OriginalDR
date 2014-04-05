@@ -2,6 +2,8 @@ package me.vaqxine.ScoreboardMechanics;
 
 import java.util.HashMap;
 
+import me.vaqxine.Main;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -10,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -57,9 +60,10 @@ public class ScoreboardMechanics implements Listener {
 		TI.setDisplayName("TI");
 	}
 	
-	public static Scoreboard getBoard(Player plr) {
+	public static Scoreboard getBoard(final Player plr) {
 		if(!boards.containsKey(plr)) {
 			Scoreboard b = Bukkit.getScoreboardManager().getNewScoreboard();
+		    
 			Objective objective = b.registerNewObjective("hpdisplay", "dummy");
 			objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
 			objective.setDisplayName("§c" + "❤");
@@ -93,7 +97,7 @@ public class ScoreboardMechanics implements Listener {
 			TI.setDisplayName("TI");
 			
 			boards.put(plr, b);
-			plr.setScoreboard(b);
+			plr.setScoreboard(b); 
 		}
 		return boards.get(plr);
 	}

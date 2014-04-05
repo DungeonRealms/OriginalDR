@@ -2186,6 +2186,9 @@ public class MonsterMechanics implements Listener {
 		}
 		if(event.getCause() == DamageCause.FIRE_TICK){
 		    Location l = event.getEntity().getLocation();
+		    if(event.getEntity().getFireTicks() > 30){
+		        event.getEntity().setFireTicks(30);
+		    }
 		    if(l.getBlock().getType() == Material.FIRE || l.getBlock().getType() == Material.LAVA || l.clone().add(0, 1, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, 1, 0).getBlock().getType() == Material.LAVA || l.clone().add(0, -1, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, -1, 0).getBlock().getType() == Material.LAVA){
 		        event.setCancelled(true);
 		    }

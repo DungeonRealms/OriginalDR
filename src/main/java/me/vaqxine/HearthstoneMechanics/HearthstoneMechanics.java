@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream.GetField;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +20,7 @@ import me.vaqxine.Main;
 import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.HearthstoneMechanics.commands.CommandAddHearthstone;
 import me.vaqxine.Hive.ParticleEffect;
+import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
@@ -29,6 +31,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,6 +46,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -81,8 +85,8 @@ public class HearthstoneMechanics implements Listener {
                         p.sendMessage(ChatColor.GRAY + "Your Hearthstone has been put on a 3 minute cooldown timer.");
                         // 5 minutes
                         getHearthStone(p_name).setTimer(60 * 3);
-                        hearthstone_location.remove(p.getName());
-                        hearthstone_timer.remove(p.getName());
+                        hearthstone_location.remove(p_name);
+                        hearthstone_timer.remove(p_name);
                         return;
                     }
                     time_left -= 1;
@@ -195,7 +199,7 @@ public class HearthstoneMechanics implements Listener {
     }
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDeath(EntityDeathEvent event){
-        for(ItemStack is : event.getDrops()){
+        for(ItemStack is : new ArrayList<ItemStack>(event.getDrops())){
             if(is.getType() == Material.QUARTZ){
                 event.getDrops().remove(is);
             }
@@ -216,7 +220,15 @@ public class HearthstoneMechanics implements Listener {
         }.runTaskLater(Main.plugin, 15L);
 
     }
-
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent e){
+        final Player p = e.getPlayer();
+        new BukkitRunnable() {
+            public void run() {
+                checkInventoryAndReset(p);
+            }
+        }.runTaskLater(Main.plugin, 15L);
+    }
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent e) {
         if (e instanceof Player) {
@@ -285,6 +297,7 @@ public class HearthstoneMechanics implements Listener {
                 p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "-" + ChatColor.RED + "1000" + ChatColor.BOLD + "G");
                 getHearthStone(p.getName()).setLocationName(changing_homes.get(p.getName()));
                 getHearthStone(p.getName()).setLocation(spawn_map.get(changing_homes.get(p.getName())));
+                p.playSound(p.getLocation(), Sound.LEVEL_UP, 1, 1);
                 checkInventoryAndReset(p);
             } else {
                 p.sendMessage(ChatColor.GRAY + "Innkeeper: " + ChatColor.WHITE + "Maybe another day traveler!");
@@ -326,11 +339,15 @@ public class HearthstoneMechanics implements Listener {
             return;
         if (!e.getItem().getItemMeta().getDisplayName().contains("Hearthstone"))
             return;
-
+        
         e.setCancelled(true);
         Player p = e.getPlayer();
         if (TutorialMechanics.onTutorialIsland(e.getPlayer())) {
             p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " use this item on Tutorial Island.");
+            return;
+        }
+        if(InstanceMechanics.isInstance(p.getWorld().getName())){
+            p.sendMessage(ChatColor.RED + "You cannot use this in an instance.");
             return;
         }
         if (changing_homes.containsKey(p.getName())) {
@@ -413,7 +430,7 @@ public class HearthstoneMechanics implements Listener {
                     p.getInventory().setItem(p.getInventory().firstEmpty(), getHearthstoneItem(p));
                 } else {
                     // They didnt have a hearthstone or any room... gg
-                    p.getInventory().setItem(6, getHearthstoneItem(p));
+                    p.getInventory().setItem(35, getHearthstoneItem(p));
                 }
             }
         } else {
