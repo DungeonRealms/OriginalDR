@@ -2990,6 +2990,7 @@ public class ShopMechanics implements Listener {
 	}
 	
 	public static void updateEntity(Entity entity, List<Player> observers) {
+	    if(entity == null)return;
 		World world = entity.getWorld();
 		WorldServer worldServer = ((CraftWorld) world).getHandle();
 		

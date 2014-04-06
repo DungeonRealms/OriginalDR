@@ -5487,11 +5487,17 @@ public class MonsterMechanics implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onItemSpawn(ItemSpawnEvent e){
+	    if(e.getEntity().getItemStack().getType() == Material.SKULL_ITEM){
+	        e.setCancelled(true);
+	        e.getEntity().remove();
+	        return;
+	    }
 	    if(InstanceMechanics.isInstance(e.getEntity().getWorld().getName())){
 	        if(ItemMechanics.isArmor(e.getEntity().getItemStack()) || ItemMechanics.isWeapon(e.getEntity().getItemStack())){
 	            e.setCancelled(true);
 	            e.getEntity().remove();
-	              System.out.print("ITEM WOULD HAVE DROPPED IN AN INSTANCE: " + e.getEntity().getItemStack().getType());
+	            System.out.print("ITEM WOULD HAVE DROPPED IN AN INSTANCE: " + e.getEntity().getItemStack().getType());
+	            return;
 	        }
 	    }
 	}
