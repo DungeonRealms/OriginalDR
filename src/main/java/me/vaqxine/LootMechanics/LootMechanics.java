@@ -185,7 +185,7 @@ public class LootMechanics implements Listener {
 		List<LivingEntity> le = new ArrayList<LivingEntity>();
 		for(Entity ent : pl.getNearbyEntities(radius, radius / 2, radius)) {
 			
-			if(ent instanceof LivingEntity && MonsterMechanics.isMonster(ent) && MonsterMechanics.getMonster(ent).getMobHealth() > 1 && !(ent.getType() == EntityType.BAT)) {
+			if(ent instanceof LivingEntity && MonsterMechanics.mob_health.containsKey(ent) && MonsterMechanics.mob_health.get(ent) > 1 && !(ent.getType() == EntityType.BAT)) {
 				/*EntityCreature ec = (EntityCreature) ((CraftEntity) ent).getHandle();
 				if(ec.target != null && ec.target.getBukkitEntity().getType() == EntityType.PLAYER){*/
 				le.add((LivingEntity) ent);

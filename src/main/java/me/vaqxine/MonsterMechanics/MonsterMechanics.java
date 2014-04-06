@@ -50,7 +50,6 @@ import net.minecraft.server.v1_7_R2.EntityLiving;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.GenericAttributes;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
-import net.minecraft.util.io.netty.util.internal.ConcurrentSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -145,33 +144,33 @@ public class MonsterMechanics implements Listener {
 	// Copy of all loaded chunks -- used for multithread operations.
 	
 	// Mob Attributes -- health, armor, damage, tier, etc.
-	//public static ConcurrentHashMap<Entity, Integer> mob_health = new ConcurrentHashMap<Entity, Integer>();
-	//static HashMap<Entity, Integer> max_mob_health = new HashMap<Entity, Integer>();
-	//public static HashMap<Entity, List<Integer>> mob_damage = new HashMap<Entity, List<Integer>>();
-	//static HashMap<Entity, Integer> mob_armor = new HashMap<Entity, Integer>();
-	//static HashMap<Entity, Integer> mob_tier = new HashMap<Entity, Integer>();
-	//static HashMap<Entity, List<ItemStack>> mob_loot = new HashMap<Entity, List<ItemStack>>();
+	public static ConcurrentHashMap<Entity, Integer> mob_health = new ConcurrentHashMap<Entity, Integer>();
+	static HashMap<Entity, Integer> max_mob_health = new HashMap<Entity, Integer>();
+	public static HashMap<Entity, List<Integer>> mob_damage = new HashMap<Entity, List<Integer>>();
+	static HashMap<Entity, Integer> mob_armor = new HashMap<Entity, Integer>();
+	static HashMap<Entity, Integer> mob_tier = new HashMap<Entity, Integer>();
+	static HashMap<Entity, List<ItemStack>> mob_loot = new HashMap<Entity, List<ItemStack>>();
 	
 	// Special mob attacks START.
-	//static ConcurrentHashMap<Entity, Integer> special_attack = new ConcurrentHashMap<Entity, Integer>();
-	//static ConcurrentHashMap<Entity, Integer> power_strike = new ConcurrentHashMap<Entity, Integer>();
-	//static ConcurrentHashMap<Entity, Integer> whirlwind = new ConcurrentHashMap<Entity, Integer>();
-	//static ConcurrentHashMap<Entity, Float> mob_yaw = new ConcurrentHashMap<Entity, Float>();
+	static ConcurrentHashMap<Entity, Integer> special_attack = new ConcurrentHashMap<Entity, Integer>();
+	static ConcurrentHashMap<Entity, Integer> power_strike = new ConcurrentHashMap<Entity, Integer>();
+	static ConcurrentHashMap<Entity, Integer> whirlwind = new ConcurrentHashMap<Entity, Integer>();
+	static ConcurrentHashMap<Entity, Float> mob_yaw = new ConcurrentHashMap<Entity, Float>();
 	// Special mob attacks END.
 	
-	//public static ConcurrentHashMap<Entity, String> mob_target = new ConcurrentHashMap<Entity, String>();
+	public static ConcurrentHashMap<Entity, String> mob_target = new ConcurrentHashMap<Entity, String>();
 	// Player name of mob target.
-	public static ConcurrentHashMap<Entity, Monster> monster_map = new ConcurrentHashMap<Entity, Monster>();
+	
 	static ConcurrentHashMap<Location, List<Entity>> local_spawned_mobs = new ConcurrentHashMap<Location, List<Entity>>();
 	// Chunk 0,0 location, list of all living entities the system is aware of.
 	
 	public static volatile ConcurrentHashMap<Location, String> mob_spawns = new ConcurrentHashMap<Location, String>();
 	// ALL mob spawns are held within this hashmap, it is not accessed often -- used as a reference point.
-	static HashMap<Entity, Integer> passive_mob = new HashMap<Entity, Integer>();
+	
 	static HashMap<Location, List<String>> mob_to_spawn = new HashMap<Location, List<String>>();
 	// Mobs that have been selected to go through Phase #2 selection to determine if they should be added to mobs_being_spawned and loaded into the main thread.
 	
-	//public static ConcurrentHashMap<Entity, String> mob_spawn_ownership = new ConcurrentHashMap<Entity, String>(); // Location:mob_num
+	public static ConcurrentHashMap<Entity, String> mob_spawn_ownership = new ConcurrentHashMap<Entity, String>(); // Location:mob_num
 	// Entity, Location(x,y,z):mob_num -- information to track entities and to know which to respawn when they're killed.
 	
 	static ConcurrentHashMap<Location, List<Integer>> spawned_mobs = new ConcurrentHashMap<Location, List<Integer>>();
@@ -185,10 +184,11 @@ public class MonsterMechanics implements Listener {
 	public static volatile ConcurrentHashMap<Location, List<String>> loaded_mobs = new ConcurrentHashMap<Location, List<String>>();
 	// Mob Spawner Location, The spawning string -- this map will only contain mob spawner locations of mobs in loaded chunks.
 	// Used in mobs_to_spawn to save memory and skip masses of already spawned mobs.
-	//public static HashMap<Entity, Long> mob_last_hit = new HashMap<Entity, Long>();
+	
+	public static HashMap<Entity, Long> mob_last_hit = new HashMap<Entity, Long>();
 	// The last time a mob hit a player. (or tried)
 	
-	//public static ConcurrentHashMap<Entity, Long> mob_last_hurt = new ConcurrentHashMap<Entity, Long>();
+	public static ConcurrentHashMap<Entity, Long> mob_last_hurt = new ConcurrentHashMap<Entity, Long>();
 	// The last time a mob took damage.
 	
 	public static HashMap<String, Long> player_slow = new HashMap<String, Long>();
@@ -227,7 +227,7 @@ public class MonsterMechanics implements Listener {
 	public static ConcurrentHashMap<Entity, Location> entities_to_remove = new ConcurrentHashMap<Entity, Location>();
 	// A list of entities being passed along to the main thread for reset. Normally a pathback.
 	
-	//public static HashMap<Entity, Long> last_respawn = new HashMap<Entity, Long>();
+	public static HashMap<Entity, Long> last_respawn = new HashMap<Entity, Long>();
 	// A list of entities being passed along to the main thread for reset. Normally a pathback.
 	
 	static ConcurrentHashMap<String, Long> last_mob_message_get = new ConcurrentHashMap<String, Long>();
@@ -313,7 +313,7 @@ public class MonsterMechanics implements Listener {
 			}
 		}, 15 * 20L, 1 * 20L);
 		
-		/*Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				for(Enderman end : enderman_list) {
 					if(end != null && end.getHealth() > 0 && !end.isDead()) {
@@ -351,13 +351,13 @@ public class MonsterMechanics implements Listener {
 					}
 				}
 			}
-		}, 15 * 20L, 40L);*/
+		}, 15 * 20L, 40L);
 		
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				for(Entity ent : approaching_mage_list) {
 					try {
-						if(ent != null && !ent.isDead() && ent instanceof Creature && isMonster(ent)) {
+						if(ent != null && !ent.isDead() && ent instanceof Creature && MonsterMechanics.mob_health.containsKey(ent)) {
 							LivingEntity le = (LivingEntity) ent;
 							ItemStack weapon = le.getEquipment().getItemInHand();
 							Creature c = (Creature) le;
@@ -717,34 +717,6 @@ public class MonsterMechanics implements Listener {
 		log.info("[MonsterMechanics] V1.0 has been disabled.");
 	}
 	
-	public static boolean isMonster(Entity e){
-	    if(e == null){
-	        System.out.print("NULL Mob on isMonster()");
-	        return false;
-	    }
-	    if(monster_map.containsKey(e)){
-	            EntityType et = e.getType();
-	            if(isEvilMob(et)){
-	                //System.out.print("Monster data: " + monster.getEntity().getType()  + " HP: " + monster.getMobHealth() + " Target: " + monster.getMobTarget() + " Damage: " + monster.getMobDamage() + " Others: " + monster.getMaxMobHealth());
-	            return true;
-	            }
-	    }
-	    return false;
-	}
-	    public static boolean isEvilMob(EntityType et){
-	        if(et == EntityType.BLAZE || et == EntityType.SKELETON || et == EntityType.CAVE_SPIDER || et == EntityType.SPIDER 
-	                || et == EntityType.ZOMBIE || et == EntityType.WOLF || et == EntityType.GHAST || et == EntityType.WITCH || et == EntityType.IRON_GOLEM 
-	                || et == EntityType.SILVERFISH || et == EntityType.MAGMA_CUBE){
-	            return true;
-	        }
-	        return false;
-	    }
-	public static Monster getMonster(Entity e){
-	    if(isMonster(e)){
-	        return monster_map.get(e);
-	    }
-	    return null;
-	}
 	public void lookAtEntity(Entity to_look_at, EntityLiving ent) {
 		Location entLoc = ent.getBukkitEntity().getLocation(), target = to_look_at.getLocation();
 		double xDiff = target.getX() - entLoc.getX();
@@ -762,30 +734,27 @@ public class MonsterMechanics implements Listener {
 	}
 	
 	public void tickPowerStrike() {
+		List<Entity> to_remove = new ArrayList<Entity>();
 		
-		for(Monster data : monster_map.values()) {
-			Entity ent = data.getEntity();
+		for(Entry<Entity, Integer> data : power_strike.entrySet()) {
+			Entity ent = data.getKey();
 			try {
-				if(ent == null || ent.isDead()) {
-				    monster_map.remove(ent);
+				if(ent == null || ent.isDead() || !(mob_health.containsKey(ent)) || !(max_mob_health.containsKey(ent))) {
+					to_remove.add(ent);
 					continue;
 				}
-				if(!data.isPowerStrike()){
-				    //Not power striking so dont worry about them
-				    continue;
-				}
-				int step = data.getPowerStrike();
+				int step = data.getValue();
 				if(step <= 4) { // Charging...
 					step += 1;
-					data.setPowerStrike(step);
-					data.setSpecialAttack(step);
+					power_strike.put(ent, step);
+					special_attack.put(ent, step);
 					boolean is_elite = false;
 					ItemStack weapon = CraftItemStack.asBukkitCopy(((CraftEntity) ent).getHandle().getEquipment()[0]);
 					if(weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK)) {
 						is_elite = true;
 					}
 					LivingEntity le = (LivingEntity) ent;
-					le.setCustomName(generateOverheadBar(ent, data.getMobHealth(), data.getMaxMobHealth(), getMobTier(ent), is_elite));
+					le.setCustomName(generateOverheadBar(ent, mob_health.get(ent), max_mob_health.get(ent), getMobTier(ent), is_elite));
 					ent.getWorld().playSound(ent.getLocation(), Sound.PISTON_EXTEND, 1F, 2.0F);
 					continue;
 				}
@@ -812,16 +781,21 @@ public class MonsterMechanics implements Listener {
 						is_elite = true;
 					}
 					LivingEntity le = (LivingEntity) ent;
-					le.setCustomName(generateOverheadBar(ent, getMonster(ent).getMobHealth(),getMonster(ent).getMaxMobHealth(), getMobTier(ent), is_elite));
+					le.setCustomName(generateOverheadBar(ent, mob_health.get(ent), max_mob_health.get(ent), getMobTier(ent), is_elite));
 				}
 			} catch(Exception err) {
 				if(err instanceof NullPointerException) {
 					err.printStackTrace();
+					to_remove.add(ent);
 				}
 				continue;
 			}
 		}
 		
+		for(Entity ent : to_remove) {
+			power_strike.remove(ent);
+			special_attack.remove(ent);
+		}
 	}
 	
 	public static boolean hasCustomDrops(String custom_name) {
@@ -1033,18 +1007,16 @@ public class MonsterMechanics implements Listener {
 	}
 	
 	public void twirlWhirldwind() {
-		for(Monster data : monster_map.values()) {
-			Entity ent = data.getEntity();
+		for(Entry<Entity, Integer> data : whirlwind.entrySet()) {
+			Entity ent = data.getKey();
 			if(ent == null || ent.isDead()) {
 				continue;
 			}
-			if(!data.isWhirlwind()){
-			    continue;
-			}
+			
 			Location loc = ent.getLocation();
 			float yaw = 0;
-			if(getMonster(ent).getMobYaw() != 0) {
-				yaw = getMonster(ent).getMobYaw();
+			if(mob_yaw.containsKey(ent)) {
+				yaw = mob_yaw.get(ent);
 			}
 			
 			yaw += 20;
@@ -1055,7 +1027,7 @@ public class MonsterMechanics implements Listener {
 			
 			//log.info("yaw= " + yaw);
 			
-			getMonster(ent).setYaw(yaw);
+			mob_yaw.put(ent, yaw);
 			loc.setYaw(yaw);
 			
 			EntityLiving el = (EntityLiving) ((CraftEntity) ent).getHandle();
@@ -1071,32 +1043,29 @@ public class MonsterMechanics implements Listener {
 	public void tickWhirlwind() {
 		List<Entity> to_remove = new ArrayList<Entity>();
 		
-		for(Monster data : monster_map.values()) {
+		for(Entry<Entity, Integer> data : whirlwind.entrySet()) {
 			try {
-				Entity ent = data.getEntity();
+				Entity ent = data.getKey();
 				if(ent == null || ent.isDead()) {
 					to_remove.add(ent);
 					continue;
 				}
-				if(!data.isWhirlwind()){
-				    continue;
-				}
-				int step = data.getWhirlind();
+				int step = data.getValue();
 				if(step <= 4) { // Charging...
 					EntityCreature ec = (EntityCreature) ((CraftEntity) ent).getHandle();
 					ec.setTarget(null);
 					
 					step += 1;
-					data.setWhirlwind(step);
-					data.setSpecialAttack(step);
+					whirlwind.put(ent, step);
+					special_attack.put(ent, step);
 					boolean is_elite = false;
 					ItemStack weapon = CraftItemStack.asBukkitCopy(((CraftEntity) ent).getHandle().getEquipment()[0]);
 					if(weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK)) {
 						is_elite = true;
 					}
 					LivingEntity le = (LivingEntity) ent;
-					if(le != null && isMonster(le)) {
-						le.setCustomName(generateOverheadBar(ent, getMonster(ent).getMobHealth(), getMonster(ent).getMaxMobHealth(), getMobTier(ent), is_elite));
+					if(le != null && mob_health.containsKey(ent)) {
+						le.setCustomName(generateOverheadBar(ent, mob_health.get(ent), max_mob_health.get(ent), getMobTier(ent), is_elite));
 						ent.getWorld().playSound(ent.getLocation(), Sound.CREEPER_HISS, 1F, 4.0F);
 						try {
 							ParticleEffect.sendToLocation(ParticleEffect.LARGE_EXPLODE, ent.getLocation().add(0, 1, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.3F, 40);
@@ -1126,7 +1095,7 @@ public class MonsterMechanics implements Listener {
 						if(enemy instanceof Player) {
 							Player pl = (Player) enemy;
 							if(HealthMechanics.getPlayerHP(pl.getName()) > 0) {
-								List<Integer> dmg_range = getMonster(ent).getMobDamage();
+								List<Integer> dmg_range = mob_damage.get(ent);
 								int min_dmg = dmg_range.get(0);
 								int max_dmg = dmg_range.get(1);
 								
@@ -1143,9 +1112,9 @@ public class MonsterMechanics implements Listener {
 						}
 					}
 					
-					data.setWhirlwinding(false);
-					data.setYaw(0);
-					data.setIsSpecialAttack(false);
+					whirlwind.remove(ent);
+					mob_yaw.remove(ent);
+					special_attack.remove(ent);
 					
 					boolean is_elite = false;
 					ItemStack weapon = CraftItemStack.asBukkitCopy(((CraftEntity) ent).getHandle().getEquipment()[0]);
@@ -1154,8 +1123,8 @@ public class MonsterMechanics implements Listener {
 					}
 					LivingEntity le = (LivingEntity) ent;
 					
-					if(le != null && isMonster(ent)) {
-						le.setCustomName(generateOverheadBar(ent, getMonster(ent).getMobHealth(), getMonster(ent).getMaxMobHealth(), getMobTier(ent), is_elite));
+					if(le != null && mob_health.containsKey(ent)) {
+						le.setCustomName(generateOverheadBar(ent, mob_health.get(ent), max_mob_health.get(ent), getMobTier(ent), is_elite));
 					}
 				}
 				
@@ -1165,7 +1134,9 @@ public class MonsterMechanics implements Listener {
 		}
 		
 		for(Entity ent : to_remove) {
-		    monster_map.remove(ent);
+			whirlwind.remove(ent);
+			mob_yaw.remove(ent);
+			special_attack.remove(ent);
 		}
 	}
 	
@@ -1176,34 +1147,34 @@ public class MonsterMechanics implements Listener {
 	}
 	
 	public void fixStuckEntities() {
-		for(Monster ent : monster_map.values()) {
-			if(ent.getMobTarget() == null){
-			    continue;
-			}
-			if(ent.getMobLastHurt() == 0) {
+		for(Entity ent : mob_target.keySet()) {
+			if(!(mob_health.containsKey(ent))) {
 				continue;
 			}
-			if((System.currentTimeMillis() - ent.getMobLastHurt()) > 2 * 1000) {
-				String target = ent.getMobTarget();
+			if(!(mob_last_hit.containsKey(ent))) {
+				continue;
+			}
+			if((System.currentTimeMillis() - mob_last_hit.get(ent)) > 2 * 1000) {
+				String target = mob_target.get(ent);
 				if(Bukkit.getPlayer(target) != null) {
 					Player pl = Bukkit.getPlayer(target);
-					if(!pl.getWorld().getName().equalsIgnoreCase(ent.getEntity().getWorld().getName())) {
+					if(!pl.getWorld().getName().equalsIgnoreCase(ent.getWorld().getName())) {
 						continue;
 					}
-					double y_diff = Math.abs(pl.getLocation().getY() - ent.getEntity().getLocation().getY());
+					double y_diff = Math.abs(pl.getLocation().getY() - ent.getLocation().getY());
 					if(pl.getLocation().getBlock().getType() == Material.LADDER || pl.getLocation().getBlock().getType() == Material.VINE) {
 						continue;
 					}
-					if(y_diff <= 4.0D && (y_diff >= 1.4D || y_diff == 0.5D || ((pl.getLocation().getY() < ent.getEntity().getLocation().getY()) && y_diff >= 0.65D) || (ent.getEntity().getLocation().getBlock().getType() == Material.WATER && y_diff >= 0.6D))) {
+					if(y_diff <= 4.0D && (y_diff >= 1.4D || y_diff == 0.5D || ((pl.getLocation().getY() < ent.getLocation().getY()) && y_diff >= 0.65D) || (ent.getLocation().getBlock().getType() == Material.WATER && y_diff >= 0.6D))) {
 						try {
 							Location loc = pl.getLocation();
-							loc.setY(ent.getEntity().getLocation().getY());
-							double distance = ent.getEntity().getLocation().distanceSquared(loc);
+							loc.setY(ent.getLocation().getY());
+							double distance = ent.getLocation().distanceSquared(loc);
 							if(distance <= 6) {
 								// Ok so, no hits in last 2 seconds, and player is within 9 (not counting Y) blocks. This could be an issue.
 								Location ploc = pl.getLocation().add(0, 0.25, 0);
-								ent.getEntity().teleport(ploc);
-								ent.getEntity().setFallDistance(0.0F);
+								ent.teleport(ploc);
+								ent.setFallDistance(0.0F);
 							}
 						} catch(IllegalArgumentException IAE) {
 							// Cannot measure distance between DODungeon.0 and DODungeon.0 ??
@@ -1269,13 +1240,10 @@ public class MonsterMechanics implements Listener {
 	}
 	
 	public void updateNametags() {
-		for(Monster m : monster_map.values()) {
-		    if(m.getMobLastHurt() == 0){
-		        continue;
-		    }
-			if((System.currentTimeMillis() - m.getMobLastHurt()) > (6 * 1000)) {
+		for(Entry<Entity, Long> data : mob_last_hurt.entrySet()) {
+			if((System.currentTimeMillis() - data.getValue()) > (6 * 1000)) {
 				// Change nametag back to name/level.
-				Entity e = m.getEntity();
+				Entity e = data.getKey();
 				if(!(e instanceof LivingEntity)) {
 					continue;
 				}
@@ -1290,11 +1258,7 @@ public class MonsterMechanics implements Listener {
 	}
 	
 	public void updateParticles() {
-		for(Monster monster : monster_map.values()) {
-		    if(monster.getMobLastHurt() == 0){
-		        continue;
-		    }
-		    Entity ent = monster.getEntity();
+		for(Entity ent : mob_last_hurt.keySet()) {
 			if(ent instanceof LivingEntity && ent.hasMetadata("etype")) {
 				LivingEntity le = (LivingEntity) ent;
 				String elemental_type = le.getMetadata("etype").get(0).asString();
@@ -1539,7 +1503,7 @@ public class MonsterMechanics implements Listener {
 	}
 	
 	public void addMobToRespawnList(Entity e) {
-		if(!(isMonster(e) && getMonster(e).getMobSpawn() == null)) {
+		if(!(mob_spawn_ownership.containsKey(e))) {
 			log.info("[MonsterMechanics] Entity " + e.toString() + " does not have mob_spawn_ownership information. Removing from spawn list.");
 			//log.info(e.getLocation().toString());
 			return;
@@ -1571,12 +1535,15 @@ public class MonsterMechanics implements Listener {
 		}
 		
 		to_spawn.add(mob_num + ":" + (System.currentTimeMillis() + (delay * 1000)));
-		getMonster(e).setMobSpawn(null);
+		mob_spawn_ownership.remove(e);
 		////log.info("[MM] Adding a new entity to respawn list. LOCATION: " + l.toString() + " MOB NUMBER: " + mob_num);
 		no_delay_kills.remove(e);
 		loaded_mobs.put(l, to_spawn);
 	}
 	
+	public void removeMobFromRespawnList(Entity e) {
+		// TODO: Remove it at the location where we loop through mob_to_spawn.
+	}
 	
 	public String getMobDataFromNum(Location l, int num) {
 		String spawn_data = mob_spawns.get(l);
@@ -1816,13 +1783,11 @@ public class MonsterMechanics implements Listener {
 	}
 	
 	public void killListEntities() {
-		List<Monster> to_remove = new ArrayList<Monster>();
+		List<Entity> to_remove = new ArrayList<Entity>();
 		if(entities_to_kill.size() <= 0) { return; }
 		
 		for(Entity ent : entities_to_kill) {
-		    if(isMonster(ent)){
-		      to_remove.add(getMonster(ent));
-		    }
+			to_remove.add(ent);
 			LivingEntity le = (LivingEntity) ent;
 			le.damage(le.getHealth());
 			ent.remove();
@@ -1830,18 +1795,18 @@ public class MonsterMechanics implements Listener {
 		}
 		
 		entities_to_kill.clear();
-		final List<Monster> safe_to_remove = new ArrayList<Monster>(to_remove);
+		final List<Entity> safe_to_remove = new ArrayList<Entity>(to_remove);
 		
-		for(Monster ent : safe_to_remove) {
+		//this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+		//	public void run() {
+		for(Entity ent : safe_to_remove) {
 			//entities_to_kill.remove(ent);
 			// Been handled, remove them.
-		    if(ent.getMobSpawn() == null){
-		        continue;
-		    }
-				int mob_num = getMobsUniqueNumber(ent.getEntity());
-				Location spawner_loc = getMobsHomeSpawner(ent.getEntity());
+			if(mob_spawn_ownership.containsKey(ent)) {
+				int mob_num = getMobsUniqueNumber(ent);
+				Location spawner_loc = getMobsHomeSpawner(ent);
 				if(spawned_mobs.containsKey(spawner_loc)) {
-					no_delay_kills.add(ent.getEntity());
+					no_delay_kills.add(ent);
 					List<Integer> spawned_mob_nums = spawned_mobs.get(spawner_loc);
 					
 					List<Entity> lspawned_mobs = new ArrayList<Entity>();
@@ -1857,12 +1822,15 @@ public class MonsterMechanics implements Listener {
 					spawned_mob_nums.remove(new Integer(mob_num));
 					spawned_mobs.put(spawner_loc, spawned_mob_nums);
 					
-					addMobToRespawnList(ent.getEntity());
+					addMobToRespawnList(ent);
 				} else if(!(spawned_mobs.containsKey(spawner_loc))) {
-				   ent.setMobSpawn(null);
+					mob_spawn_ownership.remove(ent);
 					//no_delay_kills.remove(ent);
+				}
 			}
 		}
+		//	}
+		//}, 0L);
 	}
 	
 	public void removeListEntities() {
@@ -1883,7 +1851,7 @@ public class MonsterMechanics implements Listener {
 				continue;
 			}*/
 			
-			if(isMonster(ent) && getMonster(ent).getLastRespawn() != 0 && ((cur_time - getMonster(ent).getLastRespawn() <= (10 * 1000)))) {
+			if(last_respawn.containsKey(ent) && ((cur_time - last_respawn.get(ent) <= (10 * 1000)))) {
 				continue; // They already repositioned 15 seconds ago, chill the fuck out.
 			}
 			
@@ -1922,14 +1890,23 @@ public class MonsterMechanics implements Listener {
 			}
 			
 			int max_hp = HealthMechanics.generateMaxHP(ent);
-			getMonster(ent).setMobHealth(max_hp);
-			getMonster(ent).setMobMaxHealth(max_hp);
+			mob_health.put(ent, max_hp);
+			max_mob_health.put(ent, max_hp);
+			
+			/*boolean is_elite = false;
+			if(le.getEquipment().getItemInHand().getEnchantments().size() > 0){
+				is_elite = true;
+			}
+
+			le.setCustomName(generateOverheadBar(max_hp, max_hp, getMobTier(ent), is_elite));*/
+			
 			to_remove.add(ent);
+			//log.info("[MM] Transported entity back to spawn. " + ent.toString());
 		}
 		
 		for(Entity e : to_remove) {
 			entities_to_remove.remove(e);
-			getMonster(e).setLastRespawn(System.currentTimeMillis());
+			last_respawn.put(e, System.currentTimeMillis());
 			// Been handled, remove them.
 		}
 		
@@ -1943,16 +1920,18 @@ public class MonsterMechanics implements Listener {
 			if(ent instanceof Player) {
 				continue;
 			}
-			if(ent.getType() == EntityType.DROPPED_ITEM || ent.getType() == EntityType.ARROW || ent.getType() == EntityType.BOAT || ent.getType() == EntityType.WEATHER || ent.getType() == EntityType.HORSE || ent.getType() == EntityType.THROWN_EXP_BOTTLE || ent.getType() == EntityType.EGG || ent.getType() == EntityType.HORSE) {
+			if(ent.getType() == EntityType.DROPPED_ITEM || ent.getType() == EntityType.ARROW || ent.getType() == EntityType.BOAT || ent.getType() == EntityType.WEATHER || ent.getType() == EntityType.HORSE || ent.getType() == EntityType.THROWN_EXP_BOTTLE || ent.getType() == EntityType.EGG) {
 				continue;
 			}
 			alive_ents.add(ent);
 		}
 		for(Entity ent : alive_ents) {
-			if(!(isMonster(ent))) {
+			if(!(mob_health.containsKey(ent))) {
 				ent.remove();
-				((LivingEntity)ent).damage(((LivingEntity)ent).getHealth());
-				log.info("[MM] Killing a mob due to <1 HP value, cleanup event. " + ent.toString());
+				//to_remove.add(ent);
+				//LivingEntity le = (LivingEntity)ent;
+				//le.damage(le.getHealth());
+				//log.info("[MM] Killing a mob due to <1 HP value, cleanup event. " + ent.toString());
 				continue; // Null mob, let's kill them.
 			}
 		}
@@ -2005,18 +1984,20 @@ public class MonsterMechanics implements Listener {
 	public void cleanupMonsters() {
 		List<Entity> to_remove = new ArrayList<Entity>();
 		
-		for(Monster monster: monster_map.values()) {
-			Entity e = monster.getEntity();
+		for(Map.Entry<Entity, String> entry : mob_spawn_ownership.entrySet()) {
+			Entity e = entry.getKey();
 			try {
 				if(e == null) {
 					//addMobToRespawnList(e);
 					//to_remove.add(e);
-					log.info("[MM] Null dead entity, skipping... ");
+					log.info("[MM] Null dead entity, skipping... " + entry.getValue());
 					continue;
 				}
+				
 				if(entities_to_remove.containsKey(e)) {
 					continue; // Irrelevant.
 				}
+				
 				boolean is_instance = InstanceMechanics.isInstance(e.getWorld().getName());
 				
 				if(!is_instance) {
@@ -2039,7 +2020,7 @@ public class MonsterMechanics implements Listener {
 					}
 					
 					// If the last time the mob was hurt was less than 6 seconds ago and they're not TOO far out, we won't TP them.
-					if(((monster.getMobLastHurt() != 0 && ((System.currentTimeMillis() - monster.getMobLastHurt()) <= (6 * 1000))) && distance <= (Math.pow(max_xz, 2) + 2500.0D))) {
+					if(((mob_last_hurt.containsKey(e) && ((System.currentTimeMillis() - mob_last_hurt.get(e)) <= (6 * 1000))) && distance <= (Math.pow(max_xz, 2) + 2500.0D))) {
 						continue;
 					}
 					
@@ -2107,14 +2088,52 @@ public class MonsterMechanics implements Listener {
 				}
 				//TODO: Check the last time the mob has gotten action AKA had health change. If no health change, no target, we'll refresh.
 				LivingEntity le = (LivingEntity) ent;
-				if(!(isMonster(ent)) && le.getHealth() > 0) {
+				if(!(mob_target.containsKey(ent)) && le.getHealth() > 0) {
 					if(ent.isDead() || !(ent.isValid())) {
 						entities_to_kill.add(ent);
 						continue;
 					}
+					/*if(!(mob_last_hurt.containsKey(ent))){
+							entities_to_kill.add(ent);
+							continue;
+						}
+						long last_hit = mob_last_hurt.get(ent);
+						if((System.currentTimeMillis() - last_hit) > (360 * 1000)){
+							// They haven't been hit in 5 minutes, no target.
+							entities_to_kill.add(ent);
+						}*/
 				}
 			}
 		}
+		
+		/*for(Entity ent : mob_health.keySet()){
+			if(ent.isDead() || !ent.isValid() || !ent.hasMetadata("mobname")){
+				//log.info("[MM] Removing null'd entry in mob_hashmaps.");
+
+				if(ent != null){
+					entities_to_kill.add(ent);
+					mob_health.remove(ent);
+					mob_damage.remove(ent);
+					max_mob_health.remove(ent);
+					mob_armor.remove(ent);
+					mob_tier.remove(ent);
+					mob_loot.remove(ent);
+					//mob_spawn_ownership.remove(ent);
+					//no_delay_kills.remove(ent);
+				}
+			}
+		}*/
+		
+		/*for(Entity ent : mob_spawn_ownership.keySet()){
+			if(ent.isDead() || !ent.isValid() || !ent.hasMetadata("mobname")){
+				//log.info("[MM] Removing null'd entry in mob_hashmaps.");
+
+				if(ent != null){
+					mob_spawn_ownership.remove(ent);
+					//no_delay_kills.remove(ent);
+				}
+			}
+		}*/
 		
 	}
 	
@@ -2880,13 +2899,13 @@ public class MonsterMechanics implements Listener {
 		/*if(!(mob_loot.containsKey(e))){
 			return 1; // Not custom, or something is wrong.
 		}*/
-		if(!(isMonster(e))) {
+		if(!(mob_health.containsKey(e))) {
 			// They're dead.
-			log.info("No health data for " + e.toString());
+			//log.info("No health data for " + e.toString());
 			return 0;
 			//mob_health.put(e, calculateMobHP(e));
 		}
-		return getMonster(e).getMobHealth();
+		return mob_health.get(e);
 	}
 	
 	public static int getBarLength(int tier) {
@@ -2894,7 +2913,7 @@ public class MonsterMechanics implements Listener {
 		if(tier == 2) { return 30; }
 		if(tier == 3) { return 35; }
 		if(tier == 4) { return 40; }
-		if(tier == 5) { return 45; }
+		if(tier == 5) { return 50; }
 		return 25;
 	}
 	
@@ -2927,7 +2946,7 @@ public class MonsterMechanics implements Listener {
 		if(BossMechanics.boss_map.containsKey(ent)) {
 			cc = ChatColor.GOLD;
 		}
-		if(getMonster(ent).isSpecialAttacking() && cur_hp > 0) {
+		if(special_attack.containsKey(ent) && cur_hp > 0) {
 			cc = ChatColor.LIGHT_PURPLE;
 		}
 		
@@ -2955,17 +2974,43 @@ public class MonsterMechanics implements Listener {
 		
 		return_string = return_string + cc + ChatColor.BOLD.toString() + "║";
 		
+		// TODO: Generate activity bar status
+		/*if(special_attack.containsKey(ent) && cur_hp > 0){
+
+			return_string += ChatColor.LIGHT_PURPLE.toString();
+
+			int special_bar_length = 5;
+			int charge_state = special_attack.get(ent);
+			int charge_count = charge_state;
+
+			while(charge_state > 0){
+				return_string += "|";
+				charge_state--;
+			}
+
+			return_string += ChatColor.BLACK.toString();
+
+			while((special_bar_length - charge_count) > 0){
+				return_string += "|";
+				charge_count++;
+			}
+
+			return_string += cc.toString() + ChatColor.BOLD + "â•‘";
+		}
+		/*else{
+			return_string += ChatColor.BLACK.toString() + "|||||" + cc.toString() + ChatColor.BOLD.toString() + "â•‘";
+		}*/
+		
 		return return_string;
 		// 20 Bars, that's 5% HP per bar
 	}
 	
 	public static void subtractMHealth(Entity e, int amount) {
-		if(!(isMonster(e))) {
-			log.info("[MonsterMechanics] Killing for entity " + e.toString() + " due to no mob_health.");
-			e.remove();
+		if(!(mob_health.containsKey(e))) {
+			log.info("[MonsterMechanics] Skipping subtractMHealth() for entity " + e.toString() + " due to no mob_health.");
 			return; // No data available, GG.
 		}
-		int old_hp = getMonster(e).getMobHealth();
+		int old_hp = mob_health.get(e);
 		int new_hp = old_hp - amount;
 		//int max_health = max_mob_health.get(e);
 		
@@ -2979,26 +3024,30 @@ public class MonsterMechanics implements Listener {
 		}
 		
 		if(new_hp > 0) {
-		    getMonster(e).setMobHealth(new_hp);
+			mob_health.put(e, new_hp);
+			if(max_mob_health.containsKey(e)) {
 				LivingEntity le = (LivingEntity) e;
-				le.setCustomName(generateOverheadBar(e, new_hp, getMonster(e).getMaxMobHealth(), tier, is_elite));
+				le.setCustomName(generateOverheadBar(e, new_hp, max_mob_health.get(e), tier, is_elite));
 				le.setCustomNameVisible(true);
+			}
 		} else if(new_hp <= 0) {
-			getMonster(e).setMobHealth(0);
+			mob_health.put(e, 0);
 			LivingEntity le = (LivingEntity) e;
-			le.setCustomName(generateOverheadBar(e, 0, getMonster(e).getMaxMobHealth(), tier, is_elite));
+			
+			if(max_mob_health.containsKey(e)) {
+				le.setCustomName(generateOverheadBar(e, 0, max_mob_health.get(e), tier, is_elite));
+			}
 			if(le.getVehicle() != null) {
 				Entity mount = le.getVehicle();
 				le.eject();
 				mount.remove();
 			}
 			le.damage(le.getHealth());
-			le.setHealth(0);
 		}
 	}
 	
 	public void setMHealth(Entity e, int health) {
-		getMonster(e).setMobHealth(health);
+		mob_health.put(e, health);
 	}
 	
 	public void pushAwayEntity(Player p, Entity entity, double speed) {
@@ -3264,7 +3313,7 @@ public class MonsterMechanics implements Listener {
 	@EventHandler
 	public void onVehicleEnter(VehicleEnterEvent e) {
 		Entity ent = e.getEntered();
-		if((e.getVehicle().getType() == EntityType.MINECART || e.getVehicle().getType() == EntityType.BOAT) && isMonster(ent)) {
+		if((e.getVehicle().getType() == EntityType.MINECART || e.getVehicle().getType() == EntityType.BOAT) && mob_health.containsKey(ent)) {
 			e.setCancelled(true);
 		}
 	}
@@ -3368,15 +3417,20 @@ public class MonsterMechanics implements Listener {
 			Entity r_ent = ent.getPassenger();
 			ent = r_ent;
 		}
-		if(isMonster(ent)){
-		    getMonster(ent).getMobTier();
+		if(mob_tier.containsKey(ent)) { return mob_tier.get(ent); }
+		LivingEntity le = (LivingEntity) ent;
+		ItemStack i = le.getEquipment().getItemInHand();
+		if(i == null) { return -1; // No tier.
 		}
-		return -1;
+		int wep_tier = getItemTier(i);
+		log.info("[MonsterMechanics] No mob tier stored for entity " + ent.toString() + ", saving new value to memory. (" + wep_tier + ")");
+		mob_tier.put(ent, wep_tier);
+		return wep_tier;
 	}
 	
 	@EventHandler
 	public void onEntityCombustEvent(EntityCombustEvent e) {
-		if(isMonster(e.getEntity())) {
+		if(mob_health.containsKey(e.getEntity())) {
 			e.setCancelled(true);
 			e.getEntity().setFireTicks(0);
 		}
@@ -3386,9 +3440,9 @@ public class MonsterMechanics implements Listener {
 	public void onPotionSplashEffect(PotionSplashEvent e) {
 		if(e.getEntity().getShooter() instanceof Witch) {
 			LivingEntity le = (LivingEntity) e.getEntity().getShooter();
-			if(isMonster(le)) {
+			if(mob_damage.containsKey(le)) {
 				// Custom mob, witch throwing potion, do damage.
-				List<Integer> dmg_range = getMonster(le).getMobDamage();
+				List<Integer> dmg_range = mob_damage.get(le);
 				int dmg = new Random().nextInt(dmg_range.get(1) - dmg_range.get(0)) + dmg_range.get(0);
 				dmg = dmg * 2;
 				for(Entity ent : e.getAffectedEntities()) {
@@ -3419,7 +3473,7 @@ public class MonsterMechanics implements Listener {
 			ent = r_ent;
 		}
 		
-		if(!(isMonster(ent)) && !(PetMechanics.inv_pet_map.containsKey(ent))) {
+		if(!(mob_health.containsKey(ent)) && !(PetMechanics.inv_pet_map.containsKey(ent))) {
 			e.setCancelled(false);
 			return;
 		}
@@ -3496,7 +3550,7 @@ public class MonsterMechanics implements Listener {
 			e.setCancelled(true);
 			e.setDamage(0);
 			if(!(entities_to_remove.containsKey(ent))) {
-				if(isMonster(ent) && getMonster(ent).getLastRespawn() != 0 && ((System.currentTimeMillis() - getMonster(ent).getLastRespawn()) <= 500) && !(InstanceMechanics.isInstance(ent.getWorld().getName()))) {
+				if(last_respawn.containsKey(ent) && ((System.currentTimeMillis() - last_respawn.get(ent)) <= 500) && !(InstanceMechanics.isInstance(ent.getWorld().getName()))) {
 					// Took them less than 5 seconds to get glitched again...
 					// Disable this spawn?
 					no_pathing.add(ent);
@@ -3515,12 +3569,12 @@ public class MonsterMechanics implements Listener {
 		}
 		
 		if(e.getCause() == DamageCause.FIRE_TICK) {
-			double cur_hp = getMonster(ent).getMobHealth();
+			double cur_hp = mob_health.get(ent);
 			dmg = (cur_hp * 0.03D);
 		}
 		
 		if(e.getCause() == DamageCause.POISON) {
-			double cur_hp =  getMonster(ent).getMobHealth();
+			double cur_hp = mob_health.get(ent);
 			dmg = (cur_hp * 0.02D);
 		}
 		
@@ -3529,14 +3583,42 @@ public class MonsterMechanics implements Listener {
 			// 10% normal damage while enraged.
 		}
 		
+		/*if(ent.getType() != EntityType.SPIDER && ent.getType() != EntityType.CAVE_SPIDER && ent.getLocation().getBlock().getType() == Material.WEB){
+			ent.getLocation().getBlock().setType(Material.AIR);
+		}*/
 		
-		if(!(isMonster(ent))) {
+		/*int mob_tier = getMobTier(ent);
+		if(mob_tier == 4 || mob_tier == 5){
+			final Entity f_ent = ent;
+			final Entity f_attacker = attacker;
+			this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+				public void run() {
+					f_ent.setVelocity(new Vector());
+
+					// Get velocity unit vector:
+					org.bukkit.util.Vector unitVector = f_ent.getLocation().toVector().subtract(f_ent.getLocation().toVector()).normalize();
+					// Set speed and push entity:
+
+					if(f_attacker != null){
+						unitVector = f_ent.getLocation().toVector().subtract(f_attacker.getLocation().toVector()).normalize();
+
+						f_ent.setVelocity(unitVector.multiply(0.10D));
+						if(f_ent != null){
+							f_ent.playEffect(EntityEffect.HURT);
+						}
+					}
+
+				}
+			}, 1L);
+		}*/
+		
+		if(!(max_mob_health.containsKey(ent))) {
 			// Beacon buff?
 			return;
 		}
 		
-		int max_health = getMonster(ent).getMaxMobHealth();
-		double mhealth = getMonster(ent).getMobHealth();
+		int max_health = max_mob_health.get(ent);
+		double mhealth = mob_health.get(ent);
 		
 		if(attacker instanceof Player && mhealth == max_health && dmg >= max_health) {
 			AchievmentMechanics.addAchievment(((Player) attacker).getName(), "One K.O");
@@ -3580,8 +3662,8 @@ public class MonsterMechanics implements Listener {
 						p_attacker.playSound(p_attacker.getLocation(), Sound.FIRE_IGNITE, 1F, 1F);
 					}
 					
-					double max_hp = getMonster(ent).getMaxMobHealth();
-					double cur_hp = getMonster(ent).getMobHealth();
+					double max_hp = max_mob_health.get(ent);
+					double cur_hp = mob_health.get(ent);
 					
 					double percent_hp = ((cur_hp / max_hp) * 100.0D);
 					double minion_wave = 0;
@@ -3598,9 +3680,9 @@ public class MonsterMechanics implements Listener {
 							Ghast g = (Ghast) ((LivingEntity) spawnTierMob(new Location(ent.getWorld(), -54, 158, 646).add(0, 5, 0), EntityType.GHAST, 4, -1, new Location(ent.getWorld(), -54, 158, 646).add(0, 5, 0), false, "", "Abysal Wraith", true)); //(Ghast)ent.getWorld().spawnEntity(ent.getLocation().add(0, 5, 0), EntityType.GHAST);
 							g.setPassenger(ent);
 							
-							double boss_armor = getMonster(ent).getMobArmor();
+							double boss_armor = mob_armor.get(ent);
 							boss_armor += 50;
-							getMonster(ent).setMobArmor((int)boss_armor); // +50% ARMOR
+							mob_armor.put(ent, (int) boss_armor); // +50% ARMOR
 							
 							for(Player pl : ent.getWorld().getPlayers()) {
 								pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "The Infernal Abyss: " + ChatColor.WHITE + "The inferno will devour you!");
@@ -3713,9 +3795,9 @@ public class MonsterMechanics implements Listener {
 				}
 			}
 			
-			if(boss_type.equalsIgnoreCase("bandit_leader") && isMonster(ent)) {
-				double max_hp =  getMonster(ent).getMaxMobHealth();
-				double cur_hp =  getMonster(ent).getMobHealth();
+			if(boss_type.equalsIgnoreCase("bandit_leader") && max_mob_health.containsKey(ent)) {
+				double max_hp = max_mob_health.get(ent);
+				double cur_hp = mob_health.get(ent);
 				
 				double percent_hp = ((cur_hp / max_hp) * 100.0D);
 				double minion_wave = 0;
@@ -3783,8 +3865,8 @@ public class MonsterMechanics implements Listener {
 						List<Entity> minion_map = BossMechanics.minion_map.get(ent);
 						for(Entity add : minion_map) {
 							if(add != null && !add.isDead()) {
-								double add_max_health = getMonster(add).getMaxMobHealth();
-								int deficet = (int) (add_max_health - getMonster(add).getMobHealth());
+								double add_max_health = MonsterMechanics.max_mob_health.get(add);
+								int deficet = (int) (add_max_health - MonsterMechanics.mob_health.get(add));
 								MonsterMechanics.subtractMHealth(add, -deficet);
 								try {
 									ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, ent.getLocation().add(0, 2, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.5F, 5);
@@ -3806,17 +3888,17 @@ public class MonsterMechanics implements Listener {
 					List<Entity> minion_map = BossMechanics.minion_map.get(ent);
 					for(Entity add : minion_map) {
 						if(add != null && !add.isDead()) {
-							List<Integer> add_dmg = getMonster(ent).getMobDamage();
-							int add_arm =getMonster(ent).getMobArmor();
+							List<Integer> add_dmg = MonsterMechanics.mob_damage.get(add);
+							int add_arm = MonsterMechanics.mob_armor.get(add);
 							add_arm += 2;
-							getMonster(add).setMobArmor(add_arm);
+							MonsterMechanics.mob_armor.put(add, add_arm);
 							double min_dmg = add_dmg.get(0);
 							double max_dmg = add_dmg.get(1);
 							min_dmg = (min_dmg * 1.1) + 1;
 							max_dmg = (max_dmg * 1.1) + 1;
 							add_dmg.set(0, (int) Math.round(min_dmg));
 							add_dmg.set(1, (int) Math.round(max_dmg));
-							getMonster(ent).setMobDamage(add_dmg);
+							MonsterMechanics.mob_damage.put(add, add_dmg);
 							
 							try {
 								ParticleEffect.sendToLocation(ParticleEffect.CRIT, ent.getLocation().add(0, 0.5, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 1F, 10);
@@ -3835,12 +3917,12 @@ public class MonsterMechanics implements Listener {
 			}
 			
 			if(boss_type.equalsIgnoreCase("unholy_priest")) {
-				if(!isMonster(ent)) {
+				if(!max_mob_health.containsKey(ent)) {
 					e.setCancelled(true);
 					return;
 				}
-				double max_hp = getMonster(ent).getMaxMobHealth();
-				double cur_hp = getMonster(ent).getMobHealth();
+				double max_hp = max_mob_health.get(ent);
+				double cur_hp = mob_health.get(ent);
 				
 				double percent_hp = ((cur_hp / max_hp) * 100.0D);
 				double minion_wave = 0;
@@ -3858,7 +3940,7 @@ public class MonsterMechanics implements Listener {
 					
 					if(heal_count <= 3) {
 						// Heal the boss.
-						subtractMHealth(ent, -(int) (max_hp / 4.0D)); // Heal 30% of HP.
+						subtractMHealth(ent, -(int) (max_hp / 3.0D)); // Heal 30% of HP.
 						if(heal_count == 1) {
 							for(Player pl : ent.getWorld().getPlayers()) {
 								pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Burick The Fanatic: " + ChatColor.WHITE + "Let the powers of Maltai channel into me and give me strength!");
@@ -3927,8 +4009,8 @@ public class MonsterMechanics implements Listener {
 						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true));
 						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true));
 						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, true, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, true, "", "", true));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "", "", true));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "", "", true));
 						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 3, -1, loc, false, "", "", true));
 					}
 					if(minion_type == 3) {
@@ -3938,7 +4020,7 @@ public class MonsterMechanics implements Listener {
 						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true));
 					}
 					if(minion_type == 4) {
-						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, true, "", "", true));
+						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, false, "", "", true));
 						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, true, "", "", true));
 						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true));
 					}
@@ -3978,7 +4060,8 @@ public class MonsterMechanics implements Listener {
 		if(ent.hasMetadata("etype")) {
 			fire = ent.getMetadata("etype").get(0).asString().equalsIgnoreCase("fire");
 		}
-		if(isMonster(ent) && getMonster(ent).isPowerStrike() && getMonster(ent).getPowerStrike() >= 5){
+		
+		if(power_strike.containsKey(ent) && power_strike.get(ent) >= 5) {
 			// Double arrows!
 			ent.getWorld().playSound(ent.getLocation(), Sound.ARROW_HIT, 1F, 1F);
 			ent.getWorld().playSound(ent.getLocation(), Sound.ARROW_HIT, 1F, 1F);
@@ -4014,8 +4097,8 @@ public class MonsterMechanics implements Listener {
 			arrow.setVelocity(ent.getVelocity().add(vec));
 			arrow.setShooter((LivingEntity) ent);
 			
-			getMonster(ent).setPowerStriking(false);
-			getMonster(ent).setIsSpecialAttack(false);
+			power_strike.remove(ent);
+			special_attack.remove(ent);
 		}
 		
 		if(fire) {
@@ -4142,7 +4225,7 @@ public class MonsterMechanics implements Listener {
 		
 		if(ent == null) { return; }
 		
-		if(!(isMonster(ent)) || (isMonster(ent) && getMonster(ent).getMobDamage().isEmpty())) {
+		if(!(mob_damage.containsKey(ent))) {
 			// No damage data stored for monster.
 			return;
 		}
@@ -4161,16 +4244,16 @@ public class MonsterMechanics implements Listener {
 			ent = r_ent;
 		}
 		
-		if(isMonster(ent) && getMonster(ent).getMobLastHit() == 0) {
-			getMonster(ent).setMobLastHit(System.currentTimeMillis());
-		} else if(isMonster(ent) && getMonster(ent).getMobLastHit() > 0) {
-			long last_hit = getMonster(ent).getMobLastHit();
-			getMonster(ent).setMobLastHit(System.currentTimeMillis());
-			//1/5 of a second they are hit by a mob
+		if(!mob_last_hit.containsKey(ent)) {
+			mob_last_hit.put(ent, System.currentTimeMillis());
+		} else if(mob_last_hit.containsKey(ent)) {
+			long last_hit = mob_last_hit.get(ent);
+			mob_last_hit.put(ent, System.currentTimeMillis());
+			
 			if((System.currentTimeMillis() - last_hit) < Delay.MELEE.delay) {
 				e.setCancelled(true);
 				e.setDamage(0);
-				return;
+				return; // A half-second hasn't passed since the mob last hit someone. 1/5th of a second
 			}
 		}
 		
@@ -4179,13 +4262,13 @@ public class MonsterMechanics implements Listener {
 		boolean is_elite = false;
 		//int mob_tier = getMobTier(ent);
 		//List<ItemStack> ent_gear = mob_loot.get(ent);
-		ItemStack weapon = ((LivingEntity)ent).getEquipment().getItemInHand();
+		ItemStack weapon = CraftItemStack.asBukkitCopy(((CraftEntity) ent).getHandle().getEquipment()[0]);
 		if(weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK)) {
 			//log.info("ELITE!");
 			is_elite = true;
 		}
 		
-		List<Integer> dmg_range = getMonster(ent).getMobDamage();
+		List<Integer> dmg_range = mob_damage.get(ent);
 		int min_dmg = dmg_range.get(0);
 		int max_dmg = dmg_range.get(1);
 		
@@ -4205,10 +4288,11 @@ public class MonsterMechanics implements Listener {
 			}
 		}
 		
-		if(getMonster(ent).isWhirlwind() && getMonster(ent).getWhirlind() >= 5) {
+		if(whirlwind.containsKey(ent) && whirlwind.get(ent) >= 5) {
 			dmg = dmg * 4;
 		}
-		if(getMonster(ent).isPowerStrike() && getMonster(ent).getWhirlind() >= 5){
+		
+		if(power_strike.containsKey(ent) && power_strike.get(ent) >= 5) {
 			// Extra DMG!
 			if(!(BossMechanics.boss_map.containsKey(ent))) {
 				dmg = dmg * 3;
@@ -4240,11 +4324,11 @@ public class MonsterMechanics implements Listener {
 					pushAwayPlayer(ent, p, 4F);
 				}
 			}
-		    getMonster(ent).setPowerStriking(false);
-	        getMonster(ent).setIsSpecialAttack(false);
+			power_strike.remove(ent);
+			special_attack.remove(ent);
 			
 			LivingEntity le = (LivingEntity) ent;
-			le.setCustomName(generateOverheadBar(ent, getMonster(ent).getMobHealth(), getMonster(ent).getMaxMobHealth(), getMobTier(ent), is_elite));
+			le.setCustomName(generateOverheadBar(ent, mob_health.get(ent), max_mob_health.get(ent), getMobTier(ent), is_elite));
 		}
 		
 		if(BossMechanics.enraged_boss.contains(ent)) {
@@ -4256,73 +4340,6 @@ public class MonsterMechanics implements Listener {
 		
 	}
 	
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onEntityDamageEvent(EntityDamageByEntityEvent e){
-	    if(!(e.getDamager() instanceof Player))return;
-	    if(e.getEntity() instanceof Player)return;
-	    Player damager = (Player)e.getDamager();
-	    Entity ent = e.getEntity();
-	    if(!isMonster(ent) && isEvilMob(ent.getType())){
-	        System.out.print(ChatColor.RED + "This mob was not a MONSTER in the monster_map. Recalculating...");
-	       
-	        int mob_health = calculateMobHP(ent);
-	        if(mob_health == 10){
-	            System.out.print(ChatColor.RED + "They didnt have any more or hp values! GG");
-	            return;
-	        }
-	        long time_start = System.currentTimeMillis();
-	        pushAwayPlayer(ent, damager, 2);
-	        damager.sendMessage(ChatColor.GRAY + ((LivingEntity)ent).getCustomName() + ": " + ChatColor.WHITE + "Let me get ready!");
-	        e.setCancelled(true);
-	        e.setDamage(0);
-	        int total_armor = 0;
-	        for(ItemStack is : ((LivingEntity)ent).getEquipment().getArmorContents()){
-	            if(is == null || is.getType() == Material.AIR){
-	                List<Integer> armor_vals = new ArrayList<Integer>(ItemMechanics.getArmorVal(is, true));
-	                int median = armor_vals.get(0) + (armor_vals.get(1) - armor_vals.get(0));
-	                total_armor += median;
-	            }
-	        }
-	        int tier = getTier(((LivingEntity)ent).getEquipment().getArmorContents());
-	        List<Integer> list_dmg = ItemMechanics.getDmgRangeOfWeapon(((LivingEntity)ent).getEquipment().getItemInHand());
-	        Monster m = new Monster(ent, mob_health, mob_health, total_armor, tier, list_dmg);
-	        monster_map.put(ent, m);
-	        long finish = System.currentTimeMillis();
-	        System.out.print("Recalculated Stats for " + ent.getType() + " HP: " + mob_health + " DMG: " + list_dmg.get(0) + " TIER: " + tier + " ARMOR: " + total_armor + " Done in " + (finish - time_start) + "ms");
-	    }
-	}
-	public int getTier(ItemStack[] i){
-	    ItemStack boots = i[0];
-	    ItemStack leggings = i[1];
-	    ItemStack chest = i[2];
-	    ItemStack helmet = i[3];
-	    //Boots
-	    if(boots.getType() == Material.LEATHER_BOOTS)return 1;
-	    if(boots.getType() == Material.CHAINMAIL_BOOTS)return 2;
-	    if(boots.getType() == Material.IRON_BOOTS)return 3;
-	    if(boots.getType() == Material.DIAMOND_BOOTS)return 4;
-	    if(boots.getType() == Material.GOLD_BOOTS)return 5;
-	    //Legs
-	    if(leggings.getType() == Material.LEATHER_BOOTS)return 1;
-	    if(leggings.getType() == Material.CHAINMAIL_BOOTS)return 2;
-	    if(leggings.getType() == Material.IRON_BOOTS)return 3;
-	    if(leggings.getType() == Material.DIAMOND_BOOTS)return 4;
-	    if(leggings.getType() == Material.GOLD_BOOTS)return 5;
-	    //Chest
-        if(chest.getType() == Material.LEATHER_CHESTPLATE)return 1;
-        if(chest.getType() == Material.CHAINMAIL_CHESTPLATE)return 2;
-        if(chest.getType() == Material.IRON_CHESTPLATE)return 3;
-        if(chest.getType() == Material.DIAMOND_CHESTPLATE)return 4;
-        if(chest.getType() == Material.GOLD_CHESTPLATE)return 5;
-        //Helmet
-        if(helmet.getType() == Material.LEATHER_HELMET)return 1;
-        if(helmet.getType() == Material.CHAINMAIL_HELMET)return 2;
-        if(helmet.getType() == Material.IRON_HELMET)return 3;
-        if(helmet.getType() == Material.DIAMOND_HELMET)return 4;
-        if(helmet.getType() == Material.GOLD_HELMET)return 5;
-        //no armor? Kill em
-	    return 1;
-	}
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerDamageMonsterEvent(EntityDamageByEntityEvent e) {
 		if(!(e.getDamager() instanceof Player) && !(e.getDamager() instanceof Projectile)) { return; }
@@ -4362,20 +4379,20 @@ public class MonsterMechanics implements Listener {
 			}
 		}
 		
-		if(!(isMonster(ent))) {
+		if(!(mob_health.containsKey(ent))) {
 			if(ent instanceof LivingEntity) {
 				LivingEntity le = (LivingEntity) ent;
 				if(le.getEquipment().getArmorContents().length > 0) { // They have armor on, so something must have gone wrong.
 					// TODO: Calculate HP instead.
-					le.remove();
+					le.damage(le.getHealth()); // Just kill them.
 					return;
 				}
 			}
 			return;
 		}
 		
-		if(isMonster(ent)) {
-			double armor_val = getMonster(ent).getMobArmor() / 100.0D;
+		if(mob_armor.containsKey(ent)) {
+			double armor_val = mob_armor.get(ent) / 100.0D;
 			double dmg = e.getDamage();
 			
 			double to_negate = armor_val * dmg;
@@ -4402,7 +4419,8 @@ public class MonsterMechanics implements Listener {
 		}
 		
 		if(p != null) {
-		    getMonster(ent).setMobTarget(p.getName());			
+			mob_target.put(ent, p.getName());
+			
 			if(p.getItemInHand() != null) {
 				int mob_tier = getMobTier(ent);
 				int wep_tier = ItemMechanics.getItemTier(p.getItemInHand());
@@ -4441,65 +4459,53 @@ public class MonsterMechanics implements Listener {
 			is_elite = true;
 		}
 		
-		if(ent != null && is_elite && !(getMonster(ent).isSpecialAttacking()) && (getMonster(ent).getMobHealth() - e.getDamage()) > 0) {
+		if(ent != null && is_elite && !(special_attack.containsKey(ent)) && (mob_health.get(ent) - e.getDamage()) > 0) {
 			int do_i_whirlwind = new Random().nextInt(100);
 			int mob_tier = getMobTier(ent);
 			if(mob_tier == 1) {
 				if(do_i_whirlwind <= 5) {
-				    getMonster(ent).setWhirlwind(1);
-				    getMonster(ent).setWhirlwinding(true);
-				    getMonster(ent).setSpecialAttack(1);
-                    getMonster(ent).setIsSpecialAttack(true);
+					whirlwind.put(ent, 1);
+					special_attack.put(ent, 1);
 					
 					ent.getWorld().playSound(ent.getLocation(), Sound.CREEPER_HISS, 1F, 4.0F);
 				}
 			}
 			if(mob_tier == 2) {
 				if(do_i_whirlwind <= 7) {
-                    getMonster(ent).setWhirlwind(1);
-                    getMonster(ent).setWhirlwinding(true);
-                    getMonster(ent).setSpecialAttack(1);
-                    getMonster(ent).setIsSpecialAttack(true);
+					whirlwind.put(ent, 1);
+					special_attack.put(ent, 1);
 					
 					ent.getWorld().playSound(ent.getLocation(), Sound.CREEPER_HISS, 1F, 4.0F);
 				}
 			}
 			if(mob_tier == 3) {
 				if(do_i_whirlwind <= 10) {
-	                 getMonster(ent).setWhirlwind(1);
-	                    getMonster(ent).setWhirlwinding(true);
-	                    getMonster(ent).setSpecialAttack(1);
-	                    getMonster(ent).setIsSpecialAttack(true);
+					whirlwind.put(ent, 1);
+					special_attack.put(ent, 1);
 					
 					ent.getWorld().playSound(ent.getLocation(), Sound.CREEPER_HISS, 1F, 4.0F);
 				}
 			}
 			if(mob_tier == 4) {
 				if(do_i_whirlwind <= 13) {
-	                 getMonster(ent).setWhirlwind(1);
-	                    getMonster(ent).setWhirlwinding(true);
-	                    getMonster(ent).setSpecialAttack(1);
-	                    getMonster(ent).setIsSpecialAttack(true);
+					whirlwind.put(ent, 1);
+					special_attack.put(ent, 1);
 					
 					ent.getWorld().playSound(ent.getLocation(), Sound.CREEPER_HISS, 1F, 4.0F);
 				}
 			}
 			if(mob_tier == 5) {
 				if(do_i_whirlwind <= 20) {
-	                    getMonster(ent).setWhirlwind(1);
-	                    getMonster(ent).setWhirlwinding(true);
-	                    getMonster(ent).setSpecialAttack(1);
-	                    getMonster(ent).setIsSpecialAttack(true);
+					whirlwind.put(ent, 1);
+					special_attack.put(ent, 1);
 					
 					ent.getWorld().playSound(ent.getLocation(), Sound.CREEPER_HISS, 1F, 4.0F);
 				}
 			}
 			if(mob_tier == -1 && BossMechanics.boss_map.containsKey(ent) && BossMechanics.boss_map.get(ent).equalsIgnoreCase("unholy priest")) {
 				if(do_i_whirlwind <= 10) {
-                    getMonster(ent).setWhirlwind(1);
-                    getMonster(ent).setWhirlwinding(true);
-                    getMonster(ent).setSpecialAttack(1);
-                    getMonster(ent).setIsSpecialAttack(true);
+					whirlwind.put(ent, 1);
+					special_attack.put(ent, 1);
 					
 					ent.getWorld().playSound(ent.getLocation(), Sound.CREEPER_HISS, 1F, 4.0F);
 				}
@@ -4509,71 +4515,59 @@ public class MonsterMechanics implements Listener {
 		
 		int mob_tier = getMobTier(ent);
 		
-		if(ent != null && !(getMonster(ent).isSpecialAttacking()) && (getMonster(ent).getMobHealth() - e.getDamage()) > 0) {
+		if(ent != null && !(special_attack.containsKey(ent)) && (mob_health.get(ent) - e.getDamage()) > 0) {
 			int do_i_powerstrike = new Random().nextInt(100);
 			if(mob_tier == 1) {
 				if(do_i_powerstrike <= 5) {
-                    getMonster(ent).setWhirlwind(1);
-                    getMonster(ent).setWhirlwinding(true);
-                    getMonster(ent).setSpecialAttack(1);
-                    getMonster(ent).setIsSpecialAttack(true);
+					power_strike.put(ent, 1);
+					special_attack.put(ent, 1);
 					
 					ent.getWorld().playSound(ent.getLocation(), Sound.PISTON_EXTEND, 1F, 2.0F);
 				}
 			}
 			if(mob_tier == 2) {
 				if(do_i_powerstrike <= 7) {
-                    getMonster(ent).setPowerStrike(1);
-                    getMonster(ent).setPowerStriking(true);
-                    getMonster(ent).setSpecialAttack(1);
-                    getMonster(ent).setIsSpecialAttack(true);
+					power_strike.put(ent, 1);
+					special_attack.put(ent, 1);
 					
 					ent.getWorld().playSound(ent.getLocation(), Sound.PISTON_EXTEND, 1F, 2.0F);
 				}
 			}
 			if(mob_tier == 3) {
 				if(do_i_powerstrike <= 10) {
-				     getMonster(ent).setPowerStrike(1);
-	                    getMonster(ent).setPowerStriking(true);
-	                    getMonster(ent).setSpecialAttack(1);
-	                    getMonster(ent).setIsSpecialAttack(true);
+					power_strike.put(ent, 1);
+					special_attack.put(ent, 1);
 					
 					ent.getWorld().playSound(ent.getLocation(), Sound.PISTON_EXTEND, 1F, 2.0F);
 				}
 			}
 			if(mob_tier == 4) {
 				if(do_i_powerstrike <= 13) {
-				     getMonster(ent).setPowerStrike(1);
-	                    getMonster(ent).setPowerStriking(true);
-	                    getMonster(ent).setSpecialAttack(1);
-	                    getMonster(ent).setIsSpecialAttack(true);
+					power_strike.put(ent, 1);
+					special_attack.put(ent, 1);
 					
 					ent.getWorld().playSound(ent.getLocation(), Sound.PISTON_EXTEND, 1F, 2.0F);
 				}
 			}
 			if(mob_tier == 5) {
 				if(do_i_powerstrike <= 20) {
-				     getMonster(ent).setPowerStrike(1);
-	                    getMonster(ent).setPowerStriking(true);
-	                    getMonster(ent).setSpecialAttack(1);
-	                    getMonster(ent).setIsSpecialAttack(true);
+					power_strike.put(ent, 1);
+					special_attack.put(ent, 1);
 					
 					ent.getWorld().playSound(ent.getLocation(), Sound.PISTON_EXTEND, 1F, 2.0F);
 				}
 			}
 			if(mob_tier == -1 && BossMechanics.boss_map.containsKey(ent) && BossMechanics.boss_map.get(ent).equalsIgnoreCase("unholy priest")) {
 				if(do_i_powerstrike <= 5) {
-				     getMonster(ent).setPowerStrike(1);
-	                    getMonster(ent).setPowerStriking(true);
-	                    getMonster(ent).setSpecialAttack(1);
-	                    getMonster(ent).setIsSpecialAttack(true);
+					power_strike.put(ent, 1);
+					special_attack.put(ent, 1);
 					
 					ent.getWorld().playSound(ent.getLocation(), Sound.PISTON_EXTEND, 1F, 2.0F);
 				}
 			}
 		}
 		
-		getMonster(ent).setMobLastHurt(System.currentTimeMillis());
+		mob_last_hurt.put(ent, System.currentTimeMillis());
 	}
 	
 	public static String getMobType(Entity e, boolean system_name) {
@@ -4762,7 +4756,7 @@ public class MonsterMechanics implements Listener {
 			return;
 		}
 		
-		if(!(e.getTarget() instanceof Player) || !(isMonster(e.getEntity()))) {
+		if(!(e.getTarget() instanceof Player) || !(mob_tier.containsKey(e.getEntity()))) {
 			e.setCancelled(true);
 			return;
 		}
@@ -4776,7 +4770,7 @@ public class MonsterMechanics implements Listener {
 		
 		final Entity ent = e.getEntity();
 		
-		if(getMonster(ent).isWhirlwind()) {
+		if(whirlwind.containsKey(ent)) {
 			ignore_target_event.add(e.getEntity());
 			e.setCancelled(true);
 			return;
@@ -4809,20 +4803,40 @@ public class MonsterMechanics implements Listener {
 			return;
 		}
 		
-		final Entity ent = e.getEntity();
+		/*final Entity ent = e.getEntity();
 
-		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+		this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 			public void run() {
-			    //A check for a bugged mob.
-				if(!(isMonster(ent)) || (isMonster(ent) && getMonster(ent).getMaxMobHealth() == 1)){
+				if(!(mob_health.containsKey(ent))){
 					ent.remove();
 				}
 			}
-		}, 10L);
+		}, 10L);*/
 		
 	}
 	
-
+	/*@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerPickupItemEvent(PlayerPickupItemEvent e) {
+		Player p = e.getPlayer();
+		Item it = e.getItem();
+		if (it.getType() != EntityType.DROPPED_ITEM) {
+			return;
+		}
+		if (it.getType() == EntityType.ARROW) {
+			return;
+		}
+		try {
+			EntityItem ei = ((EntityItem) ((CraftItem) it).getHandle());
+			if (!(drop_protection.containsKey(ei))) {
+				return;
+			}
+			if (!drop_protection.get(ei).equalsIgnoreCase(p.getName())) {
+				e.setCancelled(true);
+			}
+		} catch (ClassCastException cce) {
+			return; // Don't do anything if it's not the right item.
+		}
+	}*/
 	
 	@EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
 	public void onDeathCleanupEnchants(EntityDeathEvent e) {
@@ -4838,17 +4852,7 @@ public class MonsterMechanics implements Listener {
 	@EventHandler(ignoreCancelled = false)
 	public void onEntityDeathEvent(final EntityDeathEvent e) {
 		final Entity ent = e.getEntity();
-		if(!isMonster(ent)){
-		    if(ent == null){
-		          System.out.print("NULL mob on EntityDeathEvent");
-		        return;
-		    }
-		    System.out.print("Entity " + e.getEntity().getCustomName() + " was not in the monster_map!");
-		    
-		    return;
-		}
-		
-		final String p_name = getMonster(ent).getMobTarget();
+		final String p_name = mob_target.get(ent);
 		boolean never_unload_home = false;
 		
 		if(ent instanceof Player) {
@@ -4945,12 +4949,19 @@ public class MonsterMechanics implements Listener {
 		}
 		
 		approaching_mage_list.remove(ent);
-		Monster m = getMonster(ent);
+		mob_last_hurt.remove(ent);
+		mob_last_hit.remove(ent);
+		power_strike.remove(ent);
+		whirlwind.remove(ent);
+		mob_yaw.remove(ent);
+		special_attack.remove(ent);
+		special_attack.remove(ent);
 		ignore_target_event.remove(ent);
 		async_entity_target.remove(ent);
+		last_respawn.remove(ent);
 		//mob_spawn_ownership.remove(ent);
 		
-		if(p_name != null && Bukkit.getPlayer(p_name) != null && !(hasCustomDrops(ent)) && !DuelMechanics.isDamageDisabled(ent.getLocation()) && m.getMobHealth() != 1 && !m.getMobLoot().isEmpty() && m.getMobTarget() != null && !BossMechanics.boss_map.containsKey(ent) && !(InstanceMechanics.isInstance(ent.getWorld().getName()))) {
+		if(p_name != null && Bukkit.getPlayer(p_name) != null && !(hasCustomDrops(ent)) && !DuelMechanics.isDamageDisabled(ent.getLocation()) && mob_health.containsKey(ent) && mob_loot.containsKey(ent) && mob_target.containsKey(ent) && !BossMechanics.boss_map.containsKey(ent) && !(InstanceMechanics.isInstance(ent.getWorld().getName()))) {
 			Player pl = Bukkit.getPlayer(p_name);
 			ItemStack in_hand = pl.getItemInHand();
 			int tier = ItemMechanics.getItemTier(in_hand);
@@ -4961,15 +4972,11 @@ public class MonsterMechanics implements Listener {
 			}
 			
 			if((tier - mob_tier) <= 2) {
-				final List<ItemStack> ent_gear = m.getMobLoot();
+				final List<ItemStack> ent_gear = mob_loot.get(ent);
 				
 				// Thread t = new Thread(new Runnable() {
 				//  public void run() {
 				Player p = Bukkit.getPlayer(p_name);
-				//Dont drop anything -_- gg
-				if(InstanceMechanics.isInstance(p.getWorld().getName()))return;
-				//Not the world so maybe a problem with isInstance()?
-				if(p.getWorld().getName() != Bukkit.getWorlds().get(0).getName())return;
 				if(p.getWorld().getName().equalsIgnoreCase(ent.getWorld().getName())) { // && p.getLocation().distanceSquared(ent.getLocation()) <= 484
 				
 					double do_i_drop = new Random().nextInt(100); // 10% Chance.
@@ -5414,7 +5421,7 @@ public class MonsterMechanics implements Listener {
 			e.getDrops().clear();
 		}
 		
-		if(m.getMobSpawn() != null) {
+		if(mob_spawn_ownership.containsKey(ent)) {
 			//Thread t = new Thread(new Runnable() {
 			//	  public void run() {
 			int mob_num = getMobsUniqueNumber(ent);
@@ -5448,11 +5455,18 @@ public class MonsterMechanics implements Listener {
 				
 				addMobToRespawnList(ent);
 			} else if(!(spawned_mobs.containsKey(spawner_loc))) {
+				mob_spawn_ownership.remove(ent);
 				//no_delay_kills.remove(ent);
 			}
 		}
 		
-		monster_map.remove(m.getEntity());
+		mob_health.remove(ent);
+		max_mob_health.remove(ent);
+		mob_damage.remove(ent);
+		mob_tier.remove(ent);
+		mob_loot.remove(ent);
+		mob_target.remove(ent);
+		
 	}
 	
 	public Location getMobsHomeSpawner(Entity e) {
@@ -5465,22 +5479,19 @@ public class MonsterMechanics implements Listener {
 		/*if(!(e instanceof LivingEntity)){
 			return null;
 		}*/
-		if(!isMonster(e)){
-		    System.out.print("Entity was not in the monster_map!") ;
-		    return null;
-		}
-		if(getMonster(e).getMobSpawn() == null) {
+		
+		if(!(mob_spawn_ownership.containsKey(e))) {
 			//LivingEntity le = (LivingEntity)e;
 			//le.damage(le.getHealth());
 			return null;
 		}
-		String mob_ownership_data = getMonster(e).getMobSpawn();
+		String mob_ownership_data = mob_spawn_ownership.get(e);
 		Location loc = new Location(e.getWorld(), Double.parseDouble(mob_ownership_data.split(":")[0].split(",")[0]), Double.parseDouble(mob_ownership_data.split(":")[0].split(",")[1]), Double.parseDouble(mob_ownership_data.split(":")[0].split(",")[2]));
 		return loc;
 	}
 	
 	public int getMobsUniqueNumber(Entity e) {
-		String mob_ownership_data = getMonster(e).getMobSpawn();
+		String mob_ownership_data = mob_spawn_ownership.get(e);
 		int mob_num = Integer.parseInt(mob_ownership_data.split(":")[1]);
 		return mob_num;
 	}
@@ -5880,7 +5891,17 @@ public class MonsterMechanics implements Listener {
 		if(custom_name.contains("Mad Bandit Pyromancer")) {
 			total_hp = total_hp * 2.00D;
 		}
+		
 		BossMechanics.boss_event_log.put(e, "");
+		
+		max_mob_health.put(e, (int) total_hp);
+		mob_health.put(e, (int) total_hp);
+		mob_damage.put(e, dmg_range);
+		mob_armor.put(e, total_armor);
+		mob_tier.put(e, -1); // -1 = Boss!
+		mob_last_hurt.put(e, System.currentTimeMillis());
+		mob_last_hit.put(e, System.currentTimeMillis());
+		
 		return e;
 	}
 	
@@ -5924,7 +5945,13 @@ public class MonsterMechanics implements Listener {
 			}
 			
 			a.setBreed(false);
-			passive_mob.put(e, 1);
+			
+			mob_health.put(e, 1);
+			
+			if(mob_num > -1) {
+				mob_spawn_ownership.put(e, mob_spawner_loc.getX() + "," + mob_spawner_loc.getY() + "," + mob_spawner_loc.getZ() + ":" + mob_num);
+			}
+			
 			LivingEntity le = (LivingEntity) e;
 			le.setMetadata("mobname", new FixedMetadataValue(Main.plugin, et.name().substring(0, 1).toUpperCase() + et.name().substring(1, et.name().length()).toLowerCase()));
 			return e;
@@ -5932,7 +5959,11 @@ public class MonsterMechanics implements Listener {
 		
 		if(et == EntityType.BAT) {
 			e = l.getWorld().spawnEntity(l, et);
-			passive_mob.put(e, 1);
+			mob_health.put(e, 1);
+			
+			if(mob_num > -1) {
+				mob_spawn_ownership.put(e, mob_spawner_loc.getX() + "," + mob_spawner_loc.getY() + "," + mob_spawner_loc.getZ() + ":" + mob_num);
+			}
 			
 			return e;
 		}
@@ -6118,7 +6149,8 @@ public class MonsterMechanics implements Listener {
 			}
 		}
 		
-		double total_hp = calculateMobHP(e);
+		double total_hp = 1;
+		
 		for(ItemStack i : gear_list) {
 			if(i == null || i.getType() == Material.AIR || i == is_weapon) {
 				continue;
@@ -6267,6 +6299,7 @@ public class MonsterMechanics implements Listener {
 		}
 		LivingEntity le = (LivingEntity) e;
 		le.setRemoveWhenFarAway(false);
+		EntityLiving ent = ((CraftLivingEntity) e).getHandle();
 		if(((meta_data.equalsIgnoreCase("wither") || (elite == true && (meta_data.equalsIgnoreCase("bandit") || meta_data.equalsIgnoreCase("monk")))) && e instanceof CraftSkeleton)) {
 			// Make it a wither skeleton.
 			((CraftSkeleton) e).getHandle().setSkeletonType(1);
@@ -6277,25 +6310,25 @@ public class MonsterMechanics implements Listener {
 			pz.setBaby(true);
 		}
 		
-		le.getEquipment().setItemInHand(CraftItemStack.asBukkitCopy(weapon));
+		ent.setEquipment(0, weapon);
 		
 		if(boots != null) {
-		    le.getEquipment().setBoots(gear_list.get(1));
+			ent.setEquipment(1, CraftItemStack.asNMSCopy(gear_list.get(1)));
 		}
 		if(legs != null) {
-		    le.getEquipment().setLeggings(gear_list.get(2));
+			ent.setEquipment(2, CraftItemStack.asNMSCopy(gear_list.get(2)));
 		}
 		if(chest != null) {
-		    le.getEquipment().setChestplate(gear_list.get(3));
+			ent.setEquipment(3, CraftItemStack.asNMSCopy(gear_list.get(3)));
 		}
 		if(helmet != null && meta_data.equalsIgnoreCase("")) {
-		    le.getEquipment().setHelmet(gear_list.get(4));
+			ent.setEquipment(4, CraftItemStack.asNMSCopy(gear_list.get(4)));
 		}
 		
 		if(!meta_data.equalsIgnoreCase("")) {
 			if(meta_data.equalsIgnoreCase("acolyte")) {
 				String skin_name = "InfinityWarrior_";
-				 le.getEquipment().setHelmet(getHead(skin_name));
+				ent.setEquipment(4, CraftItemStack.asNMSCopy(getHead(skin_name)));
 			}
 			
 			if(meta_data.equalsIgnoreCase("tripoli solider")) {
@@ -6306,10 +6339,10 @@ public class MonsterMechanics implements Listener {
 					skin_name = "Xmattpt";
 				}
 				
-				le.getEquipment().setHelmet(getHead(skin_name));
+				ent.setEquipment(4, CraftItemStack.asNMSCopy(getHead(skin_name)));
 			}
 			if(meta_data.equalsIgnoreCase("ocelot")) {
-				Ocelot oc = (Ocelot) le;
+				Ocelot oc = (Ocelot) ent;
 				oc.setAdult();
 				oc.setCatType(Type.WILD_OCELOT);
 			}
@@ -6324,7 +6357,7 @@ public class MonsterMechanics implements Listener {
 					skin_name = "Das_Doktor";
 				}
 				
-				le.getEquipment().setHelmet(getHead(skin_name));
+				ent.setEquipment(4, CraftItemStack.asNMSCopy(getHead(skin_name)));
 			}
 			if(meta_data.equalsIgnoreCase("lizardman")) {
 				int solider_type = 0; //new Random().nextInt(2); // 0, 1
@@ -6334,7 +6367,7 @@ public class MonsterMechanics implements Listener {
 					skin_name = "_Kashi_";
 				}
 				
-				le.getEquipment().setHelmet(getHead(skin_name));
+				ent.setEquipment(4, CraftItemStack.asNMSCopy(getHead(skin_name)));
 			}
 			if(meta_data.equalsIgnoreCase("troll")) {
 				int troll_type = new Random().nextInt(2);
@@ -6347,16 +6380,16 @@ public class MonsterMechanics implements Listener {
 					skin_name = "Malware";
 				}
 				
-				le.getEquipment().setHelmet(getHead(skin_name));
+				ent.setEquipment(4, CraftItemStack.asNMSCopy(getHead(skin_name)));
 			}
 			if(meta_data.equalsIgnoreCase("goblin")) {
 				int goblin_type = new Random().nextInt(2);
 				
 				if(goblin_type == 0) {
-				    le.getEquipment().setHelmet(getHead("dEr_t0d"));
+					ent.setEquipment(4, CraftItemStack.asNMSCopy(getHead("dEr_t0d")));
 				}
 				if(goblin_type == 1) {
-				    le.getEquipment().setHelmet(getHead("niv330"));
+					ent.setEquipment(4, CraftItemStack.asNMSCopy(getHead("niv330")));
 				}
 				
 			}
@@ -6364,7 +6397,7 @@ public class MonsterMechanics implements Listener {
 				
 				if(chest == null) { // They don't normally have the torso.
 					chest = gear_list.get(3);
-					le.getEquipment().setChestplate(chest);
+					ent.setEquipment(3, CraftItemStack.asNMSCopy(chest));
 				}
 				
 				int bandit_type = new Random().nextInt(3);
@@ -6379,12 +6412,12 @@ public class MonsterMechanics implements Listener {
 				if(bandit_type == 2) {
 					skin_name = "TheNextPaladin"; //niv330
 				}
-				le.getEquipment().setHelmet(getHead(skin_name));
+				ent.setEquipment(4, CraftItemStack.asNMSCopy(getHead(skin_name)));
 			}
 			if(meta_data.equalsIgnoreCase("monk")) {
 				if(chest == null) { // They don't normally have the torso.
 					chest = gear_list.get(3);
-					le.getEquipment().setChestplate(chest);
+					ent.setEquipment(3, CraftItemStack.asNMSCopy(chest));
 				}
 				
 				int bandit_type = 0;
@@ -6394,7 +6427,7 @@ public class MonsterMechanics implements Listener {
 					skin_name = "Yhmen";
 				}
 				
-				le.getEquipment().setHelmet(getHead(skin_name));
+				ent.setEquipment(4, CraftItemStack.asNMSCopy(getHead(skin_name)));
 			}
 		}
 		
@@ -6437,23 +6470,30 @@ public class MonsterMechanics implements Listener {
 			dmg_range.set(1, (int) ((double) (dmg_range.get(1) * 1.5D)));
 			total_armor = (int) (((double) total_armor * 1.5D));
 		}
-		Monster m = new Monster(le, (int)total_hp, (int)total_hp, (int)total_armor, tier, dmg_range);
-		m.setMobLastHurt(System.currentTimeMillis());
-		m.setMobLastHit(System.currentTimeMillis());
-		monster_map.put(m.getEntity(), m);
+		
+		max_mob_health.put(e, (int) total_hp);
+		mob_health.put(e, (int) total_hp);
+		mob_damage.put(e, dmg_range);
+		mob_armor.put(e, total_armor);
+		mob_tier.put(e, tier);
+		mob_last_hurt.put(e, System.currentTimeMillis());
+		mob_last_hit.put(e, System.currentTimeMillis());
+		
 		for(ItemStack i : gear_list) {
 			if(i == null || i.getType() == Material.AIR || i.getType() == Material.SKULL_ITEM) {
 				gear_list.remove(i);
 			}
 		}
-		/*Set loot*/
-		m.setMobDrops(gear_list);
+		
+		mob_loot.put(e, gear_list);
+		
 		if(mob_num == -1) {
 			// Do nothing, this mob is not tracked.
 		}
 		
 		if(mob_num != -1) {
-			m.setMobSpawn(mob_spawner_loc.getX() + "," + mob_spawner_loc.getY() + "," + mob_spawner_loc.getZ() + ":" + mob_num);
+			mob_spawn_ownership.put(e, mob_spawner_loc.getX() + "," + mob_spawner_loc.getY() + "," + mob_spawner_loc.getZ() + ":" + mob_num);
+			//log.info("[MonsterMechanics] Inserted ownership data for " + e.toString());
 		}
 		
 		List<Entity> spawned_mobs = new ArrayList<Entity>();
@@ -7009,7 +7049,7 @@ public class MonsterMechanics implements Listener {
 			// elemental_prefix = color
 			
 			is_weapon.addUnsafeEnchantment(Enchantment.LOOT_BONUS_MOBS, 1);
-			le.getEquipment().setItemInHand(is_weapon);
+			ent.setEquipment(0, CraftItemStack.asNMSCopy(is_weapon));
 			
 			mob_name = elemental_prefix + mob_name;
 			String formal_elemental_type = elemental_type;
@@ -7134,17 +7174,38 @@ public class MonsterMechanics implements Listener {
 	
 	public static int calculateMobHP(Entity e) {
 		int total_hp = 10;
-		if(!isMonster(e))return 10;
-		if(((LivingEntity)e).getEquipment().getArmorContents().length != 0) {
-			for(ItemStack i : ((LivingEntity)e).getEquipment().getArmorContents()) {
+		
+		if(mob_loot.containsKey(e)) {
+			for(ItemStack i : mob_loot.get(e)) {
 				if(i == null || i.getType() == Material.AIR) {
 					continue;
 				}
 				total_hp += HealthMechanics.getHealthVal(i);
 			}
 		}
+		
 		return total_hp;
 	}
-
+	
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+		
+		/*
+		 * if(cmd.getName().equalsIgnoreCase("spawncm")){ Player p =
+		 * (Player)sender; if(!(args.length == 3)){ p.sendMessage(ChatColor.RED
+		 * + "Invalid Command."); p.sendMessage(ChatColor.GRAY +
+		 * "Usage: /spawncm <mob type> <mob name> <level>"); return true; }
+		 * String mtype = args[0]; String mname = args[1]; String level =
+		 * args[2]; EntityType rmtype = EntityType.fromName(mtype); if(rmtype ==
+		 * null){ p.sendMessage(ChatColor.RED + "Invalid mob type: " + mtype);
+		 * return true; }
+		 * 
+		 * createNamedMob(rmtype, p.getTargetBlock(null,
+		 * 128).getLocation().add(0.0D, 1.0D, 0.0D), mname + " LVL " + level +
+		 * ""); p.sendMessage(ChatColor.YELLOW + "DEBUG: Spawned " + mname +
+		 * ", a level " + level + " " + mtype + "."); return true; }
+		 */
+		
+		return true;
+	}
 	
 }

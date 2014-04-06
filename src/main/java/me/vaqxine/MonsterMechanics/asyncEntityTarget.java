@@ -36,7 +36,7 @@ public class asyncEntityTarget extends Thread {
 			}
 			
 			for(EntityTargetEvent e : MonsterMechanics.async_entity_target) {
-				if(!(e.getTarget() instanceof Player) || !(MonsterMechanics.isMonster(e.getEntity()))) {
+				if(!(e.getTarget() instanceof Player) || !(MonsterMechanics.mob_tier.containsKey(e.getEntity()))) {
 					MonsterMechanics.async_entity_target.remove(e);
 					continue;
 				}
@@ -44,7 +44,7 @@ public class asyncEntityTarget extends Thread {
 				Entity ent = e.getEntity();
 				final Player p = (Player) e.getTarget();
 				
-				if(!(PetMechanics.inv_pet_map.containsKey(e.getEntity())) && !(MonsterMechanics.isMonster(e.getEntity()) && MonsterMechanics.getMonster(ent).getMobTarget() != null)&& !(MonsterMechanics.last_mob_message_get.containsKey(p.getName()))) {
+				if(!(PetMechanics.inv_pet_map.containsKey(e.getEntity())) && !MonsterMechanics.mob_target.containsKey(e.getEntity()) && !(MonsterMechanics.last_mob_message_get.containsKey(p.getName()))) {
 					int do_i_speak = new Random().nextInt(100);
 					if(do_i_speak <= 12) {
 						String mob_type = MonsterMechanics.getMobType(e.getEntity(), true);

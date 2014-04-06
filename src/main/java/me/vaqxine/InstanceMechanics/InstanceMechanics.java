@@ -422,7 +422,7 @@ public class InstanceMechanics implements Listener {
 											World w = Bukkit.getWorld(w_name);
 											
 											for(LivingEntity le : w.getLivingEntities()) {
-												if(le != null && MonsterMechanics.isMonster(le)) {
+												if(le != null && MonsterMechanics.mob_health.containsKey(le)) {
 													total_mob_count++;
 												}
 											}
@@ -1275,7 +1275,7 @@ public class InstanceMechanics implements Listener {
 		if(save_as_template) {
 			for(Entity ent : Main.plugin.getServer().getWorld(world_name).getEntities()) {
 				// Clear all the entities/monsters
-				if(MonsterMechanics.isMonster(ent)) {
+				if(MonsterMechanics.mob_health.containsKey(ent)) {
 					ent.remove();
 				}
 			}

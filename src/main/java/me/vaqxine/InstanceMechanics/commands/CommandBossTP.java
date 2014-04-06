@@ -47,7 +47,7 @@ public class CommandBossTP implements CommandExecutor {
 		
 		int alive_mobs = 0;
 		for(LivingEntity le : cb.getBlock().getWorld().getLivingEntities()) {
-			if(MonsterMechanics.isMonster((Entity) le)) {
+			if(MonsterMechanics.mob_health.containsKey((Entity) le)) {
 				alive_mobs++;
 			}
 		}

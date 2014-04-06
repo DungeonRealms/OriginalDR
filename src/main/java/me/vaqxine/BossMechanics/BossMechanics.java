@@ -122,7 +122,7 @@ public class BossMechanics implements Listener {
 					List<Entity> minions = data.getValue();
 					boolean minion_alive = false;
 					for(Entity ent : minions) {
-						if(ent != null && MonsterMechanics.isMonster(ent)) {
+						if(ent != null && MonsterMechanics.mob_health.containsKey(ent)) {
 							minion_alive = true;
 							break;
 						}
@@ -321,7 +321,7 @@ public class BossMechanics implements Listener {
 					if(le instanceof Player) {
 						continue;
 					}
-					if(MonsterMechanics.isMonster(ent)) {
+					if(MonsterMechanics.mob_health.containsKey(le)) {
 						le.damage(Integer.MAX_VALUE);
 						le.remove();
 					}
