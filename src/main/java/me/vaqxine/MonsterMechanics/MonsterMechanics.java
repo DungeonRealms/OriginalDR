@@ -807,7 +807,7 @@ public class MonsterMechanics implements Listener {
 		if(!(ent instanceof LivingEntity)) { return false; }
 		LivingEntity le = (LivingEntity) ent;
 		if(!(le.hasMetadata("mobname"))) { return false; }
-		if(InstanceMechanics.isInstance(ent.getWorld().getName())){return false;}
+		//if(InstanceMechanics.isInstance(ent.getWorld().getName())){return false;}
 		String custom_name = ChatColor.stripColor(le.getMetadata("mobname").get(0).asString());
 		if(custom_mob_loot_tables.containsKey(custom_name)) { return true; }
 		return false;
@@ -3037,12 +3037,13 @@ public class MonsterMechanics implements Listener {
 			if(max_mob_health.containsKey(e)) {
 				le.setCustomName(generateOverheadBar(e, 0, max_mob_health.get(e), tier, is_elite));
 			}
+			le.damage(le.getHealth());
 			if(le.getVehicle() != null) {
 				Entity mount = le.getVehicle();
 				le.eject();
 				mount.remove();
 			}
-			le.damage(le.getHealth());
+			
 		}
 	}
 	
@@ -4961,7 +4962,7 @@ public class MonsterMechanics implements Listener {
 		last_respawn.remove(ent);
 		//mob_spawn_ownership.remove(ent);
 		
-		if(p_name != null && Bukkit.getPlayer(p_name) != null && !(hasCustomDrops(ent)) && !DuelMechanics.isDamageDisabled(ent.getLocation()) && mob_health.containsKey(ent) && mob_loot.containsKey(ent) && mob_target.containsKey(ent) && !BossMechanics.boss_map.containsKey(ent) && !(InstanceMechanics.isInstance(ent.getWorld().getName()))) {
+		if(p_name != null && Bukkit.getPlayer(p_name) != null && !(hasCustomDrops(ent)) && !DuelMechanics.isDamageDisabled(ent.getLocation()) && mob_health.containsKey(ent) && mob_loot.containsKey(ent) && mob_target.containsKey(ent) && !BossMechanics.boss_map.containsKey(ent) && !(InstanceMechanics.isInstance(ent.getWorld().getName())) && ent.getWorld().getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName())) {
 			Player pl = Bukkit.getPlayer(p_name);
 			ItemStack in_hand = pl.getItemInHand();
 			int tier = ItemMechanics.getItemTier(in_hand);
@@ -5411,7 +5412,13 @@ public class MonsterMechanics implements Listener {
 			if(loot != null && loot.size() > 0) {
 				for(ItemStack is : loot) {
 					if(is != null) {
-						ent.getWorld().dropItemNaturally(ent.getLocation(), is);
+					    if(InstanceMechanics.isInstance(ent.getWorld().getName())){
+					        if(!ItemMechanics.isArmor(is) && !ItemMechanics.isWeapon(is)){
+					            ent.getWorld().dropItemNaturally(ent.getLocation(), is);
+					        }
+					    }else{
+					        ent.getWorld().dropItemNaturally(ent.getLocation(), is);
+					    }
 					}
 				}
 			}
@@ -5469,6 +5476,25 @@ public class MonsterMechanics implements Listener {
 		
 	}
 	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onEntityDeath(EntityDeathEvent e){
+	    if(e.getEntity() instanceof Player)return;
+	    if(InstanceMechanics.isInstance(e.getEntity().getWorld().getName())){
+	        //System.out.print("WAS GOING TO DROP THIS: " + e.getDrops().toString() + " FROM: " + e.getEntity());
+	        //e.getDrops().clear();
+	    }
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onItemSpawn(ItemSpawnEvent e){
+	    if(InstanceMechanics.isInstance(e.getEntity().getWorld().getName())){
+	        if(ItemMechanics.isArmor(e.getEntity().getItemStack()) || ItemMechanics.isWeapon(e.getEntity().getItemStack())){
+	            e.setCancelled(true);
+	            e.getEntity().remove();
+	              System.out.print("ITEM WOULD HAVE DROPPED IN AN INSTANCE: " + e.getEntity().getItemStack().getType());
+	        }
+	    }
+	}
 	public Location getMobsHomeSpawner(Entity e) {
 		// TODO: Parse out mob_spawn_ownership (x,y,z:#)
 		/*

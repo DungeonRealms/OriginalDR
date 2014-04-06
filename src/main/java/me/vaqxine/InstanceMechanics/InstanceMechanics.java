@@ -942,9 +942,6 @@ public class InstanceMechanics implements Listener {
 					}
 				}
 			}
-			if(!(e instanceof Player)){
-			    e.getDrops().clear();
-			}
 		}
 	}
 	
@@ -1295,7 +1292,6 @@ public class InstanceMechanics implements Listener {
 		} else {
 			Main.plugin.getServer().unloadWorld(world_name, false);
 		}
-		
 		if(!(f_save_as_template)) {
 			deleteFolder(new File(world_name));
 			deleteFolder(new File("plugins/WorldGuard/worlds/" + world_name));
@@ -1360,7 +1356,9 @@ public class InstanceMechanics implements Listener {
 	}
 	
 	public static boolean isInstance(String world_name) {
-		if(instance_loaded.containsKey(world_name) || world_name.contains(".") || new File("plugins/InstanceMechanics/dungeons/" + world_name + ".zip").exists()) { return true; }
+		if(instance_loaded.containsKey(world_name) || world_name.contains(".") || new File("plugins/InstanceMechanics/dungeons/" + world_name + ".zip").exists()) { 
+		    return true; 
+		    }
 		return false;
 	}
 	
