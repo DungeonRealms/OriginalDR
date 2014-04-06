@@ -3201,7 +3201,7 @@ public class ItemMechanics implements Listener {
 					armor_percent -= block_count;
 				}
 				
-				if(attacker != null && !processing_ent_dmg_event.contains(attacker) && MonsterMechanics.mob_health.containsKey((LivingEntity) attacker) && (wep.getType() == Material.WOOD_SPADE || wep.getType() == Material.STONE_SPADE || wep.getType() == Material.IRON_SPADE || wep.getType() == Material.DIAMOND_SPADE || wep.getType() == Material.GOLD_SPADE || attacker.getType() == EntityType.IRON_GOLEM)) {
+				if(attacker != null && !processing_ent_dmg_event.contains(attacker) && MonsterMechanics.isMonster((LivingEntity)attacker) && (wep.getType() == Material.WOOD_SPADE || wep.getType() == Material.STONE_SPADE || wep.getType() == Material.IRON_SPADE || wep.getType() == Material.DIAMOND_SPADE || wep.getType() == Material.GOLD_SPADE || attacker.getType() == EntityType.IRON_GOLEM)) {
 					processing_ent_dmg_event.add(attacker);
 					// AoE on the idiot we damaging.
 					List<Entity> aoe = e.getEntity().getNearbyEntities(2.5, 3, 2.5);
@@ -3687,7 +3687,7 @@ public class ItemMechanics implements Listener {
 				vs_mod = Double.parseDouble(dmg_data.split("vs_players=")[1].split(":")[0].replaceAll(red.toString(), ""));
 				dmg = dmg + (int) ((dmg * (vs_mod / 100.0D)));
 			}
-			if(MonsterMechanics.mob_health.containsKey(ent) && dmg_data.contains("vs_monsters")) {
+			if(MonsterMechanics.isMonster(ent) && dmg_data.contains("vs_monsters")) {
 				vs_mod = Double.parseDouble(dmg_data.split("vs_monsters=")[1].split(":")[0].replaceAll(red.toString(), ""));
 				dmg = dmg + (int) ((dmg * (vs_mod / 100.0D)));
 			}
@@ -4094,7 +4094,7 @@ public class ItemMechanics implements Listener {
 					vs_mod = Double.parseDouble(dmg_data.split("vs_players=")[1].split(":")[0].replaceAll(red.toString(), ""));
 					dmg = dmg + (int) ((dmg * (vs_mod / 100.0D)));
 				}
-				if(MonsterMechanics.mob_health.containsKey(ent) && dmg_data.contains("vs_monsters")) {
+				if(MonsterMechanics.isMonster(ent) && dmg_data.contains("vs_monsters")) {
 					vs_mod = Double.parseDouble(dmg_data.split("vs_monsters=")[1].split(":")[0].replaceAll(red.toString(), ""));
 					dmg = dmg + (int) ((dmg * (vs_mod / 100.0D)));
 				}
@@ -4322,7 +4322,7 @@ public class ItemMechanics implements Listener {
 					vs_mod = Double.parseDouble(dmg_data.split("vs_players=")[1].split(":")[0].replaceAll(red.toString(), ""));
 					dmg = dmg + (int) ((dmg * (vs_mod / 100.0D)));
 				}
-				if(MonsterMechanics.mob_health.containsKey(ent) && dmg_data.contains("vs_monsters")) {
+				if(MonsterMechanics.isMonster(ent) && dmg_data.contains("vs_monsters")) {
 					vs_mod = Double.parseDouble(dmg_data.split("vs_monsters=")[1].split(":")[0].replaceAll(red.toString(), ""));
 					dmg = dmg + (int) ((dmg * (vs_mod / 100.0D)));
 				}
@@ -4548,7 +4548,7 @@ public class ItemMechanics implements Listener {
 					vs_mod = Double.parseDouble(dmg_data.split("vs_players=")[1].split(":")[0].replaceAll(red.toString(), ""));
 					dmg = dmg + (int) ((dmg * (vs_mod / 100.0D)));
 				}
-				if(MonsterMechanics.mob_health.containsKey(ent) && dmg_data.contains("vs_monsters")) {
+				if(MonsterMechanics.isMonster(ent)&& dmg_data.contains("vs_monsters")) {
 					vs_mod = Double.parseDouble(dmg_data.split("vs_monsters=")[1].split(":")[0].replaceAll(red.toString(), ""));
 					dmg = dmg + (int) ((dmg * (vs_mod / 100.0D)));
 				}
@@ -4771,7 +4771,7 @@ public class ItemMechanics implements Listener {
 						return; // TODO: Want to make this tier based?
 					}*/
 					// This creates infinite loop.
-					if(aoe_ent instanceof LivingEntity && MonsterMechanics.mob_health.containsKey((LivingEntity) aoe_ent)) {
+					if(aoe_ent instanceof LivingEntity && MonsterMechanics.isMonster((LivingEntity) aoe_ent)) {
 						LivingEntity le_ent = (LivingEntity) aoe_ent;
 						FatigueMechanics.last_attack.remove(p_attacker.getName());
 						le_ent.damage(dmg, p_attacker); // TODO: Multiple debug messages
@@ -4818,7 +4818,7 @@ public class ItemMechanics implements Listener {
 					vs_mod = Double.parseDouble(dmg_data.split("vs_players=")[1].split(":")[0].replaceAll(red.toString(), ""));
 					dmg = dmg + (int) ((dmg * (vs_mod / 100.0D)));
 				}
-				if(MonsterMechanics.mob_health.containsKey(ent) && dmg_data.contains("vs_monsters")) {
+				if(MonsterMechanics.isMonster(ent) && dmg_data.contains("vs_monsters")) {
 					vs_mod = Double.parseDouble(dmg_data.split("vs_monsters=")[1].split(":")[0].replaceAll(red.toString(), ""));
 					dmg = dmg + (int) ((dmg * (vs_mod / 100.0D)));
 				}
@@ -5114,10 +5114,10 @@ public class ItemMechanics implements Listener {
 				return;
 			}
 			for(Entity ent : proj.getNearbyEntities(2, 1.5, 2)) {
-				if(ent instanceof Player || (ent instanceof LivingEntity && MonsterMechanics.mob_health.containsKey((LivingEntity) ent))) {
-					if(proj.getShooter() instanceof LivingEntity && MonsterMechanics.mob_health.containsKey((LivingEntity) proj.getShooter())) {
+				if(ent instanceof Player || (ent instanceof LivingEntity && MonsterMechanics.isMonster((LivingEntity) ent))) {
+					if(proj.getShooter() instanceof LivingEntity && MonsterMechanics.isMonster((LivingEntity) proj.getShooter())) {
 						// If the shooter is a mob, don't let it damage another mob.
-						if((ent instanceof LivingEntity && MonsterMechanics.mob_health.containsKey((LivingEntity) ent))) {
+						if((ent instanceof LivingEntity && MonsterMechanics.isMonster((LivingEntity) ent))) {
 							continue;
 						}
 					}

@@ -414,7 +414,7 @@ public class FatigueMechanics implements Listener {
 			bz = block.getZ();
 			// check for entities near this block in the line of sight
 			for(LivingEntity e : livingE) {
-				if(!MonsterMechanics.mob_health.containsKey(e) && !(e instanceof Player)) {
+				if(!MonsterMechanics.isMonster(e) && !(e instanceof Player)) {
 					continue; // Not something we'll be damaging.
 				}
 				loc = e.getLocation();

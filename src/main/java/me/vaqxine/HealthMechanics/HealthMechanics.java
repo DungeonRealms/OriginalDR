@@ -710,15 +710,13 @@ public class HealthMechanics implements Listener {
 	}
 	
 	public static int generateMaxHP(Entity e) {
-		EntityLiving ent = ((CraftLivingEntity) e).getHandle();
-		net.minecraft.server.v1_7_R2.ItemStack[] armor_contents = ent.getEquipment();
+		ItemStack[] armor_contents = ((LivingEntity)e).getEquipment().getArmorContents();
 		double total_health = 0;
-		for(net.minecraft.server.v1_7_R2.ItemStack i : armor_contents) {
-			ItemStack is = CraftItemStack.asBukkitCopy(i);
-			if(is.getType() == Material.AIR) {
+		for(ItemStack i : armor_contents) {
+			if(i.getType() == Material.AIR) {
 				continue;
 			}
-			total_health += getHealthVal(is);
+			total_health += getHealthVal(i);
 		}
 		
 		int tier = MonsterMechanics.getMobTier(e);
@@ -782,7 +780,7 @@ public class HealthMechanics implements Listener {
 	
 	public static int getHealthVal(ItemStack armor) {
 		String armor_data = ItemMechanics.getArmorData(armor);
-		if(armor_data.equalsIgnoreCase("no")) { return 0; }
+		if(armor_data.equalsIgnoreCase("no")) { return 50; }
 		
 		int health_val = Integer.parseInt(armor_data.substring(armor_data.indexOf(":") + 1, armor_data.indexOf("@")));
 		
