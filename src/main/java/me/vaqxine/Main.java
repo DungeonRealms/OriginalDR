@@ -250,6 +250,14 @@ public class Main extends JavaPlugin {
 		Main.plugin.getLogger().info(color + o.toString() + CC.DEFAULT);
 	}
 	
+	public static void dl(Object o){
+		String fullClassName = Thread.currentThread().getStackTrace()[2].getClassName();  
+		String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
+		String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
+		int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
+		Main.plugin.getLogger().info(CC.MAGENTA + className + "." + methodName + "():" + lineNumber + " - " + CC.CYAN + o + CC.DEFAULT);
+	}
+	
 	public static boolean isDev(String s) {
 		return devs.contains(s);
 	}

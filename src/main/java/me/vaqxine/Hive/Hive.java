@@ -204,7 +204,7 @@ public class Hive implements Listener {
     public static volatile ConcurrentHashMap<String, List<Object>> remote_player_data = new ConcurrentHashMap<String, List<Object>>();
     // Packaged version of player data, created in loadPlayerDataSQL() and accessed throughout login proceedure.
     
-    public static ConcurrentHashMap<Integer, List<Integer>> server_population = new ConcurrentHashMap<Integer, List<Integer>>();
+    public static HashMap<Integer, List<Integer>> server_population = new HashMap<Integer, List<Integer>>();
     // Contains min/max players for every server, used for shard menu.
     // US-1, Array(10,150)
     
@@ -278,7 +278,7 @@ public class Hive implements Listener {
     public static HashMap<String, String> server_swap_pending = new HashMap<String, String>();
     // Prevent abuse from mooman and his evil scripts.
     
-    public static volatile ConcurrentHashMap<Integer, Long> last_ping = new ConcurrentHashMap<Integer, Long>();
+    public static volatile HashMap<Integer, Long> last_ping = new HashMap<Integer, Long>();
     // Last time each server_num sent information to the proxy. If >20 seconds, server is offline.
     
     public static boolean local_saving = false;
@@ -1053,7 +1053,7 @@ public class Hive implements Listener {
     public void updateServerPopulations() {
         final String prefix = MOTD.substring(0, MOTD.indexOf(" "));
         
-        if(prefix.equalsIgnoreCase("US-0") || prefix.equalsIgnoreCase("US-99")) { return; }
+        //if(prefix.equalsIgnoreCase("US-0") || prefix.equalsIgnoreCase("US-99")) { return; }
         
         int players_on = Main.plugin.getServer().getOnlinePlayers().length;
         int players_max = Main.plugin.getServer().getMaxPlayers();
@@ -3772,7 +3772,7 @@ public class Hive implements Listener {
             online_players = server_population.get(server_num).get(0);
             max_players = server_population.get(server_num).get(1);
         }
-        
+
         // TODO: Ping the server, make sure it's online.
         if(server_prefix.equalsIgnoreCase(MOTD.substring(0, MOTD.indexOf(" ")))) {
             // This is the server they're on. Green dye to show they're connected.
@@ -3805,16 +3805,6 @@ public class Hive implements Listener {
             online_players = max_players - (new Random().nextInt(15 - 5) + 5);
         }
         
-        if(Bukkit.getOnlinePlayers().length + 10 >= max_players) {
-            // Ok, now if the actual length+10 more is > maximum, we're full for real, so no more spoofing is needed.
-            online_players = Bukkit.getOnlinePlayers().length;
-        }
-        
-        if(Bukkit.getOnlinePlayers().length <= 5) {
-            // Less than 5 people on, don't spoof. 5 -> 6 / 13
-            online_players = Bukkit.getOnlinePlayers().length;
-        }
-        
         if(online_players > 0 || max_players > 0) {
             im.setDisplayName(cc.toString() + server_prefix + ChatColor.GRAY + " " + online_players + "/" + max_players + "");
         } else {
@@ -3823,7 +3813,7 @@ public class Hive implements Listener {
         List<String> lore = new ArrayList<String>();
         
         if(vip_server && cc != ChatColor.RED) {
-            lore.add(ChatColor.GREEN.toString() + ChatColor.GREEN + "S" + ChatColor.GREEN.toString() + "ubscriber " + ChatColor.GREEN + "S" + ChatColor.GREEN.toString() + "erver");
+            lore.add(ChatColor.GREEN + "Subscriber Server");
         }
         
         if(rp_server && cc != ChatColor.RED) {

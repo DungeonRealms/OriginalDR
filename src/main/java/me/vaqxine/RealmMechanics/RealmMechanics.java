@@ -3284,10 +3284,14 @@ public class RealmMechanics implements Listener {
 				
 				int page = 1;
 				if(e.getInventory().getItem(54).getType() != Material.GLASS){
-					if(e.getInventory().getItem(54).getItemMeta().getLore().get(0).contains("1/3")){
-						page = 2;
-					}else{
-						page = 3;
+					if(e.getInventory().getItem(54).getItemMeta().getLore() != null){
+						if(e.getInventory().getItem(54).getItemMeta().getLore().size() > 0){
+							if(e.getInventory().getItem(54).getItemMeta().getLore().get(0).contains("1/3")){
+								page = 2;
+							}else{
+								page = 3;
+							}
+						}
 					}
 				}
 				

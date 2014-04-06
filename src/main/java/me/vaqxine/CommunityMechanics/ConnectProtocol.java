@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import me.vaqxine.Main;
 import me.vaqxine.ChatMechanics.ChatMechanics;
 import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;
@@ -21,6 +22,7 @@ import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
+import me.vaqxine.enums.CC;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,6 +31,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ConnectProtocol implements Runnable {
 	private Socket clientSocket;
@@ -95,18 +98,24 @@ public class ConnectProtocol implements Runnable {
 				}
 				
 				if(inputLine.startsWith("@population@")) {
+					
 					// @population@US-1:50/150
-					String server_prefix = inputLine.substring(inputLine.lastIndexOf("@") + 1, inputLine.indexOf(":"));
-					int online_players = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.indexOf("/")));
-					int max_players = Integer.parseInt(inputLine.substring(inputLine.indexOf("/") + 1, inputLine.length()));
-					int server_num = Hive.getServerNumFromPrefix(server_prefix);
+					final String server_prefix = inputLine.substring(inputLine.lastIndexOf("@") + 1, inputLine.indexOf(":"));
+					final int online_players = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.indexOf("/")));
+					final int max_players = Integer.parseInt(inputLine.substring(inputLine.indexOf("/") + 1, inputLine.length()));
+					final int server_num = Hive.getServerNumFromPrefix(server_prefix);
 					
 					if(online_players > 0 && Hive.offline_servers.contains(server_prefix)) {
 						Hive.offline_servers.remove(server_prefix);
 					}
 					
-					Hive.last_ping.put(server_num, System.currentTimeMillis());
-					Hive.server_population.put(server_num, new ArrayList<Integer>(Arrays.asList(online_players, max_players)));
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							Hive.last_ping.put(server_num, System.currentTimeMillis());
+							Hive.server_population.put(server_num, new ArrayList<Integer>(Arrays.asList(online_players, max_players)));
+						}
+					}.runTask(Main.plugin);
 					return;
 				}
 				
