@@ -29,6 +29,7 @@ import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.LootMechanics.LootMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
+import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
@@ -1498,7 +1499,7 @@ public class ShopMechanics implements Listener {
 		
 		if(slot == (shop_slots - 1) && e.getInventory().getTitle().contains("@")) { // Open / Close button.
 			e.setCancelled(true);
-			if(!(shop_stock.containsKey(p.getName())) || !e.getInventory().getName().equalsIgnoreCase(shop_stock.get(p.getName()).getName())) {
+			if((!(shop_stock.containsKey(p.getName())) || !e.getInventory().getName().equalsIgnoreCase(shop_stock.get(p.getName()).getName())) && !PermissionMechanics.getRank(p.getName()).equalsIgnoreCase("gm")) {
 				p.sendMessage(ChatColor.RED + "You can't do that.");
 				return;
 			}
