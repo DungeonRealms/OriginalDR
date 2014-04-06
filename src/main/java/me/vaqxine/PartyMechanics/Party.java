@@ -26,7 +26,6 @@ public class Party {
 	private ArrayList<String> players = new ArrayList<String>();
 	
 	public Party(Player leader) {
-		Main.d("New party of " + leader.getName());
 		this.leader = leader;
 		addPlayer(leader);
 	}
@@ -68,7 +67,6 @@ public class Party {
 	}
 	
 	public void removePlayer(Player p) {
-		Main.d("Removing " + p.getName());
 		for(String tn : getPartyMembers()) {
 			if(Bukkit.getPlayer(tn) == null) {
 				continue;

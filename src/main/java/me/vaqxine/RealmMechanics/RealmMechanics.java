@@ -128,8 +128,12 @@ public class RealmMechanics implements Listener {
 	
 	// Realm Shop Items {
 	public static ItemStack divider = ItemMechanics.signCustomItem(Material.THIN_GLASS, (short) 0, " ", "");
-	public static ItemStack next_page = ItemMechanics.signCustomItem(Material.ARROW, (short) 0, ChatColor.YELLOW.toString() + "Next Page " + ChatColor.BOLD.toString() + "->", ChatColor.GRAY.toString() + "Page 1/2");
-	public static ItemStack previous_page = ItemMechanics.signCustomItem(Material.ARROW, (short) 0, ChatColor.YELLOW.toString() + ChatColor.BOLD + "<-" + ChatColor.YELLOW.toString() + " Previous Page ", ChatColor.GRAY.toString() + "Page 2/2");
+	
+	public static ItemStack next_page_1 = ItemMechanics.signCustomItem(Material.ARROW, (short) 0, ChatColor.YELLOW.toString() + "Next Page " + ChatColor.BOLD.toString() + "->", ChatColor.GRAY.toString() + "Page 2/3");
+	public static ItemStack next_page_2 = ItemMechanics.signCustomItem(Material.ARROW, (short) 0, ChatColor.YELLOW.toString() + "Next Page " + ChatColor.BOLD.toString() + "->", ChatColor.GRAY.toString() + "Page 3/3");
+	
+	public static ItemStack previous_page_2 = ItemMechanics.signCustomItem(Material.ARROW, (short) 0, ChatColor.YELLOW.toString() + ChatColor.BOLD + "<-" + ChatColor.YELLOW.toString() + " Previous Page ", ChatColor.GRAY.toString() + "Page 1/3");
+	public static ItemStack previous_page_3 = ItemMechanics.signCustomItem(Material.ARROW, (short) 0, ChatColor.YELLOW.toString() + ChatColor.BOLD + "<-" + ChatColor.YELLOW.toString() + " Previous Page ", ChatColor.GRAY.toString() + "Page 2/3");
 	// }
 	
 	public static String rootDir = "";
@@ -1075,10 +1079,10 @@ public class RealmMechanics implements Listener {
 			mat_shop_3.setItem(x, is_mod);
 		}
 		
-		mat_shop_1.setItem(62, next_page);
-		mat_shop_2.setItem(54, previous_page);
-		mat_shop_2.setItem(62, next_page);
-		mat_shop_3.setItem(54, previous_page);
+		mat_shop_1.setItem(62, next_page_1);
+		mat_shop_2.setItem(54, previous_page_2);
+		mat_shop_2.setItem(62, next_page_2);
+		mat_shop_3.setItem(54, previous_page_3);
 	}
 	
 	public static ItemStack fixItemName(ItemStack iss, String name) {
@@ -1231,7 +1235,6 @@ public class RealmMechanics implements Listener {
 		return name;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void handle2MinCD(final String p_name, World p_realm) {
 		List<Player> plist = new ArrayList<Player>();
 		for(Player pl : p_realm.getPlayers()) {
@@ -2292,7 +2295,14 @@ public class RealmMechanics implements Listener {
 					p.sendMessage(ChatColor.GRAY + "Wait " + ChatColor.UNDERLINE + "a few seconds" + ChatColor.GRAY + " and try again.");
 					return;
 				}
-				p.openInventory(mat_shop_1);
+
+				Inventory i = Bukkit.createInventory(null, mat_shop_1.getSize(), "Realm Material Store");
+				
+				for(int x = 0; x < mat_shop_1.getSize(); x++){
+					i.setItem(x, mat_shop_1.getItem(x));
+				}
+				
+				p.openInventory(i);
 			}
 		}
 		
@@ -3272,8 +3282,17 @@ public class RealmMechanics implements Listener {
 				
 				if(e.getCurrentItem().getType() == Material.AIR) { return; }
 				
+				int page = 1;
+				if(e.getInventory().getItem(54).getType() != Material.GLASS){
+					if(e.getInventory().getItem(54).getItemMeta().getLore().get(0).contains("1/3")){
+						page = 2;
+					}else{
+						page = 3;
+					}
+				}
+				
 				current_item_being_bought.put(p.getName(), e.getRawSlot());
-				shop_page.put(p.getName(), Integer.parseInt(e.getInventory().getName().substring(e.getInventory().getName().lastIndexOf("(") + 1, e.getInventory().getName().lastIndexOf("/"))));
+				shop_page.put(p.getName(), page);
 				
 				Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 					public void run() {
@@ -3300,57 +3319,56 @@ public class RealmMechanics implements Listener {
 				
 			}
 		}
+		if(e.getCurrentItem().getType() == Material.AIR) return;
 		
-		if(e.getRawSlot() == 62 && e.getInventory().getName().contains("1/3")) {
+		if(e.getCurrentItem().getItemMeta().getLore().get(0).contains("1/3")){
+			e.setCancelled(true);
+			p.updateInventory();
+			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+				public void run() {
+					//p.closeInventory();
+					if(p.getOpenInventory() == null){
+						p.openInventory(mat_shop_1);
+						return;
+					}
+					for(int x = 0; x < mat_shop_1.getSize(); x++){
+						p.getOpenInventory().getTopInventory().setItem(x, mat_shop_1.getItem(x));
+					}
+					p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
+				}
+			}, 2L);
+		} else if (e.getCurrentItem().getItemMeta().getLore().get(0).contains("2/3")){
 			e.setCancelled(true);
 			p.updateInventory();
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
 					//p.closeInventory(); Doesnt need to close first just looks bad
-					p.openInventory(mat_shop_2);
+					if(p.getOpenInventory() == null){
+						p.openInventory(mat_shop_2);
+						return;
+					}
+					for(int x = 0; x < mat_shop_2.getSize(); x++){
+						p.getOpenInventory().getTopInventory().setItem(x, mat_shop_2.getItem(x));
+					}
 					p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
 				}
 			}, 2L);
-			// TODO: Next page.
-		}
-		
-		if(e.getRawSlot() == 62 && e.getInventory().getName().contains("2/3")) {
+		} else if (e.getCurrentItem().getItemMeta().getLore().get(0).contains("3/3")){
 			e.setCancelled(true);
 			p.updateInventory();
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
 					//p.closeInventory();
-					p.openInventory(mat_shop_3);
+					if(p.getOpenInventory() == null){
+						p.openInventory(mat_shop_3);
+						return;
+					}
+					for(int x = 0; x < mat_shop_3.getSize(); x++){
+						p.getOpenInventory().getTopInventory().setItem(x, mat_shop_3.getItem(x));
+					}
 					p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
 				}
 			}, 2L);
-			// TODO: Next page.
-		}
-		
-		if(e.getRawSlot() == 54 && e.getInventory().getName().contains("2/3")) {
-			e.setCancelled(true);
-			p.updateInventory();
-			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() {
-					//p.closeInventory();
-					p.openInventory(mat_shop_1);
-					p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
-				}
-			}, 2L);
-			// TODO: Next page.
-		}
-		
-		if(e.getRawSlot() == 54 && e.getInventory().getName().contains("3/3")) {
-			e.setCancelled(true);
-			p.updateInventory();
-			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() {
-					//p.closeInventory();
-					p.openInventory(mat_shop_2);
-					p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
-				}
-			}, 2L);
-			// TODO: Next page.
 		}
 	}
 	

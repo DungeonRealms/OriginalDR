@@ -52,50 +52,50 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin {
 	
-	public static AchievmentMechanics achievmentMechanics;
-	public static BossMechanics bossMechanics;
-	public static ChatMechanics chatMechanics;
-	public static CommunityMechanics communityMechanics;
-	public static DonationMechanics donationMechanics;
-	public static DuelMechanics duelMechanics;
-	public static EcashMechanics ecashMechanics;
-	public static EnchantMechanics enchantMechanics;
-	public static FatigueMechanics fatigueMechanics;
-	public static GuildMechanics guildMechanics;
-	public static HealthMechanics healthMechanics;
-	public static InstanceMechanics instanceMechanics;
-	public static ItemMechanics itemMechanics;
-	public static KarmaMechanics karmaMechanics;
-	public static LootMechanics lootMechanics;
-	public static MerchantMechanics merchantMechanics;
-	public static ModerationMechanics moderationMechanics;
-	public static MoneyMechanics moneyMechanics;
-	public static MonsterMechanics monsterMechanics;
-	public static MountMechanics mountMechanics;
-	public static PartyMechanics partyMechanics;
-	public static PermissionMechanics permissionMechanics;
-	public static PetMechanics petMechanics;
-	public static PowerupMechanics powerupMechanics;
-	public static ProfessionMechanics professionMechanics;
-	public static RealmMechanics realmMechanics;
-	public static RecordMechanics recordMechanics;
-	public static RepairMechanics repairMechanics;
-	public static RestrictionMechanics restrictionMechanics;
-	public static ShopMechanics shopMechanics;
-	public static SpawnMechanics spawnMechanics;
-	public static SubscriberMechanics subscriberMechanics;
-	public static TeleportationMechanics teleportationMechanics;
-	public static TradeMechanics tradeMechanics;
-	public static TutorialMechanics tutorialMechanics;
-	public static WeatherMechanics weatherMechanics;
-	public static HearthstoneMechanics hearthstoneMechanics;
-	public static Hive hive;
-	public static HiveServer hiveServer;
+	private static AchievmentMechanics achievmentMechanics;
+	private static BossMechanics bossMechanics;
+	private static ChatMechanics chatMechanics;
+	private static CommunityMechanics communityMechanics;
+	private static DonationMechanics donationMechanics;
+	private static DuelMechanics duelMechanics;
+	private static EcashMechanics ecashMechanics;
+	private static EnchantMechanics enchantMechanics;
+	private static FatigueMechanics fatigueMechanics;
+	private static GuildMechanics guildMechanics;
+	private static HealthMechanics healthMechanics;
+	private static InstanceMechanics instanceMechanics;
+	private static ItemMechanics itemMechanics;
+	private static KarmaMechanics karmaMechanics;
+	private static LootMechanics lootMechanics;
+	private static MerchantMechanics merchantMechanics;
+	private static ModerationMechanics moderationMechanics;
+	private static MoneyMechanics moneyMechanics;
+	private static MonsterMechanics monsterMechanics;
+	private static MountMechanics mountMechanics;
+	private static PartyMechanics partyMechanics;
+	private static PermissionMechanics permissionMechanics;
+	private static PetMechanics petMechanics;
+	private static PowerupMechanics powerupMechanics;
+	private static ProfessionMechanics professionMechanics;
+	private static RealmMechanics realmMechanics;
+	private static RecordMechanics recordMechanics;
+	private static RepairMechanics repairMechanics;
+	private static RestrictionMechanics restrictionMechanics;
+	private static ShopMechanics shopMechanics;
+	private static SpawnMechanics spawnMechanics;
+	private static SubscriberMechanics subscriberMechanics;
+	private static TeleportationMechanics teleportationMechanics;
+	private static TradeMechanics tradeMechanics;
+	private static TutorialMechanics tutorialMechanics;
+	private static WeatherMechanics weatherMechanics;
+	private static HearthstoneMechanics hearthstoneMechanics;
+	private static Hive hive;
+	private static HiveServer hiveServer;
 	
 	public static Main plugin;
 	public static Logger log;
 	
-	public static List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine", "felipepcjr");
+	private static List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine", "felipepcjr");
 	
 	public void onEnable() {
 		plugin = this;
@@ -243,6 +243,10 @@ public class Main extends JavaPlugin {
 	}
 	
 	public static void d(Object o, CC color) {
+		if(o == null){
+			Main.plugin.getLogger().info(color + "null" + CC.DEFAULT);
+			return;
+		}
 		Main.plugin.getLogger().info(color + o.toString() + CC.DEFAULT);
 	}
 	
