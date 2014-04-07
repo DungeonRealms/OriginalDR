@@ -1732,6 +1732,10 @@ public class Hive implements Listener {
                 i_lore = "null";
             }
             
+            while(i_lore.contains(",,")){
+            	i_lore = i_lore.replace(",,", ",");
+            }
+            
             return_string = return_string + ("@item@" + slot + ":" + is.getTypeId() + "-" + is.getAmount() + "." + is.getDurability() + "#" + i_name + "#" + "$" + i_lore + "$");
             if(is.hasItemMeta() && is.getItemMeta() instanceof LeatherArmorMeta) {
                 return_string = return_string + "[lam1]" + ((LeatherArmorMeta) is.getItemMeta()).getColor().asBGR() + "[lam2]";
@@ -1819,6 +1823,11 @@ public class Hive implements Listener {
             
             if(is.getType() == Material.POTION && is.getDurability() > 0) {
                 // Renames potion to Instant Heal.
+            	
+            	while(i_lore.contains(",,")){
+                	i_lore = i_lore.replace(",,", ",");
+                }
+            	
                 is = ItemMechanics.signNewCustomItem(Material.getMaterial(item_id), durability, i_name, i_lore);
                 is_list.add(is);
                 continue;
@@ -1838,6 +1847,7 @@ public class Hive implements Listener {
             if(!(i_lore.equalsIgnoreCase("null"))) {
                 // Lore!
                 List<String> all_lore = new ArrayList<String>();
+                
                 for(String lore : i_lore.split(",")) {
                     if(lore.length() > 1) {
                         all_lore.add(lore);
@@ -1905,6 +1915,11 @@ public class Hive implements Listener {
             
             if(is.getType() == Material.POTION && is.getDurability() > 0) {
                 // Renames potion to Instant Heal.
+            	
+            	while(i_lore.contains(",,")){
+                	i_lore = i_lore.replace(",,", ",");
+                }
+            	
                 is = ItemMechanics.signNewCustomItem(Material.getMaterial(item_id), durability, i_name, i_lore);
                 if(pl != null) {
                     pl.getInventory().setItem(slot, is);
@@ -1928,6 +1943,7 @@ public class Hive implements Listener {
             if(!(i_lore.equalsIgnoreCase("null"))) {
                 // Lore!
                 List<String> all_lore = new ArrayList<String>();
+
                 for(String lore : i_lore.split(",")) {
                     if(lore.length() > 1) {
                         all_lore.add(lore);
