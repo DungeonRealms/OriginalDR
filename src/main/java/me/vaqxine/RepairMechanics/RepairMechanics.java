@@ -661,13 +661,22 @@ public class RepairMechanics implements Listener {
 		if(p.getInventory().getLeggings() != null && p.getInventory().getLeggings().getType() != Material.AIR) armor.put(ArmorPosition.LEGS, p.getInventory().getLeggings());
 		if(p.getInventory().getBoots() != null && p.getInventory().getBoots().getType() != Material.AIR) armor.put(ArmorPosition.BOOTS, p.getInventory().getBoots());
 	}*/
-	
+	//Calling this in another class now gg
+	/*long last_tell = System.currentTimeMillis();
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
 	public void onArmorDamageEvent(EntityDamageEvent e) {
 		if(!(e.getEntity() instanceof Player)) { return; }
 		Player p = (Player) e.getEntity();
-		if(!(p.getGameMode() == GameMode.SURVIVAL)) { return; }
-		if(e.getDamage() <= 1) { 
+		if(!(p.getGameMode() == GameMode.SURVIVAL)) { 
+		    System.out.print("(EDE) Cancelled due to being in creative!!");
+		    return; 
+		    }
+		if(e.getDamage() <= 1) {
+		    if(System.currentTimeMillis() > last_tell){
+		    System.out.print("Damage was less then 1!");
+		    //10 second intervals
+		    last_tell = System.currentTimeMillis() + 10000;
+		    }
 		    return; 
 		 }
 		
@@ -691,7 +700,7 @@ public class RepairMechanics implements Listener {
 			subtractCustomDurability(p, Helmet, 1, "armor");
 			log.info("HELMET: " + getCustomDurability(Helmet, "armor"));
 		}
-	}
+	}*/
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)

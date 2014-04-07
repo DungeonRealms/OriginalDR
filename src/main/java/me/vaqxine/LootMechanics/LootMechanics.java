@@ -70,8 +70,8 @@ public class LootMechanics implements Listener {
 	static HashMap<Player, String> loot_spawn_data = new HashMap<Player, String>();
 	static HashMap<Player, Location> loot_spawn_location = new HashMap<Player, Location>();
 	
-	public static HashMap<Location, String> loot_spawns = new HashMap<Location, String>();
-	public static HashMap<Location, String> loot_chests_to_spawn = new HashMap<Location, String>();
+	public static ConcurrentHashMap<Location, String> loot_spawns = new ConcurrentHashMap<Location, String>();
+	public static ConcurrentHashMap<Location, String> loot_chests_to_spawn = new ConcurrentHashMap<Location, String>();
 	public static ConcurrentHashMap<Location, Inventory> loot_chest_inv = new ConcurrentHashMap<Location, Inventory>();
 	public static HashMap<Player, Location> last_opened_loot_chest = new HashMap<Player, Location>();
 	

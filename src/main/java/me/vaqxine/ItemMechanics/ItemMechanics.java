@@ -97,6 +97,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.sqlite.OSInfo;
 
 public class ItemMechanics implements Listener {
 	
@@ -3254,6 +3255,26 @@ public class ItemMechanics implements Listener {
 				if(CommunityMechanics.toggle_list.get(p.getName()).contains("debug") && e.getDamage() > 0) {
 					//p.sendMessage(ChatColor.GRAY + "DEBUG: " + damage_to_reduce + " DMG (original: " + damage + ")"); -50HP [-5%A -> -25DMG]
 					p.sendMessage(ChatColor.RED + "        " + ChatColor.BOLD + "-" + ChatColor.RED + (int) e.getDamage() + ChatColor.RED + ChatColor.BOLD + "HP" + ChatColor.GRAY + " [-" + calculateArmorVal(p) + "%A -> -" + damage_to_reduce + ChatColor.BOLD + "DMG" + ChatColor.GRAY + "] " + ChatColor.GREEN + "[" + (int) (HealthMechanics.getPlayerHP(p.getName()) - e.getDamage()) + ChatColor.BOLD + "HP" + ChatColor.GREEN + "]");
+					if(p.getInventory().getBoots() != null && p.getInventory().getBoots().getType() != Material.AIR) {
+			            ItemStack boots = p.getInventory().getBoots();
+			            RepairMechanics.subtractCustomDurability(p, boots, 1, "armor");
+			            //log.info("BOOTS: " + getCustomDurability(boots, "armor"));
+			        }
+			        if(p.getInventory().getLeggings() != null && p.getInventory().getLeggings().getType() != Material.AIR) {
+			            ItemStack Leggings = p.getInventory().getLeggings();
+			            RepairMechanics.subtractCustomDurability(p, Leggings, 1, "armor");
+			            //log.info("LEGS: " + getCustomDurability(Leggings, "armor"));
+			        }
+			        if(p.getInventory().getChestplate() != null && p.getInventory().getChestplate().getType() != Material.AIR) {
+			            ItemStack Chestplate = p.getInventory().getChestplate();
+			            RepairMechanics.subtractCustomDurability(p, Chestplate, 1, "armor");
+			            //log.info("CHEST: " + getCustomDurability(Chestplate, "armor"));
+			        }
+			        if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getType() != Material.AIR) {
+			            ItemStack Helmet = p.getInventory().getHelmet();
+			            RepairMechanics.subtractCustomDurability(p, Helmet, 1, "armor");
+			            //log.info("HELMET: " + getCustomDurability(Helmet, "armor"));
+			        }
 				}
 				
 			}
@@ -3414,8 +3435,8 @@ public class ItemMechanics implements Listener {
 		}
 		
 		final double dmg = e.getDamage();
-		
 		final boolean f_is_player = is_player;
+	
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {
 				Hologram hg = new Hologram(Main.plugin, ChatColor.RED.toString() + (int) dmg + ChatColor.RED + ChatColor.BOLD + " DMG");
