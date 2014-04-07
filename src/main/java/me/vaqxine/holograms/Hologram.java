@@ -2,6 +2,7 @@ package me.vaqxine.holograms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.server.v1_7_R2.EntityHorse;
@@ -27,12 +28,10 @@ public class Hologram {
 	private List<Integer> ids = new ArrayList<Integer>();
 	private boolean show = false;
 	private Location location;
-
-	private EntityWitherSkull skull;
-	private EntityHorse horse;
 	
-	private PacketPlayOutSpawnEntity skull_packet;
-	private PacketPlayOutSpawnEntityLiving horse_packet;
+	private HashMap<PacketPlayOutSpawnEntity, EntityWitherSkull> skull_entities = new HashMap<PacketPlayOutSpawnEntity, EntityWitherSkull>();
+	private HashMap<PacketPlayOutSpawnEntityLiving, EntityHorse> horse_entities = new HashMap<PacketPlayOutSpawnEntityLiving, EntityHorse>();
+	private HashMap<PacketPlayOutSpawnEntity, PacketPlayOutSpawnEntityLiving> packets = new HashMap<PacketPlayOutSpawnEntity, PacketPlayOutSpawnEntityLiving>();
 	
 	public static List<Hologram> getHolograms() {
 		return holograms;
@@ -68,10 +67,19 @@ public class Hologram {
 	public void show() {
 		if(show) return;
 		
+		horse_entities.clear();
+		skull_entities.clear();
+		
+		packets.clear();
+		
 		Location first = location.clone().add(0, (this.lines.size() / 2) * distance, 0);
 		for(int i = 0; i < this.lines.size(); i++) {
 			ids.addAll(showLine(first.clone(), this.lines.get(i)));
 			first.subtract(0, distance, 0);
+		}
+		
+		for(Player player : location.getWorld().getPlayers()) {
+			sendPacketsToPlayer(player);
 		}
 		
 		show = true;
@@ -94,37 +102,40 @@ public class Hologram {
 		show = false;
 	}
 	
-	public void destroy(){
+	public void destroy() {
 		if(show) hide();
 		holograms.remove(this);
 	}
 	
-	public void sendPacketsToPlayer(Player player){
-		EntityPlayer nmsPlayer = ((CraftPlayer) player).getHandle();
-		nmsPlayer.playerConnection.sendPacket(horse_packet);
-		nmsPlayer.playerConnection.sendPacket(skull_packet);
-		
-		PacketPlayOutAttachEntity pa = new PacketPlayOutAttachEntity(0, horse, skull);
-		nmsPlayer.playerConnection.sendPacket(pa);
+	public void sendPacketsToPlayer(Player player) {
+		for(PacketPlayOutSpawnEntity skull_packet : packets.keySet()) {
+			EntityPlayer nmsPlayer = ((CraftPlayer) player).getHandle();
+			nmsPlayer.playerConnection.sendPacket(packets.get(skull_packet));
+			nmsPlayer.playerConnection.sendPacket(skull_packet);
+			
+			PacketPlayOutAttachEntity pa = new PacketPlayOutAttachEntity(0, horse_entities.get(packets.get(skull_packet)), skull_entities.get(skull_packet));
+			nmsPlayer.playerConnection.sendPacket(pa);
+		}
 	}
 	
 	private List<Integer> showLine(Location loc, String text) {
 		WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
 		
-		skull = new EntityWitherSkull(world);
+		EntityWitherSkull skull = new EntityWitherSkull(world);
 		skull.setLocation(loc.getX(), loc.getY() + 1 + 53.7, loc.getZ(), 0, 0);
-		skull_packet = new PacketPlayOutSpawnEntity(skull, 66);
+		PacketPlayOutSpawnEntity skull_packet = new PacketPlayOutSpawnEntity(skull, 66);
 		
-		horse = new EntityHorse(world);
+		EntityHorse horse = new EntityHorse(world);
 		horse.setLocation(loc.getX(), loc.getY() + 1.2 + 53.7, loc.getZ(), 0, 0);
 		horse.setAge(-1700000);
 		horse.setCustomName(text);
 		horse.setCustomNameVisible(true);
-		horse_packet = new PacketPlayOutSpawnEntityLiving(horse);
+		PacketPlayOutSpawnEntityLiving horse_packet = new PacketPlayOutSpawnEntityLiving(horse);
 		
-		for(Player player : loc.getWorld().getPlayers()) {
-			sendPacketsToPlayer(player);
-		}
+		skull_entities.put(skull_packet, skull);
+		horse_entities.put(horse_packet, horse);
+		
+		packets.put(skull_packet, horse_packet);
 		
 		return Arrays.asList(skull.getId(), horse.getId());
 	}
