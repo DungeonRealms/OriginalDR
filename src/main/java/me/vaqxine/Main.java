@@ -46,11 +46,15 @@ import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.WeatherMechanics.WeatherMechanics;
 import me.vaqxine.database.ConnectionPool;
 import me.vaqxine.enums.CC;
+import me.vaqxine.holograms.Hologram;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Main extends JavaPlugin {
+public class Main extends JavaPlugin implements Listener {
 	
 	private static AchievmentMechanics achievmentMechanics;
 	private static BossMechanics bossMechanics;
@@ -102,6 +106,8 @@ public class Main extends JavaPlugin {
 		log = this.getLogger();
 		
 		getServer().getPluginManager().registerEvents(new ScoreboardMechanics(), this);
+		getServer().getPluginManager().registerEvents(this, this);
+		
 		hearthstoneMechanics = new HearthstoneMechanics();
 		achievmentMechanics = new AchievmentMechanics();
 		bossMechanics = new BossMechanics();
@@ -233,6 +239,13 @@ public class Main extends JavaPlugin {
 		weatherMechanics.onDisable();
 		hive.onDisable();
 		hiveServer.onDisable();
+	}
+	
+	@EventHandler
+	public void onPlayerJoinEvent(PlayerJoinEvent e){
+		for(Hologram h : Hologram.getHolograms()){
+			h.sendPacketsToPlayer(e.getPlayer());
+		}
 	}
 	
 	/**
