@@ -31,6 +31,7 @@ import me.vaqxine.PetMechanics.commands.CommandPet;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.TeleportationMechanics.TeleportationMechanics;
 import me.vaqxine.database.ConnectionPool;
+import net.citizensnpcs.api.event.PlayerCreateNPCEvent;
 import net.minecraft.server.v1_7_R2.EntityCreature;
 import net.minecraft.server.v1_7_R2.EntityCreeper;
 import net.minecraft.server.v1_7_R2.EntityInsentient;
@@ -80,6 +81,7 @@ import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -1583,7 +1585,26 @@ public class PetMechanics implements Listener {
 			e.setCancelled(true);
 		}
 	}
+	@EventHandler
+	public void onEntityInteractWithMooshroom(PlayerInteractEntityEvent e){
+	    if(e.getRightClicked() instanceof MushroomCow){
+	        Player p = (Player)e.getPlayer();
+	        if(p.getItemInHand() != null && p.getItemInHand().getType() == Material.BOWL){
+	            e.setCancelled(true);
+	            p.damage(0);
+	            p.sendMessage(ChatColor.RED + "You cannot do this!");
+	        }
+	    }
+	}
 	
+	@EventHandler
+	public void onBowlCraft(CraftItemEvent e){
+	   if(e.getCurrentItem().getType() == Material.BOWL){
+	        e.setCancelled(true);
+	        e.setCurrentItem(new ItemStack(Material.AIR));
+	        ((Player)e.getWhoClicked()).sendMessage(ChatColor.RED + "You cannot craft bowls!");
+	    }
+	}
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		String p_name = e.getEntity().getName();
