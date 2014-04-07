@@ -3433,7 +3433,7 @@ public class MonsterMechanics implements Listener {
 		if(i == null) { return -1; // No tier.
 		}
 		int wep_tier = getItemTier(i);
-		log.info("[MonsterMechanics] No mob tier stored for entity " + ent.toString() + ", saving new value to memory. (" + wep_tier + ")");
+		//log.info("[MonsterMechanics] No mob tier stored for entity " + ent.toString() + ", saving new value to memory. (" + wep_tier + ")");
 		mob_tier.put(ent, wep_tier);
 		return wep_tier;
 	}
@@ -7212,7 +7212,38 @@ public class MonsterMechanics implements Listener {
 		
 		return e;
 	}
-	
+	public boolean isHostile(EntityType e){
+	    if(e == EntityType.SKELETON || e == EntityType.ZOMBIE || e == EntityType.SPIDER || e == EntityType.CAVE_SPIDER || e == EntityType.BLAZE || e == EntityType.WITCH || e == EntityType.WOLF || e == EntityType.ENDERMAN || e == EntityType.IRON_GOLEM || e == EntityType.SILVERFISH || e == EntityType.MAGMA_CUBE){
+	        return true;
+	    }
+	    return false;
+	}
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onGhostEntityHit(EntityDamageByEntityEvent e){
+	    if(e.getEntity() instanceof Player)return;
+	    if(!(e.getDamager() instanceof Player))return;
+	    Entity ent = e.getEntity();
+	    Player p = (Player)e.getDamager();
+	    if(!mob_health.containsKey(ent) && isHostile(ent.getType())){
+	        int total_hp = 10;
+	        for(ItemStack is : ((LivingEntity)ent).getEquipment().getArmorContents()){
+	            if(is == null || is.getType() == Material.AIR)continue;
+	            total_hp += HealthMechanics.getHealthVal(is);
+	        }
+	        List<Integer> dmg_val = new ArrayList<Integer>(Arrays.asList(1, 5));
+	        dmg_val = ItemMechanics.getDmgRangeOfWeapon(((LivingEntity)ent).getEquipment().getItemInHand());
+	        mob_health.put(ent, total_hp);
+	        ((LivingEntity)ent).setHealth(((LivingEntity)ent).getMaxHealth());
+	        max_mob_health.put(ent, total_hp);
+	        mob_damage.put(ent, dmg_val);
+	        mob_last_hit.put(ent, System.currentTimeMillis());
+	        mob_last_hurt.put(ent, System.currentTimeMillis());
+	        mob_tier.put(ent, getMobTier(ent));
+	        mob_target.put(ent, p.getName());
+	       // Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED + "Entity " + ent.getType() + " was a null, so we created a new instance of it!"); 
+	        //They are a ghost entity
+	    }
+	}
 	public static int calculateMobHP(Entity e) {
 		int total_hp = 10;
 		
@@ -7227,26 +7258,4 @@ public class MonsterMechanics implements Listener {
 		
 		return total_hp;
 	}
-	
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		
-		/*
-		 * if(cmd.getName().equalsIgnoreCase("spawncm")){ Player p =
-		 * (Player)sender; if(!(args.length == 3)){ p.sendMessage(ChatColor.RED
-		 * + "Invalid Command."); p.sendMessage(ChatColor.GRAY +
-		 * "Usage: /spawncm <mob type> <mob name> <level>"); return true; }
-		 * String mtype = args[0]; String mname = args[1]; String level =
-		 * args[2]; EntityType rmtype = EntityType.fromName(mtype); if(rmtype ==
-		 * null){ p.sendMessage(ChatColor.RED + "Invalid mob type: " + mtype);
-		 * return true; }
-		 * 
-		 * createNamedMob(rmtype, p.getTargetBlock(null,
-		 * 128).getLocation().add(0.0D, 1.0D, 0.0D), mname + " LVL " + level +
-		 * ""); p.sendMessage(ChatColor.YELLOW + "DEBUG: Spawned " + mname +
-		 * ", a level " + level + " " + mtype + "."); return true; }
-		 */
-		
-		return true;
-	}
-	
 }
