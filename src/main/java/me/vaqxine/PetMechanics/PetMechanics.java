@@ -127,7 +127,7 @@ public class PetMechanics implements Listener {
 	public static HashMap<Entity, Entity> zombie_eating = new HashMap<Entity, Entity>();
 	public static HashMap<Entity, Entity> creeper_chase = new HashMap<Entity, Entity>();
 	public static HashMap<Entity, Long> creeper_firework = new HashMap<Entity, Long>();
-	
+	public static ConcurrentHashMap<Entity, Long> zombie_eating_timer = new ConcurrentHashMap<Entity, Long>();
 	public static List<Item> fake_gems = new ArrayList<Item>();
 	
 	public static List<org.bukkit.entity.Horse.Color> horse_color_list = new ArrayList<org.bukkit.entity.Horse.Color>();
@@ -574,10 +574,11 @@ public class PetMechanics implements Listener {
 								partner = null;
 								zombie_eating.remove(pet);
 							}else{
+							    partner.setPassenger(pet);
 							    //Same world so it should be fine.
 							    Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(pet.getLocation().getX()), (int) Math.round(pet.getLocation().getY()), (int) Math.round(pet.getLocation().getZ()), 152, false);
 		                        ((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(pet.getLocation().getX(), pet.getLocation().getY(), pet.getLocation().getZ(), 24, ((CraftWorld) pet.getWorld()).getHandle().dimension, particles);
-							    pet.getWorld().playSound(pet.getLocation(), Sound.BURP, 1.5F, .5F);
+							    pet.getWorld().playSound(pet.getLocation(), Sound.BURP, 1.5F, .8F);
 							    continue;
 							}
 						}
@@ -585,7 +586,15 @@ public class PetMechanics implements Listener {
 						if(partner == null){
 						    continue;
 						}
-						@SuppressWarnings("unused")
+						if(zombie_eating_timer.containsKey(pet)){
+						    long time_since = zombie_eating_timer.get(pet);
+						    if(System.currentTimeMillis() < time_since){
+						        //They are on a timer
+						        continue;
+						    }
+						}else{
+						 zombie_eating_timer.put(pet, System.currentTimeMillis() + 10000);   
+						}
 						LivingEntity le = (LivingEntity) pet;
 						
 						walkTo(le, partner.getLocation().getX(), partner.getLocation().getY(), partner.getLocation().getZ(), 1.20F);
