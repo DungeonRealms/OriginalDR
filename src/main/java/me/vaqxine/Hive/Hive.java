@@ -2497,7 +2497,7 @@ public class Hive implements Listener {
             Bukkit.getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                 public void run() {
                     pl.teleport(loc); // Set location back to where they are.
-                    Main.plugin.getServer().getConsoleSender().sendMessage("Player had an invalid death! Location: " + loc);
+                    Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED + "Player had an invalid death! Location: " + loc);
                 }
             }, 5L);
             

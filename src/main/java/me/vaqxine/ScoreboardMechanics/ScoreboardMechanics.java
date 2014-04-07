@@ -137,6 +137,7 @@ public class ScoreboardMechanics implements Listener {
 	
 	public static void incrementViewCount(OfflinePlayer shop_tag) {
 		for(Player p : Bukkit.getOnlinePlayers()) {
+		    if(p == null || p.hasMetadata("NPC"))continue;
 			Score c = ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.BELOW_NAME).getScore(shop_tag);
 			c.setScore(c.getScore() + 1);
 		}

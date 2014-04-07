@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import me.vaqxine.Main;
 import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.HearthstoneMechanics.commands.CommandAddHearthstone;
+import me.vaqxine.HearthstoneMechanics.commands.CommandListHearthstone;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
@@ -54,7 +55,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class HearthstoneMechanics implements Listener {
     public static ConcurrentHashMap<String, Hearthstone> hearthstone_map = new ConcurrentHashMap<String, Hearthstone>();
-
+    public static ConcurrentHashMap<String, Integer> hearthstone_price = new ConcurrentHashMap<String, Integer>();
     public static ConcurrentHashMap<String, Location> hearthstone_location = new ConcurrentHashMap<String, Location>();
     // Player name, location they called it at.
     public static ConcurrentHashMap<String, Integer> hearthstone_timer = new ConcurrentHashMap<String, Integer>();
@@ -70,6 +71,7 @@ public class HearthstoneMechanics implements Listener {
         Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
         loadSpawnLocationTemplate();
         Main.plugin.getCommand("addhearthstone").setExecutor(new CommandAddHearthstone());
+        Main.plugin.getCommand("listhearthstone").setExecutor(new CommandListHearthstone());
         new BukkitRunnable() {
             @SuppressWarnings("deprecation")
             public void run() {
@@ -94,8 +96,8 @@ public class HearthstoneMechanics implements Listener {
                     if (time_left <= 0) {
                         p.playSound(p.getLocation(), Sound.WITHER_DEATH, 1, 1);
                         p.teleport(getHearthStone(p.getName()).getLocation());
-                        int timer = (PermissionMechanics.getRank(p.getName()) != null && !PermissionMechanics.getRank(p.getName()).equalsIgnoreCase("default") && !p.isOp()) ? 25
-                                : 15;
+                        int timer = (PermissionMechanics.getRank(p.getName()) != null && !PermissionMechanics.getRank(p.getName()).equalsIgnoreCase("default") && !p
+                                .isOp()) ? 25 : 15;
                         getHearthStone(p.getName()).setTimer(60 * timer);
                         p.sendMessage(ChatColor.GRAY + "Your Hearthstone has been put on a " + ChatColor.UNDERLINE + timer + ChatColor.GRAY
                                 + " minute cooldown timer.");
@@ -159,7 +161,7 @@ public class HearthstoneMechanics implements Listener {
                     }
                     Player p = Bukkit.getPlayer(p_name);
                     boolean inkeeper_nearby = false;
-                    for (Entity e : p.getNearbyEntities(150D, 150D, 150D)) {
+                    for (Entity e : p.getNearbyEntities(15, 15, 15)) {
                         if (e instanceof Player) {
                             Player to_check = (Player) e;
                             if (isInnkeeper(to_check)) {
@@ -198,14 +200,16 @@ public class HearthstoneMechanics implements Listener {
         // Loads the data and saves it into a hashmap
         new Hearthstone(e.getName());
     }
+
     @EventHandler(priority = EventPriority.HIGH)
-    public void onEntityDeath(EntityDeathEvent event){
-        for(ItemStack is : new ArrayList<ItemStack>(event.getDrops())){
-            if(is.getType() == Material.QUARTZ){
+    public void onEntityDeath(EntityDeathEvent event) {
+        for (ItemStack is : new ArrayList<ItemStack>(event.getDrops())) {
+            if (is.getType() == Material.QUARTZ) {
                 event.getDrops().remove(is);
             }
         }
     }
+
     @EventHandler
     public void onPlayerLoginEvent(PlayerLoginEvent e) {
         final Player p = e.getPlayer();
@@ -221,8 +225,9 @@ public class HearthstoneMechanics implements Listener {
         }.runTaskLater(Main.plugin, 15L);
 
     }
+
     @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent e){
+    public void onPlayerRespawn(PlayerRespawnEvent e) {
         final Player p = e.getPlayer();
         new BukkitRunnable() {
             public void run() {
@@ -230,6 +235,7 @@ public class HearthstoneMechanics implements Listener {
             }
         }.runTaskLater(Main.plugin, 15L);
     }
+
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent e) {
         if (e instanceof Player) {
@@ -261,24 +267,31 @@ public class HearthstoneMechanics implements Listener {
         if (e.getRightClicked() instanceof Player) {
             Player clicked = (Player) e.getRightClicked();
             Player p = e.getPlayer();
-            if(!isInnkeeper(clicked))return;
+            if (!isInnkeeper(clicked))
+                return;
             ItemStack is = clicked.getItemInHand();
-            if(changing_homes.containsKey(p.getName())){
+            if (changing_homes.containsKey(p.getName())) {
                 p.sendMessage(ChatColor.GRAY + "Innkeeper: " + ChatColor.WHITE + "You are already changing your home!");
                 return;
             }
-            if (!RealmMechanics.doTheyHaveEnoughMoney(p, 1000)) {
-                p.sendMessage(ChatColor.GRAY + "Innkeeper: " + ChatColor.WHITE + "Im sorry traveler but you cant afford this!");
-                p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "COST: " + ChatColor.RED + "1000G");
+
+            String town_name = ChatColor.stripColor(is.getItemMeta().getDisplayName());
+            if (!hearthstone_price.containsKey(town_name)) {
+                p.sendMessage(ChatColor.GRAY + "Innkeeper: " + ChatColor.WHITE + "Im sorry traveler! Theres seems to be a problem with my calculations.");
                 return;
             }
-            String town_name = ChatColor.stripColor(is.getItemMeta().getDisplayName());
+            int price = hearthstone_price.get(town_name);
+            if (!RealmMechanics.doTheyHaveEnoughMoney(p, price)) {
+                p.sendMessage(ChatColor.GRAY + "Innkeeper: " + ChatColor.WHITE + "Im sorry traveler but you cant afford this!");
+                p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "COST: " + ChatColor.RED + price + "G");
+                return;
+            }
             if (getHearthStone(p.getName()).getName().equalsIgnoreCase(town_name)) {
                 p.sendMessage(ChatColor.GRAY + "Innkeeper:" + ChatColor.WHITE + " Traveler! It seems like your home is already set here!");
                 return;
             }
             p.sendMessage(ChatColor.GRAY + "Changing your location to " + ChatColor.GREEN + "'" + town_name + "'" + ChatColor.GRAY + " will cost "
-                    + ChatColor.GREEN + ChatColor.BOLD + "1000 GEM(s)" + ChatColor.GRAY + ".");
+                    + ChatColor.GREEN + ChatColor.BOLD + price + " GEM(s)" + ChatColor.GRAY + ".");
             p.sendMessage(ChatColor.GRAY + "Please type " + ChatColor.GREEN + ChatColor.BOLD + "Y" + ChatColor.GRAY + " to confirm.");
             changing_homes.put(p.getName(), town_name);
 
@@ -292,10 +305,12 @@ public class HearthstoneMechanics implements Listener {
         if (changing_homes.containsKey(p.getName())) {
             e.setCancelled(true);
             if (e.getMessage().equalsIgnoreCase("Y")) {
-                RealmMechanics.subtractMoney(p, 1000);
+                String town_name = changing_homes.get(p.getName());
+                int price = hearthstone_price.get(town_name);
+                RealmMechanics.subtractMoney(p, price);
                 p.sendMessage(ChatColor.GRAY + "Innkeeper: " + ChatColor.WHITE + "Welcome to the town traveler!");
                 p.sendMessage(ChatColor.GRAY + "Hearthstone set to: " + ChatColor.GREEN + changing_homes.get(p.getName()));
-                p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "-" + ChatColor.RED + "1000" + ChatColor.BOLD + "G");
+                p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "-" + ChatColor.RED + price + ChatColor.BOLD + "G");
                 getHearthStone(p.getName()).setLocationName(changing_homes.get(p.getName()));
                 getHearthStone(p.getName()).setLocation(spawn_map.get(changing_homes.get(p.getName())));
                 p.playSound(p.getLocation(), Sound.LEVEL_UP, 1, 1);
@@ -340,18 +355,18 @@ public class HearthstoneMechanics implements Listener {
             return;
         if (!e.getItem().getItemMeta().getDisplayName().contains("Hearthstone"))
             return;
-        
+
         e.setCancelled(true);
         Player p = e.getPlayer();
         if (TutorialMechanics.onTutorialIsland(e.getPlayer())) {
             p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " use this item on Tutorial Island.");
             return;
         }
-        if(KarmaMechanics.getAlignment(p.getName()).contains("evil")){
+        if (KarmaMechanics.getAlignment(p.getName()).contains("evil")) {
             p.sendMessage(ChatColor.RED + "You cannot do this while chaotic!");
             return;
         }
-        if(InstanceMechanics.isInstance(p.getWorld().getName())){
+        if (InstanceMechanics.isInstance(p.getWorld().getName())) {
             p.sendMessage(ChatColor.RED + "You cannot use this in an instance.");
             return;
         }
@@ -371,7 +386,6 @@ public class HearthstoneMechanics implements Listener {
     }
 
     public static void loadSpawnLocationTemplate() {
-        spawn_map.put("Cyrennica", new Location(Bukkit.getWorlds().get(0), -378, 83, 362));
         if (!(new File(templatePath_s).exists())) {
             try {
                 new File(templatePath_s).createNewFile();
@@ -390,16 +404,26 @@ public class HearthstoneMechanics implements Listener {
                     System.out.print("No name for the line: " + line);
                     continue;
                 }
-                String loc_name = line.split("@name@")[1].replace("_", " ");
+                if (!line.contains("#price#")) {
+                    System.out.print("No price for " + line);
+                    continue;
+                }
+                String loc_name = line.split("@name@")[1].split("#price#")[0].replace("_", " ");
+                int price = 1000;
+                try {
+                    price = Integer.parseInt(line.split("#price#")[1]);
+                } catch (Exception e) {
+                    System.out.print("Couldnt parse in for " + line);
+                }
                 if (line.contains(",")) {
                     if (spawn_map.containsKey(loc_name)) {
                         System.out.print("[HearthStoneMechanics] Duplicate entry for the name " + loc_name);
-                        continue;
                     }
                     String[] cords = line.split(",");
                     Location loc = new Location(Bukkit.getWorlds().get(0), Double.parseDouble(cords[0]), Double.parseDouble(cords[1]),
                             Double.parseDouble(cords[2].split("@")[0]));
                     spawn_map.put(loc_name, loc);
+                    hearthstone_price.put(loc_name, price);
                     count++;
                 }
             }
@@ -453,10 +477,10 @@ public class HearthstoneMechanics implements Listener {
                 continue;
             }
             String name = entry.getKey();
-            all_dat += loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "@name@" + name.replace(" ", "_") + "\r\n";
+            all_dat += loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "@name@" + name.replace(" ", "_") + "#price#"
+                    + hearthstone_price.get(name) + "\r\n";
             count++;
         }
-
         if (all_dat.length() > 1) {
             try {
                 DataOutputStream dos = new DataOutputStream(new FileOutputStream(templatePath_s, false));

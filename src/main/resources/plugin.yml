@@ -308,6 +308,9 @@ commands:
   addhearthstone:
     description: Adds a hearthstone spawn point.
     usage: /<command>
+  listhearthstone:
+    description: List the hearthstones locations.
+    usage: /<command>
   showms:
     description: Show mob spawners visually.
     usage: /<command>

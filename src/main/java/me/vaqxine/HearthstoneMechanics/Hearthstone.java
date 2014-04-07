@@ -50,7 +50,7 @@ public class Hearthstone {
             tp_loc = HearthstoneMechanics.spawn_map.get(rst.getString("location_name"));
             setTimer(rst.getInt("timer"));
             // TODO: Download the data from tables and set their spawns
-            System.out.print("Loaded Hearthstone data for " + p_name);
+           // System.out.print("Loaded Hearthstone data for " + p_name);
             pst.close();
         } catch (SQLException sqlE) {
             sqlE.printStackTrace();
@@ -86,7 +86,7 @@ public class Hearthstone {
                     pst.setInt(2, timer_seconds);
                     pst.setString(3, p_name);
                     pst.executeUpdate();
-                    System.out.print("[HeartstoneMechanics] Saved " + p.getName() + "s Hearthstone data.");
+                    //System.out.print("[HeartstoneMechanics] Saved " + p.getName() + "s Hearthstone data.");
                     pst.close();
                 } catch (Exception e) {
                     e.printStackTrace();

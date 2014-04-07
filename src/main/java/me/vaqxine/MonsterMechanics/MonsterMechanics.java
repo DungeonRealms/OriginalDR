@@ -131,6 +131,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class MonsterMechanics implements Listener {
@@ -637,14 +638,14 @@ public class MonsterMechanics implements Listener {
 		}, 10 * 20L, 1 * 20L);
 		
 		// Power Strike custom attack.
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				tickPowerStrike();
 			}
 		}, 10 * 20L, 10L);
 		
 		// Whirlwind custom attack.
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				tickWhirlwind();
 			}
@@ -3032,8 +3033,8 @@ public class MonsterMechanics implements Listener {
 			}
 		} else if(new_hp <= 0) {
 			mob_health.put(e, 0);
-			LivingEntity le = (LivingEntity) e;
-			
+			final LivingEntity le = (LivingEntity) e;
+			//System.out.print("SET MOB HEALTH TO 0");
 			if(max_mob_health.containsKey(e)) {
 				le.setCustomName(generateOverheadBar(e, 0, max_mob_health.get(e), tier, is_elite));
 			}
@@ -3043,6 +3044,14 @@ public class MonsterMechanics implements Listener {
 				le.eject();
 				mount.remove();
 			}
+			new BukkitRunnable() {
+                public void run() {
+                    //This addresses mobs being 1 hp.
+                    if(le != null && !le.isDead()){
+                        le.setHealth(0);
+                    }
+                }
+            }.runTaskLater(Main.plugin, 1L);
 			
 		}
 	}

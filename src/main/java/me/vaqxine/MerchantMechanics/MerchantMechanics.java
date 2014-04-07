@@ -1466,7 +1466,7 @@ public class MerchantMechanics implements Listener {
 			ItemStack product = null;
 			
 			if(item_slot == 0) {
-				price_per = 400; // Orb of peace
+				price_per = 100; // Orb of peace
 				product = ShopMechanics.removePrice(CraftItemStack.asCraftCopy(ItemMechanics.orb_of_peace));
 			}
 			if(item_slot == 1) {
@@ -1704,12 +1704,12 @@ public class MerchantMechanics implements Listener {
 				}
 			}.runTaskLaterAsynchronously(Main.plugin, 2L);
 			
-			int total_price = 400 * 64;
-			int price = 400;
+			int total_price = 100 * 64;
+			int price = 100;
 			
-			if(!RealmMechanics.doTheyHaveEnoughMoney(pl, 400)) {
+			if(!RealmMechanics.doTheyHaveEnoughMoney(pl, 100)) {
 				pl.sendMessage(ChatColor.RED + "You do NOT have enough gems to purchase this Orb of Peace.");
-				pl.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "COST: " + ChatColor.RED + "400" + ChatColor.BOLD + "G");
+				pl.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "COST: " + ChatColor.RED + "100" + ChatColor.BOLD + "G");
 				return;
 			} else {
 				item_being_bought.put(pl.getName(), 0); // 0 == orb of peace

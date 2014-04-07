@@ -3807,6 +3807,8 @@ public class ItemMechanics implements Listener {
 				HealthMechanics.setPlayerHP(p.getName(), getMaxHP(p));
 				p.setHealth(20);
 			} else {
+			    if(!(HealthMechanics.getPlayerHP(p.getName()) <= 0) && !p.isDead()){
+			        //They are dead and dont need to be healed -_-
 				HealthMechanics.setPlayerHP(p.getName(), ((int) (HealthMechanics.getPlayerHP(p.getName()) + leech_val)));
 				double health_percent = ((double) HealthMechanics.getPlayerHP(p.getName())) / (double) getMaxHP(p);
 				double new_health_display = health_percent * 20.0D;
@@ -3818,8 +3820,8 @@ public class ItemMechanics implements Listener {
 			
 			if(CommunityMechanics.toggle_list.get(p.getName()).contains("debug")) {
 				p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP" + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p.getName())) + "/" + (int) getMaxHP(p) + "HP]");
+			    }
 			}
-			
 		}
 		if(dmg_data.contains("slow=true")) {
 			int mob_tier = MonsterMechanics.getMobTier(ent);
