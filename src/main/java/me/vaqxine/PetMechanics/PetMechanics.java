@@ -35,6 +35,8 @@ import net.citizensnpcs.api.event.PlayerCreateNPCEvent;
 import net.minecraft.server.v1_7_R2.EntityCreature;
 import net.minecraft.server.v1_7_R2.EntityCreeper;
 import net.minecraft.server.v1_7_R2.EntityInsentient;
+import net.minecraft.server.v1_7_R2.Packet;
+import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -46,6 +48,8 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_7_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftCreeper;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
@@ -538,8 +542,7 @@ public class PetMechanics implements Listener {
 								continue;
 							}
 						}
-						
-						for(Entity ent : pet.getNearbyEntities(3, 3, 3)) {
+						for(Entity ent : pet.getNearbyEntities(7, 7, 7)) {
 							if(ent.getType() == EntityType.PLAYER) {
 								Player p = (Player) ent;
 								if(owner_name.equalsIgnoreCase(p.getName())) {
@@ -570,14 +573,18 @@ public class PetMechanics implements Listener {
 							if(!partner.getWorld().getName().equalsIgnoreCase(pet.getWorld().getName())) {
 								partner = null;
 								zombie_eating.remove(pet);
+							}else{
+							    //Same world so it should be fine.
+							    Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(pet.getLocation().getX()), (int) Math.round(pet.getLocation().getY()), (int) Math.round(pet.getLocation().getZ()), 152, false);
+		                        ((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(pet.getLocation().getX(), pet.getLocation().getY(), pet.getLocation().getZ(), 24, ((CraftWorld) pet.getWorld()).getHandle().dimension, particles);
+							    pet.getWorld().playSound(pet.getLocation(), Sound.BURP, 1.5F, .5F);
+							    continue;
 							}
 						}
 						
-						partner = null;
-						if(partner == null) {
-							continue;
+						if(partner == null){
+						    continue;
 						}
-						
 						@SuppressWarnings("unused")
 						LivingEntity le = (LivingEntity) pet;
 						
@@ -586,21 +593,20 @@ public class PetMechanics implements Listener {
 						
 						if(le.getLocation().distanceSquared(partner.getLocation()) <= 4) {
 							//walkTo(le, partner.getLocation().getX(), partner.getLocation().getY(), partner.getLocation().getZ(), 1.20F);
-							EntityCreature ec = (EntityCreature) ((CraftEntity) pet).getHandle();
-							CraftPlayer cp = (CraftPlayer) partner;
-							if(!pet.isInsideVehicle() && !(cp.isInsideVehicle())) {
-								ec.mount((net.minecraft.server.v1_7_R2.Entity) cp.getHandle());
+							if(!pet.isInsideVehicle() && !(partner.isInsideVehicle())) {
+								//ec.mount((net.minecraft.server.v1_7_R2.Entity) cp.getHandle());
+							    partner.setPassenger(pet);
 							}
 							
 							//double x = partner.getLocation().getX(); //(pet.getLocation().getX() + partner.getLocation().getX()) / 2;
 							//double y = partner.getLocation().getY(); //((pet.getLocation().getY() + partner.getLocation().getY()) / 2);
 							//double z = partner.getLocation().getZ(); //(pet.getLocation().getZ() + partner.getLocation().getZ()) / 2;
 							
-							try {
+							/*try {
 								ParticleEffect.sendToLocation(ParticleEffect.HEART, partner.getLocation().add(0, 2, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 1.0F, 1);
 							} catch(Exception err) {
 								err.printStackTrace();
-							}
+							}*/
 							
 							//partner.getWorld().spawnParticle(partner.getLocation().add(0, 2, 0), Particle.HEART, 1.0F, 1);
 							

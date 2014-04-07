@@ -521,13 +521,12 @@ public class MonsterMechanics implements Listener {
 		}, 20 * 20L, 10L);
 		
 		// Is it even needed?
-		/*this.getServer().getScheduler()
-			.scheduleSyncRepeatingTask(this, new Runnable() {
+		Main.plugin.getServer().getScheduler()
+			.scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 				public void run() {
-					removeNoHPMobs();
-					// Removes all entities who have no mob_health value. (Pointless?)
+					removeNoHPMobs(); // Kill all mobs that are ghosts
 				}
-		}, 13 * 20L, 4 * 20L);*/
+		}, 13 * 20L, 4 * 20L);
 		
 		// DEPRECIATED, added code to cleanupMobs() event.
 		/*this.getServer().getScheduler()
@@ -765,14 +764,14 @@ public class MonsterMechanics implements Listener {
 						try {
 							ParticleEffect.sendToLocation(ParticleEffect.WITCH_MAGIC, ent.getLocation().add(0, 0.5, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.2F, 100);
 						} catch(Exception err) {
-							err.printStackTrace();
+							//err.printStackTrace();
 						}
 						//ent.getWorld().spawnParticle(ent.getLocation().add(0, 0.5, 0), Particle.WITCH_MAGIC, 0.2F, 100);
 					} else {
 						try {
-							ParticleEffect.sendToLocation(ParticleEffect.WITCH_MAGIC, ent.getLocation().add(0, 1, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.5F, 35);
+						    ParticleEffect.sendToLocation(ParticleEffect.WITCH_MAGIC, ent.getLocation().add(0, 1, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.5F, 35);
 						} catch(Exception err) {
-							err.printStackTrace();
+							//err.printStackTrace();
 						}
 					}
 					
@@ -1915,7 +1914,6 @@ public class MonsterMechanics implements Listener {
 	}
 	
 	public void removeNoHPMobs() {
-		//List<Entity> to_remove = new ArrayList<Entity>();
 		List<Entity> alive_ents = new ArrayList<Entity>();
 		for(Entity ent : Main.plugin.getServer().getWorlds().get(0).getLivingEntities()) {
 			if(ent instanceof Player) {
@@ -1927,7 +1925,15 @@ public class MonsterMechanics implements Listener {
 			alive_ents.add(ent);
 		}
 		for(Entity ent : alive_ents) {
-			if(!(mob_health.containsKey(ent))) {
+		    boolean isPet = false;
+		    for(Entry<String, List<Entity>> petmap : PetMechanics.pet_map.entrySet()){
+		        List<Entity> ents = petmap.getValue();
+		        if(ents.contains(ent)){
+		            isPet = true;
+		            break;
+		        }
+		    }
+			if(!(mob_health.containsKey(ent)) && isHostile(ent.getType()) && !isPet) {
 				ent.remove();
 				//to_remove.add(ent);
 				//LivingEntity le = (LivingEntity)ent;
@@ -3048,6 +3054,13 @@ public class MonsterMechanics implements Listener {
                 public void run() {
                     //This addresses mobs being 1 hp.
                     if(le != null && !le.isDead()){
+                        //This needs to be called so the mobs will be respawned and stuff.
+                        List<ItemStack> drops = new ArrayList<ItemStack>();
+                        if(mob_loot.containsKey(le)){
+                            drops = mob_loot.get(le);
+                        }
+                        EntityDeathEvent e = new EntityDeathEvent(le, drops);
+                        Bukkit.getPluginManager().callEvent(e);
                         le.setHealth(0);
                     }
                 }
@@ -4242,7 +4255,9 @@ public class MonsterMechanics implements Listener {
 		
 		if(DuelMechanics.isDamageDisabled(ent.getLocation())) {
 			if(!(entities_to_remove.containsKey(e))) {
+			    if(getMobsHomeSpawner(ent) != null){
 				entities_to_remove.put(ent, getMobsHomeSpawner(ent));
+			    }
 			}
 			e.setCancelled(true);
 			e.setDamage(0);
@@ -4851,6 +4866,7 @@ public class MonsterMechanics implements Listener {
 	@EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
 	public void onDeathCleanupEnchants(EntityDeathEvent e) {
 		if(e.getEntity() instanceof Player) return;
+		if(e.getDrops() == null)return;
 		for(ItemStack i : e.getDrops()) {
 			for(Enchantment n : Enchantment.values()) {
 				i.removeEnchantment(n);
@@ -7218,7 +7234,7 @@ public class MonsterMechanics implements Listener {
 	    }
 	    return false;
 	}
-	@EventHandler(priority = EventPriority.LOWEST)
+	/*@EventHandler(priority = EventPriority.LOWEST)
 	public void onGhostEntityHit(EntityDamageByEntityEvent e){
 	    if(e.getEntity() instanceof Player)return;
 	    if(!(e.getDamager() instanceof Player))return;
@@ -7243,7 +7259,7 @@ public class MonsterMechanics implements Listener {
 	       // Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED + "Entity " + ent.getType() + " was a null, so we created a new instance of it!"); 
 	        //They are a ghost entity
 	    }
-	}
+	}*/
 	public static int calculateMobHP(Entity e) {
 		int total_hp = 10;
 		

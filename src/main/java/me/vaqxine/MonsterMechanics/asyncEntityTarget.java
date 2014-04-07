@@ -40,7 +40,9 @@ public class asyncEntityTarget extends Thread {
 					MonsterMechanics.async_entity_target.remove(e);
 					continue;
 				}
-				
+				if(e == null || e.getEntity() == null){
+				    continue;
+				}
 				Entity ent = e.getEntity();
 				final Player p = (Player) e.getTarget();
 				
