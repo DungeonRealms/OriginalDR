@@ -95,8 +95,6 @@ public enum ParticleEffect {
 	
 	public static void sendToLocation(final ParticleEffect effect, final Location location, final float offsetX, final float offsetY, final float offsetZ, final float speed, final int count) throws Exception {
 		// Hive.log.info(effect.name + " @ " + location.toString());
-		new Thread(new Runnable() {
-			public void run() {
 				Object packet = null;
 				try {
 					packet = createPacket(effect, location, offsetX, offsetY, offsetZ, speed, count);
@@ -108,7 +106,7 @@ public enum ParticleEffect {
 				for(String s : MonsterMechanics.player_locations.keySet()) {
 					if(Bukkit.getPlayerExact(s) != null) {
 						Player pl = Main.plugin.getServer().getPlayer(s);
-						if(pl.getWorld().getName().equalsIgnoreCase(location.getWorld().getName()) && pl.getWorld().getName().equalsIgnoreCase(location.getWorld().getName()) && pl.getLocation().distanceSquared(location) <= Math.pow(radius, 2)) {
+						if(pl.getWorld().getName().equalsIgnoreCase(location.getWorld().getName()) && pl.getLocation().distanceSquared(location) <= Math.pow(radius, 2)) {
 							try {
 								sendPacket(pl, packet);
 							} catch(Exception e) {
@@ -117,8 +115,6 @@ public enum ParticleEffect {
 						}
 					}
 				}
-			}
-		}).start();
 	}
 	
 	public static void sendCrackToPlayer(boolean icon, int id, byte data, Player player, Location location, float offsetX, float offsetY, float offsetZ, int count) throws Exception {
