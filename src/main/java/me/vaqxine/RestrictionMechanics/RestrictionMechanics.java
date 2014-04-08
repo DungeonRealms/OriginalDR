@@ -338,7 +338,7 @@ public class RestrictionMechanics implements Listener {
 			}
 		}
 		
-		if(cmd.startsWith("/list") || cmd.startsWith("/who") || cmd.startsWith("/online") || cmd.startsWith("/me")) {
+		if(cmd.startsWith("/list") || cmd.startsWith("/who") || cmd.startsWith("/online") || cmd.startsWith("/me") || cmd.startsWith("/bukkit:me")) {
 			e.setCancelled(true);
 			return;
 		}

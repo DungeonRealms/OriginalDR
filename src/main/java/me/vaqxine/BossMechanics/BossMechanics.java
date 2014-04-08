@@ -115,7 +115,7 @@ public class BossMechanics implements Listener {
 			public void run() {
 				List<Entity> remove = new ArrayList<Entity>();
 				for(Entry<Entity, List<Entity>> data : minion_map.entrySet()) {
-					Entity boss = data.getKey();
+					final Entity boss = data.getKey();
 					if(!(boss_saved_location.containsKey(boss))) {
 						continue;
 					}
@@ -139,11 +139,18 @@ public class BossMechanics implements Listener {
 					} else {
 						LivingEntity le = (LivingEntity) boss;
 						if(le.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-							try {
+						    new BukkitRunnable(){
+
+                                public void run() {
+                                   try {
 								ParticleEffect.sendToLocation(ParticleEffect.PORTAL, boss.getLocation().add(0, 1, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 0.2F, 50);
 							} catch(Exception e) {
 								e.printStackTrace();
-							}
+							} // TODO Auto-generated method stub
+                                    
+                                }
+						    }.runTask(Main.plugin);
+							
 							boss.setVelocity(new Vector(0, 0.40F, 0));
 						}
 					}

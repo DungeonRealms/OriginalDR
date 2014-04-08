@@ -1559,7 +1559,8 @@ public class DuelMechanics implements Listener {
 				String attacked_prefix = ChatMechanics.getPlayerPrefix(attacked);
 				
 				RecordMechanics.incrementDuelStats(attacker.getName(), true);
-				RecordMechanics.incrementDuelStats(attacked.getName(), true);
+				//They lost
+				RecordMechanics.incrementDuelStats(attacked.getName(), false);
 				
 				attacker.sendMessage(attacker_color + attacker_prefix + attacker.getName() + ChatColor.GREEN + " has " + ChatColor.UNDERLINE + "DEFEATED" + ChatColor.RESET + " " + attacked_color + attacked_prefix + attacked.getName() + ChatColor.GREEN + " in a duel.");
 				for(Entity ent : attacker.getNearbyEntities(48, 48, 48)) {

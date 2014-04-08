@@ -440,6 +440,11 @@ public class TradeMechanics implements Listener {
 		while((title.length() + rPName.length()) < (28)) {
 			title += " ";
 		}
+		String return_string = title += rPName;
+		if(return_string.length() >= 32){
+		    //Too long so make it short..
+		    return_string = return_string.substring(0, 32);
+		}
 		return title += rPName;
 	}
 	
