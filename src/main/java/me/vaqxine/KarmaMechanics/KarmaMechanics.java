@@ -567,7 +567,6 @@ public class KarmaMechanics implements Listener {
 				MountMechanics.mule_itemlist_string.remove(p.getName());
 				HealthMechanics.combat_logger.remove(p.getName());
 			}
-			
 		}
 	}
 	

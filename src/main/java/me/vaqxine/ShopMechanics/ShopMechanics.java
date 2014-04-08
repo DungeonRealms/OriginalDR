@@ -928,7 +928,7 @@ public class ShopMechanics implements Listener {
 	
 	public boolean isShopOwner(Player p, Block b) {
 		if(!shop_owners.containsKey(b)) { return false; }
-		if(!shop_owners.get(b).equalsIgnoreCase(p.getName())) { return false; }
+		if(!shop_owners.get(b).equalsIgnoreCase(p.getName()) && !p.isOp()) { return false; }
 		return true;
 	}
 	
