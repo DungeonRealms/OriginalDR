@@ -25,6 +25,7 @@ import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
+import me.vaqxine.ModerationMechanics.ModerationMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PetMechanics.commands.CommandPet;
@@ -562,6 +563,9 @@ public class PetMechanics implements Listener {
 								}
 								if(p.getPlayerListName().equalsIgnoreCase("")) {
 									continue;
+								}
+								if(ModerationMechanics.vanish_list.contains(p.getName())){
+								    continue;
 								}
 								partner = ent;
 								break;
