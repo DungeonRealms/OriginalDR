@@ -30,7 +30,6 @@ import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.PartyMechanics.PartyMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
-import me.vaqxine.config.Config;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
 
 import org.bukkit.Bukkit;
@@ -167,7 +166,7 @@ public class ChatMechanics implements Listener {
 		PreparedStatement pst = null;
 		
 		try {
-			con = DriverManager.getConnection(Config.sql_url, Config.sql_user, Config.sql_password);
+			con = DriverManager.getConnection(Hive.sql_url, Hive.sql_user, Hive.sql_password);
 			pst = con.prepareStatement(
 			/* Was the wrong data searching for */
 			"SELECT unmute FROM mute_map WHERE pname = '" + p_name + "'");

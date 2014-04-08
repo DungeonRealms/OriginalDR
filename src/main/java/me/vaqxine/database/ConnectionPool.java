@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 import me.vaqxine.Main;
-import me.vaqxine.config.Config;
+import me.vaqxine.Hive.Hive;
 import me.vaqxine.enums.CC;
 
 public class ConnectionPool {
@@ -18,7 +18,7 @@ public class ConnectionPool {
 			if(refresh || con == null || con.isClosed()) {
 				refresh = false;
 				if(con != null) con.close();
-				con = DriverManager.getConnection(Config.sql_url, Config.sql_user, Config.sql_password);
+				con = DriverManager.getConnection(Hive.sql_url, Hive.sql_user, Hive.sql_password);
 			}
 		} catch(Exception e) {
 			Main.d("Couldn't connect to the database!", CC.RED);

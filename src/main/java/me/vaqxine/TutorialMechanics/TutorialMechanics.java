@@ -19,7 +19,6 @@ import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.TutorialMechanics.commands.CommandSkip;
 import me.vaqxine.TutorialMechanics.commands.CommandTutorial;
-import me.vaqxine.config.Config;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -641,7 +640,7 @@ public class TutorialMechanics implements Listener {
 		pl.sendMessage("");
 		pl.sendMessage("");
 		pl.sendMessage("");
-		pl.sendMessage(ChatColor.WHITE + "" + ChatColor.BOLD + "              Dungeon Realms Patch " + Config.version);
+		pl.sendMessage(ChatColor.WHITE + "" + ChatColor.BOLD + "              Dungeon Realms Patch " + Hive.version);
 		pl.sendMessage(ChatColor.GRAY + "                    " + "http://www.dungeonrealms.net/");
 		pl.sendMessage("");
 		pl.sendMessage(ChatColor.YELLOW + "                 " + "You are on the " + ChatColor.BOLD + Hive.MOTD.substring(0, Hive.MOTD.indexOf(" ")) + ChatColor.YELLOW + " shard.");

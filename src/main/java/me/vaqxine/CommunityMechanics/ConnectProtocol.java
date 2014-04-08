@@ -22,7 +22,6 @@ import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
-import me.vaqxine.config.Config;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -50,7 +49,7 @@ public class ConnectProtocol implements Runnable {
 				out = new PrintWriter(kkSocket.getOutputStream(), true);
 			} catch(Exception err) {
 				kkSocket = new Socket();
-				kkSocket.connect(new InetSocketAddress(server_ip, Config.transfer_port), 150);
+				kkSocket.connect(new InetSocketAddress(server_ip, Hive.transfer_port), 150);
 				out = new PrintWriter(kkSocket.getOutputStream(), true);
 			}
 			

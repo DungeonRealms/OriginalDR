@@ -56,7 +56,6 @@ import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
-import me.vaqxine.config.Config;
 import me.vaqxine.holograms.Hologram;
 import net.minecraft.server.v1_7_R2.DataWatcher;
 import net.minecraft.server.v1_7_R2.Packet;
@@ -1160,7 +1159,7 @@ public class RealmMechanics implements Listener {
 			}
 			try {
 				String realm_name = f.getName().replaceAll(".zip", "");
-				URL url = new URL("ftp://" + Config.ftp_user + ":" + Config.ftp_pass + "@" + Config.Hive_IP + "/rdata/" + realm_name + ".zip");
+				URL url = new URL("ftp://" + Hive.ftp_user + ":" + Hive.ftp_pass + "@" + Hive.Hive_IP + "/rdata/" + realm_name + ".zip");
 				URLConnection urlc;
 				
 				urlc = url.openConnection();
@@ -1420,7 +1419,7 @@ public class RealmMechanics implements Listener {
 			zipDirectory(new File(world_name), new File(rootDir + "/realms/up/" + world_name + ".zip"));
 			log.info("[RealmMechanics] " + world_name + "'s realm is now uploading...");
 			
-			URL url = new URL("ftp://" + Config.ftp_user + ":" + Config.ftp_pass + "@" + Config.Hive_IP + "/rdata/" + world_name + ".zip");
+			URL url = new URL("ftp://" + Hive.ftp_user + ":" + Hive.ftp_pass + "@" + Hive.Hive_IP + "/rdata/" + world_name + ".zip");
 			URLConnection urlc = url.openConnection();
 			OutputStream out = urlc.getOutputStream();
 			
@@ -1490,7 +1489,7 @@ public class RealmMechanics implements Listener {
 				zipDirectory(new File(rootDir + "/" + p_safe_realm_name), new File(rootDir + "/realms/up/" + p_safe_realm_name + ".zip"));
 				log.info("[RealmMechanics] " + p_safe_realm_name + "'s realm is now uploading...");
 				
-				URL url = new URL("ftp://" + Config.ftp_user + ":" + Config.ftp_pass + "@" + Config.Hive_IP + "/rdata/" + p_safe_realm_name + ".zip");
+				URL url = new URL("ftp://" + Hive.ftp_user + ":" + Hive.ftp_pass + "@" + Hive.Hive_IP + "/rdata/" + p_safe_realm_name + ".zip");
 				URLConnection urlc = url.openConnection();
 				OutputStream out = urlc.getOutputStream();
 				
@@ -1524,7 +1523,7 @@ public class RealmMechanics implements Listener {
 				zipDirectory(new File(rootDir + "/" + p_safe_realm_name), new File(rootDir + "/realms/up/" + p_safe_realm_name + ".zip"));
 				log.info("[RealmMechanics] " + p_safe_realm_name + "'s realm is now uploading...");
 				
-				URL url = new URL("ftp://" + Config.ftp_user + ":" + Config.ftp_pass + "@" + Config.Hive_IP + "/rdata/" + p_safe_realm_name + ".zip");
+				URL url = new URL("ftp://" + Hive.ftp_user + ":" + Hive.ftp_pass + "@" + Hive.Hive_IP + "/rdata/" + p_safe_realm_name + ".zip");
 				URLConnection urlc = url.openConnection();
 				OutputStream out = urlc.getOutputStream();
 				
@@ -3943,7 +3942,7 @@ public class RealmMechanics implements Listener {
 	
 	public static boolean doesWorldExistGlobal(String wname) {
 		try {
-			URL url = new URL("ftp://" + Config.ftp_user + ":" + Config.ftp_pass + "@" + Config.Hive_IP + "/rdata/" + wname + ".zip");
+			URL url = new URL("ftp://" + Hive.ftp_user + ":" + Hive.ftp_pass + "@" + Hive.Hive_IP + "/rdata/" + wname + ".zip");
 			URLConnection urlc;
 			urlc = url.openConnection();
 			InputStream is = urlc.getInputStream();
@@ -4399,7 +4398,7 @@ public class RealmMechanics implements Listener {
 	
 	public static boolean isHiveOnline() {
 		try {
-			Socket ServerSok = new Socket(Config.Hive_IP, Config.FTP_port);
+			Socket ServerSok = new Socket(Hive.Hive_IP, Hive.FTP_port);
 			ServerSok.close();
 			return true;
 		} catch(Exception e) {
@@ -4410,7 +4409,7 @@ public class RealmMechanics implements Listener {
 	public static void downloadRealm(String realm_name, Player p) {
 		new File(rootDir + "/realms/down/" + p.getName() + ".zip").delete();
 		try {
-			URL url = new URL("ftp://" + Config.ftp_user + ":" + Config.ftp_pass + "@" + Config.Hive_IP + "/rdata/" + realm_name + ".zip");
+			URL url = new URL("ftp://" + Hive.ftp_user + ":" + Hive.ftp_pass + "@" + Hive.Hive_IP + "/rdata/" + realm_name + ".zip");
 			URLConnection urlc;
 			
 			urlc = url.openConnection();
