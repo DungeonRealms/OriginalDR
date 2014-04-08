@@ -140,7 +140,6 @@ public class Hologram {
 		
 		for(Entity e : entities){
 			if(!(e instanceof Player)) continue;
-			Main.d(((Player) e).getName());
 			sendPacketsToPlayer((Player) e);
 		}
 	}
