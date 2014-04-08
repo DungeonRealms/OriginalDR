@@ -445,7 +445,7 @@ public class TradeMechanics implements Listener {
 		    //Too long so make it short..
 		    return_string = return_string.substring(0, 32);
 		}
-		return title += rPName;
+		return return_string;
 	}
 	
 	@SuppressWarnings("deprecation")
