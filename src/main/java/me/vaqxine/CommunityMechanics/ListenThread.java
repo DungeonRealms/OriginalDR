@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import me.vaqxine.Hive.Hive;
+import me.vaqxine.config.Config;
 
 import org.bukkit.Bukkit;
 
@@ -18,14 +18,14 @@ public class ListenThread extends Thread {
 		try {
 			
 			lAddress = InetAddress.getByName(Bukkit.getIp());
-			ss = new ServerSocket(Hive.transfer_port, 200, lAddress);
-			CommunityMechanics.log.info("[CommunityMechanics] LISTENING on port " + Hive.transfer_port + " @ " + Bukkit.getIp() + " ...");
+			ss = new ServerSocket(Config.transfer_port, 200, lAddress);
+			CommunityMechanics.log.info("[CommunityMechanics] LISTENING on port " + Config.transfer_port + " @ " + Bukkit.getIp() + " ...");
 			
 			while(true) {
 				final Socket clientSocket = ss.accept();
 				String ip = clientSocket.getInetAddress().getHostAddress();
 				if(!(CommunityMechanics.ip_whitelist.contains(ip))) {
-					CommunityMechanics.log.info("[CommunityMechanics] Illegal connection on port " + Hive.transfer_port + " by " + ip);
+					CommunityMechanics.log.info("[CommunityMechanics] Illegal connection on port " + Config.transfer_port + " by " + ip);
 					clientSocket.close();
 					continue;
 				}
@@ -34,7 +34,7 @@ public class ListenThread extends Thread {
 			}
 		} catch(IOException e) {
 			e.printStackTrace();
-			CommunityMechanics.log.info("Could not listen on port: " + Hive.transfer_port);
+			CommunityMechanics.log.info("Could not listen on port: " + Config.transfer_port);
 			return;
 		}
 	}

@@ -55,6 +55,7 @@ import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
+import me.vaqxine.config.Config;
 import me.vaqxine.database.ConnectionPool;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.Packet;
@@ -229,7 +230,7 @@ public class CommunityMechanics implements Listener {
 			ip_whitelist.add(s);
 		}
 		
-		ip_whitelist.add(Hive.Hive_IP);
+		ip_whitelist.add(Config.Hive_IP);
 		ip_whitelist.add("72.8.157.66"); // Donation Back-end Server AND US-0
 		ip_whitelist.add("72.20.9.154");
 		ip_whitelist.add("72.20.9.158");
@@ -1482,7 +1483,7 @@ public class CommunityMechanics implements Listener {
 				Socket s = new Socket();
 				// s.bind(new InetSocketAddress(Hive.local_IP,
 				// Hive.transfer_port+1));
-				s.connect(new InetSocketAddress(server_list.get(server_num), Hive.transfer_port), delay);
+				s.connect(new InetSocketAddress(server_list.get(server_num), Config.transfer_port), delay);
 				return s;
 			} catch(IOException e) {
 				// e.printStackTrace(); Worthless spam for dead servers.
@@ -1512,7 +1513,7 @@ public class CommunityMechanics implements Listener {
 					kkSocket = new Socket();
 					// kkSocket.bind(new InetSocketAddress(Hive.local_IP,
 					// Hive.transfer_port+1));
-					kkSocket.connect(new InetSocketAddress(server_ip, Hive.transfer_port), 100);
+					kkSocket.connect(new InetSocketAddress(server_ip, Config.transfer_port), 100);
 					out = new PrintWriter(kkSocket.getOutputStream(), true);
 					
 					out.println(packet_data);
@@ -1535,7 +1536,7 @@ public class CommunityMechanics implements Listener {
 				kkSocket = new Socket();
 				// kkSocket.bind(new InetSocketAddress(Hive.local_IP,
 				// Hive.transfer_port+1));
-				kkSocket.connect(new InetSocketAddress(server_ip, Hive.transfer_port), 100);
+				kkSocket.connect(new InetSocketAddress(server_ip, Config.transfer_port), 100);
 				out = new PrintWriter(kkSocket.getOutputStream(), true);
 				
 				out.println(packet_data);
@@ -1562,7 +1563,7 @@ public class CommunityMechanics implements Listener {
 			kkSocket = new Socket();
 			// kkSocket.bind(new InetSocketAddress(Hive.local_IP,
 			// Hive.transfer_port+1));
-			kkSocket.connect(new InetSocketAddress(ip, Hive.transfer_port), 100);
+			kkSocket.connect(new InetSocketAddress(ip, Config.transfer_port), 100);
 			out = new PrintWriter(kkSocket.getOutputStream(), true);
 			
 			out.println(packet_data);

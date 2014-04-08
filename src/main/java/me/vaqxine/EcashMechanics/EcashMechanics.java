@@ -34,6 +34,7 @@ import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
+import me.vaqxine.config.Config;
 import net.minecraft.server.v1_7_R2.EntityLiving;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
@@ -1872,7 +1873,7 @@ public class EcashMechanics implements Listener {
 		PreparedStatement pst = null;
 		
 		try {
-			con = DriverManager.getConnection(Hive.sql_url, Hive.sql_user, Hive.sql_password);
+			con = DriverManager.getConnection(Config.sql_url, Config.sql_user, Config.sql_password);
 			pst = con.prepareStatement("SELECT ecash FROM player_database WHERE p_name = '" + p_name + "'");
 			
 			pst.execute();

@@ -1,9 +1,5 @@
 package me.vaqxine.ModerationMechanics;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -47,6 +43,7 @@ import me.vaqxine.ModerationMechanics.commands.CommandUnban;
 import me.vaqxine.ModerationMechanics.commands.CommandUnlock;
 import me.vaqxine.ModerationMechanics.commands.CommandUnmute;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
+import me.vaqxine.config.Config;
 import me.vaqxine.database.ConnectionPool;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
@@ -351,7 +348,7 @@ public class ModerationMechanics implements Listener {
 		PreparedStatement pst = null;
 		
 		try {
-			con = DriverManager.getConnection(Hive.sql_url, Hive.sql_user, Hive.sql_password);
+			con = DriverManager.getConnection(Config.sql_url, Config.sql_user, Config.sql_password);
 			pst = ConnectionPool.getConnection().prepareStatement("SELECT unban_reason FROM ban_list WHERE pname = '" + p_name + "'");
 			
 			pst.execute();
