@@ -508,3 +508,6 @@ commands:
   ploot:
     description: Change loot distribution type.
     usage: /<command>
+  isunomadyet:
+    description: Shhh don't tell anyone about this.
+    usage: /<command>

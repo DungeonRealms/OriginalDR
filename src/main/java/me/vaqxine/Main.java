@@ -108,6 +108,8 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new ScoreboardMechanics(), this);
 		getServer().getPluginManager().registerEvents(this, this);
 		
+		getCommand("isunomadyet").setExecutor(new CommandIsUnoMadYet());
+		
 		hearthstoneMechanics = new HearthstoneMechanics();
 		achievmentMechanics = new AchievmentMechanics();
 		bossMechanics = new BossMechanics();
