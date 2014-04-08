@@ -270,15 +270,16 @@ public class ShopMechanics implements Listener {
 		String right = String.valueOf((char) 9658);
 		if(lines.size() < 2){
 			if(lines.size() == 0){
-				lines.set(0, "ERROR");
-				lines.set(1, left + "1" + right);
+				lines.add("ERROR");
+				lines.add(left + "1" + right);
 			}else{
-				lines.set(1, left + "1" + right);
+				lines.add(left + "1" + right);
 			}
 		}else{
 			String line = lines.get(1);
 			line = line.substring(1, line.length() - 1);
-			lines.set(1, left + String.valueOf((Integer.parseInt(line) + 1)) + right);
+			Integer count = Integer.parseInt(line) + 1;
+			lines.set(1, left + String.valueOf(count) + right);
 		}
 		shop_tag.setLines(lines);
 	}
