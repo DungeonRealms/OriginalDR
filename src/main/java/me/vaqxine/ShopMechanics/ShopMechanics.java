@@ -16,6 +16,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.EntityManager;
+
 import me.vaqxine.Main;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.ChatMechanics.ChatMechanics;
@@ -38,6 +40,7 @@ import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.database.ConnectionPool;
+import me.vaqxine.holograms.Hologram;
 import net.citizensnpcs.api.CitizensAPI;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.EntityTracker;
@@ -90,19 +93,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import de.kumpelblase2.remoteentities.EntityManager;
-import de.kumpelblase2.remoteentities.RemoteEntities;
-import de.kumpelblase2.remoteentities.api.RemoteEntity;
-import de.kumpelblase2.remoteentities.api.RemoteEntityType;
-
 public class ShopMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
 	
 	private static final String ALPHA_NUM = "123456789";
 	
-	public static EntityManager npc_manager = null;
-	
-	static HashMap<Block, RemoteEntity> shop_nameplates = new HashMap<Block, RemoteEntity>();
+	static HashMap<Block, Hologram> shop_nameplates = new HashMap<Block, Hologram>();
 	// NPC linked list that assigns an NPC to a given shop block.
 	
 	public static HashMap<String, Integer> shop_level = new HashMap<String, Integer>();
@@ -163,7 +159,7 @@ public class ShopMechanics implements Listener {
 	public static List<Block> open_shops = new ArrayList<Block>();
 	// Determine if a given block is indeed a shop. isShop(b);
 	
-	public static CopyOnWriteArrayList<RemoteEntity> npc_to_remove = new CopyOnWriteArrayList<RemoteEntity>();
+	public static CopyOnWriteArrayList<Hologram> npc_to_remove = new CopyOnWriteArrayList<Hologram>();
 	// List of NPC's to kill on the main thread if concurrency issues arise.
 	
 	public static boolean shop_shutdown = false;
@@ -184,12 +180,6 @@ public class ShopMechanics implements Listener {
 		store_backup = new BackupStoreData();
 		store_backup.start();
 		
-		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-			public void run() {
-				npc_manager = RemoteEntities.createManager(Main.plugin);
-			}
-		}, 2 * 20L);
-		
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				ConnectionPool.refresh = true;
@@ -199,21 +189,13 @@ public class ShopMechanics implements Listener {
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				if(npc_to_remove.size() <= 0) { return; }
-				for(RemoteEntity re : npc_to_remove) {
-					if(re == null || re.getBukkitEntity() == null) {
+				for(Hologram re : npc_to_remove) {
+					if(re == null) {
 						npc_to_remove.remove(re);
 						continue;
 					}
 					
-					List<Player> lpl = new ArrayList<Player>();
-					for(Entity ent : re.getBukkitEntity().getNearbyEntities(32, 32, 32)) {
-						if(ent instanceof Player) lpl.add(((Player) ent));
-					}
-					
-					//Hive.npc_manager.removeEntity(re.getID(), true);
-					re.getBukkitEntity().remove();
-					
-					updateEntity(re.getBukkitEntity(), lpl);
+					re.destroy();
 					npc_to_remove.remove(re);
 				}
 			}
@@ -282,27 +264,32 @@ public class ShopMechanics implements Listener {
 		ScoreboardMechanics.setStockCount(shop_tag, stock);
 	}
 	
-	public void incrementViewCount(Player shop_tag) {
-		ScoreboardMechanics.incrementViewCount(shop_tag);
+	public void incrementViewCount(Hologram shop_tag) {
+		List<String> lines = shop_tag.getLines();
+		if(lines.size() < 2){
+			if(lines.size() == 0){
+				lines.set(0, "ERROR");
+				lines.set(1, "1");
+			}else{
+				lines.set(1, "1");
+			}
+		}else{
+			String line = lines.get(1);
+			line = line.substring(1, line.length() - 1);
+			lines.set(1, String.valueOf((Integer.parseInt(line) + 1)));
+		}
+		shop_tag.setLines(lines);
 	}
 	
 	public void cleanupNullNPC() {
-		List<RemoteEntity> to_remove = new ArrayList<RemoteEntity>();
-		for(RemoteEntity re : npc_manager.getAllEntities()) {
-			if(re.getBukkitEntity().getLocation().add(0, 1, 0).getBlock().getType() != Material.CHEST) {
+		List<Hologram> to_remove = new ArrayList<Hologram>();
+		for(Hologram re : Hologram.getHolograms()) {
+			if(re.getLocation().add(0, 1, 0).getBlock().getType() != Material.CHEST) {
 				to_remove.add(re);
 			}
 		}
-		for(RemoteEntity re : to_remove) {
-			List<Player> lpl = new ArrayList<Player>();
-			for(Entity ent : re.getBukkitEntity().getNearbyEntities(32, 32, 32)) {
-				if(ent instanceof Player) lpl.add(((Player) ent));
-			}
-			
-			//Hive.npc_manager.removeEntity(re.getID(), true);
-			re.getBukkitEntity().remove();
-			
-			updateEntity(re.getBukkitEntity(), lpl);
+		for(Hologram re : to_remove) {
+			re.destroy();
 		}
 	}
 	
@@ -327,12 +314,9 @@ public class ShopMechanics implements Listener {
 			String shop_owner_n = "";
 			
 			try {
-				/*final Block b2 = chest_partners.get(b1);
+				final Block b2 = chest_partners.get(b1);
 				b1.setType(Material.AIR);
 				b2.setType(Material.AIR);
-				
-				NPC n = shop_nameplates.get(b1);
-				n.removeFromWorld();*/
 				
 				shop_owner_n = shop_owners.get(b1);
 				
@@ -788,17 +772,9 @@ public class ShopMechanics implements Listener {
 				b1.setType(Material.AIR);
 				b2.setType(Material.AIR);
 				
-				RemoteEntity n = shop_nameplates.get(b1);
+				Hologram n = shop_nameplates.get(b1);
 				
-				List<Player> lpl = new ArrayList<Player>();
-				for(Entity ent : n.getBukkitEntity().getNearbyEntities(32, 32, 32)) {
-					if(ent instanceof Player) lpl.add(((Player) ent));
-				}
-				
-				//Hive.npc_manager.removeEntity(re.getID(), true);
-				n.getBukkitEntity().remove();
-				
-				updateEntity(n.getBukkitEntity(), lpl);
+				n.destroy();
 				
 				shop_nameplates.remove(b1);
 				shop_name_list.remove(ChatColor.stripColor(shop_names.get(b1).substring(shop_names.get(b1).indexOf(" ") + 1, shop_names.get(b1).length())));
@@ -1109,10 +1085,10 @@ public class ShopMechanics implements Listener {
 	}
 	
 	public static void setStoreColor(Block b, ChatColor c) {
-		// Player owner = getShopOwner(b);
-		RemoteEntity re = shop_nameplates.get(b);
-		CraftPlayer p = (CraftPlayer) re.getBukkitEntity();
-		CommunityMechanics.setColor(p, c);
+		Hologram re = shop_nameplates.get(b);
+		List<String> lines = re.getLines();
+		lines.set(0, c + ChatColor.stripColor(lines.get(0)));
+		re.setLines(lines);
 	}
 	
 	public static boolean hasCollectionBinItems(String p_name) {
@@ -2041,18 +2017,8 @@ public class ShopMechanics implements Listener {
 					}
 					
 					if(shop_nameplates.containsKey(chest)) {
-						RemoteEntity re = shop_nameplates.get(chest);
-						List<Player> lpl = new ArrayList<Player>();
-						for(Entity ent : re.getBukkitEntity().getNearbyEntities(32, 32, 32)) {
-							if(ent instanceof Player) lpl.add(((Player) ent));
-						}
-						
-						//Hive.npc_manager.removeEntity(re.getID(), true);
-						re.getBukkitEntity().remove();
-						
-						updateEntity(re.getBukkitEntity(), lpl);
-						/*NPC n = shop_nameplates.get(chest);
-						n.removeFromWorld();*/
+						Hologram re = shop_nameplates.get(chest);
+						re.destroy();
 					}
 					
 					if(Bukkit.getPlayer(shop_owner) != null) {
@@ -2127,19 +2093,6 @@ public class ShopMechanics implements Listener {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onEntityDamagEvent(EntityDamageEvent e) {
-		if(e.getEntity() != null && e.getEntity() instanceof LivingEntity && npc_manager.isRemoteEntity((LivingEntity) e.getEntity())) {
-			if(e.getEntity() instanceof Player) {
-				Player pl = (Player) e.getEntity();
-				if(!pl.getName().contains("[S]")) { return; }
-			}
-			
-			e.setCancelled(true);
-			e.setDamage(0);
-		}
-	}
-	
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW)
 	public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e) {
@@ -2170,23 +2123,10 @@ public class ShopMechanics implements Listener {
 			
 			final Block b = inverse_shop_owners.get(p.getName());
 			
-			RemoteEntity re = shop_nameplates.get(b);
-			re = npc_manager.getRemoteEntityByID(re.getID());
+			Hologram re = shop_nameplates.get(b);
+
 			try {
-				final List<Player> lpl = new ArrayList<Player>();
-				for(Entity ent : re.getBukkitEntity().getNearbyEntities(32, 32, 32)) {
-					if(ent instanceof Player) lpl.add(((Player) ent));
-				}
-				
-				//Hive.npc_manager.removeEntity(re.getID(), true);
-				re.getBukkitEntity().remove();
-				final RemoteEntity final_re = re;
-				new BukkitRunnable() {
-					public void run() {
-						updateEntity(final_re.getBukkitEntity(), lpl);
-					}
-				}.runTask(Main.plugin);
-				
+				re.destroy();
 			} catch(Exception err) {
 				err.printStackTrace();
 				npc_to_remove.add(re);
@@ -2496,18 +2436,8 @@ public class ShopMechanics implements Listener {
 				}
 				
 				if(shop_nameplates.containsKey(chest)) {
-					RemoteEntity re = shop_nameplates.get(chest);
-					List<Player> lpl = new ArrayList<Player>();
-					for(Entity ent : re.getBukkitEntity().getNearbyEntities(32, 32, 32)) {
-						if(ent instanceof Player) lpl.add(((Player) ent));
-					}
-					
-					//Hive.npc_manager.removeEntity(re.getID(), true);
-					re.getBukkitEntity().remove();
-					
-					updateEntity(re.getBukkitEntity(), lpl);
-					/*NPC n = shop_nameplates.get(chest);
-					n.removeFromWorld();*/
+					Hologram re = shop_nameplates.get(chest);
+					re.destroy();
 				}
 				
 				if(Bukkit.getPlayer(shop_owner) != null) {
@@ -2712,18 +2642,8 @@ public class ShopMechanics implements Listener {
 				}
 				
 				if(shop_nameplates.containsKey(b)) {
-					RemoteEntity re = shop_nameplates.get(b);
-					List<Player> lpl = new ArrayList<Player>();
-					for(Entity ent : re.getBukkitEntity().getNearbyEntities(32, 32, 32)) {
-						if(ent instanceof Player) lpl.add(((Player) ent));
-					}
-					
-					//Hive.npc_manager.removeEntity(re.getID(), true);
-					re.getBukkitEntity().remove();
-					
-					updateEntity(re.getBukkitEntity(), lpl);
-					/*NPC n = shop_nameplates.get(chest);
-					n.removeFromWorld();*/
+					Hologram re = shop_nameplates.get(b);
+					re.destroy();
 				}
 				
 				shop_nameplates.remove(b);
@@ -2911,9 +2831,8 @@ public class ShopMechanics implements Listener {
 				Block shop_block = inverse_shop_owners.get(owner.getName());
 				
 				//NPC nshop_tag = shop_nameplates.get(shop_block);
-				RemoteEntity nshop_tag = shop_nameplates.get(shop_block);
-				Player pshop_tag = (Player) nshop_tag.getBukkitEntity();
-				incrementViewCount(pshop_tag);
+				Hologram nshop_tag = shop_nameplates.get(shop_block);
+				incrementViewCount(nshop_tag);
 				
 				last_shop_open.put(p.getName(), System.currentTimeMillis());
 			}
@@ -2940,18 +2859,8 @@ public class ShopMechanics implements Listener {
 			b1.setType(Material.AIR);
 			b2.setType(Material.AIR);
 			
-			/*NPC n = shop_nameplates.get(b1);
-			n.removeFromWorld();*/
-			RemoteEntity re = shop_nameplates.get(b1);
-			List<Player> lpl = new ArrayList<Player>();
-			for(Entity ent : re.getBukkitEntity().getNearbyEntities(32, 32, 32)) {
-				if(ent instanceof Player) lpl.add(((Player) ent));
-			}
-			
-			//Hive.npc_manager.removeEntity(re.getID(), true);
-			re.getBukkitEntity().remove();
-			
-			updateEntity(re.getBukkitEntity(), lpl);
+			Hologram re = shop_nameplates.get(b1);
+			re.destroy();
 			
 			shop_nameplates.remove(b1);
 			shop_name_list.remove(ChatColor.stripColor(shop_names.get(b1).substring(shop_names.get(b1).indexOf(" ") + 1, shop_names.get(b1).length())));
@@ -3032,22 +2941,18 @@ public class ShopMechanics implements Listener {
 		Block chest2 = chest_loc2.getBlock();
 		Location loc;
 		if(chest1.getLocation().getX() > chest2.getLocation().getX()) {
-			loc = chest_loc1.subtract(0.0, 1.1, -0.5);
+			loc = chest_loc1.subtract(0.0, -1, -0.5);
 		} else {
-			loc = chest_loc1.subtract(-1.0, 1.1, -0.5);
+			loc = chest_loc1.subtract(-1.0, -1, -0.5);
 		}
+
+		String left = String.valueOf((char) 9668);
+		String right = String.valueOf((char) 9658);
 		
-		RemoteEntity re = npc_manager.createNamedEntity(RemoteEntityType.Human, loc, name, false);
-		//NPC n = m.spawnHumanNPC(name, loc);
+		List<String> lines = Arrays.asList(name, left + "0" + right);
 		
-		re.setPushable(false);
-		re.setStationary(true, true);
-		//re.getMind().clearMovementDesires();
-		//re.getMind().clearBehaviours();
-		
-		CraftPlayer p = (CraftPlayer) re.getBukkitEntity();
-		p.setGameMode(GameMode.CREATIVE);
-		p.setPlayerListName("");
+		Hologram re = new Hologram(loc, lines);
+		re.show();
 		
 		shop_nameplates.put(chest1, re);
 		shop_nameplates.put(chest2, re);

@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import me.vaqxine.Main;
+import me.vaqxine.Utils;
 import net.minecraft.server.v1_7_R2.EntityHorse;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.EntityWitherSkull;
@@ -15,10 +17,14 @@ import net.minecraft.server.v1_7_R2.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.v1_7_R2.WorldServer;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginBase;
 
 public class Hologram {
 	
@@ -38,8 +44,12 @@ public class Hologram {
 	}
 	
 	public Hologram(Location location, String... lines) {
+		new Hologram(location, Arrays.asList(lines));
+	}
+	
+	public Hologram(Location location, List<String> lines) {
 		holograms.add(this);
-		this.lines.addAll(Arrays.asList(lines));
+		this.lines.addAll(lines);
 		this.location = location;
 	}
 	
@@ -47,6 +57,13 @@ public class Hologram {
 		boolean didshow = show;
 		if(didshow) hide();
 		this.lines = Arrays.asList(lines);
+		if(didshow) show();
+	}
+	
+	public void setLines(List<String> lines){
+		boolean didshow = show;
+		if(didshow) hide();
+		this.lines = lines;
 		if(didshow) show();
 	}
 	
@@ -62,6 +79,14 @@ public class Hologram {
 		if(didshow) hide();
 		this.location = location.clone().add(0, 1.2, 0);
 		if(didshow) show();
+	}
+	
+	public Location getLocation(){
+		return location;
+	}
+	
+	public List<String> getLines(){
+		return lines;
 	}
 	
 	public void show() {
@@ -105,6 +130,19 @@ public class Hologram {
 	public void destroy() {
 		if(show) hide();
 		holograms.remove(this);
+	}
+	
+	public void updateToNearbyPlayers(){
+		if(lines.size() == 0) return;
+		if(horse_entities.size() == 0) return;
+
+		Entity[] entities = Utils.getNearbyEntities(location, 32);
+		
+		for(Entity e : entities){
+			if(!(e instanceof Player)) continue;
+			Main.d(((Player) e).getName());
+			sendPacketsToPlayer((Player) e);
+		}
 	}
 	
 	public void sendPacketsToPlayer(Player player) {

@@ -135,16 +135,6 @@ public class ScoreboardMechanics implements Listener {
 		cloneScoreboard(e.getPlayer());
 	}
 	
-	public static void incrementViewCount(OfflinePlayer shop_tag) {
-		for(Player p : Bukkit.getOnlinePlayers()) {
-		    if(p == null || p.hasMetadata("NPC"))continue;
-			Score c = ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.BELOW_NAME).getScore(shop_tag);
-			c.setScore(c.getScore() + 1);
-		}
-		Score c = main.getObjective(DisplaySlot.BELOW_NAME).getScore(shop_tag);
-		c.setScore(c.getScore() + 1);
-	}
-	
 	public static void removePlayerFromTeam(String team, OfflinePlayer player) {
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), team).removePlayer(player);

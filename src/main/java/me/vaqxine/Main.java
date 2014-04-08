@@ -198,6 +198,15 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}.runTaskTimerAsynchronously(Main.plugin, 240 * 20L, 240 * 20L);
+		
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				for(Hologram h : Hologram.getHolograms()){
+					h.updateToNearbyPlayers();
+				}
+			}
+		}.runTaskTimer(this, 20L * 5, 20L * 5);
 	}
 	
 	public void onDisable() {
