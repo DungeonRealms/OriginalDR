@@ -14,6 +14,7 @@ import java.net.URLConnection;
 import java.security.CodeSource;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -55,6 +56,7 @@ import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
+import me.vaqxine.holograms.Hologram;
 import net.minecraft.server.v1_7_R2.DataWatcher;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutEntityMetadata;
@@ -247,6 +249,8 @@ public class RealmMechanics implements Listener {
 	static RealmMechanics instance;
 	public static String main_world_name = "";
 	
+	public static HashMap<Location, Hologram> holograms = new HashMap<Location, Hologram>();
+	
 	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		instance = this;
@@ -337,6 +341,10 @@ public class RealmMechanics implements Listener {
 								Player pl = Bukkit.getPlayer(r_name);
 								pl.sendMessage(ChatColor.RED + "Your realm is now once again a " + ChatColor.BOLD + "CHAOTIC" + ChatColor.RED + " zone.");
 							}
+							Location l = getLocationOfPlayerRealm(r_name);
+							List<String> lines = holograms.get(l).getLines();
+							lines.set(1, ChatColor.RED + "Chaotic");
+							holograms.get(l).setLines(lines);
 							DuelMechanics.setPvPOn(Bukkit.getWorld(r_name));
 						}
 						safe_realms.remove(r_name);
@@ -346,6 +354,13 @@ public class RealmMechanics implements Listener {
 								pl.sendMessage(ChatColor.GRAY + "Due to this, your " + ChatColor.UNDERLINE + "Orb of Flight" + ChatColor.GRAY + " has also expired.");
 							}
 							flying_realms.remove(r_name);
+							Location l = getLocationOfPlayerRealm(r_name);
+							List<String> lines = holograms.get(l).getLines();
+							if(lines.size() == 3){
+								lines.remove(2);
+								holograms.get(l).setLines(lines);
+								if(!Bukkit.getOfflinePlayer(r_name).isOp()) holograms.get(l).setLocation(holograms.get(l).getLocation().clone().add(0, -1.5, 0));
+							}
 						}
 					} else {
 						if(Bukkit.getWorld(r_name) != null) {
@@ -373,6 +388,14 @@ public class RealmMechanics implements Listener {
 								}
 								for(Player pl : Bukkit.getWorld(r_name).getPlayers()) {
 									pl.setAllowFlight(false);
+								}
+								
+								Location l = getLocationOfPlayerRealm(r_name);
+								List<String> lines = holograms.get(l).getLines();
+								if(lines.size() == 3){
+									lines.remove(2);
+									holograms.get(l).setLines(lines);
+									if(!Bukkit.getOfflinePlayer(r_name).isOp()) holograms.get(l).setLocation(holograms.get(l).getLocation().clone().add(0, -1.5, 0));
 								}
 							}
 							
@@ -681,6 +704,14 @@ public class RealmMechanics implements Listener {
 		}
 		
 		log.info("[RealmMechanics] has been disabled.");
+	}
+	
+	public Location getLocationOfPlayerRealm(String player){
+		if(!portal_map.containsValue(player)) return null;
+		for(Location l : portal_map.keySet()){
+			if(portal_map.get(l).equalsIgnoreCase(player)) return l; 
+		}
+		return null;
 	}
 	
 	public void cleanupRealmFolders() {
@@ -1113,6 +1144,8 @@ public class RealmMechanics implements Listener {
 			portal_loc.getBlock().setType(Material.AIR);
 			portal_loc.add(0, 1, 0).getBlock().setType(Material.AIR);
 			String parse_loc = String.valueOf(portal_loc.getX() + "," + portal_loc.getY() + "," + portal_loc.getZ());
+			holograms.get(portal_loc).destroy();
+			holograms.remove(portal_loc);
 			log.info("[RealmMechanics] Cleaned up portal at: " + parse_loc);
 		}
 	}
@@ -1331,6 +1364,8 @@ public class RealmMechanics implements Listener {
 			inv_portal_map.remove(p.getName());
 			portal_map.remove(l);
 			l.getBlock().setType(Material.AIR);
+			holograms.get(l).destroy();
+			holograms.remove(l);
 			l.subtract(0, 1, 0).getBlock().setType(Material.AIR);
 		}
 		
@@ -2017,6 +2052,16 @@ public class RealmMechanics implements Listener {
 			pl.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "FLYING ENABLED");
 			pl.setAllowFlight(true);
 			
+			Location l = getLocationOfPlayerRealm(pl.getName());
+			List<String> lines = holograms.get(l).getLines();
+			lines.add(ChatColor.AQUA + "Flight");
+			holograms.get(l).setLines(lines);
+			
+			double add = 1.5;
+			if(pl.isOp()) add = 0;
+			
+			holograms.get(l).setLocation(holograms.get(l).getLocation().clone().add(0,add,0));
+			
 			for(Player visitor : Bukkit.getWorld(pl.getName()).getPlayers()) {
 				if(build_list.containsKey(pl.getName()) && build_list.get(pl.getName()).contains(visitor)) {
 					visitor.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "FLYING ENABLED");
@@ -2070,6 +2115,12 @@ public class RealmMechanics implements Listener {
 			pl.sendMessage(ChatColor.GREEN + "Your realm will now be a " + ChatColor.BOLD + "SAFE ZONE" + ChatColor.GREEN + " for 1 hour(s), or until logout.");
 			pl.sendMessage(ChatColor.GRAY + "All damage in your realm will be disabled for this time period.");
 			pl.getWorld().playEffect(pl.getLocation(), Effect.ENDER_SIGNAL, 10);
+			
+			Location l = getLocationOfPlayerRealm(pl.getName());
+			List<String> lines = holograms.get(l).getLines();
+			lines.set(1, ChatColor.GREEN + "Peaceful");
+			holograms.get(l).setLines(lines);
+			
 			try {
 				ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, pl.getWorld().getSpawnLocation().add(0.5, 1.5, 0.5), 0, 0, 0, 0.05F, 20);
 			} catch(Exception err) {
@@ -2167,6 +2218,9 @@ public class RealmMechanics implements Listener {
 				p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 5F, 0.75F);
 				
 				l.add(0, 1, 0);
+
+				holograms.get(l).destroy();
+				holograms.remove(l);
 				
 				//p.sendMessage(ChatColor.RED + "Portal " + ChatColor.BOLD + "CLOSED");
 				return;
@@ -2403,6 +2457,8 @@ public class RealmMechanics implements Listener {
 				Location new_portal = new Location(b.getWorld(), b.getX(), b.getY(), b.getZ());
 				old_portal.getBlock().setType(Material.AIR);
 				old_portal.add(0, 1, 0).getBlock().setType(Material.AIR);
+				holograms.get(old_portal).destroy();
+				holograms.remove(old_portal);
 				Bukkit.getWorld(block_world_name).setSpawnLocation(new_portal.getBlockX(), new_portal.getBlockY() + 1, new_portal.getBlockZ());
 				new_portal.getBlock().setType(Material.PORTAL);
 				new_portal.add(0, 1, 0).getBlock().setType(Material.PORTAL);
@@ -2415,6 +2471,8 @@ public class RealmMechanics implements Listener {
 			// TODO: This probably causes unlinking
 			if(has_portal.containsKey(p.getName()) && inv_portal_map.containsKey(p.getName())) {
 				Location l = inv_portal_map.get(p.getName());
+				holograms.get(l).destroy();
+				holograms.remove(l);
 				l.getBlock().setType(Material.AIR);
 				l.subtract(0, 1, 0).getBlock().setType(Material.AIR);
 				portal_map_coords.remove(p.getName());
@@ -3444,7 +3502,7 @@ public class RealmMechanics implements Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
-	public void EntityDamageEvent(EntityDamageEvent e) {
+	public void onEntityDamageEvent(EntityDamageEvent e) {
 		Entity oent = e.getEntity();
 		Entity ent = e.getEntity();
 		//log.info(e.getCause().toString());
@@ -3784,6 +3842,26 @@ public class RealmMechanics implements Listener {
 		portal_map.put(l, to_realm);
 		inv_portal_map.put(to_realm, l);
 		portal_map_coords.put(to_realm, l.getBlockX() + "," + l.getBlockY() + "," + l.getBlockZ());
+		double height = 1;
+		String owner = getOwner(l);
+		if(Bukkit.getOfflinePlayer(owner).isOp()) height = 2.5;
+		holograms.put(l, new Hologram(l.clone().add(0.5, height, 0.5), Arrays.asList(owner, ChatColor.RED + "Chaotic")));
+		holograms.get(l).show();
+	}
+	
+	public static String getOwner(Location portal){
+		String realm_owner = "";
+		for(Entry<Location, String> entry : portal_map.entrySet()) {
+			Location l = entry.getKey();
+			String owner_name = entry.getValue();
+			
+			if(l.distanceSquared(portal) <= 4) {
+				realm_owner = owner_name;
+				//log.info(owner_name);
+				break;
+			}
+		}
+		return realm_owner;
 	}
 	
 	public static void deleteFolder(File folder) {
