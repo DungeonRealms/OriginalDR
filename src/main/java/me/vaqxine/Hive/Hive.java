@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import me.vaqxine.Config;
 import me.vaqxine.Main;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.ChatMechanics.ChatMechanics;
@@ -69,6 +68,7 @@ import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
+import me.vaqxine.config.Config;
 import me.vaqxine.database.ConnectionPool;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.Packet;
