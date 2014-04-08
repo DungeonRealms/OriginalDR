@@ -135,6 +135,7 @@ import de.kumpelblase2.remoteentities.api.RemoteEntity;
 import de.kumpelblase2.remoteentities.api.RemoteEntityType;
 
 public class Hive implements Listener {
+<<<<<<< HEAD
     //"US-5", "US-6", "US-7", "US-8"
     static List<String> us_public_servers = new ArrayList<String>(Arrays.asList("US-1", "US-2", "US-3", "US-4", "US-11"));
     static List<String> us_private_servers = new ArrayList<String>(Arrays.asList("US-9", "US-10"));
@@ -163,6 +164,10 @@ public class Hive implements Listener {
     public static String local_IP = "";
     
     public static int id = getServerNumFromPrefix(Bukkit.getMotd());
+=======
+
+	public static int id = getServerNumFromPrefix(Bukkit.getMotd());
+>>>>>>> b242f284c45367e6f1f9e80bf07cbfade04dec86
     
     public static boolean no_shard = false;
     // Do not allow /shard -- toggle.
@@ -647,7 +652,7 @@ public class Hive implements Listener {
             public void run() {
                 if(payload_pending == true) {
                     try {
-                        URL url = new URL("ftp://" + ftp_user + ":" + ftp_pass + "@" + Hive_IP + "/sdata/payload.zip");
+                        URL url = new URL("ftp://" + Config.ftp_user + ":" + Config.ftp_pass + "@" + Config.Hive_IP + "/sdata/payload.zip");
                         url.openConnection();
                         URLConnection urlc = url.openConnection();
                         InputStream is = urlc.getInputStream();
@@ -1024,7 +1029,7 @@ public class Hive implements Listener {
             
             log.info("[ShopMechanics] Recovered a total of " + fix_count + " corrupt shops.");
             
-        } catch(SQLException e) {
+        } catch(Exception e) {
             e.printStackTrace();
             return;
         }
@@ -3182,7 +3187,7 @@ public class Hive implements Listener {
             p.sendMessage("");
             p.sendMessage("");
             p.sendMessage("");
-            p.sendMessage(ChatColor.WHITE + "" + ChatColor.BOLD + "              Dungeon Realms Patch " + version);
+            p.sendMessage(ChatColor.WHITE + "" + ChatColor.BOLD + "              Dungeon Realms Patch " + Config.version);
             //p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "              Dungeon Realms Halloween Patch");
             p.sendMessage(ChatColor.GRAY + "                    " + "http://www.dungeonrealms.net/");
             p.sendMessage("");
@@ -3531,7 +3536,7 @@ public class Hive implements Listener {
     public String addPatchVersion(String motd) {
         // It's 48 characters to get to where we need to be. (from 0)
         String motd_with_space = motd + "";
-        String patch_string = ChatColor.GRAY + "Patch " + version;
+        String patch_string = ChatColor.GRAY + "Patch " + Config.version;
         int needed_space = (int) (58 - ((ChatColor.stripColor(motd).length()) * 1.25));
         while(needed_space > 0) {
             needed_space--;
@@ -3608,7 +3613,7 @@ public class Hive implements Listener {
     public static boolean isHiveOnline() {
         Socket socket = null;
         try {
-            socket = new Socket(Hive_IP, SQL_port);
+            socket = new Socket(Config.Hive_IP, Config.SQL_port);
             socket.close();
             return true;
         } catch(Exception err) {} finally {
@@ -3628,7 +3633,7 @@ public class Hive implements Listener {
             e.printStackTrace();
         }
         
-        URL url = new URL("ftp://" + ftp_user + ":" + ftp_pass + "@" + Hive_IP + "/sdata/payload.zip");
+        URL url = new URL("ftp://" + Config.ftp_user + ":" + Config.ftp_pass + "@" + Config.Hive_IP + "/sdata/payload.zip");
         URLConnection urlc;
         
         try {
@@ -3859,21 +3864,21 @@ public class Hive implements Listener {
         ItemStack minecade_lobby = ItemMechanics.signCustomItem(Material.SKULL_ITEM, (short) 3, ChatColor.WHITE + "Minecade Lobby", ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Go back to the Minecade lobby.");
         Inventory shard_menu = Bukkit.createInventory(null, 9, "Shard Selection");
         int index = 0;
-        for(String s : us_public_servers) {
+        for(String s : Config.us_public_servers) {
             shard_menu.setItem(index, generateShardItem(s));
             index++;
         }
         
         //index = 9; // Move to next row for BR servers.
         
-        for(String s : br_servers) {
+        for(String s : Config.br_servers) {
             shard_menu.setItem(index, generateShardItem(s));
             index++;
         }
         
         //index = 18;
         
-        for(String s : us_private_servers) {
+        for(String s : Config.us_private_servers) {
             shard_menu.setItem(index, generateShardItem(s));
             index++;
         }
