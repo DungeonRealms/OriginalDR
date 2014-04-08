@@ -479,7 +479,7 @@ public class Hive implements Listener {
             }
         }, 1 * 20L, 1 * 20L);
         
-        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+        Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 for(Entry<Integer, Long> data : last_ping.entrySet()) {
                     long time = data.getValue();
