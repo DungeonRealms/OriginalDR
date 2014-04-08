@@ -6,7 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -70,6 +72,7 @@ import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.config.Config;
 import me.vaqxine.database.ConnectionPool;
+import me.vaqxine.enums.CC;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutEntityEquipment;
@@ -133,23 +136,31 @@ import de.kumpelblase2.remoteentities.api.RemoteEntityType;
 
 public class Hive implements Listener {
     //"US-5", "US-6", "US-7", "US-8"
-    static List<String> us_public_servers = Config.us_public_servers;
-    static List<String> us_private_servers = Config.us_private_servers;
-    static List<String> br_servers = Config.br_servers;
+    static List<String> us_public_servers = new ArrayList<String>(Arrays.asList("US-1", "US-2", "US-3", "US-4", "US-11"));
+    static List<String> us_private_servers = new ArrayList<String>(Arrays.asList("US-9", "US-10"));
+    static List<String> br_servers = new ArrayList<String>(Arrays.asList("BR-1"));
     
-    public static final int transfer_port = Config.transfer_port;
-    public static final String Hive_IP = Config.Hive_IP;
-
-    public static final int SQL_port = Config.SQL_port;
-    public static final String sql_user = Config.sql_url;
-    public static final String sql_password = Config.sql_password;
-    public static final String sql_url = Config.sql_url;
-
-    public static final int FTP_port = Config.FTP_port;
-    public static final String ftp_user = Config.ftp_user;
-    public static final String ftp_pass = Config.ftp_pass;
+    // CREDENTIAL INFORMATION -- DO NOT CHANGE!
+    public static final int FTP_port = 21;
+    public static final int SQL_port = 7447; // 9834 11451
+    public static final int transfer_port = 6427; // 10521
+    //public static final int SITE_SQL_PORT = 9108; // 21413
     
-    public static final String version = Config.version;
+    //public static final String Proxy_IP = "69.197.31.34"; // Frontend login server IP.
+    public static final String Hive_IP = "72.20.40.38"; // Player database backend IP (used for SQL). 72.20.40.38
+    
+    public static final String sql_user = "slave_3XNZvi"; // k7ENqtenbZH3
+    public static final String sql_password = "SgUmxYSJSFmOdro3"; // S?v<W>JN+XPt{ g04h@Is4F1Uz
+    
+    public static final String version = "1.6";
+    
+    public static final String ftp_user = "agent";
+    public static final String ftp_pass = "9bgsMKsknkJ6OY"; // $WHe4KT`l^S6sc
+    
+    public static final String sql_url = "jdbc:mysql://" + Hive_IP + ":" + SQL_port + "/dungeonrealms";
+    // CREDENTIAL INFORMATION -- DO NOT CHANGE!
+    
+    public static String local_IP = "";
     
     public static int id = getServerNumFromPrefix(Bukkit.getMotd());
     
@@ -389,6 +400,7 @@ public class Hive implements Listener {
         Main.plugin.getCommand("whois").setExecutor(new CommandWhois());
         Main.plugin.getCommand("wipe").setExecutor(new CommandWipe());
         
+        local_IP = Bukkit.getIp();
         MOTD = Bukkit.getMotd();
         
         restoreCorruptShops(false);

@@ -1497,7 +1497,7 @@ public class CommunityMechanics implements Listener {
 	
 	// @server_num@p_name:server_num
 	public static void sendPacketCrossServer(String packet_data, int server_num, boolean all_servers) {
-		String local_ip = Bukkit.getIp();
+		String local_ip = Hive.local_IP;
 		
 		Socket kkSocket = null;
 		PrintWriter out = null;

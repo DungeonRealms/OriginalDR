@@ -264,7 +264,7 @@ public class ShopMechanics implements Listener {
 		ScoreboardMechanics.setStockCount(shop_tag, stock);
 	}
 	
-	public void incrementViewCount(Hologram shop_tag) {
+	/*public void incrementViewCount(Hologram shop_tag) {
 		List<String> lines = shop_tag.getLines();
 		String left = String.valueOf((char) 9668);
 		String right = String.valueOf((char) 9658);
@@ -282,7 +282,7 @@ public class ShopMechanics implements Listener {
 			lines.set(1, left + String.valueOf(count) + right);
 		}
 		shop_tag.setLines(lines);
-	}
+	}*/
 	
 	public void cleanupNullNPC() {
 		List<Hologram> to_remove = new ArrayList<Hologram>();
@@ -2835,7 +2835,7 @@ public class ShopMechanics implements Listener {
 				
 				//NPC nshop_tag = shop_nameplates.get(shop_block);
 				Hologram nshop_tag = shop_nameplates.get(shop_block);
-				incrementViewCount(nshop_tag);
+				//incrementViewCount(nshop_tag);
 				
 				last_shop_open.put(p.getName(), System.currentTimeMillis());
 			}
