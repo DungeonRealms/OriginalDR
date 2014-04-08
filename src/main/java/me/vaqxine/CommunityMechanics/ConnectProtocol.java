@@ -285,6 +285,7 @@ public class ConnectProtocol implements Runnable {
 					String p_name = inputLine;
 					
 					ChatMechanics.mute_list.remove(p_name);
+					
 					if(Bukkit.getPlayer(p_name) != null) {
 						Player muted = Bukkit.getPlayer(p_name);
 						muted.sendMessage("");

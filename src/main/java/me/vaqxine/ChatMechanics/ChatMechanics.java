@@ -748,6 +748,10 @@ public class ChatMechanics implements Listener {
 		final Player p = e.getPlayer();
 		
 		
+		if(mute_list.containsKey(p.getName())){
+			if(mute_list.get(p.getName()) == 0) mute_list.remove(p.getName());
+		}
+		
 		if(mute_list.containsKey(p.getName())) {
 			long time_left = mute_list.get(p.getName());
 			p.sendMessage(ChatColor.RED + "You are currently " + ChatColor.BOLD + "GLOBALLY MUTED" + ChatColor.RED + ". You will be unmuted in " + time_left + " minute(s).");
