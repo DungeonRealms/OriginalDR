@@ -777,8 +777,8 @@ public class MerchantMechanics implements Listener {
 				merchant_offer.add(scroll);
 			}
 			
-			while(t4_scraps >= 120) {
-				t4_scraps -= 120;
+			while(t4_scraps >= 60) {
+				t4_scraps -= 60;
 				ItemStack orb = CraftItemStack.asCraftCopy(orb_of_alteration);
 				merchant_offer.add(orb);
 			}
@@ -807,8 +807,8 @@ public class MerchantMechanics implements Listener {
 				merchant_offer.add(scroll);
 			}
 			
-			while(t5_scraps >= 30) {
-				t5_scraps -= 30;
+			while(t5_scraps >= 20) {
+				t5_scraps -= 20;
 				ItemStack orb = CraftItemStack.asCraftCopy(orb_of_alteration);
 				merchant_offer.add(orb);
 			}
@@ -890,9 +890,8 @@ public class MerchantMechanics implements Listener {
 			if(!(trader.hasMetadata("NPC"))) { return; } // Only NPC's matter.
 			if(!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Item Vendor"))) { return; } // Only 'Trader' should do anything.
 			e.setCancelled(true);
-			
 			final Inventory TradeWindow = Bukkit.createInventory(null, 9, "Item Vendor");
-			TradeWindow.setItem(0, ShopMechanics.setPrice(CraftItemStack.asCraftCopy(ItemMechanics.orb_of_peace), 400));
+			TradeWindow.setItem(0, ShopMechanics.setPrice(CraftItemStack.asCraftCopy(ItemMechanics.orb_of_peace), 100));
 			TradeWindow.setItem(1, ShopMechanics.setPrice(CraftItemStack.asCraftCopy(ItemMechanics.orb_of_flight), 1000));
 			TradeWindow.setItem(2, ShopMechanics.setPrice(CraftItemStack.asCraftCopy(GuildMechanics.guild_dye), 1000));
 			//TradeWindow.setItem(8, TradeMechanics.setIinfo(new ItemStack(Material.INK_SACK, 1, (short) 8), ChatColor.YELLOW.toString() + "Click to ACCEPT Trade", ""));
