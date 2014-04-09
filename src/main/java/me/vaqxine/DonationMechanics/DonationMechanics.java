@@ -26,7 +26,6 @@ import me.vaqxine.DonationMechanics.commands.CommandGiveSubPlus;
 import me.vaqxine.DonationMechanics.commands.CommandRemoveSub;
 import me.vaqxine.DonationMechanics.commands.CommandRemoveSubPlus;
 import me.vaqxine.DonationMechanics.commands.CommandRewardSubLife;
-import me.vaqxine.DonationMechanics.commands.CommandTickDays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -69,7 +68,6 @@ public class DonationMechanics implements Listener {
 		Main.plugin.getCommand("removesub").setExecutor(new CommandRemoveSub());
 		Main.plugin.getCommand("removesubplus").setExecutor(new CommandRemoveSubPlus());
 		Main.plugin.getCommand("rewardsublife").setExecutor(new CommandRewardSubLife());
-		Main.plugin.getCommand("tickdays").setExecutor(new CommandTickDays());
 		
 		RankThread = new RankThread();
 		RankThread.start();
