@@ -6,9 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.lang.reflect.Field;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -22,6 +20,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -72,7 +71,6 @@ import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.config.Config;
 import me.vaqxine.database.ConnectionPool;
-import me.vaqxine.enums.CC;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutEntityEquipment;
@@ -127,6 +125,8 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.fusesource.jansi.Ansi;
+
+import com.google.common.base.Joiner;
 
 import de.kumpelblase2.remoteentities.EntityManager;
 import de.kumpelblase2.remoteentities.RemoteEntities;
@@ -1795,12 +1795,15 @@ public class Hive implements Listener {
             
             ItemStack is = new ItemStack(Material.getMaterial(item_id), amount, durability);
             
+        	while(i_lore.contains(",,")){
+            	i_lore = i_lore.replace(",,", ",");
+            }
+        	
+        	List<String> splitlore = new ArrayList<String>(new LinkedHashSet<String>(Arrays.asList(i_lore.split(","))));
+        	i_lore = Joiner.on(',').join(splitlore);
+            
             if(is.getType() == Material.POTION && is.getDurability() > 0) {
                 // Renames potion to Instant Heal.
-            	
-            	while(i_lore.contains(",,")){
-                	i_lore = i_lore.replace(",,", ",");
-                }
             	
                 is = ItemMechanics.signNewCustomItem(Material.getMaterial(item_id), durability, i_name, i_lore);
                 is_list.add(is);
@@ -1887,12 +1890,11 @@ public class Hive implements Listener {
             
             ItemStack is = new ItemStack(Material.getMaterial(item_id), amount, durability);
             
+        	List<String> splitlore = new ArrayList<String>(new LinkedHashSet<String>(Arrays.asList(i_lore.split(","))));
+        	i_lore = Joiner.on(',').join(splitlore);
+            
             if(is.getType() == Material.POTION && is.getDurability() > 0) {
                 // Renames potion to Instant Heal.
-            	
-            	while(i_lore.contains(",,")){
-                	i_lore = i_lore.replace(",,", ",");
-                }
             	
                 is = ItemMechanics.signNewCustomItem(Material.getMaterial(item_id), durability, i_name, i_lore);
                 if(pl != null) {
