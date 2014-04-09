@@ -167,7 +167,7 @@ public class ShopMechanics implements Listener {
 	
 	public static HashMap<Hologram, Integer> view_count = new HashMap<Hologram, Integer>();
 	
-	Thread store_backup;
+	BukkitRunnable store_backup;
 	
 	static ShopMechanics sm = null;
 	
@@ -176,7 +176,7 @@ public class ShopMechanics implements Listener {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		
 		store_backup = new BackupStoreData();
-		store_backup.start();
+		store_backup.runTaskTimerAsynchronously(Main.plugin, 100L, 20L * 5);
 		
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
