@@ -13,12 +13,6 @@ public class CommandRemoveSubPlus implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		//
-		if(sender != null) {
-			sender.sendMessage("Donation Mechanics currently disabled!");
-			return true;
-		}
-		//
 		
 		Player ps = null;
 		if(sender instanceof Player) {
