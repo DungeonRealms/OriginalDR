@@ -16,8 +16,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.EntityManager;
-
 import me.vaqxine.Main;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.ChatMechanics.ChatMechanics;
@@ -67,7 +65,6 @@ import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
@@ -75,7 +72,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -168,6 +164,8 @@ public class ShopMechanics implements Listener {
 	// A list of all shop owner's that need their shop contents updated SQL side.
 	
 	public static boolean all_collection_bins_uploaded = false;
+	
+	public static HashMap<Hologram, Integer> view_count = new HashMap<Hologram, Integer>();
 	
 	Thread store_backup;
 	
@@ -264,25 +262,17 @@ public class ShopMechanics implements Listener {
 		ScoreboardMechanics.setStockCount(shop_tag, stock);
 	}
 	
-	/*public void incrementViewCount(Hologram shop_tag) {
+	public void incrementViewCount(Hologram shop_tag) {
+		if(!view_count.containsKey(shop_tag)) view_count.put(shop_tag, 0);
+		view_count.put(shop_tag, view_count.get(shop_tag) + 1); 
+		
 		List<String> lines = shop_tag.getLines();
 		String left = String.valueOf((char) 9668);
 		String right = String.valueOf((char) 9658);
-		if(lines.size() < 2){
-			if(lines.size() == 0){
-				lines.add("ERROR");
-				lines.add(left + "1" + right);
-			}else{
-				lines.add(left + "1" + right);
-			}
-		}else{
-			String line = lines.get(1);
-			line = line.substring(1, line.length() - 1);
-			Integer count = Integer.parseInt(line) + 1;
-			lines.set(1, left + String.valueOf(count) + right);
-		}
+		lines.set(1, left + view_count.get(shop_tag) + right);
+
 		shop_tag.setLines(lines);
-	}*/
+	}
 	
 	public void cleanupNullNPC() {
 		List<Hologram> to_remove = new ArrayList<Hologram>();
@@ -2949,10 +2939,11 @@ public class ShopMechanics implements Listener {
 			loc = chest_loc1.subtract(-1.0, -1, -0.5);
 		}
 
-		String left = String.valueOf((char) 9668);
-		String right = String.valueOf((char) 9658);
-		
-		List<String> lines = Arrays.asList(name, left + "0" + right);
+		//String left = String.valueOf((char) 9668);
+		//String right = String.valueOf((char) 9658);
+
+		//List<String> lines = Arrays.asList(name, left + "0" + right);
+		List<String> lines = Arrays.asList(name);
 		
 		Hologram re = new Hologram(loc, lines);
 		re.show();
