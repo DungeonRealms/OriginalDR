@@ -1498,7 +1498,7 @@ public class CommunityMechanics implements Listener {
 	
 	// @server_num@p_name:server_num
 	public static void sendPacketCrossServer(String packet_data, int server_num, boolean all_servers) {
-		String local_ip = Hive.local_IP;
+		String local_ip = Config.local_IP;
 		
 		Socket kkSocket = null;
 		PrintWriter out = null;

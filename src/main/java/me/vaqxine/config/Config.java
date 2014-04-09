@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+
 public class Config {
 
 	
@@ -131,6 +133,8 @@ public class Config {
     public static String ftp_user = "agent";
     public static String ftp_pass = "9bgsMKsknkJ6OY"; 
     
-    public static final String version = "1.6";
+    public static String version = "1.6";
+    
+    public static String local_IP = Bukkit.getIp();
     
 }
