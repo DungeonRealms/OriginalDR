@@ -64,7 +64,7 @@ public class PlayerModel {
 	}
 	
 	public Player getPlayer() {
-		return Bukkit.getPlayer(name);
+		return Bukkit.getPlayerExact(name);
 	}
 	
 	public OfflinePlayer getOfflinePlayer() {
