@@ -902,7 +902,7 @@ public class RealmMechanics implements Listener {
 		mat_shop_2.setItem(36, new ItemStack(Material.HARD_CLAY, 55, (short) 0));
 		mat_shop_2.setItem(37, new ItemStack(Material.COAL_BLOCK, 45, (short) 0));
 		mat_shop_2.setItem(38, new ItemStack(Material.DAYLIGHT_DETECTOR, 200, (short) 0));
-		mat_shop_2.setItem(39, new ItemStack(Material.FLOWER_POT_ITEM, 45, (short) 0));
+		//mat_shop_2.setItem(39, new ItemStack(Material.FLOWER_POT_ITEM, 45, (short) 0));
 		mat_shop_2.setItem(40, new ItemStack(Material.REDSTONE_LAMP_OFF, 55, (short) 0));
 		mat_shop_2.setItem(41, new ItemStack(Material.VINE, 50, (short) 0));
 		mat_shop_2.setItem(42, new ItemStack(Material.STAINED_CLAY, 8, (short) 0));

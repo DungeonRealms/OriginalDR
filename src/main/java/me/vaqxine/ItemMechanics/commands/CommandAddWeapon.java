@@ -9,14 +9,21 @@ import me.vaqxine.ItemMechanics.Halloween;
 import me.vaqxine.ItemMechanics.ItemGenerators;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.MerchantMechanics.MerchantMechanics;
+import me.vaqxine.MonsterMechanics.MonsterMechanics;
+import me.vaqxine.MountMechanics.MountMechanics;
+import me.vaqxine.PetMechanics.MountSpider;
 import me.vaqxine.RealmMechanics.RealmMechanics;
+import net.minecraft.server.v1_7_R2.WorldServer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -68,6 +75,9 @@ public class CommandAddWeapon implements CommandExecutor {
 			for(ItemStack is : ItemMechanics.generateNoobArmor()) {
 				p.getInventory().addItem(RealmMechanics.makeUntradeable(is));
 			}
+		}
+		if(args[0].equalsIgnoreCase("quiver")){
+		    p.getInventory().addItem(ItemMechanics.t1_quiver);
 		}
 		if(args[0].equalsIgnoreCase("enchantwhite")) {
 			p.getInventory().addItem(EnchantMechanics.t5_white_scroll);
@@ -122,6 +132,18 @@ public class CommandAddWeapon implements CommandExecutor {
 		}
 		if(args[0].equalsIgnoreCase("egg")) {
 			p.getInventory().addItem(ItemMechanics.easter_egg);
+		}
+		if(args[0].equalsIgnoreCase("mount") && p.getName().equalsIgnoreCase("iFamasssxD")){
+		    p.sendMessage("Mount summoned!");
+		    WorldServer w = ((CraftWorld)p.getWorld()).getHandle();
+		    MountSpider ms = new MountSpider(w);
+		    //w.getMinecraftServer().getPlayerList().repositionEntity(ms, p.getLocation(), false);
+		    ms.setLocation(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), 0, 0);
+		    w.addEntity(ms, SpawnReason.CUSTOM);
+		    ((CraftPlayer)p).getHandle().mount(ms);
+		    ms.passenger = ((CraftPlayer)p).getHandle();
+		    MountMechanics.mount_map.put(p.getName(), ms.getBukkitEntity());
+		    MonsterMechanics.mob_health.put(ms.getBukkitEntity(), 10);
 		}
 		if(args[0].equalsIgnoreCase("pots")) {
 			p.getInventory().addItem(MerchantMechanics.t1_pot);

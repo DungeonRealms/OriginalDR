@@ -359,19 +359,19 @@ public class FatigueMechanics implements Listener {
 		if(m == Material.DIAMOND_SPADE) { return 0.125F; }
 		if(m == Material.GOLD_SPADE) { return 0.135F; }
 		
-		if(m == Material.WOOD_HOE) { return 0.0721F / 1.1F; }
-		if(m == Material.STONE_HOE) { return 0.0833F / 1.1F; }
-		if(m == Material.IRON_HOE) { return 0.10F / 1.1F; }
-		if(m == Material.DIAMOND_HOE) { return 0.125F / 1.1F; }
-		if(m == Material.GOLD_HOE) { return 0.135F / 1.1F; }
+		if(m == Material.WOOD_HOE) { return 0.10F / 1.1F; }
+		if(m == Material.STONE_HOE) { return 0.12F / 1.1F; }
+		if(m == Material.IRON_HOE) { return 0.13F / 1.1F; }
+		if(m == Material.DIAMOND_HOE) { return 0.14F / 1.1F; }
+		if(m == Material.GOLD_HOE) { return 0.15F / 1.1F; }
 		
 		if(m == Material.BOW) { // Arrow shooting. Bow punch will be addressed at event level.
 			int tier = ItemMechanics.getItemTier(i);
-			if(tier == 1) { return 0.12F; }
-			if(tier == 2) { return 0.142F; }
-			if(tier == 3) { return 0.1666F; }
-			if(tier == 4) { return 0.20F; }
-			if(tier == 5) { return 0.25F; }
+			if(tier == 1) { return 0.8F; }
+			if(tier == 2) { return 0.10F; }
+			if(tier == 3) { return 0.11F; }
+			if(tier == 4) { return 0.13F; }
+			if(tier == 5) { return 0.15F; }
 		}
 		
 		return 0.10F;

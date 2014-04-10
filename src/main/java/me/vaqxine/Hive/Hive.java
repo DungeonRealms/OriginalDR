@@ -253,7 +253,7 @@ public class Hive implements Listener {
     public static HashMap<String, String> server_swap_pending = new HashMap<String, String>();
     // Prevent abuse from mooman and his evil scripts.
     
-    public static volatile HashMap<Integer, Long> last_ping = new HashMap<Integer, Long>();
+    public static volatile ConcurrentHashMap<Integer, Long> last_ping = new ConcurrentHashMap<Integer, Long>();
     // Last time each server_num sent information to the proxy. If >20 seconds, server is offline.
     
     public static boolean local_saving = false;
@@ -2724,7 +2724,7 @@ public class Hive implements Listener {
         int server_num = Integer.parseInt(Bukkit.getMotd().substring(Bukkit.getMotd().indexOf("-") + 1, Bukkit.getMotd().indexOf(" ")));
         if(server_num == 9 || server_num == 10) {
             // VIP server
-            if(!(VIP)) {
+            if(!(VIP) && !PermissionMechanics.isGM(p_name)) {
                 e.setKickMessage(ChatColor.RED + "You are " + ChatColor.UNDERLINE + "not" + ChatColor.RED + " authorized to connect to subscriber only servers." + "\n\n" + ChatColor.GRAY + "Subscribe at http://dungeonrealms.net/shop to gain instant access!");
                 e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
             }

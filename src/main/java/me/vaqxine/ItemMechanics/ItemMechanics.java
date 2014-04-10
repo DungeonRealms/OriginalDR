@@ -34,6 +34,7 @@ import net.minecraft.server.v1_7_R2.EntityLiving;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
 import net.minecraft.server.v1_7_R2.NBTTagList;
 import net.minecraft.server.v1_7_R2.Packet;
+import net.minecraft.server.v1_7_R2.PacketPlayOutSetSlot;
 import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
@@ -50,6 +51,7 @@ import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_7_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftSkeleton;
 import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
@@ -67,6 +69,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.WitherSkull;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -77,15 +80,18 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.Inventory;
@@ -117,7 +123,7 @@ public class ItemMechanics implements Listener {
 	
 	public static HashMap<String, List<Integer>> dmg_data = new HashMap<String, List<Integer>>();
 	// Player_name, min%-max% DMG
-	
+	public static HashMap<String, PlayerArrowReplace> arrow_replace = new HashMap<String, PlayerArrowReplace>();
 	// All stats of players stored in memory {
 	public static HashMap<String, Integer> str_data = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> dex_data = new HashMap<String, Integer>();
@@ -174,12 +180,17 @@ public class ItemMechanics implements Listener {
 	
 	public static ItemStack easter_egg = ItemMechanics.signNewCustomItem(Material.EGG, (short) 1, ChatColor.LIGHT_PURPLE.toString() + "" + "Easter Egg", ChatColor.GRAY.toString() + "Instantly Heals " + ChatColor.UNDERLINE + "ALL" + ChatColor.GRAY.toString() + " health" + "," + ChatColor.LIGHT_PURPLE + "Rare");
 	
-	public static ItemStack t1_arrow = ItemMechanics.signNewCustomItem(Material.ARROW, (short) 1, ChatColor.WHITE.toString() + "" + "Wood Arrow", ChatColor.GRAY.toString() + "An arrow for " + ChatColor.ITALIC.toString() + "shortbows.");
-	public static ItemStack t2_arrow = ItemMechanics.signNewCustomItem(Material.ARROW, (short) 1, ChatColor.GREEN.toString() + "" + "Stone Arrow", ChatColor.GRAY.toString() + "An arrow for " + ChatColor.ITALIC.toString() + "longbows.");
-	public static ItemStack t3_arrow = ItemMechanics.signNewCustomItem(Material.ARROW, (short) 1, ChatColor.AQUA.toString() + "" + "Iron Arrow", ChatColor.GRAY.toString() + "An arrow for " + ChatColor.ITALIC.toString() + "magic bows.");
-	public static ItemStack t4_arrow = ItemMechanics.signNewCustomItem(Material.ARROW, (short) 1, ChatColor.LIGHT_PURPLE.toString() + "" + "Ancient Arrow", ChatColor.GRAY.toString() + "An arrow for " + ChatColor.ITALIC.toString() + "ancient bows.");
-	public static ItemStack t5_arrow = ItemMechanics.signNewCustomItem(Material.ARROW, (short) 1, ChatColor.YELLOW.toString() + "" + "Legendary Arrow", ChatColor.GRAY.toString() + "An arrow for " + ChatColor.ITALIC.toString() + "legendary bows.");
-	
+	public static ItemStack t1_arrow = ItemMechanics.signNewCustomItem(Material.ARROW, (short) 1, ChatColor.WHITE.toString() + "" + "Bent Arrow", ChatColor.GRAY.toString() + "Increase arrow damage by 5%");
+	public static ItemStack t2_arrow = ItemMechanics.signNewCustomItem(Material.ARROW, (short) 1, ChatColor.GREEN.toString() + "" + "Precise Arrow", ChatColor.GRAY.toString() + "Increase arrow damage by 10%");
+	public static ItemStack t3_arrow = ItemMechanics.signNewCustomItem(Material.ARROW, (short) 1, ChatColor.AQUA.toString() + "" + "Reinforced Arrow", ChatColor.GRAY.toString() + "Increase arrow damage by 20%");
+	public static ItemStack t4_arrow = ItemMechanics.signNewCustomItem(Material.ARROW, (short) 1, ChatColor.LIGHT_PURPLE.toString() + "" + "Pointed Arrow", ChatColor.GRAY.toString() + "Increase arrow damage by 40%");
+	public static ItemStack t5_arrow = ItemMechanics.signNewCustomItem(Material.ARROW, (short) 1, ChatColor.YELLOW.toString() + "" + "Piercing Arrow", ChatColor.GRAY.toString() + "Increase arrow damage by 80%");
+	public static ItemStack t1_quiver = ItemMechanics.createItem(Material.FLOWER_POT_ITEM, ChatColor.GOLD + "Quiver " + ChatColor.WHITE + "0 / 200", Arrays.asList(ChatColor.GRAY + "A sturdy quiver to hold arrows.", 
+	        ChatColor.WHITE + "Tier 1: " + ChatColor.WHITE +  ChatColor.BOLD + "0",
+	        ChatColor.GREEN + "Tier 2: " + ChatColor.WHITE + ChatColor.BOLD + "0",
+	        ChatColor.AQUA + "Tier 3: " + ChatColor.WHITE + ChatColor.BOLD + "0",
+	        ChatColor.LIGHT_PURPLE + "Tier 4: " + ChatColor.WHITE + ChatColor.BOLD + "0",
+	        ChatColor.YELLOW + "Tier 5: " + ChatColor.WHITE + ChatColor.BOLD + "0"));
 	public static CopyOnWriteArrayList<String> to_process_weapon = new CopyOnWriteArrayList<String>();
 	
 	static ChatColor red = ChatColor.RED;
@@ -2678,7 +2689,8 @@ public class ItemMechanics implements Listener {
 			Player p = e.getPlayer();
 			if(p.getItemInHand().getType() == Material.BOW) {
 				int bow_tier = getItemTier(p.getItemInHand());
-				if(!doesPlayerHaveArrows(p, bow_tier)) {
+				//if(!doesPlayerHaveArrows(p, bow_tier)) {
+				    if(!doesPlayerHaveAnyArrows(p)){
 					p.playSound(p.getLocation(), Sound.IRONGOLEM_HIT, 0.3F, 2.0F);
 					e.setCancelled(true);
 					p.updateInventory();
@@ -2696,6 +2708,21 @@ public class ItemMechanics implements Listener {
 			event.getItem().remove();
 		}
 	}
+	public static boolean doesPlayerHaveAnyArrows(Player p){
+	  
+	    if(p.getInventory().contains(Material.FLOWER_POT_ITEM)){
+	        int slot = -1;
+	        slot = p.getInventory().first(Material.FLOWER_POT_ITEM);
+	        ItemStack is = p.getInventory().getItem(slot);
+	        int amount = getQuiverAmount(is);
+	        if(amount != 0)return true;
+	     } 
+	    if(p.getInventory().contains(Material.ARROW)){
+	        return true;
+	    }
+	    return false;
+	 }
+	    
 	
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerPickupItem(PlayerPickupItemEvent e) {
@@ -3281,46 +3308,35 @@ public class ItemMechanics implements Listener {
 		}
 	}
 	
-	public boolean doesPlayerHaveArrows(Player pl, int tier) {
-		for(ItemStack is : pl.getInventory().all(Material.ARROW).values()) {
-			if(getItemTier(is) == tier) { return true; }
-		}
-		return false;
-	}
 	
-	@SuppressWarnings("deprecation")
-	public boolean subtractArrow(Player pl, int tier) {
-		for(ItemStack is : pl.getInventory().getContents()) {
-			if(is == null || is.getType() != Material.ARROW) {
-				continue;
-			}
-			int arrow_tier = getItemTier(is);
-			if(arrow_tier == tier) {
-				int is_amount = is.getAmount();
-				if(is.getAmount() > 1) {
-					is.setAmount(is_amount - 1);
-				} else if(is.getAmount() == 1) {
-					pl.getInventory().remove(is);
-				}
-				pl.updateInventory();
-				return true;
-			}
-		}
-		return false;
-	}
 	
 	public void convertVanillaArrows(Inventory inv) {
 		for(ItemStack is : inv.getContents()) {
 			if(is == null || is.getType() != Material.ARROW) {
 				continue;
 			}
-			if(getItemTier(is) == 0) {
-				// Normal arrow! Convert to T1.
-				ItemMeta im = is.getItemMeta();
-				im.setDisplayName(ChatColor.WHITE.toString() + "Wood Arrow");
-				im.setLore(new ArrayList<String>(Arrays.asList(ChatColor.GRAY.toString() + "An arrow for " + ChatColor.ITALIC.toString() + "shortbows.")));
-				is.setItemMeta(im);
+			int tier = getItemTier(is);
+			ItemMeta im = is.getItemMeta();
+			im.setDisplayName("Bent Arrow");
+			im.setLore(Arrays.asList(ChatColor.GRAY + "Increase damage by 5%"));
+			switch(tier){
+			case 1:
+			    im = t1_arrow.getItemMeta();
+			    break;
+			case 2:
+			    im = t2_arrow.getItemMeta();
+			    break;
+			case 3:
+			    im = t3_arrow.getItemMeta();
+			    break;
+			case 4:
+			    im = t4_arrow.getItemMeta();
+			    break;
+			case 5:
+			    im = t5_arrow.getItemMeta();
+			    break;
 			}
+			is.setItemMeta(im);
 		}
 	}
 	
@@ -3337,23 +3353,30 @@ public class ItemMechanics implements Listener {
 			return;
 		}
 		
-		int bow_tier = getItemTier(p.getItemInHand());
-		if(!doesPlayerHaveArrows(p, bow_tier)) {
+		//int bow_tier = getItemTier(p.getItemInHand());
+		if(!doesPlayerHaveAnyArrows(p)) {
 			e.setCancelled(true);
 			p.updateInventory();
 			return;
 		}
 		
-		if(subtractArrow(p, bow_tier) != true) {
-			e.setCancelled(true);
-			p.updateInventory();
-			return;
-			// Failed to remove arrow.
-		}
+		int tier = subtractArrow(p);
+		
+		int bow_tier = getItemTier(p.getItemInHand());
 		
 		Arrow a = (Arrow) e.getProjectile();
+		int percent_for_homing = new Random().nextInt(100);
+		if(percent_for_homing < 5 + bow_tier){
+		    //DA HOMING STRIKE YO
+		    //new HomingArrow(a, p, Main.plugin);
+		}
+		if(arrow_replace.containsKey(p.getName())){
+		    PlayerArrowReplace par = arrow_replace.get(p.getName());
+		    p.getInventory().setItem(par.getItemSlot(), par.getItem());
+		    arrow_replace.remove(p.getName());
+		}
 		arrow_shooter.put(a, p.getItemInHand());
-		
+		a.setMetadata("tier", new FixedMetadataValue(Main.plugin, tier));
 		String dmg_data = getDamageData(p.getItemInHand());
 		
 		if(dmg_data.contains("edmg=")) {
@@ -3436,7 +3459,7 @@ public class ItemMechanics implements Listener {
 		
 		final double dmg = e.getDamage();
 		final boolean f_is_player = is_player;
-	
+		
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {
 				Hologram hg = new Hologram(Main.plugin, ChatColor.RED.toString() + (int) dmg + ChatColor.RED + ChatColor.BOLD + " DMG");
@@ -3468,6 +3491,7 @@ public class ItemMechanics implements Listener {
 	public static void ArrowDebugListener(final EntityDamageByEntityEvent e) {
 		if(!(e.getDamager().getType() == EntityType.ARROW)) { return; }
 		Arrow a = (Arrow) e.getDamager();
+		int tier = a.getMetadata("tier").get(0).asInt();
 		if(e.getDamage() <= 0) { return; }
 		
 		if(a.getShooter() != null && !(((CraftLivingEntity) a.getShooter()).getType() == EntityType.PLAYER)) { return; }
@@ -3487,8 +3511,24 @@ public class ItemMechanics implements Listener {
 		final Entity ent = temp_ent;
 		
 		final LivingEntity le = (LivingEntity) ent;
-		final double dmg = e.getDamage();
-		
+		double dmg = e.getDamage();
+		switch(tier){
+		case 1:
+		    dmg = dmg * 1.05;
+		    break;
+		case 2:
+		    dmg = dmg * 1.10;
+		    break;
+		case 3:
+		    dmg = dmg * 1.20;
+		    break;
+		case 4:
+		    dmg = dmg * 1.4;
+		    break;
+		case 5:
+		    dmg = dmg * 1.8;
+		    break;
+		}
 		if(PetMechanics.pet_map.containsKey(ent)) { return; }
 		
 		if(le instanceof Player) {
@@ -3505,18 +3545,18 @@ public class ItemMechanics implements Listener {
 				}
 			}
 		}
-		
+		final double dmg_d = dmg;
 		if(CommunityMechanics.toggle_list.get(p.getName()).contains("debug")) {
 			final boolean f_is_player = is_player;
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
 					//p_attacker.sendMessage(ChatColor.GRAY + "DEBUG: " + String.valueOf(e.getDamage()) + " DMG");
 					if(f_is_player == true) {
-						p.sendMessage(ChatColor.RED + "        " + (int) dmg + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> " + ((Player) le).getName());
+						p.sendMessage(ChatColor.RED + "        " + (int) dmg_d + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> " + ((Player) le).getName());
 					}
 					if(f_is_player == false) {
 						String mob_name = MonsterMechanics.getMobType(ent, false);
-						p.sendMessage(ChatColor.RED + "        " + (int) dmg + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> " + mob_name + " [" + ((int) MonsterMechanics.getMHealth(ent)) + "HP]");
+						p.sendMessage(ChatColor.RED + "        " + (int) dmg_d + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> " + mob_name + " [" + ((int) MonsterMechanics.getMHealth(ent)) + "HP]");
 					}
 				}
 			}, 1L);
@@ -3654,6 +3694,49 @@ public class ItemMechanics implements Listener {
 		}
 	}
 	
+	//@EventHandler(priority = EventPriority.LOWEST) REMOVE WHEN ITS DONE
+	public void onPlayerInteract(PlayerInteractEvent e){
+	    Player p = e.getPlayer();
+	    if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK){
+	    if(e.hasItem() && e.getItem().getType() == Material.BOW){
+	        if(arrow_replace.containsKey(p.getName()))return;
+	            arrow_replace.put(p.getName(), new PlayerArrowReplace(p, p.getInventory().getItem(35), 35));
+	            p.getInventory().setItem(35, new ItemStack(Material.ARROW));
+	        }
+	    }
+	}
+	
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent e){
+	    Player p = e.getEntity();
+	    if(arrow_replace.containsKey(p.getName())){
+            PlayerArrowReplace par = arrow_replace.get(p.getName());
+            p.getInventory().setItem(par.getItemSlot(), par.getItem());
+            arrow_replace.remove(p.getName());
+         }
+	}
+	
+	@EventHandler
+	public void onPlayerOpen(PlayerQuitEvent e){
+	    Player p = e.getPlayer();
+	    if(arrow_replace.containsKey(p.getName())){
+            PlayerArrowReplace par = arrow_replace.get(p.getName());
+            p.getInventory().setItem(par.getItemSlot(), par.getItem());
+            arrow_replace.remove(p.getName());
+         }
+	}
+	
+	@EventHandler
+	public void onPlayerOpenInv(InventoryOpenEvent e){
+	    Player p = (Player) e.getPlayer();
+	    if(e.getInventory().getType() == InventoryType.PLAYER){
+	       if(arrow_replace.containsKey(p.getName())){
+	          PlayerArrowReplace par = arrow_replace.get(p.getName());
+	          p.getInventory().setItem(par.getItemSlot(), par.getItem());
+	          arrow_replace.remove(p.getName());
+	       }
+	    }
+	}
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void ArrowListener(EntityDamageByEntityEvent e) {
 		if(!(e.getDamager().getType() == EntityType.ARROW)) { return; }
@@ -5261,28 +5344,155 @@ public class ItemMechanics implements Listener {
 		}
 		projectile_map.remove(proj);
 	}
-	
-	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.MONITOR)
+	public static boolean isQuiver(ItemStack is){
+	    if(is.getType() == Material.FLOWER_POT_ITEM){
+	        if(is.hasItemMeta() && is.getItemMeta().hasDisplayName() && is.getItemMeta().getDisplayName().contains("Quiver")){
+	            return true;
+	        }
+	        return true;
+	    }
+	    return false;
+	}
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerCancelled(final InventoryClickEvent e) {
-		if(e.isCancelled()) {
-			new BukkitRunnable() {
-				public void run() {
-					// TODO Auto-generated method stub
-					((Player) e.getWhoClicked()).updateInventory();
-				}
-			}.runTaskLater(Main.plugin, 1);
-			
-		}
+	    Player p = (Player) e.getWhoClicked();
+	        if(e.getCurrentItem() != null){
+	            if(isQuiver(e.getCurrentItem())){
+	                ItemStack is = e.getCurrentItem();
+	                if(e.getCursor().getType() == Material.ARROW){
+	                    ItemStack arrows = e.getCursor();
+	                    //They are trying to add arrows
+	                   int arrow_cap = getMaxQuiverHold(is);
+	                   int current_arrows_in_quiver = getQuiverAmount(is);
+	                   if(arrow_cap == current_arrows_in_quiver){
+	                       p.sendMessage(ChatColor.RED + "This Quiver cannot hold anymore arrows!");
+	                       e.setCancelled(true);
+	                       return;
+	                   }else if(current_arrows_in_quiver + arrows.getAmount() > arrow_cap){
+	                       //64 arrows - 150 pouch -> 200 - 150 -> 64 - 50 -> 14 -> DONE
+	                       int space_left = arrow_cap - current_arrows_in_quiver;
+	                       e.setCancelled(true);
+	                       ItemStack arrows_to_add = arrows.clone();
+	                       arrows_to_add.setAmount(space_left);
+	                       arrows.setAmount(arrows.getAmount() - space_left);
+	                       if(addArrowsToQuiver(is, arrows_to_add)){
+	                            p.setItemOnCursor(arrows);
+	                           }else{
+	                               e.setCancelled(true);
+	                               e.setResult(Result.DENY);
+	                           }
+	                   }else{
+	                       if(addArrowsToQuiver(is, arrows)){
+	                          p.setItemOnCursor(new ItemStack(Material.AIR));
+	                          p.sendMessage(ChatColor.GREEN + "+" + arrows.getAmount());
+	                          e.setCancelled(true);
+	                       }else{
+	                           e.setCancelled(true);
+	                           e.setResult(Result.DENY);
+	                       }
+	                   }
+	                }
+	        }
+	    }
 	}
 	
+	public boolean addArrowsToQuiver(ItemStack quiver, ItemStack arrows){
+	    int tier = getItemTier(arrows);
+	    ItemMeta im = quiver.getItemMeta();
+	    for(String s : im.getLore()){
+	        if(ChatColor.stripColor(s).contains("Tier " + tier)){
+	            //Tier line
+	            int current_amount = Integer.parseInt(ChatColor.stripColor(s).split(": ")[1]);
+	            replaceQuiverLore(quiver, tier, arrows.getAmount() + current_amount, getMaxQuiverHold(quiver));
+	            return true;
+	        }
+	    }
+	    
+	    return false;
+	}
+	public static int getQuiverAmount(ItemStack is){
+	    ItemMeta im = is.getItemMeta();
+	    return Integer.parseInt(ChatColor.stripColor(im.getDisplayName().split("Quiver ")[1].split(" /")[0]));
+	}
+	
+	public int getMaxQuiverHold(ItemStack is){
+	    ItemMeta im = is.getItemMeta();
+	    return Integer.parseInt(ChatColor.stripColor(im.getDisplayName().split("/ ")[1]));
+	}
+	public int subtractArrow(Player pl) {
+	        for(ItemStack is : pl.getInventory().getContents()) {
+	            if(is == null || is.getType() != Material.ARROW ){
+	                   // || is.getType() != Material.FLOWER_POT_ITEM) {
+	                continue;
+	            }
+	            /*REMOVE ONCE POT IS DONE
+	             * if(is.getType() == Material.FLOWER_POT_ITEM){
+	                ItemMeta im = is.getItemMeta();
+	                int highest_tier = 0;
+	                int amount_of_arrows = 0;
+	                for(String line : im.getLore()){
+	                    if(ChatColor.stripColor(line).contains("Tier")){
+	                        System.out.print(line);
+	                        int tier_arrow = Integer.parseInt(ChatColor.stripColor(line).split("Tier ")[1].split(":")[0]);
+	                        if(tier_arrow > highest_tier){
+	                            //Check to see if there are any arrows
+	                            int amount = Integer.parseInt(ChatColor.stripColor(line).split(": ")[1]);
+	                            System.out.print(tier_arrow + "");
+	                            if(amount > 0){
+	                            //Set the arrow since they have one
+	                            amount_of_arrows = amount;
+	                            highest_tier = tier_arrow;
+	                            System.out.print("Tier: " + tier_arrow + " AMOUNT OF ARROWS: " + amount_of_arrows);
+	                            }
+	                        }
+	                    }
+	                }
+	                replaceQuiverLore(is, highest_tier, amount_of_arrows - 1, getMaxQuiverHold(is));
+	                return highest_tier;
+	            }*/
+	        if(is.getType() == Material.ARROW){
+	            if(is.getAmount() == 1){
+	                    is.setType(Material.AIR);
+	                }else{
+	                    is.setAmount(is.getAmount() - 1);
+	                }
+	                return getItemTier(is);
+	            }
+	        }
+	        return 0;
+	    }
+	
+	    public ItemStack replaceQuiverLore(ItemStack quiver, int tier, int new_tier_value, int max_arrows){
+	        ItemMeta im = quiver.getItemMeta();
+	        List<String> lore = im.getLore();
+	        switch(tier){
+	        case 1:
+	            lore.set(1, ChatColor.WHITE + "Tier 1: " + ChatColor.WHITE + ChatColor.BOLD + new_tier_value);
+	            break;
+	        case 2:
+	            lore.set(2, ChatColor.GREEN + "Tier 2: " + ChatColor.WHITE + ChatColor.BOLD + new_tier_value);
+	            break;
+	        case 3:
+	            lore.set(3, ChatColor.AQUA + "Tier 3: " + ChatColor.WHITE + ChatColor.BOLD + new_tier_value);
+	            break;
+	        case 4:
+	            lore.set(4, ChatColor.LIGHT_PURPLE + "Tier 4: " + ChatColor.WHITE + ChatColor.BOLD + new_tier_value);
+	            break;
+	        case 5:
+	            lore.set(5, ChatColor.YELLOW + "Tier 5: " + ChatColor.WHITE + ChatColor.BOLD + new_tier_value);
+	            break;
+	        }
+	        im.setLore(lore);
+	        int already_total = getQuiverAmount(quiver);
+	        im.setDisplayName(ChatColor.GOLD + "Quiver " + (already_total + new_tier_value) + " / " + max_arrows);
+	        quiver.setItemMeta(im);
+	        return quiver;
+	    }
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerShootWand(PlayerInteractEvent e) {
 		Player pl = e.getPlayer();
-		
 		if(!e.hasItem()) { return; }
-		
 		ItemStack wep = e.getItem();
 		if((e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) && (wep.getType() == Material.WOOD_HOE || wep.getType() == Material.STONE_HOE || wep.getType() == Material.IRON_HOE || wep.getType() == Material.DIAMOND_HOE || wep.getType() == Material.GOLD_HOE)) {
 			if(getDamageData(wep).equalsIgnoreCase("no") || (DuelMechanics.isDamageDisabled(pl.getLocation()) && !DuelMechanics.duel_map.containsKey(pl.getName()))) {
@@ -5345,7 +5555,7 @@ public class ItemMechanics implements Listener {
 			if(getItemTier(wep) == 5) {
 				pj = pl.launchProjectile(SmallFireball.class);
 				pj.setBounce(false);
-				pj.setVelocity(pj.getVelocity().multiply(1.5));
+				pj.setVelocity(pj.getVelocity().multiply(3));
 				/*final org.bukkit.util.Vector direction = pl.getEyeLocation().getDirection().multiply(1.5);
 				pj = (Projectile)pl.getWorld().spawn(pl.getEyeLocation().add(direction.getX(), direction.getY(), direction.getZ()), LargeFireball.class);
 				pj.setShooter(pl);
@@ -5471,7 +5681,19 @@ public class ItemMechanics implements Listener {
 		removeAttributes(iss);
 		return iss;
 	}
-	
+	public static ItemStack createItem(Material m, String name, List<String> lore){
+	    ItemStack is = new ItemStack(m);
+	    ItemMeta im = is.getItemMeta();
+	    if(name != null){
+	        im.setDisplayName(name);
+	        
+	    }
+	    if(lore != null){
+	        im.setLore(lore);
+	    }
+	    is.setItemMeta(im);
+	    return is;
+	}
 	@SuppressWarnings("static-access")
 	public static ItemStack generateRandomTierItem(int tier) {
 		ItemStack i = null;

@@ -50,6 +50,7 @@ import net.minecraft.server.v1_7_R2.EntityLiving;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.GenericAttributes;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
+import net.minecraft.util.io.netty.util.internal.ConcurrentSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -62,7 +63,6 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
@@ -202,7 +202,7 @@ public class MonsterMechanics implements Listener {
 	// Used in MULTIPLE plugins as a thread safe way to access player location.
 	
 	//static HashMap<Chunk, Entity[]> unload_chunks = new HashMap<Chunk, Entity[]>();
-	
+	public ConcurrentSet<Entity> pathing_away = new ConcurrentSet<Entity>();
 	public static List<Entity> no_delay_kills = new ArrayList<Entity>();
 	// List of monsters to NOT have a spawn delay to come back. Used for chunk unloading/loading.
 	
@@ -330,7 +330,6 @@ public class MonsterMechanics implements Listener {
 						if(random_n <= 0) {
 							random_n = mob_damage.get((Entity) end).get(1);
 						}
-						
 						int dmg = new Random().nextInt(random_n) + mob_damage.get((Entity) end).get(0);
 						dmg = dmg / 2;
 						for(Entity ent : end.getNearbyEntities(4, 4, 4)) {
@@ -2195,8 +2194,20 @@ public class MonsterMechanics implements Listener {
 		    if(event.getEntity().getFireTicks() > 30){
 		        event.getEntity().setFireTicks(30);
 		    }
-		    if(l.getBlock().getType() == Material.FIRE || l.getBlock().getType() == Material.LAVA || l.clone().add(0, 1, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, 1, 0).getBlock().getType() == Material.LAVA || l.clone().add(0, -1, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, -1, 0).getBlock().getType() == Material.LAVA){
+		    if(l.getBlock().getType() == Material.FIRE || l.getBlock().getType() == Material.LAVA ||
+		            l.clone().add(0, 1, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, 1, 0).getBlock().getType() == Material.LAVA 
+		            || l.clone().add(0, -1, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, -1, 0).getBlock().getType() == Material.LAVA
+		            ||  l.clone().add(0, -2, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, -2, 0).getBlock().getType() == Material.LAVA){
 		        event.setCancelled(true);
+		        if(mob_target.containsKey(event.getEntity())){
+		            Player p = Bukkit.getPlayer(mob_target.get(event.getEntity()));
+		            if(p == null){
+		                pathFindAway(event.getEntity());
+		            }else{
+		                event.getEntity().teleport(p.getLocation().add(0, .5, 0));
+		            }
+		        }
+		        event.getEntity().setFireTicks(0);
 		    }
 		}
 		if(event.getCause() == DamageCause.WITHER) {
@@ -2209,6 +2220,50 @@ public class MonsterMechanics implements Listener {
 				}
 			}
 		}
+	}
+	public void pathFindAway(Entity e){
+	    if(pathing_away.contains(e)){
+	        if(isLavaNearby(e.getLocation())){
+	            return;
+	        }else{
+	            pathing_away.remove(e);
+	        }
+	    }
+	  
+	    int add_y = e.getLocation().getBlockY() + 1;
+        int add_X = e.getLocation().getBlockX() + 10;
+        int add_Z = e.getLocation().getBlockZ() + 10;
+        // The numbers seem to act strange and not dissapear
+        int minus_X = e.getLocation().getBlockX() - 10;
+        int minus_Z = e.getLocation().getBlockZ() - 10;
+        int minus_Y = e.getLocation().getBlockY() - 1;
+        for (int x = minus_X; x < add_X; x++) {
+            for (int z = minus_Z; z < add_Z; z++) {
+                for (int y = minus_Y; y < add_y; y++) {
+                    final Block b = e.getWorld().getBlockAt(x, y, z);
+                    if (b.getType().isSolid() && b.getType() != Material.LAVA) {
+                        //So its a legit block so make them move
+                      if(b.getLocation().add(0, 1,0 ).getBlock().getType() == Material.AIR && b.getLocation().add(0, 2, 0).getBlock().getType() == Material.AIR){
+                      //The block is legit so make them go there.
+                      PetMechanics.walkTo((LivingEntity)e, x, y, z, 3);
+                      pathing_away.add(e);
+                      break;
+                      }
+                    }
+                }
+            }
+        }
+	    
+	}
+	
+	public boolean isLavaNearby(Location l){
+	    if(l.getBlock().getType() == Material.FIRE || l.getBlock().getType() == Material.LAVA ||
+                l.clone().add(0, 1, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, 1, 0).getBlock().getType() == Material.LAVA 
+                || l.clone().add(0, -1, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, -1, 0).getBlock().getType() == Material.LAVA
+                ||  l.clone().add(0, -2, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, -2, 0).getBlock().getType() == Material.LAVA){
+	        return true;
+	    }
+	    return false;
 	}
 	@EventHandler
 	public void onNPCDamage(EntityDamageEvent e){
@@ -4224,7 +4279,7 @@ public class MonsterMechanics implements Listener {
 		
 		Player p = (Player) e.getEntity();
 		Entity ent = null;
-		
+		boolean bow = false;
 		/*if(p.getNoDamageTicks() > 0){
 			return;
 		}*/
@@ -4233,6 +4288,7 @@ public class MonsterMechanics implements Listener {
 			if(e.getDamager() instanceof Arrow) {
 				Arrow a = ((Arrow) e.getDamager());
 				ent = (Entity) a.getShooter();
+				bow = true;
 			}
 		}
 		
@@ -4359,7 +4415,10 @@ public class MonsterMechanics implements Listener {
 			dmg = (int) ((double) dmg * 2.5D);
 			// 2.5x damage while enraged.
 		}
-		
+		if(bow){
+		    /*Only do 60% damage - NERF*/
+		    dmg = (int) (dmg * .6D);
+		}
 		e.setDamage(dmg);
 		
 	}
@@ -5205,8 +5264,8 @@ public class MonsterMechanics implements Listener {
 					
 					int do_i_drop_arrows = new Random().nextInt(100);
 					
-					if(weapon.getType() == Material.BOW && do_i_drop_arrows <= 75) { // Drop some arrows!
-						int amount_to_drop = new Random().nextInt(5) + 1;
+					if(weapon.getType() == Material.BOW && do_i_drop_arrows <= 85) { // Drop some arrows!
+						int amount_to_drop = new Random().nextInt(10) + 1;
 						if(mob_tier == 1) {
 							ItemStack arrow_loot = ItemMechanics.t1_arrow;
 							arrow_loot.setAmount(amount_to_drop);

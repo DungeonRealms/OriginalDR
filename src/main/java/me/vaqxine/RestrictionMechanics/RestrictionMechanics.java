@@ -144,7 +144,7 @@ public class RestrictionMechanics implements Listener {
 		unstackable_items.add(Material.REDSTONE_TORCH_ON);
 		unstackable_items.add(Material.SPIDER_EYE);
 		unstackable_items.add(Material.PORTAL);
-		
+		unstackable_items.add(Material.FLOWER_POT_ITEM);
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				for(Player p : Main.plugin.getServer().getOnlinePlayers()) {

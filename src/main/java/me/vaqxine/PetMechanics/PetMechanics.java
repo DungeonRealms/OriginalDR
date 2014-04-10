@@ -872,7 +872,7 @@ public class PetMechanics implements Listener {
 		}
 	}
 	
-	private boolean walkTo(LivingEntity livingEntity, double x, double y, double z, float speed) {
+	public static boolean walkTo(LivingEntity livingEntity, double x, double y, double z, float speed) {
 		return ((EntityInsentient) ((CraftLivingEntity) livingEntity).getHandle()).getNavigation().a(x, y, z, speed);
 	}
 	
