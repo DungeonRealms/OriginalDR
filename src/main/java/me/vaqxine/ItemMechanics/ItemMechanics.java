@@ -2712,8 +2712,10 @@ public class ItemMechanics implements Listener {
 	        slot = p.getInventory().first(Material.FLOWER_POT_ITEM);
 	        ItemStack is = p.getInventory().getItem(slot);
 	        int amount = getQuiverAmount(is);
-	        if(amount != 0)return true;
-	     } 
+	        if(amount != 0){
+	            return true;
+	        }
+	      } 
 	    if(p.getInventory().contains(Material.ARROW)){
 	        return true;
 	    }
@@ -3691,14 +3693,16 @@ public class ItemMechanics implements Listener {
 		}
 	}
 	
-	//@EventHandler(priority = EventPriority.LOWEST) REMOVE WHEN ITS DONE
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerInteract(PlayerInteractEvent e){
 	    Player p = e.getPlayer();
 	    if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK){
-	    if(e.hasItem() && e.getItem().getType() == Material.BOW){
-	        if(arrow_replace.containsKey(p.getName()))return;
-	            arrow_replace.put(p.getName(), new PlayerArrowReplace(p, p.getInventory().getItem(35), 35));
-	            p.getInventory().setItem(35, new ItemStack(Material.ARROW));
+	        if(e.hasItem() && e.getItem().getType() == Material.BOW){
+	            if(!p.getInventory().contains(Material.AIR) && p.getInventory().contains(Material.FLOWER_POT_ITEM) && doesPlayerHaveAnyArrows(p)){
+	                if(arrow_replace.containsKey(p.getName()))return;
+	                arrow_replace.put(p.getName(), new PlayerArrowReplace(p, p.getInventory().getItem(35), 35));
+	                p.getInventory().setItem(35, new ItemStack(Material.ARROW));
+	            }
 	        }
 	    }
 	}
@@ -5419,7 +5423,7 @@ public class ItemMechanics implements Listener {
 	}
 	public int subtractArrow(Player pl) {
 	        for(ItemStack is : pl.getInventory().getContents()) {
-	            if(is != null && is.getType() != Material.AIR && is.getType() != Material.FLOWER_POT_ITEM){
+	            if(is == null || !(is.getType() == Material.AIR || is.getType() == Material.FLOWER_POT_ITEM)){
 	                continue;
 	            }
 	             if(is.getType() == Material.FLOWER_POT_ITEM){
