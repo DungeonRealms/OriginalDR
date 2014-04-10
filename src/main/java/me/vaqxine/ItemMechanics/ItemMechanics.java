@@ -2707,7 +2707,7 @@ public class ItemMechanics implements Listener {
 	}
 	public static boolean doesPlayerHaveAnyArrows(Player p){
 	  
-	    if(p.getInventory().contains(Material.FLOWER_POT_ITEM)){
+	      if(p.getInventory().contains(Material.FLOWER_POT_ITEM)){
 	        int slot = -1;
 	        slot = p.getInventory().first(Material.FLOWER_POT_ITEM);
 	        ItemStack is = p.getInventory().getItem(slot);
@@ -5400,7 +5400,8 @@ public class ItemMechanics implements Listener {
 	        if(ChatColor.stripColor(s).contains("Tier " + tier)){
 	            //Tier line
 	            int current_amount = Integer.parseInt(ChatColor.stripColor(s).split(": ")[1]);
-	            replaceQuiverLore(quiver, tier, arrows.getAmount() + current_amount, getMaxQuiverHold(quiver));
+	            int current_quiver = getQuiverAmount(quiver);
+	            replaceQuiverLore(quiver, tier, arrows.getAmount() + current_amount, current_quiver + arrows.getAmount(), getMaxQuiverHold(quiver));
 	            return true;
 	        }
 	    }
@@ -5418,12 +5419,10 @@ public class ItemMechanics implements Listener {
 	}
 	public int subtractArrow(Player pl) {
 	        for(ItemStack is : pl.getInventory().getContents()) {
-	            if(is == null || is.getType() != Material.ARROW ){
-	                   // || is.getType() != Material.FLOWER_POT_ITEM) {
+	            if(is != null && is.getType() != Material.AIR && is.getType() != Material.FLOWER_POT_ITEM){
 	                continue;
 	            }
-	            /*REMOVE ONCE POT IS DONE
-	             * if(is.getType() == Material.FLOWER_POT_ITEM){
+	             if(is.getType() == Material.FLOWER_POT_ITEM){
 	                ItemMeta im = is.getItemMeta();
 	                int highest_tier = 0;
 	                int amount_of_arrows = 0;
@@ -5439,14 +5438,14 @@ public class ItemMechanics implements Listener {
 	                            //Set the arrow since they have one
 	                            amount_of_arrows = amount;
 	                            highest_tier = tier_arrow;
-	                            System.out.print("Tier: " + tier_arrow + " AMOUNT OF ARROWS: " + amount_of_arrows);
 	                            }
 	                        }
 	                    }
 	                }
-	                replaceQuiverLore(is, highest_tier, amount_of_arrows - 1, getMaxQuiverHold(is));
+	                int max_amount = getQuiverAmount(is);
+	                replaceQuiverLore(is, highest_tier, amount_of_arrows - 1, max_amount - 1, getMaxQuiverHold(is));
 	                return highest_tier;
-	            }*/
+	            }
 	        if(is.getType() == Material.ARROW){
 	            if(is.getAmount() == 1){
 	                    is.setType(Material.AIR);
@@ -5459,7 +5458,7 @@ public class ItemMechanics implements Listener {
 	        return 0;
 	    }
 	
-	    public ItemStack replaceQuiverLore(ItemStack quiver, int tier, int new_tier_value, int max_arrows){
+	    public ItemStack replaceQuiverLore(ItemStack quiver, int tier, int new_tier_value, int new_amount_toSet, int max_arrows){
 	        ItemMeta im = quiver.getItemMeta();
 	        List<String> lore = im.getLore();
 	        switch(tier){
@@ -5480,8 +5479,7 @@ public class ItemMechanics implements Listener {
 	            break;
 	        }
 	        im.setLore(lore);
-	        int already_total = getQuiverAmount(quiver);
-	        im.setDisplayName(ChatColor.GOLD + "Quiver " + (already_total + new_tier_value) + " / " + max_arrows);
+	        im.setDisplayName(ChatColor.GOLD + "Quiver " + (new_amount_toSet) + " / " + max_arrows);
 	        quiver.setItemMeta(im);
 	        return quiver;
 	    }

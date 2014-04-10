@@ -4041,7 +4041,7 @@ public class Hive implements Listener {
                     
                     if(vipServer(cur_item)) {
                         String rank = PermissionMechanics.getRank(pl.getName());
-                        if(rank.equalsIgnoreCase("default") && !(pl.isOp())) {
+                        if(rank.equalsIgnoreCase("default") && !(pl.isOp()) && !Main.isDev(pl.getName())) {
                             // Don't let them in.
                             pl.sendMessage(ChatColor.RED + "You are " + ChatColor.UNDERLINE + "not" + ChatColor.RED + " authorized to connect to subscriber only servers.");
                             pl.sendMessage(ChatColor.GRAY + "Subscribe at http://dungeonrealms.net/shop to gain instant access!");
