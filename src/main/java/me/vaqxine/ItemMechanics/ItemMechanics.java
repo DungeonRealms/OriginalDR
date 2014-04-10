@@ -34,7 +34,6 @@ import net.minecraft.server.v1_7_R2.EntityLiving;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
 import net.minecraft.server.v1_7_R2.NBTTagList;
 import net.minecraft.server.v1_7_R2.Packet;
-import net.minecraft.server.v1_7_R2.PacketPlayOutSetSlot;
 import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
@@ -51,7 +50,6 @@ import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_7_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftSkeleton;
 import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
@@ -101,9 +99,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.sqlite.OSInfo;
 
 public class ItemMechanics implements Listener {
 	
@@ -624,7 +620,8 @@ public class ItemMechanics implements Listener {
 		
 		return "no";
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	public static void updatePlayerStats(String p_name) {
 		if(Bukkit.getPlayer(p_name) == null || !Bukkit.getPlayer(p_name).isOnline()) { return; }
 		Player p = Bukkit.getPlayer(p_name);
@@ -2682,7 +2679,7 @@ public class ItemMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unused" })
 	@EventHandler
 	public void onPlayerAttemptBowFire(PlayerInteractEvent e) {
 		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {

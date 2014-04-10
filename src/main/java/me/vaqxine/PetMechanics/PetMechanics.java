@@ -32,7 +32,6 @@ import me.vaqxine.PetMechanics.commands.CommandPet;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.TeleportationMechanics.TeleportationMechanics;
 import me.vaqxine.database.ConnectionPool;
-import net.citizensnpcs.api.event.PlayerCreateNPCEvent;
 import net.minecraft.server.v1_7_R2.EntityCreature;
 import net.minecraft.server.v1_7_R2.EntityCreeper;
 import net.minecraft.server.v1_7_R2.EntityInsentient;
@@ -688,7 +687,8 @@ public class PetMechanics implements Listener {
 			}
 		}
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	public static void addPetToPlayer(String p_name, String pet) {
 		List<String> pet_list = downloadPetData(p_name);
 		String pet_string = "";
@@ -1341,7 +1341,8 @@ public class PetMechanics implements Listener {
 		}
 		player_pets.remove(e.getPlayer().getName());
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onEntityPortalEnterEvent(EntityPortalEnterEvent e) {
 		if(!(e.getEntity() instanceof Player)) {

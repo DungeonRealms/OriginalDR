@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import me.vaqxine.Main;
 import me.vaqxine.Utils;
 import net.minecraft.server.v1_7_R2.EntityHorse;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
@@ -17,14 +16,11 @@ import net.minecraft.server.v1_7_R2.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.v1_7_R2.WorldServer;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginBase;
 
 public class Hologram {
 	

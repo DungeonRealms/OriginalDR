@@ -51,8 +51,6 @@ public class DonationMechanics implements Listener {
 	public static volatile ConcurrentHashMap<String, String> async_set_rank = new ConcurrentHashMap<String, String>();
 	// Controls the async thread pool for setRank().
 	
-	public static HashMap<String, String> rank_map = new HashMap<String, String>();
-	
 	Thread RankThread;
 	
 	// TODO: Fix sub++ expiring when sub/sub+ expires, prevent sub++ from showing days left in sub.

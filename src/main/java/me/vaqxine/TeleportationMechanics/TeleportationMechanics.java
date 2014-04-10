@@ -44,6 +44,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+@SuppressWarnings("deprecation")
 public class TeleportationMechanics implements Listener {
 	public static Logger log = Logger.getLogger("Minecraft");
 	
@@ -587,7 +588,6 @@ public class TeleportationMechanics implements Listener {
 		}
 	}*/
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		Player p = e.getPlayer();

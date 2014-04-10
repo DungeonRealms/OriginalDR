@@ -73,6 +73,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.mcsg.double0negative.tabapi.TabAPI;
 
+@SuppressWarnings("deprecation")
 public class GuildMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
 	
@@ -172,7 +173,6 @@ public class GuildMechanics implements Listener {
 	
 	// Used for confirming /gquit
 	
-	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		instance = this;
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
@@ -771,7 +771,6 @@ public class GuildMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onItemDrop(PlayerDropItemEvent e) {
 		Player pl = e.getPlayer();
@@ -781,7 +780,6 @@ public class GuildMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onColorPicker(InventoryClickEvent e) {
 		if(!(e.getInventory().getName().equalsIgnoreCase("Guild Color Selector")) && !e.getWhoClicked().getOpenInventory().getTopInventory().getName().equalsIgnoreCase("Guild Color Selector")) { return; }
@@ -980,7 +978,6 @@ public class GuildMechanics implements Listener {
 		// TODO: Remind them what to do.
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
 		Player pl = (Player) e.getWhoClicked();

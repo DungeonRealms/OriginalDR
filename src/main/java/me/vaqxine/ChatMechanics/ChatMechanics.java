@@ -60,6 +60,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+@SuppressWarnings("deprecation")
 public class ChatMechanics implements Listener {
 	public static Logger log = Logger.getLogger("Minecraft");
 	
@@ -79,7 +80,6 @@ public class ChatMechanics implements Listener {
 	
 	Thread LoginProcessThread;
 	
-	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		LoginProcessThread = new LoginProcessThread();
 		LoginProcessThread.start();
@@ -570,7 +570,6 @@ public class ChatMechanics implements Listener {
 		recent_death.remove(e.getPlayer().getName());
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		e.setDeathMessage("");
@@ -740,7 +739,6 @@ public class ChatMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	// We need to ignore all those "enter XXX" situations.
 	public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e) {

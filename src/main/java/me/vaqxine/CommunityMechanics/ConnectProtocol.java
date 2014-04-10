@@ -33,6 +33,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
+@SuppressWarnings("deprecation")
 public class ConnectProtocol implements Runnable {
 	private Socket clientSocket;
 	

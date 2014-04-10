@@ -1,9 +1,5 @@
 package me.vaqxine.PermissionMechanics;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,13 +12,11 @@ import java.util.logging.Logger;
 
 import me.vaqxine.Main;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
-import me.vaqxine.DonationMechanics.DonationMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.PermissionMechanics.commands.CommandGMHelp;
 import me.vaqxine.PermissionMechanics.commands.CommandPMHelp;
 import me.vaqxine.PermissionMechanics.commands.CommandSetRank;
 import me.vaqxine.database.ConnectionPool;
-import me.vaqxine.enums.CC;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -133,7 +127,8 @@ public class PermissionMechanics implements Listener {
 		Hive.sql_query.add("INSERT INTO player_database (p_name, rank)" + " VALUES" + "('" + pname + "', '" + rank + "') ON DUPLICATE KEY UPDATE rank ='" + rank + "'");
 		
 	}
-	
+
+	@SuppressWarnings("deprecation")	
 	public static void setRank(String p_name, String rank, boolean upload_sql) {
 		Player p = null;
 		if(Bukkit.getPlayer(p_name) != null && Bukkit.getPlayer(p_name).isOnline()) {

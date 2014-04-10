@@ -695,7 +695,8 @@ public class MountMechanics implements Listener {
 		if(is != null && is.getType() == Material.TRAPPED_CHEST && is.hasItemMeta() && is.getItemMeta().hasDisplayName() && is.getItemMeta().getDisplayName().toLowerCase().contains("mule chest")) { return true; }
 		return false;
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	public static int getHighestMuleTier(String p_name) {
 		ItemStack mule = null;
 		int mule_tier = 0;
@@ -1152,7 +1153,8 @@ public class MountMechanics implements Listener {
 	public void onInventoryOpenEvent(InventoryOpenEvent e) {
 		convertMounts(e.getInventory());
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		changeStickToSaddle(e.getPlayer());
@@ -1171,7 +1173,8 @@ public class MountMechanics implements Listener {
 			}
 		}, 40L);
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent e) {
 		final Player p = e.getPlayer();

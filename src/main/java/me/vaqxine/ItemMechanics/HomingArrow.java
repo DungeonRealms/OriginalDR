@@ -1,7 +1,5 @@
 package me.vaqxine.ItemMechanics;
 import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -9,9 +7,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+@SuppressWarnings("unused")
 public class HomingArrow extends BukkitRunnable
 {
-  private static final double MaxRotationAngle = 0.12D;
+private static final double MaxRotationAngle = 0.12D;
   private static final double TargetSpeed = 1.4D;
   Arrow arrow;
   LivingEntity target;

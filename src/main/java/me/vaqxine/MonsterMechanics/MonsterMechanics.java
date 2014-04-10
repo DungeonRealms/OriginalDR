@@ -1143,7 +1143,8 @@ public class MonsterMechanics implements Listener {
 			recent_loaded_chunks.put(l.getChunk().getBlock(0, 0, 0).getLocation(), System.currentTimeMillis());
 		}
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	public void fixStuckEntities() {
 		for(Entity ent : mob_target.keySet()) {
 			if(!(mob_health.containsKey(ent))) {
@@ -2181,6 +2182,7 @@ public class MonsterMechanics implements Listener {
 		chunks_to_unload.remove(loc);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onEntityDamageLava(EntityDamageEvent event) {
 		if(event.getEntity() instanceof Player) return;

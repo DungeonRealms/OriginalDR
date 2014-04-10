@@ -20,7 +20,6 @@ import java.util.zip.ZipOutputStream;
 
 import me.vaqxine.Main;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
-import me.vaqxine.Hive.Hive;
 import me.vaqxine.HiveServer.commands.CommandClassicRollout;
 import me.vaqxine.HiveServer.commands.CommandCycle;
 import me.vaqxine.HiveServer.commands.CommandRollout;

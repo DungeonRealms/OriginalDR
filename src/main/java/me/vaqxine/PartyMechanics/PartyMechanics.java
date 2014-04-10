@@ -41,6 +41,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.ScoreboardManager;
 
+@SuppressWarnings("deprecation")
 public class PartyMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
 	public static ScoreboardManager manager;

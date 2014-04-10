@@ -3835,7 +3835,8 @@ public class RealmMechanics implements Listener {
 		}
 		
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	public static void makePortal(final String to_realm, final Location l, int for_time) {
 		l.add(0, 1, 0).getBlock().setType(Material.PORTAL);
 		l.add(0, 1, 0).getBlock().setType(Material.PORTAL);

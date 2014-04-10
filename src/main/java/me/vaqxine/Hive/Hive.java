@@ -134,6 +134,7 @@ import de.kumpelblase2.remoteentities.api.DespawnReason;
 import de.kumpelblase2.remoteentities.api.RemoteEntity;
 import de.kumpelblase2.remoteentities.api.RemoteEntityType;
 
+@SuppressWarnings("deprecation")
 public class Hive implements Listener {
 
 	public static int id = getServerNumFromPrefix(Bukkit.getMotd());
@@ -354,7 +355,6 @@ public class Hive implements Listener {
     
     public static EntityManager npc_manager = null;
     
-    @SuppressWarnings("deprecation")
     public void onEnable() {
         instance = this;
         log.info(TimeZone.getDefault().toString());
@@ -1634,7 +1634,6 @@ public class Hive implements Listener {
         return true;
     }
     
-    @SuppressWarnings("deprecation")
     public static String convertInventoryToString(List<ItemStack> inv) {
         // @item@Slot:ItemID-Amount.Durability#Item_Name#$Item_Lore$[lam1]lam_color[lam2]
         // @item@1:267-1.54#Magic Sword#$DMG: 5 - 7, CRIT: 5%$@item@
@@ -1675,7 +1674,6 @@ public class Hive implements Listener {
         return return_string;
     }
     
-    @SuppressWarnings("deprecation")
     public static String convertInventoryToString(String p_name, Inventory inv, boolean player) {
         // @item@Slot:ItemID-Amount.Durability#Item_Name#$Item_Lore$[lam1]lam_color[lam2]
         // @item@1:267-1.54#Magic Sword#$DMG: 5 - 7, CRIT: 5%$@item@
@@ -1767,7 +1765,6 @@ public class Hive implements Listener {
         return return_string;
     }
     
-    @SuppressWarnings("deprecation")
     public static List<ItemStack> convertStringToInventoryString(String inventory_string) {
         List<ItemStack> is_list = new ArrayList<ItemStack>();
         //int expected_item_size = inventory_string.split("@item@").length;
@@ -1847,7 +1844,6 @@ public class Hive implements Listener {
         return is_list;
     }
     
-    @SuppressWarnings("deprecation")
     public static Inventory convertStringToInventory(Player pl, String inventory_string, String inventory_name, int slots) {
         Inventory inv = null;
         //int slot_cache = -1;
@@ -2542,7 +2538,6 @@ public class Hive implements Listener {
         }
     }
     
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerAsyncChatEvent(final AsyncPlayerChatEvent e) {
         Bukkit.getScheduler().runTask(Main.plugin, new Runnable() {

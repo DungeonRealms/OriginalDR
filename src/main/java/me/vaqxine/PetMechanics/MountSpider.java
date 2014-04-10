@@ -1,15 +1,13 @@
 package me.vaqxine.PetMechanics;
 
-import java.lang.reflect.Field;
-
 import net.minecraft.server.v1_7_R2.EntityHuman;
 import net.minecraft.server.v1_7_R2.EntityLiving;
 import net.minecraft.server.v1_7_R2.EntitySpider;
-import net.minecraft.server.v1_7_R2.GenericAttributes;
 import net.minecraft.server.v1_7_R2.World;
 
 import org.bukkit.Bukkit;
 
+@SuppressWarnings("deprecation")
 public class MountSpider extends EntitySpider {
 
     public MountSpider(World world) {

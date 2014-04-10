@@ -61,7 +61,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Team;
 
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.Vector;
@@ -72,6 +71,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
+@SuppressWarnings("deprecation")
 public class DuelMechanics implements Listener {
 	Logger log = Logger.getLogger("Minecraft");
 	
@@ -85,7 +85,6 @@ public class DuelMechanics implements Listener {
 	public static ItemStack gray_button = ItemMechanics.signNewCustomItem(Material.INK_SACK, (short) 8, ChatColor.YELLOW.toString() + "Click to ACCEPT Duel Stake", "");
 	public static ItemStack green_button = ItemMechanics.signNewCustomItem(Material.INK_SACK, (short) 10, ChatColor.GREEN.toString() + "Duel ACCEPTED.", ChatColor.GRAY.toString() + "Modify the stake to unaccept.");
 	
-	@SuppressWarnings("deprecation")
 	public static ItemStack t0_armor_icon = ItemMechanics.signNewCustomItem(Material.getMaterial(111), (short) 0, ChatColor.WHITE.toString() + "Armor Tier Limit", ChatColor.RED + "Tier 0 [NO ARMOR]" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor in this duel.");
 	
 	public static ItemStack t1_armor_icon = ItemMechanics.signNewCustomItem(Material.LEATHER_CHESTPLATE, (short) 0, ChatColor.WHITE.toString() + "Armor Tier Limit", ChatColor.RED + "Tier 1" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor above " + ChatColor.WHITE + ChatColor.UNDERLINE + "TIER 1");
@@ -98,7 +97,6 @@ public class DuelMechanics implements Listener {
 	
 	public static ItemStack t5_armor_icon = ItemMechanics.signNewCustomItem(Material.GOLD_CHESTPLATE, (short) 0, ChatColor.YELLOW.toString() + "Armor Tier Limit", ChatColor.RED + "Tier 5" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor above " + ChatColor.YELLOW + ChatColor.UNDERLINE + "TIER 5");
 	
-	@SuppressWarnings("deprecation")
 	public static ItemStack t0_weapon_icon = ItemMechanics.signNewCustomItem(Material.getMaterial(397), (short) 3, ChatColor.WHITE.toString() + "Weapon Tier Limit", ChatColor.RED + "Tier 0 [FISTS]" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapons in this duel.");
 	
 	public static ItemStack t1_weapon_icon = ItemMechanics.signNewCustomItem(Material.WOOD_SWORD, (short) 0, ChatColor.WHITE.toString() + "Weapon Tier Limit", ChatColor.RED + "Tier 1" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapon above " + ChatColor.WHITE + ChatColor.UNDERLINE + "TIER 1");
@@ -355,7 +353,6 @@ public class DuelMechanics implements Listener {
 		
 		if(GuildMechanics.inGuild(p1.getName())) {
 			String g_name = GuildMechanics.guild_handle_map.get(GuildMechanics.getGuild(p1.getName()));
-			Team t = null;
 			
 			String fixed_gname = g_name;
 			
@@ -371,7 +368,6 @@ public class DuelMechanics implements Listener {
 		}
 		if(GuildMechanics.inGuild(p2.getName())) {
 			String g_name = GuildMechanics.guild_handle_map.get(GuildMechanics.getGuild(p2.getName()));
-			Team t = null;
 			
 			String fixed_gname = g_name;
 			
@@ -465,7 +461,6 @@ public class DuelMechanics implements Listener {
 		return false;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public ItemStack cycleArmorIcon(ItemStack is) {
 		// is = The previous armor icon.
 		int previous_tier = ItemMechanics.getItemTier(is);
@@ -478,7 +473,6 @@ public class DuelMechanics implements Listener {
 		return t0_armor_icon; // Default.
 	}
 	
-	@SuppressWarnings("deprecation")
 	public ItemStack cycleWeaponIcon(ItemStack is) {
 		// is = The previous armor icon.
 		int previous_tier = ItemMechanics.getItemTier(is);
@@ -697,7 +691,6 @@ public class DuelMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onSpoilersMenuCloseEvent(InventoryCloseEvent e) {
 		if(!e.getInventory().getName().equalsIgnoreCase("Spoils")) { return; }
@@ -717,7 +710,6 @@ public class DuelMechanics implements Listener {
 		p.updateInventory();
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onInventoryCloseEvent(InventoryCloseEvent e) {
 		Player closer = (Player) e.getPlayer();
@@ -902,7 +894,6 @@ public class DuelMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerInventoryClick(InventoryClickEvent e) {
 		if(!(e.getWhoClicked().getType() == EntityType.PLAYER)) { return; }
@@ -1394,7 +1385,6 @@ public class DuelMechanics implements Listener {
 		
 		if(in_duel_window.contains(attacked.getName())) {
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-				@SuppressWarnings("deprecation")
 				public void run() {
 					attacked.updateInventory();
 					attacked.closeInventory();
@@ -1420,7 +1410,6 @@ public class DuelMechanics implements Listener {
 				final Player p_partner = Bukkit.getPlayer(partner);
 				p_partner.sendMessage(ChatColor.RED + "Your opponent took damage before the duel was accepted - " + ChatColor.BOLD + "DUEL CANCELLED");
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-					@SuppressWarnings("deprecation")
 					public void run() {
 						p_partner.closeInventory();
 						p_partner.updateInventory();
@@ -1440,7 +1429,6 @@ public class DuelMechanics implements Listener {
 				String attacker_name = duel_map.get(attacked.getName());
 				
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-					@SuppressWarnings("deprecation")
 					public void run() {
 						attacked.updateInventory();
 						attacked.closeInventory();

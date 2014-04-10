@@ -6,18 +6,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import me.vaqxine.Main;
-import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.HearthstoneMechanics.commands.CommandAddHearthstone;
 import me.vaqxine.HearthstoneMechanics.commands.CommandListHearthstone;
 import me.vaqxine.Hive.ParticleEffect;
@@ -26,14 +23,12 @@ import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
-import net.minecraft.util.io.netty.util.internal.ConcurrentSet;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -53,6 +48,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+@SuppressWarnings("deprecation")
 public class HearthstoneMechanics implements Listener {
     public static ConcurrentHashMap<String, Hearthstone> hearthstone_map = new ConcurrentHashMap<String, Hearthstone>();
     public static ConcurrentHashMap<String, Integer> hearthstone_price = new ConcurrentHashMap<String, Integer>();
@@ -73,7 +69,6 @@ public class HearthstoneMechanics implements Listener {
         Main.plugin.getCommand("addhearthstone").setExecutor(new CommandAddHearthstone());
         Main.plugin.getCommand("listhearthstone").setExecutor(new CommandListHearthstone());
         new BukkitRunnable() {
-            @SuppressWarnings("deprecation")
             public void run() {
                 for (Entry<String, Integer> timer_data : hearthstone_timer.entrySet()) {
                     int time_left = timer_data.getValue();

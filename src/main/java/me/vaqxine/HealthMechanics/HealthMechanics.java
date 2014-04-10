@@ -72,6 +72,7 @@ import org.bukkit.potion.PotionEffectType;
 import de.kumpelblase2.remoteentities.api.DespawnReason;
 import de.kumpelblase2.remoteentities.api.RemoteEntity;
 
+@SuppressWarnings("deprecation")
 public class HealthMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
 	
@@ -128,7 +129,6 @@ public class HealthMechanics implements Listener {
 	
 	public static HealthMechanics plugin = null;
 	
-	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		
@@ -855,7 +855,6 @@ public class HealthMechanics implements Listener {
 		
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
 	public void onPlayerDrinkPotion(PlayerInteractEvent e) {
 		if(e.hasItem() && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
@@ -1023,7 +1022,6 @@ public class HealthMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerClickEntity(PlayerInteractEntityEvent e) {
 		Player pl = e.getPlayer();
@@ -1043,7 +1041,6 @@ public class HealthMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerRightClickEquip(PlayerInteractEvent e) {
 		if(e.hasItem() && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
@@ -1085,7 +1082,7 @@ public class HealthMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings({ "unused", "deprecation" })
+	@SuppressWarnings("unused")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onInventoryClickEvent(InventoryClickEvent e) {
 		if(e.getSlotType() != SlotType.ARMOR && !(e.isShiftClick())) { return; }

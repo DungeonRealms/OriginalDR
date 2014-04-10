@@ -1264,7 +1264,8 @@ public class MoneyMechanics implements Listener {
 		
 		bank_upgrade_codes.put(p, tier + sb.toString());
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerOpenChest(PlayerInteractEvent e) {
 		final Player p = (Player) e.getPlayer();

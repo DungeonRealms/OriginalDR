@@ -92,6 +92,7 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+@SuppressWarnings("deprecation")
 public class CommunityMechanics implements Listener {
 	public static Logger log = Logger.getLogger("Minecraft");
 	
@@ -540,7 +541,6 @@ public class CommunityMechanics implements Listener {
 	 * Only updates the first few pages of the character journal, the pages with
 	 * realtime, non-SQL/socket based information.
 	 */
-	@SuppressWarnings("deprecation")
 	public static void updateCombatPage(Player p) {
 		List<String> new_pages = new ArrayList<String>();
 		int slot = -1;
@@ -1780,7 +1780,6 @@ public class CommunityMechanics implements Listener {
 	// DEPRECIATED, Kept for backwards compatibility
 	public static void setIgnoreColor(final Player p_viewer, final Player p_edited) {}
 	
-	@SuppressWarnings("deprecation")
 	public static void clearAllViewColor(final Player p_viewer, final Player p_edited) {
 		final String r_name = p_edited.getName();
 		
@@ -1836,7 +1835,6 @@ public class CommunityMechanics implements Listener {
 		}, 2L);
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(final PlayerJoinEvent e) {
 		Player p = e.getPlayer();
@@ -1966,7 +1964,6 @@ public class CommunityMechanics implements Listener {
 		
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void updateCommBook(Player p) {
 		int slot = -1;
 		boolean book = false;
@@ -2117,7 +2114,6 @@ public class CommunityMechanics implements Listener {
 		
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onToggleMenuClick(InventoryClickEvent e) {
 		if(e.getInventory().getTitle().equalsIgnoreCase("Toggle Menu")) {

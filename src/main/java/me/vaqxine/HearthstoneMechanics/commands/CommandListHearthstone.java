@@ -2,7 +2,6 @@ package me.vaqxine.HearthstoneMechanics.commands;
 
 import java.util.Map.Entry;
 
-import me.vaqxine.HearthstoneMechanics.Hearthstone;
 import me.vaqxine.HearthstoneMechanics.HearthstoneMechanics;
 
 import org.bukkit.ChatColor;

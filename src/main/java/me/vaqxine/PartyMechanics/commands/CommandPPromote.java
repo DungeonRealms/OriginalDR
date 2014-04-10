@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 
+@SuppressWarnings("deprecation")
 public class CommandPPromote implements CommandExecutor {
 	
 	@Override

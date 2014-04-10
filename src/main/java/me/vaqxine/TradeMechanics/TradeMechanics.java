@@ -49,6 +49,7 @@ import org.bukkit.util.BlockIterator;
 //TODO: Add combat support, if you get hit, close window.
 //TODO: Add a trade request system perhaps? They have to type /accept? Alternatively, allow players to disable trades.
 
+@SuppressWarnings("deprecation")
 public class TradeMechanics implements Listener {
 	Logger log = Logger.getLogger("Minecraft");
 	static Inventory TradeWindowTemplate;
@@ -163,6 +164,7 @@ public class TradeMechanics implements Listener {
 		return orig_i;
 	}
 	
+	@SuppressWarnings("unused")
 	public static Player getTarget(Player trader) {
 		List<Entity> nearbyE = trader.getNearbyEntities(4.0D, 4.0D, 4.0D);
 		ArrayList<Player> livingE = new ArrayList<Player>();
@@ -448,7 +450,6 @@ public class TradeMechanics implements Listener {
 		return return_string;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerDropItem(PlayerDropItemEvent e) {
 		final Player trader = e.getPlayer();
@@ -817,7 +818,6 @@ public class TradeMechanics implements Listener {
 		return is;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	// Was Normal / Low
 	public void onPlayerInventoryClick(InventoryClickEvent e) {

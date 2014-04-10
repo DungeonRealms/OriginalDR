@@ -89,6 +89,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+@SuppressWarnings("deprecation")
 public class ShopMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
 	
@@ -171,7 +172,6 @@ public class ShopMechanics implements Listener {
 	
 	static ShopMechanics sm = null;
 	
-	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		
@@ -803,6 +803,7 @@ public class ShopMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	public void upgradeShop(final Player p, int new_level, boolean interval) {
 		int r_new_level = 0;
 		
@@ -1214,6 +1215,7 @@ public class ShopMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		if(!(e.hasItem())) { return; }
@@ -1410,6 +1412,7 @@ public class ShopMechanics implements Listener {
 		
 	}
 	
+	@SuppressWarnings("unused")
 	@EventHandler
 	public void CollectionBinManager(InventoryClickEvent e) {
 		if(!(e.getWhoClicked() instanceof Player)) { return; }
@@ -1442,7 +1445,7 @@ public class ShopMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("unused")
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	// ignoreCancelled = true, prevents bug with shift left click.
 	public void ShopManager(InventoryClickEvent e) {
@@ -2086,7 +2089,6 @@ public class ShopMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW)
 	public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e) {
 		final Player p = e.getPlayer();
@@ -2355,6 +2357,7 @@ public class ShopMechanics implements Listener {
 				final int f_amount_to_buy = amount_to_buy;
 				
 				Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+					@SuppressWarnings("unused")
 					public void run() {
 						String i_name = f_i.getType().toString().toLowerCase();
 						if(f_i != null && hasCustomName(f_i)) {
@@ -2731,6 +2734,7 @@ public class ShopMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerOpeningChest(PlayerInteractEvent e) {
 		if(!(e.getAction() == Action.RIGHT_CLICK_BLOCK)) { return; }
@@ -2892,6 +2896,7 @@ public class ShopMechanics implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void updateEntity(Entity entity, List<Player> observers) {
 	    if(entity == null)return;
 		World world = entity.getWorld();

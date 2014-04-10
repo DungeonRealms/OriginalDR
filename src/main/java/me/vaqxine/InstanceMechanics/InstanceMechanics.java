@@ -86,6 +86,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@SuppressWarnings("deprecation")
 public class InstanceMechanics implements Listener {
 	
 	// TODO: No dueling in instances.
@@ -157,7 +158,6 @@ public class InstanceMechanics implements Listener {
 	// The Devastator
 	// y:5
 	
-	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		plugin_instance = this;
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
@@ -1108,7 +1108,6 @@ public class InstanceMechanics implements Listener {
 		return false;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void removeFromInstanceParty(String p_name) {
 		if(!(player_instance.containsKey(p_name))) { return; // They're not in an instance.
 		}

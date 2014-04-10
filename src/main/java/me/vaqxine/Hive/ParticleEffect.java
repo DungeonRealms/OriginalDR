@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("deprecation")
 public enum ParticleEffect {
 	
 	HUGE_EXPLOSION("hugeexplosion", 0),

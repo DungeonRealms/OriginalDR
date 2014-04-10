@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.fusesource.jansi.Ansi;
 
+@SuppressWarnings("deprecation")
 public class UploadPlayerData extends Thread {
 	
 	String p_name = "";

@@ -15,13 +15,11 @@ import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
-import me.vaqxine.enums.ArmorPosition;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -941,7 +939,8 @@ public class RepairMechanics implements Listener {
 		
 		subtractCustomDurability(p, e.getBow(), 1, "wep");
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
 	public void onPlayerInteractEvent(PlayerInteractEvent e) {
 		
