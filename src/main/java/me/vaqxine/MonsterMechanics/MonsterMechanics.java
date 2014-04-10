@@ -2224,14 +2224,6 @@ public class MonsterMechanics implements Listener {
 		}
 	}
 	public void pathFindAway(Entity e){
-	    if(pathing_away.contains(e)){
-	        if(isLavaNearby(e.getLocation())){
-	            return;
-	        }else{
-	            pathing_away.remove(e);
-	        }
-	    }
-	  
 	    int add_y = e.getLocation().getBlockY() + 1;
         int add_X = e.getLocation().getBlockX() + 10;
         int add_Z = e.getLocation().getBlockZ() + 10;
@@ -2247,8 +2239,7 @@ public class MonsterMechanics implements Listener {
                         //So its a legit block so make them move
                       if(b.getLocation().add(0, 1,0 ).getBlock().getType() == Material.AIR && b.getLocation().add(0, 2, 0).getBlock().getType() == Material.AIR){
                       //The block is legit so make them go there.
-                      PetMechanics.walkTo((LivingEntity)e, x, y, z, 3);
-                      pathing_away.add(e);
+                      e.teleport(b.getLocation());
                       break;
                       }
                     }
@@ -5265,14 +5256,16 @@ public class MonsterMechanics implements Listener {
 					}
 					
 					int do_i_drop_arrows = new Random().nextInt(100);
-					
+					int do_i_drop_quiver = new Random().nextInt(100);
 					if(weapon.getType() == Material.BOW && do_i_drop_arrows <= 85) { // Drop some arrows!
 						int amount_to_drop = new Random().nextInt(10) + 1;
+					
 						if(mob_tier == 1) {
 							ItemStack arrow_loot = ItemMechanics.t1_arrow;
 							arrow_loot.setAmount(amount_to_drop);
 							ent.getWorld().dropItemNaturally(ent.getLocation(), arrow_loot);
 						}
+						
 						if(mob_tier == 2) {
 							ItemStack arrow_loot = ItemMechanics.t2_arrow;
 							arrow_loot.setAmount(amount_to_drop);
@@ -5288,6 +5281,9 @@ public class MonsterMechanics implements Listener {
 							}
 							arrow_loot.setAmount(amount_to_drop);
 							ent.getWorld().dropItemNaturally(ent.getLocation(), arrow_loot);
+							 if(do_i_drop_quiver <= 10){
+		                            ent.getWorld().dropItemNaturally(ent.getLocation(), ItemMechanics.t1_quiver);
+		                        }
 						}
 						if(mob_tier == 4) {
 							int drop_t5 = new Random().nextInt(100);
@@ -5299,11 +5295,17 @@ public class MonsterMechanics implements Listener {
 							}
 							arrow_loot.setAmount(amount_to_drop);
 							ent.getWorld().dropItemNaturally(ent.getLocation(), arrow_loot);
+							 if(do_i_drop_quiver <= 10){
+		                            ent.getWorld().dropItemNaturally(ent.getLocation(), ItemMechanics.t1_quiver);
+		                        }
 						}
 						if(mob_tier == 5) {
 							ItemStack arrow_loot = ItemMechanics.t5_arrow;
 							arrow_loot.setAmount(amount_to_drop);
 							ent.getWorld().dropItemNaturally(ent.getLocation(), arrow_loot);
+							 if(do_i_drop_quiver <= 10){
+		                            ent.getWorld().dropItemNaturally(ent.getLocation(), ItemMechanics.t1_quiver);
+		                        }
 						}
 					}
 					

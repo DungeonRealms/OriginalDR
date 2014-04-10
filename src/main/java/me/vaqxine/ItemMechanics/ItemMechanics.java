@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
@@ -80,6 +81,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -3348,6 +3350,12 @@ public class ItemMechanics implements Listener {
 		
 		if(DuelMechanics.isDamageDisabled(p.getLocation()) && !(DuelMechanics.duel_map.containsKey(p.getName()))) {
 			e.setCancelled(true);
+			if(arrow_replace.containsKey(p.getName())){
+	            PlayerArrowReplace par = arrow_replace.get(p.getName());
+	            p.getInventory().setItem(par.getItemSlot(), par.getItem());
+	            arrow_replace.remove(p.getName());
+	            p.updateInventory();
+	        }
 			p.updateInventory();
 			return;
 		}
@@ -3355,6 +3363,12 @@ public class ItemMechanics implements Listener {
 		//int bow_tier = getItemTier(p.getItemInHand());
 		if(!doesPlayerHaveAnyArrows(p)) {
 			e.setCancelled(true);
+			if(arrow_replace.containsKey(p.getName())){
+	            PlayerArrowReplace par = arrow_replace.get(p.getName());
+	            p.getInventory().setItem(par.getItemSlot(), par.getItem());
+	            arrow_replace.remove(p.getName());
+	            p.updateInventory();
+	        }
 			p.updateInventory();
 			return;
 		}
@@ -3371,8 +3385,10 @@ public class ItemMechanics implements Listener {
 		}
 		if(arrow_replace.containsKey(p.getName())){
 		    PlayerArrowReplace par = arrow_replace.get(p.getName());
+		    p.getInventory().setItem(par.getItemSlot(), new ItemStack(Material.AIR));
 		    p.getInventory().setItem(par.getItemSlot(), par.getItem());
 		    arrow_replace.remove(p.getName());
+		    p.updateInventory();
 		}
 		arrow_shooter.put(a, p.getItemInHand());
 		a.setMetadata("tier", new FixedMetadataValue(Main.plugin, tier));
@@ -3702,6 +3718,7 @@ public class ItemMechanics implements Listener {
 	                if(arrow_replace.containsKey(p.getName()))return;
 	                arrow_replace.put(p.getName(), new PlayerArrowReplace(p, p.getInventory().getItem(35), 35));
 	                p.getInventory().setItem(35, new ItemStack(Material.ARROW));
+	                p.updateInventory();
 	            }
 	        }
 	    }
@@ -3714,6 +3731,7 @@ public class ItemMechanics implements Listener {
             PlayerArrowReplace par = arrow_replace.get(p.getName());
             p.getInventory().setItem(par.getItemSlot(), par.getItem());
             arrow_replace.remove(p.getName());
+            p.updateInventory();
          }
 	}
 	
@@ -3724,6 +3742,7 @@ public class ItemMechanics implements Listener {
             PlayerArrowReplace par = arrow_replace.get(p.getName());
             p.getInventory().setItem(par.getItemSlot(), par.getItem());
             arrow_replace.remove(p.getName());
+            p.updateInventory();
          }
 	}
 	
@@ -3733,8 +3752,10 @@ public class ItemMechanics implements Listener {
 	    if(e.getInventory().getType() == InventoryType.PLAYER){
 	       if(arrow_replace.containsKey(p.getName())){
 	          PlayerArrowReplace par = arrow_replace.get(p.getName());
+	          p.getInventory().setItem(par.getItemSlot(), new ItemStack(Material.AIR));
 	          p.getInventory().setItem(par.getItemSlot(), par.getItem());
 	          arrow_replace.remove(p.getName());
+	          p.updateInventory();
 	       }
 	    }
 	}
@@ -5358,7 +5379,15 @@ public class ItemMechanics implements Listener {
 	public void onPlayerCancelled(final InventoryClickEvent e) {
 	    Player p = (Player) e.getWhoClicked();
 	        if(e.getCurrentItem() != null){
+	            if (p.getInventory().all(Material.FLOWER_POT_ITEM).size() > 2) {
+	                for (Entry<Integer, ? extends ItemStack> data : p.getInventory().all(Material.FLOWER_POT_ITEM).entrySet()) {
+	                    p.sendMessage(ChatColor.RED + "You have been found with more then 2 Quivers in your inventorys.");
+	                    p.getInventory().remove(data.getValue()); 
+	                    p.getWorld().dropItemNaturally(p.getLocation(), data.getValue());
+	                }
+	            }
 	            if(isQuiver(e.getCurrentItem())){
+	                if(e.getClick() == ClickType.LEFT){
 	                ItemStack is = e.getCurrentItem();
 	                if(e.getCursor().getType() == Material.ARROW){
 	                    ItemStack arrows = e.getCursor();
@@ -5385,7 +5414,7 @@ public class ItemMechanics implements Listener {
 	                   }else{
 	                       if(addArrowsToQuiver(is, arrows)){
 	                          p.setItemOnCursor(new ItemStack(Material.AIR));
-	                          p.sendMessage(ChatColor.GREEN + "+" + arrows.getAmount());
+	                          p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "           +" + arrows.getAmount() + " " + arrows.getItemMeta().getDisplayName());
 	                          e.setCancelled(true);
 	                       }else{
 	                           e.setCancelled(true);
@@ -5393,10 +5422,46 @@ public class ItemMechanics implements Listener {
 	                       }
 	                   }
 	                }
+	            }else if(e.getClick() == ClickType.RIGHT){
+	                //They are taking arrows out.
+	                ItemStack quiver = e.getCurrentItem();
+	                if(getQuiverAmount(quiver) != 0){
+	                for(int i = 0; i < 5; i++){
+	                    if(hasTierArrowsInQuiver(quiver, i)){
+	                        int totalArrows = getTierArrowsInQuiver(quiver, i);
+	                        int new_total_arrows = totalArrows;
+	                        if(totalArrows > 64){
+	                            new_total_arrows = 64;
+	                        }
+	                        ItemStack arrow = getArrowFromTier(i).clone();
+	                        arrow.setAmount(new_total_arrows);
+	                        p.setItemOnCursor(arrow);
+	                        replaceQuiverLore(quiver, i, totalArrows - new_total_arrows, getQuiverAmount(quiver) - new_total_arrows, getMaxQuiverHold(quiver));
+	                        e.setCancelled(true);
+	                        p.updateInventory();
+	                        break;
+	                    }
+	                }
+	            }
+	            }
 	        }
 	    }
 	}
-	
+	public ItemStack getArrowFromTier(int tier){
+	    switch(tier){
+	    case 1:
+	        return t1_arrow;
+	    case 2:
+	        return t2_arrow;
+	    case 3:
+	        return t3_arrow;
+	    case 4:
+	        return t4_arrow;
+	    case 5:
+	        return t5_arrow;
+	    }
+	   return t1_arrow;
+	}
 	public boolean addArrowsToQuiver(ItemStack quiver, ItemStack arrows){
 	    int tier = getItemTier(arrows);
 	    ItemMeta im = quiver.getItemMeta();
@@ -5416,7 +5481,20 @@ public class ItemMechanics implements Listener {
 	    ItemMeta im = is.getItemMeta();
 	    return Integer.parseInt(ChatColor.stripColor(im.getDisplayName().split("Quiver ")[1].split(" /")[0]));
 	}
-	
+	public static int getTierArrowsInQuiver(ItemStack is, int tier){
+	    ItemMeta im = is.getItemMeta();
+	    for(String s : im.getLore()){
+	        if(ChatColor.stripColor(s).contains("Tier " + tier)){
+	            String line = ChatColor.stripColor(s);
+	            int amount_of_arrows = Integer.parseInt(line.split(": ")[1]);
+	            return amount_of_arrows;
+	        }
+	    }
+	    return 0;
+	}
+	public boolean hasTierArrowsInQuiver(ItemStack is, int tier){
+	    return getTierArrowsInQuiver(is, tier) != 0;
+	}
 	public int getMaxQuiverHold(ItemStack is){
 	    ItemMeta im = is.getItemMeta();
 	    return Integer.parseInt(ChatColor.stripColor(im.getDisplayName().split("/ ")[1]));
@@ -5432,12 +5510,10 @@ public class ItemMechanics implements Listener {
 	                int amount_of_arrows = 0;
 	                for(String line : im.getLore()){
 	                    if(ChatColor.stripColor(line).contains("Tier")){
-	                        System.out.print(line);
 	                        int tier_arrow = Integer.parseInt(ChatColor.stripColor(line).split("Tier ")[1].split(":")[0]);
 	                        if(tier_arrow > highest_tier){
 	                            //Check to see if there are any arrows
 	                            int amount = Integer.parseInt(ChatColor.stripColor(line).split(": ")[1]);
-	                            System.out.print(tier_arrow + "");
 	                            if(amount > 0){
 	                            //Set the arrow since they have one
 	                            amount_of_arrows = amount;
