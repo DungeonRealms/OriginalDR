@@ -2,9 +2,9 @@ package me.vaqxine.managers;
 
 import java.util.HashMap;
 
-import org.bukkit.entity.Player;
-
 import me.vaqxine.models.PlayerModel;
+
+import org.bukkit.entity.Player;
 
 public class PlayerManager {
 	
