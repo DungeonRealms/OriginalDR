@@ -239,7 +239,7 @@ public class ShopMechanics implements Listener {
 	public void onDisable() {
 		shop_shutdown = true;
 		// So it doesn't think server is frozen.
-		
+		store_backup.run();
 		removeAllShops(); // Needed to upload data of offline players.
 		uploadAllCollectionBinData(); // Uploads / sends sockets to all servers for new collection bin data.
 		
@@ -698,6 +698,7 @@ public class ShopMechanics implements Listener {
 			uploadCollectionBinData(p_name);
 			//}
 		}
+		Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED + "uploadAllCollectionBinData() called");
 		all_collection_bins_uploaded = true;
 	}
 	
@@ -730,8 +731,8 @@ public class ShopMechanics implements Listener {
 		PreparedStatement pst = null;
 		
 		try {
-			pst = ConnectionPool.getConnection().prepareStatement("INSERT INTO shop_database (p_name, level, server_num, collection_bin)" + " VALUES" + "('" + p_name + "', '" + lshop_level + "', '" + server_num + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE level = '" + lshop_level + "', server_num='" + server_num + "', collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "'");
-			
+			pst = ConnectionPool.getConnection().prepareStatement("INSERT INTO shop_database (p_name, level, server_num, collection_bin)" + " VALUES" + "('" + p_name + "', '" + lshop_level + "', '" + server_num + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE level = '" + lshop_level + "', server_num='" + server_num + "', collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "';");
+			Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED + "ON LINE 734 I INSERT INTO shop_database (p_name, level, server_num, collection_bin)" + " VALUES" + "('" + p_name + "', '" + lshop_level + "', '" + server_num + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE level = '" + lshop_level + "', server_num='" + server_num + "', collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "';");
 			pst.executeUpdate();
 			
 		} catch(SQLException ex) {
@@ -880,7 +881,6 @@ public class ShopMechanics implements Listener {
 	
 	public static void asyncSetShopServerSQL(final String p_name, final int server_num) {
 		shop_server.put(p_name, server_num);
-		
 		if(!shop_shutdown) {
 			Hive.sql_query.add("INSERT INTO shop_database (p_name, server_num)" + " VALUES" + "('" + p_name + "', '" + server_num + "') ON DUPLICATE KEY UPDATE server_num = '" + server_num + "'");
 			// The issue with this, is if the server crashes... backups are kind of GG'd
@@ -893,6 +893,7 @@ public class ShopMechanics implements Listener {
 		} else {
 			// In this case, we are shutting down, do work on main thread do not use query.
 			runSyncQuery("INSERT INTO shop_database (p_name, server_num)" + " VALUES" + "('" + p_name + "', '" + server_num + "') ON DUPLICATE KEY UPDATE server_num = '" + server_num + "'");
+			Main.plugin.getServer().getConsoleSender().sendMessage("INSERT INTO shop_database (p_name, server_num)" + " VALUES" + "('" + p_name + "', '" + server_num + "') ON DUPLICATE KEY UPDATE server_num = '" + server_num + "';");
 			/*if(server_num == -1){
 			    Hive.runSyncQuery(
 			            "INSERT INTO shop_database (p_name, shop_backup)"

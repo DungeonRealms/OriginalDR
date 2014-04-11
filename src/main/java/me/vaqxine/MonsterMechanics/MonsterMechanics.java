@@ -419,7 +419,7 @@ public class MonsterMechanics implements Listener {
 					}
 				}
 			}
-		}, 15 * 20L, 1 * 15L);
+		}, 15 * 20L, 1 * 25L);
 		
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {

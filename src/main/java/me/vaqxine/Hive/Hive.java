@@ -2134,6 +2134,12 @@ public class Hive implements Listener {
     
     public static void sendTimeout(int time) {
         Bukkit.getServer().broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + ">>" + ChatColor.RED + " The server will be " + ChatColor.UNDERLINE + "REBOOTING" + ChatColor.RED + " in " + ChatColor.BOLD + time + "s...");
+        if(time == 60){
+            for(String s : ShopMechanics.shop_stock.keySet()){
+                ShopMechanics.uploadShopDatabaseData(s, false);
+            }
+        }
+       // Bukkit.getServer().broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + ">>" + ChatColor.RED + " The server will be " + ChatColor.UNDERLINE + "REBOOTING" + ChatColor.RED + " in " + ChatColor.BOLD + time + "s...");
     }
     
     public static boolean isPlayerOnline(String p_name) {

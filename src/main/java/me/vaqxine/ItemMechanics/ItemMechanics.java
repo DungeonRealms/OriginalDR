@@ -2715,7 +2715,7 @@ public class ItemMechanics implements Listener {
 	        slot = p.getInventory().first(Material.FLOWER_POT_ITEM);
 	        ItemStack is = p.getInventory().getItem(slot);
 	        int amount = getQuiverAmount(is);
-	        if(amount != 0){
+	        if(amount > 0){
 	            return true;
 	        }
 	      } 
@@ -5496,6 +5496,10 @@ public class ItemMechanics implements Listener {
 	            //Tier line
 	            int current_amount = Integer.parseInt(ChatColor.stripColor(s).split(": ")[1]);
 	            int current_quiver = getQuiverAmount(quiver);
+	            int new_amount = arrows.getAmount() + current_amount;
+	            if(new_amount > getMaxQuiverHold(quiver)){
+	                new_amount = getMaxQuiverHold(quiver);
+	            }
 	            replaceQuiverLore(quiver, tier, arrows.getAmount() + current_amount, current_quiver + arrows.getAmount(), getMaxQuiverHold(quiver));
 	            return true;
 	        }
@@ -5585,6 +5589,9 @@ public class ItemMechanics implements Listener {
 	            break;
 	        }
 	        im.setLore(lore);
+	        if(new_amount_toSet < 0){
+	            new_amount_toSet = 0;
+	        }
 	        im.setDisplayName(ChatColor.GOLD + "Quiver " + (new_amount_toSet) + " / " + max_arrows);
 	        quiver.setItemMeta(im);
 	        return quiver;
@@ -5628,7 +5635,9 @@ public class ItemMechanics implements Listener {
 				return; // Not a weapon, or in a safe zone.
 			}
 			
-			if(pl.getExp() == 0.0F || FatigueMechanics.fatigue_effect.contains(pl.getName())) { return; }
+			if(pl.getExp() == 0.0F || FatigueMechanics.fatigue_effect.contains(pl.getName())) {
+			    return;
+			}
 			
 			if(FatigueMechanics.last_attack.containsKey(pl.getName()) && (System.currentTimeMillis() - FatigueMechanics.last_attack.get(pl.getName())) < 100) {
 				// Less than 100ms since last attack.
