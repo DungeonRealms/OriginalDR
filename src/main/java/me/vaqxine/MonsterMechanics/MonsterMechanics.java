@@ -4117,6 +4117,10 @@ public class MonsterMechanics implements Listener {
 					BossMechanics.boss_saved_location.put(ent, ent.getLocation().add(0, 2, 0));
 				}
 			}
+			
+			if(boss_type.equalsIgnoreCase("onewolfedungeon")){
+			    
+			}
 		}
 		
 		e.setDamage(0);
@@ -4682,7 +4686,7 @@ public class MonsterMechanics implements Listener {
 						mob_type = "Forest Troll";
 						return mob_type;
 					}
-					if(skin_name.equalsIgnoreCase("Migrosbudget") || skin_name.equalsIgnoreCase("Das_Doktor")) {
+					if(skin_name.equalsIgnoreCase("Das_Doktor")) {
 						mob_type = "Naga";
 						return mob_type;
 					}
@@ -4748,7 +4752,7 @@ public class MonsterMechanics implements Listener {
 						mob_type = "Forest Troll";
 						return mob_type;
 					}
-					if(skin_name.equalsIgnoreCase("Migrosbudget") || skin_name.equalsIgnoreCase("Das_Doktor")) {
+					if( skin_name.equalsIgnoreCase("Das_Doktor")) {
 						mob_type = "Naga";
 						return mob_type;
 					}
@@ -6466,12 +6470,12 @@ public class MonsterMechanics implements Listener {
 				oc.setCatType(Type.WILD_OCELOT);
 			}
 			if(meta_data.equalsIgnoreCase("naga")) {
-				int solider_type = new Random().nextInt(2); // 0, 1
+				//int solider_type = new Random().nextInt(2); // 0, 1
 				String skin_name = "";
-				
-				if(solider_type == 0) {
+				int solider_type = 1;
+				/*if(solider_type == 0) {
 					skin_name = "Migrosbudget";
-				}
+				}*/
 				if(solider_type == 1) {
 					skin_name = "Das_Doktor";
 				}

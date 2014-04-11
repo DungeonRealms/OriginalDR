@@ -297,11 +297,13 @@ public class InstanceMechanics implements Listener {
 								if(formal_dungeon_name.equalsIgnoreCase("Bandit Trove")) {
 									AchievmentMechanics.addAchievment(pl.getName(), "Mayel the Cruel");
 								}
-								
 								if(formal_dungeon_name.equalsIgnoreCase("Infernal Abyss")) {
 									AchievmentMechanics.addAchievment(pl.getName(), "The Infernal Abyss");
 								}
-								
+							    if(formal_dungeon_name.equalsIgnoreCase("The Dark Depths of Aceron")) {
+                                    AchievmentMechanics.addAchievment(pl.getName(), "The Dark Depths of Aceron");
+                                }
+								//if(formal_dungeon_name.eq)
 								String instance_template = pl.getWorld().getName();
 								instance_template = instance_template.substring(0, instance_template.indexOf("."));
 								

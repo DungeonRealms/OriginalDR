@@ -124,11 +124,12 @@ public class CommandBossTP implements CommandExecutor {
 		}
 		
 		if(cb.getBlock().getWorld().getName().contains("OneWolfeDungeon")) {
+		    //TODO: SET THE LOCATION
 			Location loc = new Location(cb.getBlock().getWorld(), -54, 158, 646); // TODO: onewolf - spawn his wolf pet as well
-			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.ZOMBIE, "goblin", "Jebotch The Wicked");
-			BossMechanics.boss_map.put(boss, "jebotch");
+			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.ZOMBIE, "goblin", "Aceron The Wicked");
+			BossMechanics.boss_map.put(boss, "aceron");
 			for(Player pl : boss.getWorld().getPlayers()) {
-				pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Jebotch The Wicked: " + ChatColor.WHITE + "Glory cannot be attained without blood, now let me see you bleed!");
+				pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Aceron The Wicked: " + ChatColor.WHITE + "I hope you find what you are looking for, because you wont be leaving here with it!");
 			}
 			boss.getWorld().playSound(boss.getLocation(), Sound.GHAST_MOAN, 1F, 0.25F);
 		}

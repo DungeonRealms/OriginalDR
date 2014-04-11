@@ -674,7 +674,7 @@ public class ChatMechanics implements Listener {
 								if(skin_name.equalsIgnoreCase("ArcadiaMovies") || skin_name.equalsIgnoreCase("Malware")) {
 									mob_name = "Forest Troll";
 								}
-								if(skin_name.equalsIgnoreCase("Migrosbudget") || skin_name.equalsIgnoreCase("Das_Doktor")) {
+								if(skin_name.equalsIgnoreCase("Das_Doktor")) {
 									mob_name = "Naga";
 								}
 								if(skin_name.equalsIgnoreCase("xmattpt")) {

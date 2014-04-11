@@ -74,6 +74,14 @@ public class CommandSpawnBoss implements CommandExecutor {
 			}
 			boss.getWorld().playSound(boss.getLocation(), Sound.AMBIENCE_THUNDER, 1F, 1F);
 		}
+		if(boss_name.equalsIgnoreCase("aceron")){
+		    Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "Aceron the Wicked");
+            BossMechanics.boss_map.put(boss, "aceron");
+            for(Player pl : boss.getWorld().getPlayers()) {
+                pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Aceron the Wicked: " + ChatColor.WHITE + "Aceron is here! Welcome to my cave of treasures!");
+            }
+            boss.getWorld().playSound(boss.getLocation(), Sound.AMBIENCE_THUNDER, 1F, 1F);
+		}
 		return true;
 	}
 	

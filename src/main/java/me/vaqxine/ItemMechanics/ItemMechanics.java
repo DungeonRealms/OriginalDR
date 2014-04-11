@@ -87,6 +87,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerAnimationEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -3316,6 +3317,11 @@ public class ItemMechanics implements Listener {
 			if(is == null || is.getType() != Material.ARROW) {
 				continue;
 			}
+			if(inv.getItem(35) != null && inv.getItem(35) == is){
+			    if(!is.hasItemMeta()){
+			        is.setType(Material.AIR);
+			    }
+			}
 			int tier = getItemTier(is);
 			ItemMeta im = is.getItemMeta();
 			im.setDisplayName("Bent Arrow");
@@ -5379,11 +5385,30 @@ public class ItemMechanics implements Listener {
 	public void onPlayerCancelled(final InventoryClickEvent e) {
 	    Player p = (Player) e.getWhoClicked();
 	        if(e.getCurrentItem() != null){
+	            
 	            if (p.getInventory().all(Material.FLOWER_POT_ITEM).size() > 2) {
+	                int total_amount = p.getInventory().all(Material.FLOWER_POT_ITEM).size();
+	                int amount_to_remove = total_amount - 2;
 	                for (Entry<Integer, ? extends ItemStack> data : p.getInventory().all(Material.FLOWER_POT_ITEM).entrySet()) {
-	                    p.sendMessage(ChatColor.RED + "You have been found with more then 2 Quivers in your inventorys.");
-	                    p.getInventory().remove(data.getValue()); 
-	                    p.getWorld().dropItemNaturally(p.getLocation(), data.getValue());
+	                    if(amount_to_remove > 0){
+	                        amount_to_remove--;
+	                        p.sendMessage(ChatColor.RED + "You have been found with more then 2 Quivers in your inventorys.");
+	                        p.getInventory().remove(data.getValue()); 
+	                        p.getWorld().dropItemNaturally(p.getLocation(), data.getValue());
+	                    }else{
+	                        break;
+	                    }
+	                }
+	            }
+	            if(e.getCurrentItem().getType() == Material.ARROW){
+	                if(p.getInventory().getItem(35) == e.getCurrentItem() && !e.getCurrentItem().hasItemMeta()){
+	                    e.getCurrentItem().setType(Material.AIR);
+	                    if(arrow_replace.containsKey(p.getName())){
+	                        PlayerArrowReplace par = arrow_replace.get(p.getName());
+	                        p.getInventory().setItem(par.getItemSlot(), par.getItem());
+	                        arrow_replace.remove(p.getName());
+	                        p.updateInventory();
+	                    }
 	                }
 	            }
 	            if(isQuiver(e.getCurrentItem())){
@@ -5447,6 +5472,7 @@ public class ItemMechanics implements Listener {
 	        }
 	    }
 	}
+	
 	public ItemStack getArrowFromTier(int tier){
 	    switch(tier){
 	    case 1:
@@ -5563,6 +5589,27 @@ public class ItemMechanics implements Listener {
 	        quiver.setItemMeta(im);
 	        return quiver;
 	    }
+	    
+	@EventHandler
+	public void onPlayerThrowItem(PlayerDropItemEvent e){
+	    if(e.getItemDrop().getItemStack().getType() == Material.ARROW){
+	        ItemStack is = e.getItemDrop().getItemStack();
+	        Player p = e.getPlayer();
+	        if(!is.hasItemMeta()){
+	            //They have the vanilla arrow D:
+	            if(is.getAmount() == 1){
+	                e.setCancelled(true);
+	                e.getItemDrop().remove();
+	                if(arrow_replace.containsKey(p.getName())){
+	                    PlayerArrowReplace par = arrow_replace.get(p.getName());
+	                    p.getInventory().setItem(par.getItemSlot(), par.getItem());
+	                    arrow_replace.remove(p.getName());
+	                    p.updateInventory();
+	                }
+	            }
+	        }
+	    }
+	}
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerShootWand(PlayerInteractEvent e) {

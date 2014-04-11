@@ -245,7 +245,7 @@ public class BossMechanics implements Listener {
 			boolean final_boss = false;
 			String server_message = "";
 			
-			if(boss_map.get(ent).equalsIgnoreCase("unholy_priest") || boss_map.get(ent).equalsIgnoreCase("bandit_leader") || boss_map.get(ent).equalsIgnoreCase("fire_demon")) {
+			if(boss_map.get(ent).equalsIgnoreCase("unholy_priest") ||  boss_map.get(ent).equalsIgnoreCase("aceron") || boss_map.get(ent).equalsIgnoreCase("bandit_leader") || boss_map.get(ent).equalsIgnoreCase("fire_demon")) {
 				final_boss = true;
 			}
 			
@@ -523,6 +523,7 @@ public class BossMechanics implements Listener {
 				}, 80L);
 				
 			}
+			
 			
 			if(final_boss) {
 				// This will move them all out.
