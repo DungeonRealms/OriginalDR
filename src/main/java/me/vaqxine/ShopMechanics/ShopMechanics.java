@@ -168,7 +168,7 @@ public class ShopMechanics implements Listener {
 	
 	public static HashMap<Hologram, Integer> view_count = new HashMap<Hologram, Integer>();
 	
-	BukkitRunnable store_backup;
+	BackupStoreData store_backup;
 	
 	static ShopMechanics sm = null;
 	
@@ -239,7 +239,9 @@ public class ShopMechanics implements Listener {
 	public void onDisable() {
 		shop_shutdown = true;
 		// So it doesn't think server is frozen.
-		store_backup.run();
+		BackupStoreData.shutdown = true;
+		store_backup.runTaskAsynchronously(Main.plugin);
+		
 		removeAllShops(); // Needed to upload data of offline players.
 		uploadAllCollectionBinData(); // Uploads / sends sockets to all servers for new collection bin data.
 		
@@ -732,7 +734,7 @@ public class ShopMechanics implements Listener {
 		
 		try {
 			pst = ConnectionPool.getConnection().prepareStatement("INSERT INTO shop_database (p_name, level, server_num, collection_bin)" + " VALUES" + "('" + p_name + "', '" + lshop_level + "', '" + server_num + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE level = '" + lshop_level + "', server_num='" + server_num + "', collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "';");
-			Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED + "ON LINE 734 I INSERT INTO shop_database (p_name, level, server_num, collection_bin)" + " VALUES" + "('" + p_name + "', '" + lshop_level + "', '" + server_num + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE level = '" + lshop_level + "', server_num='" + server_num + "', collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "';");
+			Main.dl("INSERT INTO shop_database (p_name, level, server_num, collection_bin)" + " VALUES" + "('" + p_name + "', '" + lshop_level + "', '" + server_num + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE level = '" + lshop_level + "', server_num='" + server_num + "', collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "';");
 			pst.executeUpdate();
 			
 		} catch(SQLException ex) {

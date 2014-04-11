@@ -37,6 +37,7 @@ import me.vaqxine.RecordMechanics.RecordMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
 import me.vaqxine.RestrictionMechanics.RestrictionMechanics;
 import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
+import me.vaqxine.ShopMechanics.BackupStoreData;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.SubscriberMechanics.SubscriberMechanics;
@@ -210,6 +211,18 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}.runTaskTimer(this, 20L * 5, 20L * 5);
+		
+		int max = 0;
+		while(BackupStoreData.shutdown){
+			if(max >= 100) break;
+			max++;
+			Main.d("Uploading shops: " + max);
+			try {
+				Thread.sleep(1000);
+			} catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void onDisable() {

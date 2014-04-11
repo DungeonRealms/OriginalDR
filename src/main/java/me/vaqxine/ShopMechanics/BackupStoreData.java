@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import me.vaqxine.Main;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.database.ConnectionPool;
 
@@ -12,6 +13,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class BackupStoreData extends BukkitRunnable {
 
+	public static boolean shutdown = false;
+	
     public void run() {
         if (ShopMechanics.need_sql_update.size() > 0) {
             // Upload it all.
@@ -39,12 +42,12 @@ public class BackupStoreData extends BukkitRunnable {
                 PreparedStatement pst = null;
 
                 try {
-                    pst = ConnectionPool.getConnection().prepareStatement(
-                            "INSERT INTO shop_database (p_name, shop_backup, collection_bin)" + " VALUES" + "('" + shop_owner + "', '"
-                                    + StringEscapeUtils.escapeSql(shop_contents) + "', '" + StringEscapeUtils.escapeSql(collection_bin_s)
-                                    + "') ON DUPLICATE KEY UPDATE shop_backup = '" + StringEscapeUtils.escapeSql(shop_contents) + "', collection_bin='"
-                                    + StringEscapeUtils.escapeSql(collection_bin_s) + "'");
-
+                	String query = "INSERT INTO shop_database (p_name, shop_backup, collection_bin)" + " VALUES" + "('" + shop_owner + "', '"
+                            + StringEscapeUtils.escapeSql(shop_contents) + "', '" + StringEscapeUtils.escapeSql(collection_bin_s)
+                            + "') ON DUPLICATE KEY UPDATE shop_backup = '" + StringEscapeUtils.escapeSql(shop_contents) + "', collection_bin='"
+                            + StringEscapeUtils.escapeSql(collection_bin_s) + "'";
+                    pst = ConnectionPool.getConnection().prepareStatement(query);
+                    Main.dl(query);
                     pst.executeUpdate();
 
                 } catch (SQLException ex) {
@@ -68,5 +71,7 @@ public class BackupStoreData extends BukkitRunnable {
             }
             // ShopMechanics.need_sql_update.clear();
         }
+        
+        if(shutdown) shutdown = false;
     }
 }
