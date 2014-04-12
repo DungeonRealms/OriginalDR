@@ -4315,7 +4315,8 @@ public class Hive implements Listener {
                             continue;
                         }
                     }
-                    ply.getWorld().dropItemNaturally(ply.getLocation(), is);
+                    Entity item = ply.getWorld().dropItemNaturally(ply.getLocation(), is);
+                    item.setMetadata("player_drop", new FixedMetadataValue(Main.plugin, ""));
                 }
                 
                 if(align != null && (align.equalsIgnoreCase("evil") || align.equalsIgnoreCase("neutral"))) {
@@ -4338,7 +4339,8 @@ public class Hive implements Listener {
                                 continue;
                             }
                         }
-                        ply.getWorld().dropItemNaturally(ply.getLocation(), is);
+                        Entity item = ply.getWorld().dropItemNaturally(ply.getLocation(), is);
+                        item.setMetadata("player_drop", new FixedMetadataValue(Main.plugin, ""));
                     }
                 }
                 
@@ -4348,7 +4350,8 @@ public class Hive implements Listener {
                         if(is == null || is.getType() == Material.AIR) {
                             continue;
                         }
-                        ply.getWorld().dropItemNaturally(ply.getLocation(), is);
+                        Entity item = ply.getWorld().dropItemNaturally(ply.getLocation(), is);
+                        item.setMetadata("player_drop", new FixedMetadataValue(Main.plugin, ""));
                     }
                 }
                 
@@ -4380,6 +4383,13 @@ public class Hive implements Listener {
         Player pl = e.getPlayer();
         if(server_swap.containsKey(pl.getName()) || (System.currentTimeMillis() - login_time.get(pl.getName())) <= 5000) {
             e.setCancelled(true);
+            return;
+        }
+        if(InstanceMechanics.isInstance(e.getItemDrop().getWorld().getName())){
+            if(ItemMechanics.isArmor(e.getItemDrop().getItemStack()) || ItemMechanics.isWeapon(e.getItemDrop().getItemStack())){
+                //They are dropping armor so dont remove it >.>
+                e.getItemDrop().setMetadata("player_drop", new FixedMetadataValue(Main.plugin, ""));
+            }
         }
     }
     

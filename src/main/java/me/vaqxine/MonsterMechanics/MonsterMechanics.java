@@ -5584,6 +5584,8 @@ public class MonsterMechanics implements Listener {
 	        return;
 	    }
 	    if(InstanceMechanics.isInstance(e.getEntity().getWorld().getName())){
+	        //Dont remove boss_drops or player_drops
+	        if(e.getEntity().hasMetadata("boss_drop") || e.getEntity().hasMetadata("player_drop"))return;
 	        if(ItemMechanics.isArmor(e.getEntity().getItemStack()) || ItemMechanics.isWeapon(e.getEntity().getItemStack())){
 	            e.setCancelled(true);
 	            e.getEntity().remove();

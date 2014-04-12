@@ -2820,7 +2820,10 @@ public class ShopMechanics implements Listener {
 		}
 		
 		Inventory shop_i = getShopStock(b);
-		
+		if(shop_i == null){
+		    p.kickPlayer(ChatColor.RED + "There was a problem loading your stock!\n" + ChatColor.BOLD + "Error Code: 1462");
+		    return;
+		}
 		p.openInventory(shop_i);
 		p.playSound(p.getLocation(), Sound.CHEST_OPEN, 1F, 1F);
 		

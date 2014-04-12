@@ -76,6 +76,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class EcashMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
@@ -212,11 +213,16 @@ public class EcashMechanics implements Listener {
 					long timeout = data.getValue();
 					if((System.currentTimeMillis() - timeout) >= 360 * 1000) {
 						// Despawn.
-						Block b = data.getKey();
-						CraftJukebox cj = (CraftJukebox) b.getState();
-						cj.setPlaying(Material.AIR);
-						cj.setRawData((byte) 0x0);
-						b.setType(Material.AIR);
+						final Block b = data.getKey();
+						new BukkitRunnable() {
+                            public void run() {
+                                CraftJukebox cj = (CraftJukebox) b.getState();
+                                cj.setPlaying(Material.AIR);
+                                cj.setRawData((byte) 0x0);
+                               b.setType(Material.AIR); 
+                            }
+						}.runTask(Main.plugin);
+						
 						Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(b.getLocation().getX()), (int) Math.round(b.getLocation().getY()), (int) Math.round(b.getLocation().getZ()), 84, false);
 						((CraftServer) Bukkit.getServer()).getServer().getPlayerList().sendPacketNearby(b.getLocation().getX(), b.getLocation().getY(), b.getLocation().getZ(), 24, ((CraftWorld) b.getWorld()).getHandle().dimension, particles);
 						
