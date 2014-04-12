@@ -5559,16 +5559,16 @@ public class MonsterMechanics implements Listener {
 	    }
 	}
 	
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onItemSpawn(ItemSpawnEvent e){
 	    if(e.getEntity().getItemStack().getType() == Material.SKULL_ITEM){
 	        e.setCancelled(true);
 	        e.getEntity().remove();
 	        return;
 	    }
+	    if(e.getEntity().hasMetadata("boss_drop") || e.getEntity().hasMetadata("player_drop"))return;
 	    if(InstanceMechanics.isInstance(e.getEntity().getWorld().getName())){
 	        //Dont remove boss_drops or player_drops
-	        if(e.getEntity().hasMetadata("boss_drop") || e.getEntity().hasMetadata("player_drop"))return;
 	        if(ItemMechanics.isArmor(e.getEntity().getItemStack()) || ItemMechanics.isWeapon(e.getEntity().getItemStack())){
 	            e.setCancelled(true);
 	            e.getEntity().remove();

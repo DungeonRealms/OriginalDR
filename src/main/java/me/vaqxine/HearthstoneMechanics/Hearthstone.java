@@ -37,7 +37,7 @@ public class Hearthstone {
         try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement("SELECT * FROM hearthstone WHERE p_name = ?")) {
             pst.setString(1, p_name);
             ResultSet rst = pst.executeQuery();
-            if (!rst.next()) {
+            if (!rst.first()) {
                 tp_loc = HearthstoneMechanics.spawn_map.get("Cyrennica");
                 tp_name = "Cyrennica";
                 sendInsertQuery();
@@ -50,7 +50,7 @@ public class Hearthstone {
             tp_loc = HearthstoneMechanics.spawn_map.get(rst.getString("location_name"));
             setTimer(rst.getInt("timer"));
             // TODO: Download the data from tables and set their spawns
-           // System.out.print("Loaded Hearthstone data for " + p_name);
+            // System.out.print("Loaded Hearthstone data for " + p_name);
             pst.close();
         } catch (SQLException sqlE) {
             sqlE.printStackTrace();
@@ -64,7 +64,7 @@ public class Hearthstone {
     /**
      * This saves all their data in an Async task
      */
-    public void sendInsertQuery(){
+    public void sendInsertQuery() {
         try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
                 "INSERT IGNORE INTO hearthstone (p_name, location_name, timer) VALUES (?, ?, 0) ON DUPLICATE KEY UPDATE p_name = ?;")) {
             pst.setString(1, tp_name);
@@ -77,6 +77,7 @@ public class Hearthstone {
             e.printStackTrace();
         }
     }
+
     public void saveData() {
         new BukkitRunnable() {
             public void run() {
@@ -86,7 +87,7 @@ public class Hearthstone {
                     pst.setInt(2, timer_seconds);
                     pst.setString(3, p_name);
                     pst.executeUpdate();
-                    //System.out.print("[HeartstoneMechanics] Saved " + p.getName() + "s Hearthstone data.");
+                    // System.out.print("[HeartstoneMechanics] Saved " + p.getName() + "s Hearthstone data.");
                     pst.close();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -98,15 +99,19 @@ public class Hearthstone {
     public Location getLocation() {
         return tp_loc;
     }
-    public Player getPlayer(){
+
+    public Player getPlayer() {
         return p;
     }
+
     public void setTimer(int timer) {
         timer_seconds = timer;
     }
-    public int getTimer(){
+
+    public int getTimer() {
         return timer_seconds;
     }
+
     public void setLocationName(String name) {
         this.tp_name = name;
     }

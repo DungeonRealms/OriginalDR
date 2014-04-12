@@ -30,6 +30,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -128,7 +129,9 @@ public class BossMechanics implements Listener {
 							break;
 						}
 					}
-					
+					if(minions.isEmpty()){
+					    minion_alive = false;
+					}
 					if(minion_alive == false) {
 						LivingEntity le_boss = (LivingEntity) boss;
 						boss_saved_location.remove(boss);
@@ -178,8 +181,19 @@ public class BossMechanics implements Listener {
 							le.teleport(boss_saved_location.get(boss));
 						}
 					}
+					List<Entity> minions = minion_map.get(boss);
+					List<Entity> to_remove = new ArrayList<Entity>();
+					for(Entity minion : minions){
+				    //Check for the minions
+					    if(minion == null || minion.isDead()){
+					     to_remove.add(minion);
+					    }
+					}
+					for(Entity mtr : to_remove){
+					    minions.remove(mtr);
+					}
+					minion_map.put(boss, minions);
 				}
-				
 				for(Entity e : remove) {
 					minion_map.remove(e);
 				}
@@ -205,6 +219,7 @@ public class BossMechanics implements Listener {
 				}
 			}
 		}, 10 * 20L, 5L);
+		
 		
 		log.info("[BossMechanics] has been enabled.");
 	}
@@ -305,7 +320,7 @@ public class BossMechanics implements Listener {
 					possible_drops.add(weapon);
 					
 					ItemStack reward = possible_drops.get(new Random().nextInt(possible_drops.size()));
-					Entity item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
+					Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
 					item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
 				}
 				
@@ -393,7 +408,7 @@ public class BossMechanics implements Listener {
 							possible_drops.add(weapon);
 							
 							ItemStack reward = possible_drops.get(new Random().nextInt(possible_drops.size()));
-							Entity item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
+							Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
 		                    item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
 						}
 						
@@ -483,7 +498,7 @@ public class BossMechanics implements Listener {
 					possible_drops.add(weapon);
 					
 					ItemStack reward = possible_drops.get(new Random().nextInt(possible_drops.size()));
-					Entity item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
+					Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
                     item.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, ""));
 				}
 				
