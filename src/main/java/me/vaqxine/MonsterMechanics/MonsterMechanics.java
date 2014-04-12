@@ -2189,28 +2189,16 @@ public class MonsterMechanics implements Listener {
 		if(event.getCause() == DamageCause.LAVA || event.getCause() == DamageCause.FIRE) {
 			event.setCancelled(true);
 			event.setDamage(0);
-			return;
 		}
 		if(event.getCause() == DamageCause.FIRE_TICK){
-		    Location l = event.getEntity().getLocation();
 		    if(event.getEntity().getFireTicks() > 30){
 		        event.getEntity().setFireTicks(30);
 		    }
-		    if(l.getBlock().getType() == Material.FIRE || l.getBlock().getType() == Material.LAVA ||
-		            l.clone().add(0, 1, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, 1, 0).getBlock().getType() == Material.LAVA 
-		            || l.clone().add(0, -1, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, -1, 0).getBlock().getType() == Material.LAVA
-		            ||  l.clone().add(0, -2, 0).getBlock().getType() == Material.FIRE || l.clone().add(0, -2, 0).getBlock().getType() == Material.LAVA){
-		        event.setCancelled(true);
-		        if(mob_target.containsKey(event.getEntity())){
-		            Player p = Bukkit.getPlayer(mob_target.get(event.getEntity()));
-		            if(p == null){
-		                pathFindAway(event.getEntity());
-		            }else{
-		                event.getEntity().teleport(p.getLocation().add(0, .5, 0));
-		            }
-		        }
-		        event.getEntity().setFireTicks(0);
-		    }
+		}
+		if(isLavaNearby(event.getEntity().getLocation(), 5)){
+		    event.setCancelled(true);
+		    event.setDamage(0);
+		    event.getEntity().setFireTicks(0);
 		}
 		if(event.getCause() == DamageCause.WITHER) {
 			if(InstanceMechanics.isInstance(event.getEntity().getWorld().getName())) return;
@@ -2223,30 +2211,25 @@ public class MonsterMechanics implements Listener {
 			}
 		}
 	}
-	public void pathFindAway(Entity e){
-	    int add_y = e.getLocation().getBlockY() + 1;
-        int add_X = e.getLocation().getBlockX() + 10;
-        int add_Z = e.getLocation().getBlockZ() + 10;
+	public boolean isLavaNearby(Location l, int to_check){
+	    int add_y = l.getBlockY() + to_check / 2;
+        int add_X = l.getBlockX() + to_check;
+        int add_Z = l.getBlockZ() + to_check;
         // The numbers seem to act strange and not dissapear
-        int minus_X = e.getLocation().getBlockX() - 10;
-        int minus_Z = e.getLocation().getBlockZ() - 10;
-        int minus_Y = e.getLocation().getBlockY() - 1;
+        int minus_X = l.getBlockX() - to_check;
+        int minus_Z = l.getBlockZ() - to_check;
+        int minus_Y = l.getBlockY() - to_check / 2;
         for (int x = minus_X; x < add_X; x++) {
             for (int z = minus_Z; z < add_Z; z++) {
                 for (int y = minus_Y; y < add_y; y++) {
-                    final Block b = e.getWorld().getBlockAt(x, y, z);
-                    if (b.getType().isSolid() && b.getType() != Material.LAVA) {
-                        //So its a legit block so make them move
-                      if(b.getLocation().add(0, 1,0 ).getBlock().getType() == Material.AIR && b.getLocation().add(0, 2, 0).getBlock().getType() == Material.AIR){
-                      //The block is legit so make them go there.
-                      e.teleport(b.getLocation());
-                      break;
-                      }
+                    final Block b = l.getWorld().getBlockAt(x, y, z);
+                    if (b.getType() ==  Material.LAVA) {
+                        return true;
                     }
                 }
             }
         }
-	    
+	    return false;
 	}
 	
 	public boolean isLavaNearby(Location l){
