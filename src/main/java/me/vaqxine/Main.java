@@ -45,6 +45,7 @@ import me.vaqxine.TeleportationMechanics.TeleportationMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.WeatherMechanics.WeatherMechanics;
+import me.vaqxine.config.Config;
 import me.vaqxine.database.ConnectionPool;
 import me.vaqxine.enums.CC;
 import me.vaqxine.holograms.Hologram;
@@ -106,6 +107,10 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 		plugin = this;
 		log = this.getLogger();
+		
+		if(getServer().getMotd().contains("US-99")){
+			Config.sql_url = "jdbc:mysql://" + Config.Hive_IP + ":" + Config.SQL_port + "/dungeonrealms_test";
+		}
 		
 		getServer().getPluginManager().registerEvents(new ScoreboardMechanics(), this);
 		getServer().getPluginManager().registerEvents(this, this);
