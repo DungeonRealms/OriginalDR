@@ -38,6 +38,7 @@ import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.database.ConnectionPool;
+import me.vaqxine.enums.CC;
 import me.vaqxine.holograms.Hologram;
 import net.citizensnpcs.api.CitizensAPI;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
@@ -62,6 +63,7 @@ import org.bukkit.craftbukkit.v1_7_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.util.ServerShutdownThread;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -83,6 +85,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -244,7 +247,7 @@ public class ShopMechanics implements Listener {
 		
 		removeAllShops(); // Needed to upload data of offline players.
 		uploadAllCollectionBinData(); // Uploads / sends sockets to all servers for new collection bin data.
-		
+		//Make the main thread sleep for 10 seconds so things can be uploaded.
 		/*int timeout = 0;
 		while((collection_bin.size() > 0) && timeout <= 200){
 		    // The timeout is for multithreaded player data upload events.
@@ -260,6 +263,25 @@ public class ShopMechanics implements Listener {
 		log.info("[ShopMechanics] has been disabled.");
 	}
 	
+	@EventHandler
+	public void onPluginDisable(PluginDisableEvent e){
+	    if(e.getPlugin().getName().equalsIgnoreCase("DungeonRealms")){
+	    int seconds_held = 0;
+	    long time_since_setting = System.currentTimeMillis();
+	    while(BackupStoreData.shutdown && seconds_held < 10 && time_since_setting <= System.currentTimeMillis() && !all_collection_bins_uploaded){
+	        Main.d(CC.RED + "HOLDING THE MAIN THREAD HOSTAGE FOR 1 SECONDS TO UPLOAD DATA.");
+	        try {
+	            ServerShutdownThread.sleep(1000);
+	            seconds_held++;
+	            time_since_setting = System.currentTimeMillis() + 1000;
+	        } catch (InterruptedException ex) {
+	            // TODO Auto-generated catch block
+	            ex.printStackTrace();
+	            }
+	        }
+	    }
+	    
+	}
 	public void setStockCount(Player shop_tag, int stock) {
 		ScoreboardMechanics.setStockCount(shop_tag, stock);
 	}
