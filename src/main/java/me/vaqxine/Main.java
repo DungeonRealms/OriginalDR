@@ -216,18 +216,6 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}.runTaskTimer(this, 20L * 5, 20L * 5);
-		
-		int max = 0;
-		while(BackupStoreData.shutdown){
-			if(max >= 100) break;
-			max++;
-			Main.d("Uploading shops: " + max);
-			try {
-				Thread.sleep(1000);
-			} catch(InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	public void onDisable() {
@@ -269,6 +257,18 @@ public class Main extends JavaPlugin implements Listener {
 		weatherMechanics.onDisable();
 		hive.onDisable();
 		hiveServer.onDisable();
+		
+		int max = 0;
+		while(BackupStoreData.shutdown){
+			if(max >= 100) break;
+			max++;
+			Main.d("Uploading shops: " + max);
+			try {
+				Thread.sleep(1000);
+			} catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	@EventHandler
