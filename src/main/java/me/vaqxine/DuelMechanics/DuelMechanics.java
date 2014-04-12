@@ -1519,8 +1519,8 @@ public class DuelMechanics implements Listener {
 				attacked.setFireTicks(0);
 				attacked.setFallDistance(0.0F);
 				attacked.removePotionEffect(PotionEffectType.POISON);
-				attacked.setHealth(1);
-				HealthMechanics.setPlayerHP(attacked.getName(), 1);
+				attacked.setHealth(10);
+				HealthMechanics.setPlayerHP(attacked.getName(), 10);
 				//attacked.setLevel(1);
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 					public void run() {
@@ -1569,11 +1569,12 @@ public class DuelMechanics implements Listener {
 					rewardLoot(attacker, attacked);
 				}
 				e.setCancelled(true);
+				System.out.print("DUEL > DMG: " + e.getDamage() + " Winner: " + attacker.getName() + " Loser: " + attacked.getName() + " Losers HP:" + attacked.getHealth() + " HP: " + HealthMechanics.getPlayerHP(attacked.getName()));
 				e.setDamage(0);
 				return;
 			}
 			
-			e.setCancelled(false);
+			e.setCancelled(true);
 			return;
 			// Cancel any previously made event cancels... if this doesn't work, just do direct damage lool.
 		}

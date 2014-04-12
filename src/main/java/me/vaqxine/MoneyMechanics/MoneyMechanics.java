@@ -1401,13 +1401,16 @@ public class MoneyMechanics implements Listener {
 			
 			updateStaticCashStack(p);
 			
-			if(!(bank_contents.containsKey(p.getName()) || !(bank_map.containsKey(p.getName())))) {
+			if(!(bank_contents.containsKey(p.getName()) || !(bank_map.containsKey(p.getName()))) || bank_contents.get(p.getName()).get(0) == null) {
 				log.info("[MoneyMechanics] Failed to load bank data for " + p.getName() + ".");
 				return;
 			}
 			
 			Inventory echest = bank_contents.get(p.getName()).get(0);
-			
+			if(echest == null){
+			    p.kickPlayer(ChatColor.RED + "There was a problem loading your data!\n" + ChatColor.BOLD + "Error Code: 1452");
+			    return;
+			}
 			p.openInventory(echest);
 			p.playSound(p.getLocation(), Sound.CHEST_OPEN, 1F, 1F);
 		}

@@ -151,7 +151,7 @@ public class PetMechanics implements Listener {
 			horse_style_list.add(horse_style);
 		}
 		
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				for(Entity ent : inv_pet_map.keySet()) {
 					if(ent != null && ent.getType() == EntityType.CREEPER && ((Creeper) ent).isPowered() && !ent.isDead()) {
@@ -201,7 +201,6 @@ public class PetMechanics implements Listener {
 							}
 							
 							t = org.bukkit.FireworkEffect.Type.BALL;
-							
 							Firework fw = (Firework) ent.getWorld().spawnEntity(ent.getLocation().add(0, 1, 0), EntityType.FIREWORK);
 							FireworkMeta fwm = fw.getFireworkMeta();
 							//Random r = new Random();   

@@ -2512,7 +2512,7 @@ public class ShopMechanics implements Listener {
 			}
 			
 			ItemStack i_format = setPrice(removePrice(i), price_per);
-			Inventory shop_i = shop_stock.get(p.getName());
+			final Inventory shop_i = shop_stock.get(p.getName());
 			current_item_being_stocked.remove(p.getName());
 			
 			shop_i.setItem(shop_i.firstEmpty(), i_format);
@@ -2533,7 +2533,12 @@ public class ShopMechanics implements Listener {
 				p.sendMessage(ChatColor.YELLOW + "Price set. Right-Click item to edit.");
 			}
 			price_update_needed.remove(p);
-			p.openInventory(shop_i);
+			new BukkitRunnable() {
+                public void run() {
+                    p.openInventory(shop_i);
+                }
+			}.runTask(Main.plugin);
+			
 			p.playSound(p.getLocation(), Sound.CLICK, 1F, 1.25F);
 			if(!(need_sql_update.contains(p.getName()))) {
 				need_sql_update.add(p.getName()); // Update SQL after a new item is added to stock.
@@ -2820,7 +2825,10 @@ public class ShopMechanics implements Listener {
 		}
 		
 		Inventory shop_i = getShopStock(b);
-		
+		if(shop_i == null){
+		    p.kickPlayer(ChatColor.RED + "There was a problem loading your stock!\n" + ChatColor.BOLD + "Error Code: 1462");
+		    return;
+		}
 		p.openInventory(shop_i);
 		p.playSound(p.getLocation(), Sound.CHEST_OPEN, 1F, 1F);
 		

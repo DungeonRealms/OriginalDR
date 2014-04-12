@@ -3755,6 +3755,7 @@ public class ItemMechanics implements Listener {
 	@EventHandler
 	public void onPlayerOpenInv(InventoryOpenEvent e){
 	    Player p = (Player) e.getPlayer();
+	    if(e.getInventory() != null && e.getInventory().getType() != null){
 	    if(e.getInventory().getType() == InventoryType.PLAYER){
 	       if(arrow_replace.containsKey(p.getName())){
 	          PlayerArrowReplace par = arrow_replace.get(p.getName());
@@ -3763,6 +3764,7 @@ public class ItemMechanics implements Listener {
 	          arrow_replace.remove(p.getName());
 	          p.updateInventory();
 	       }
+	        }
 	    }
 	}
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)

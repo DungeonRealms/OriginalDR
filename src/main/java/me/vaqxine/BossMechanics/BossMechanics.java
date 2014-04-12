@@ -38,6 +38,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -304,7 +305,8 @@ public class BossMechanics implements Listener {
 					possible_drops.add(weapon);
 					
 					ItemStack reward = possible_drops.get(new Random().nextInt(possible_drops.size()));
-					ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
+					Entity item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
+					item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
 				}
 				
 				int gem_drop = new Random().nextInt(2500 - 1000) + 1000;
@@ -391,7 +393,8 @@ public class BossMechanics implements Listener {
 							possible_drops.add(weapon);
 							
 							ItemStack reward = possible_drops.get(new Random().nextInt(possible_drops.size()));
-							ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
+							Entity item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
+		                    item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
 						}
 						
 						int gem_drop = new Random().nextInt(12000 - 10000) + 10000;
@@ -480,7 +483,8 @@ public class BossMechanics implements Listener {
 					possible_drops.add(weapon);
 					
 					ItemStack reward = possible_drops.get(new Random().nextInt(possible_drops.size()));
-					ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
+					Entity item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
+                    item.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, ""));
 				}
 				
 				int gem_drop = new Random().nextInt(250 - 100) + 100;
