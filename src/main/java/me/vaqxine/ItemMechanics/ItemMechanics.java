@@ -2833,6 +2833,8 @@ public class ItemMechanics implements Listener {
     public static boolean doesPlayerHaveAnyArrows(Player p) {
         for (ItemStack is : p.getInventory()) {
             if (is == null || is.getType() == Material.AIR || is.getType() != Material.ARROW || is.getType() != Material.FLOWER_POT_ITEM) {
+                continue;
+            }
                 if (is.getType() == Material.FLOWER_POT_ITEM) {
                     int amount = getQuiverAmount(is);
                     if (amount > 0) {
@@ -2845,7 +2847,6 @@ public class ItemMechanics implements Listener {
                 if (p.getInventory().contains(Material.ARROW)) {
                     return true;
                 }
-            }
         }
         return false;
     }
