@@ -669,7 +669,6 @@ public class ShopMechanics implements Listener {
 		try {
 			
 			pst = ConnectionPool.getConnection().prepareStatement("INSERT INTO shop_database (p_name, collection_bin)" + " VALUES" + "('" + p_name + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "'");
-			Main.dl(pst);
 			pst.executeUpdate();
 			
 		} catch(SQLException ex) {
@@ -736,7 +735,6 @@ public class ShopMechanics implements Listener {
 		
 		try {
 			pst = ConnectionPool.getConnection().prepareStatement("INSERT INTO shop_database (p_name, level, server_num, collection_bin)" + " VALUES" + "('" + p_name + "', '" + lshop_level + "', '" + server_num + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE level = '" + lshop_level + "', server_num='" + server_num + "', collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "';");
-			Main.dl("INSERT INTO shop_database (p_name, level, server_num, collection_bin)" + " VALUES" + "('" + p_name + "', '" + lshop_level + "', '" + server_num + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE level = '" + lshop_level + "', server_num='" + server_num + "', collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "';");
 			pst.executeUpdate();
 			
 		} catch(SQLException ex) {

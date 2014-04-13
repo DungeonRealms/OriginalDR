@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import me.vaqxine.Main;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.database.ConnectionPool;
 
@@ -47,7 +46,6 @@ public class BackupStoreData extends BukkitRunnable {
                             + "') ON DUPLICATE KEY UPDATE shop_backup = '" + StringEscapeUtils.escapeSql(shop_contents) + "', collection_bin='"
                             + StringEscapeUtils.escapeSql(collection_bin_s) + "';";
                     pst = ConnectionPool.getConnection().prepareStatement(query);
-                    Main.dl(query);
                     pst.executeUpdate();
 
                 } catch (SQLException ex) {
