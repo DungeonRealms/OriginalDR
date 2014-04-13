@@ -27,6 +27,7 @@ public class CommandToggleDuel implements CommandExecutor {
 			CommunityMechanics.toggle_list.put(p.getName(), ltoggle_list);
 			
 			p.sendMessage(ChatColor.GREEN + "Dueling Requests - " + ChatColor.BOLD + "ENABLED");
+			return true;
 		}
 		
 		if(!CommunityMechanics.toggle_list.get(p.getName()).contains("duel")) {
@@ -35,6 +36,7 @@ public class CommandToggleDuel implements CommandExecutor {
 			CommunityMechanics.toggle_list.put(p.getName(), ltoggle_list);
 			
 			p.sendMessage(ChatColor.RED + "Dueling Requests - " + ChatColor.BOLD + "DISABLED");
+			return true;
 		}
 		return true;
 	}

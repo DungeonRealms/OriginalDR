@@ -150,7 +150,7 @@ public class MonsterMechanics implements Listener {
 	public static HashMap<Entity, List<Integer>> mob_damage = new HashMap<Entity, List<Integer>>();
 	static HashMap<Entity, Integer> mob_armor = new HashMap<Entity, Integer>();
 	static HashMap<Entity, Integer> mob_tier = new HashMap<Entity, Integer>();
-	static HashMap<Entity, List<ItemStack>> mob_loot = new HashMap<Entity, List<ItemStack>>();
+	public static HashMap<Entity, List<ItemStack>> mob_loot = new HashMap<Entity, List<ItemStack>>();
 	
 	// Special mob attacks START.
 	static ConcurrentHashMap<Entity, Integer> special_attack = new ConcurrentHashMap<Entity, Integer>();
@@ -5567,7 +5567,10 @@ public class MonsterMechanics implements Listener {
 	        return;
 	    }
 	 
-	    if(InstanceMechanics.isInstance(e.getEntity().getWorld().getName())){
+	    if(InstanceMechanics.isInstance(e.getEntity().getWorld().getName())){ 
+	        if(e.getEntity().getItemStack().getDurability() == 0){
+	                return;
+	            }
 	        if(e.getEntity().hasMetadata("boss_drop") || e.getEntity().hasMetadata("player_drop")){
 	            Main.d(CC.RED + "DROP HAD SOME DATA DAWG");
 	            e.setCancelled(false);
@@ -5575,10 +5578,11 @@ public class MonsterMechanics implements Listener {
 	        }
 	        //Dont remove boss_drops or player_drops
 	        if(ItemMechanics.isArmor(e.getEntity().getItemStack()) || ItemMechanics.isWeapon(e.getEntity().getItemStack())){
-	            Main.d(e.getEntity().hasMetadata("player_drop"));
+	           
+	            Main.d(e.getEntity().hasMetadata("boss_drop"));
 	            e.setCancelled(true);
 	            e.getEntity().remove();
-	            System.out.print("ITEM WOULD HAVE DROPPED IN AN INSTANCE: " + e.getEntity().getItemStack().getType());
+	            System.out.print("ITEM WOULD HAVE DROPPED IN AN INSTANCE: " + e.getEntity().getItemStack().getType() + " DURA: " + e.getEntity().getItemStack().getDurability() + " MAX DURA: " + e.getEntity().getItemStack().getType().getMaxDurability());
 	            return;
 	        }
 	    }
