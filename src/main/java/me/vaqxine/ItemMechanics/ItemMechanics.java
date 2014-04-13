@@ -3317,7 +3317,7 @@ public class ItemMechanics implements Listener {
 			if(is == null || is.getType() != Material.ARROW) {
 				continue;
 			}
-			if(inv.getItem(35) != null && inv.getItem(35) == is){
+			if(inv.getSize() >= 35 && inv.getItem(35) != null && inv.getItem(35) == is){
 			    if(!is.hasItemMeta()){
 			        is.setType(Material.AIR);
 			    }
@@ -3920,20 +3920,19 @@ public class ItemMechanics implements Listener {
 				HealthMechanics.setPlayerHP(p.getName(), getMaxHP(p));
 				p.setHealth(20);
 			} else {
-			    if(!(HealthMechanics.getPlayerHP(p.getName()) <= 0) && !p.isDead()){
+			    if(HealthMechanics.getPlayerHP(p.getName()) > 0 && !p.isDead()){
 			        //They are dead and dont need to be healed -_-
 				HealthMechanics.setPlayerHP(p.getName(), ((int) (HealthMechanics.getPlayerHP(p.getName()) + leech_val)));
 				double health_percent = ((double) HealthMechanics.getPlayerHP(p.getName())) / (double) getMaxHP(p);
 				double new_health_display = health_percent * 20.0D;
 				p.setHealth((int) new_health_display);
-			}
-			
+			    }
 			Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(p.getLocation().getX()), (int) Math.round(p.getLocation().getY() + 1), (int) Math.round(p.getLocation().getZ()), 152, false);
 			((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), 24, ((CraftWorld) p.getWorld()).getHandle().dimension, particles);
 			
 			if(CommunityMechanics.toggle_list.get(p.getName()).contains("debug")) {
 				p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP" + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p.getName())) + "/" + (int) getMaxHP(p) + "HP]");
-			    }
+			        }
 			}
 		}
 		if(dmg_data.contains("slow=true")) {
@@ -4329,6 +4328,8 @@ public class ItemMechanics implements Listener {
 					HealthMechanics.setPlayerHP(p_attacker.getName(), getMaxHP(p_attacker));
 					p_attacker.setHealth(20);
 				} else {
+				    if(!p_attacker.isDead() && HealthMechanics.getPlayerHP(p_attacker.getName()) > 0){
+				        
 					//leech_val -= 20 - p_attacker.getHealth();
 					//HealthMechanics.setPlayerHP(p_attacker.getName(), (int)(HealthMechanics.getPlayerHP(p_attacker.getName()) + leech_val));
 					HealthMechanics.setPlayerHP(p_attacker.getName(), (int) (HealthMechanics.getPlayerHP(p_attacker.getName()) + leech_val));
@@ -4336,8 +4337,7 @@ public class ItemMechanics implements Listener {
 					double new_health_display = health_percent * 20.0D;
 					//log.info("" + new_health_display);
 					p_attacker.setHealth((int) new_health_display);
-				}
-				
+				    }
 				double xpt = le.getLocation().getX(); //(p_attacker.getLocation().getX() + le.getLocation().getX()) / 2;
 				double ypt = le.getLocation().getY(); //(p_attacker.getLocation().getY() + le.getLocation().getY()) / 2;
 				double zpt = le.getLocation().getZ(); //(p_attacker.getLocation().getZ() + le.getLocation().getZ()) / 2;
@@ -4347,6 +4347,7 @@ public class ItemMechanics implements Listener {
 				
 				if(CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("debug")) {
 					p_attacker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP" + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p_attacker.getName())) + "/" + (int) getMaxHP(p_attacker) + "HP]");
+				    }
 				}
 				
 			}
@@ -4557,12 +4558,13 @@ public class ItemMechanics implements Listener {
 					p_attacker.setHealth(20);
 				} else {
 					//HealthMechanics.setPlayerHP(p_attacker.getName(), (int)(HealthMechanics.getPlayerHP(p_attacker.getName()) + leech_val));
+				    if(HealthMechanics.getPlayerHP(p_attacker.getName()) > 0 && !p_attacker.isDead()){
 					HealthMechanics.setPlayerHP(p_attacker.getName(), (int) (HealthMechanics.getPlayerHP(p_attacker.getName()) + leech_val));
 					double health_percent = ((double) HealthMechanics.getPlayerHP(p_attacker.getName())) / (double) getMaxHP(p_attacker);
 					double new_health_display = health_percent * 20.0D;
 					p_attacker.setHealth((int) new_health_display);
+				    }
 				}
-				
 				double xpt = le.getLocation().getX(); //(p_attacker.getLocation().getX() + le.getLocation().getX()) / 2;
 				double ypt = le.getLocation().getY(); //(p_attacker.getLocation().getY() + le.getLocation().getY()) / 2;
 				double zpt = le.getLocation().getZ(); //(p_attacker.getLocation().getZ() + le.getLocation().getZ()) / 2;
@@ -4783,12 +4785,13 @@ public class ItemMechanics implements Listener {
 					p_attacker.setHealth(20);
 				} else {
 					//HealthMechanics.setPlayerHP(p_attacker.getName(), (int)(HealthMechanics.getPlayerHP(p_attacker.getName()) + leech_val));
+				    if(HealthMechanics.getPlayerHP(p_attacker.getName()) > 0 && !p_attacker.isDead()){
 					HealthMechanics.setPlayerHP(p_attacker.getName(), (int) (HealthMechanics.getPlayerHP(p_attacker.getName()) + leech_val));
 					double health_percent = ((double) HealthMechanics.getPlayerHP(p_attacker.getName())) / (double) getMaxHP(p_attacker);
 					double new_health_display = health_percent * 20.0D;
 					p_attacker.setHealth((int) new_health_display);
+				    }
 				}
-				
 				double xpt = le.getLocation().getX(); //(p_attacker.getLocation().getX() + le.getLocation().getX()) / 2;
 				double ypt = le.getLocation().getY(); //(p_attacker.getLocation().getY() + le.getLocation().getY()) / 2;
 				double zpt = le.getLocation().getZ(); //(p_attacker.getLocation().getZ() + le.getLocation().getZ()) / 2;
@@ -5051,12 +5054,13 @@ public class ItemMechanics implements Listener {
 					HealthMechanics.setPlayerHP(p_attacker.getName(), getMaxHP(p_attacker));
 					p_attacker.setHealth(20);
 				} else {
+				    if(HealthMechanics.getPlayerHP(p_attacker.getName()) > 0 && !p_attacker.isDead()){
 					HealthMechanics.setPlayerHP(p_attacker.getName(), (int) (HealthMechanics.getPlayerHP(p_attacker.getName()) + leech_val));
 					double health_percent = ((double) HealthMechanics.getPlayerHP(p_attacker.getName())) / (double) getMaxHP(p_attacker);
 					double new_health_display = health_percent * 20.0D;
 					p_attacker.setHealth((int) new_health_display);
+				    }
 				}
-				
 				double xpt = le.getLocation().getX(); //(p_attacker.getLocation().getX() + le.getLocation().getX()) / 2;
 				double ypt = le.getLocation().getY(); //(p_attacker.getLocation().getY() + le.getLocation().getY()) / 2;
 				double zpt = le.getLocation().getZ(); //(p_attacker.getLocation().getZ() + le.getLocation().getZ()) / 2;

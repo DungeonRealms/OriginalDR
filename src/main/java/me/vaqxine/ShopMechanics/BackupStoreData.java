@@ -45,7 +45,7 @@ public class BackupStoreData extends BukkitRunnable {
                 	String query = "INSERT INTO shop_database (p_name, shop_backup, collection_bin)" + " VALUES" + "('" + shop_owner + "', '"
                             + StringEscapeUtils.escapeSql(shop_contents) + "', '" + StringEscapeUtils.escapeSql(collection_bin_s)
                             + "') ON DUPLICATE KEY UPDATE shop_backup = '" + StringEscapeUtils.escapeSql(shop_contents) + "', collection_bin='"
-                            + StringEscapeUtils.escapeSql(collection_bin_s) + "'";
+                            + StringEscapeUtils.escapeSql(collection_bin_s) + "';";
                     pst = ConnectionPool.getConnection().prepareStatement(query);
                     Main.dl(query);
                     pst.executeUpdate();

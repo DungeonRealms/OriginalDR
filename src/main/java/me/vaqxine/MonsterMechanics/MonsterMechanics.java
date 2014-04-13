@@ -43,6 +43,7 @@ import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RecordMechanics.RecordMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
 import me.vaqxine.TeleportationMechanics.TeleportationMechanics;
+import me.vaqxine.enums.CC;
 import me.vaqxine.enums.Delay;
 import net.minecraft.server.v1_7_R2.DataWatcher;
 import net.minecraft.server.v1_7_R2.EntityCreature;
@@ -5566,10 +5567,16 @@ public class MonsterMechanics implements Listener {
 	        e.getEntity().remove();
 	        return;
 	    }
-	    if(e.getEntity().hasMetadata("boss_drop") || e.getEntity().hasMetadata("player_drop"))return;
+	 
 	    if(InstanceMechanics.isInstance(e.getEntity().getWorld().getName())){
+	        if(e.getEntity().hasMetadata("boss_drop") || e.getEntity().hasMetadata("player_drop")){
+	            Main.d(CC.RED + "DROP HAD SOME DATA DAWG");
+	            e.setCancelled(false);
+	            return;
+	        }
 	        //Dont remove boss_drops or player_drops
 	        if(ItemMechanics.isArmor(e.getEntity().getItemStack()) || ItemMechanics.isWeapon(e.getEntity().getItemStack())){
+	            Main.d(e.getEntity().hasMetadata("player_drop"));
 	            e.setCancelled(true);
 	            e.getEntity().remove();
 	            System.out.print("ITEM WOULD HAVE DROPPED IN AN INSTANCE: " + e.getEntity().getItemStack().getType());

@@ -243,44 +243,21 @@ public class ShopMechanics implements Listener {
 		shop_shutdown = true;
 		// So it doesn't think server is frozen.
 		BackupStoreData.shutdown = true;
-		store_backup.runTaskAsynchronously(Main.plugin);
+		//store_backup.runTaskAsynchronously(Main.plugin);
 		
-		removeAllShops(); // Needed to upload data of offline players.
-		uploadAllCollectionBinData(); // Uploads / sends sockets to all servers for new collection bin data.
+		//removeAllShops(); // Needed to upload data of offline players.
+		//uploadAllCollectionBinData(); // Uploads / sends sockets to all servers for new collection bin data.
+        /*Main.d(CC.RED + "Holding the main thread hostage");
+            try {
+                ServerShutdownThread.sleep(10000);
+            } catch (InterruptedException ex) {
+                // TODO Auto-generated catch block
+                ex.printStackTrace();
+                }*/
 		//Make the main thread sleep for 10 seconds so things can be uploaded.
-		/*int timeout = 0;
-		while((collection_bin.size() > 0) && timeout <= 200){
-		    // The timeout is for multithreaded player data upload events.
-		    timeout++;
-		    log.info("[ShopMechanics] (" + timeout + "/200" + ") COLLECTION BIN: " + collection_bin.size());
-		    for(String s : collection_bin.keySet()){
-		        log.info("CBIN: " + s);
-		    }
-		    //log.info("[ShopMechanics] SHOP OWNERS: " + shop_owners.size());
-		    try {Thread.sleep(100);} catch (InterruptedException e) {e.printStackTrace();}
-		}*/
+		
 		
 		log.info("[ShopMechanics] has been disabled.");
-	}
-	
-	@EventHandler
-	public void onPluginDisable(PluginDisableEvent e){
-	    if(e.getPlugin().getName().equalsIgnoreCase("DungeonRealms")){
-	    int seconds_held = 0;
-	    long time_since_setting = System.currentTimeMillis();
-	    while(BackupStoreData.shutdown && seconds_held < 10 && time_since_setting <= System.currentTimeMillis() && !all_collection_bins_uploaded){
-	        Main.d(CC.RED + "HOLDING THE MAIN THREAD HOSTAGE FOR 1 SECONDS TO UPLOAD DATA.");
-	        try {
-	            ServerShutdownThread.sleep(1000);
-	            seconds_held++;
-	            time_since_setting = System.currentTimeMillis() + 1000;
-	        } catch (InterruptedException ex) {
-	            // TODO Auto-generated catch block
-	            ex.printStackTrace();
-	            }
-	        }
-	    }
-	    
 	}
 	public void setStockCount(Player shop_tag, int stock) {
 		ScoreboardMechanics.setStockCount(shop_tag, stock);
@@ -321,6 +298,8 @@ public class ShopMechanics implements Listener {
 	}
 	
 	public static void removeAllShops() {
+	    new BukkitRunnable() {
+	        public void run() {
 		for(Block b1 : inverse_shop_owners.values()) {
 			
 			if(b1.getType() != Material.CHEST) {
@@ -338,7 +317,7 @@ public class ShopMechanics implements Listener {
 				shop_owner_n = shop_owners.get(b1);
 				
 				if(!collection_bin.containsKey(shop_owner_n)) {
-					
+				    Main.d(CC.RED + "REMOVING PLAYERS SHOP : " + shop_owner_n);
 					Inventory inv = shop_stock.get(shop_owner_n);
 					inv.remove(inv.getSize() - 1);
 					List<ItemStack> li = new ArrayList<ItemStack>();
@@ -357,6 +336,7 @@ public class ShopMechanics implements Listener {
 							cb.setItem(cb.firstEmpty(), is);
 						}
 						collection_bin.put(shop_owner_n, cb);
+						
 					}
 					//else if(li.size() <= 0){
 					asyncSetShopServerSQL(shop_owner_n, -1);
@@ -380,6 +360,8 @@ public class ShopMechanics implements Listener {
 		}
 		
 		inverse_shop_owners.clear();
+            }
+        }.runTask(Main.plugin);
 	}
 	
 	public void clearCollectionBinSQL(String p_name) {
@@ -664,7 +646,7 @@ public class ShopMechanics implements Listener {
 		// cause the occasional issue...
 		
 		// Send socket -> THEN update the SQL.
-		
+		Main.d(CC.RED + "UPLOADING DATA FOR : " + p_name);
 		if(!(collection_bin.containsKey(p_name))) { return; // No one cares.
 		}
 		
@@ -689,7 +671,7 @@ public class ShopMechanics implements Listener {
 		try {
 			
 			pst = ConnectionPool.getConnection().prepareStatement("INSERT INTO shop_database (p_name, collection_bin)" + " VALUES" + "('" + p_name + "', '" + StringEscapeUtils.escapeSql(collection_bin_s) + "') ON DUPLICATE KEY UPDATE collection_bin='" + StringEscapeUtils.escapeSql(collection_bin_s) + "'");
-			
+			Main.dl(pst);
 			pst.executeUpdate();
 			
 		} catch(SQLException ex) {
@@ -719,7 +701,7 @@ public class ShopMechanics implements Listener {
 	public static void uploadAllCollectionBinData() {
 		for(String p_name : collection_bin.keySet()) {
 			//if(Bukkit.getPlayer(p_name) == null && !(Hive.pending_upload.contains(p_name))){          
-			uploadCollectionBinData(p_name);
+		    uploadCollectionBinData(p_name);
 			//}
 		}
 		Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED + "uploadAllCollectionBinData() called");

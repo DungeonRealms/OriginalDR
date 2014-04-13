@@ -220,6 +220,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public void onDisable() {
 		ConnectionPool.refresh = false;
+		shopMechanics.onDisable();
 		achievmentMechanics.onDisable();
 		bossMechanics.onDisable();
 		chatMechanics.onDisable();
@@ -248,7 +249,7 @@ public class Main extends JavaPlugin implements Listener {
 		recordMechanics.onDisable();
 		repairMechanics.onDisable();
 		restrictionMechanics.onDisable();
-		shopMechanics.onDisable();
+		
 		spawnMechanics.onDisable();
 		subscriberMechanics.onDisable();
 		teleportationMechanics.onDisable();
@@ -258,17 +259,6 @@ public class Main extends JavaPlugin implements Listener {
 		hive.onDisable();
 		hiveServer.onDisable();
 		
-		int max = 0;
-		while(BackupStoreData.shutdown){
-			if(max >= 100) break;
-			max++;
-			Main.d("Uploading shops: " + max);
-			try {
-				Thread.sleep(1000);
-			} catch(InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	@EventHandler

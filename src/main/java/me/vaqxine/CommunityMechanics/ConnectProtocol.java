@@ -23,6 +23,7 @@ import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.config.Config;
+import me.vaqxine.enums.CC;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -109,7 +110,7 @@ public class ConnectProtocol implements Runnable {
 					if(online_players > 0 && Hive.offline_servers.contains(server_prefix)) {
 						Hive.offline_servers.remove(server_prefix);
 					}
-					
+					if(Main.plugin.isEnabled())return;
 					new BukkitRunnable() {
 						@Override
 						public void run() {
@@ -156,13 +157,15 @@ public class ConnectProtocol implements Runnable {
 					
 					ShopMechanics.shop_shutdown = true;
 					ShopMechanics.removeAllShops();
+					Thread.sleep(5000);
 					ShopMechanics.uploadAllCollectionBinData();
-					
-					timeout = 30;
-					while(ShopMechanics.all_collection_bins_uploaded != true && timeout > 0) {
+					Thread.sleep(5000);
+					timeout = 0;
+					while(!ShopMechanics.all_collection_bins_uploaded && timeout < 100 && Hive.sql_query.size() > 0) {
 						// Not done uploading collection bins.
-						timeout--;
+						timeout++;
 						Thread.sleep(1000);
+						Main.d(CC.RED + "Sleeping for 1 second since we need to keep uploading.");
 					}
 					
 					Thread.sleep(1000);
@@ -208,18 +211,21 @@ public class ConnectProtocol implements Runnable {
 					
 					ShopMechanics.shop_shutdown = true;
 					ShopMechanics.removeAllShops();
+					//Sleep 1 second
+					Thread.sleep(5000);
 					ShopMechanics.uploadAllCollectionBinData();
-					
-					timeout = 30;
-					while(ShopMechanics.all_collection_bins_uploaded != true && timeout > 0) {
-						// Not done uploading collection bins.
-						timeout--;
-						Thread.sleep(1000);
-					}
-					
-					Thread.sleep(1000);
-					Hive.reboot_me = true;
+					Thread.sleep(5000);
+					timeout = 0;
+                    while(!ShopMechanics.all_collection_bins_uploaded && timeout < 100 && Hive.sql_query.size() > 0) {
+                        // Not done uploading collection bins.
+                        timeout++;
+                        Thread.sleep(1000);
+                        Main.d(CC.RED + "Sleeping for 1 second since we need to keep uploading.");
+                    }
 					Hive.log.info("[HIVE (SLAVE Edition)] Command recieved, rebooting server now...");
+					
+					Hive.reboot_me = true;
+					
 					return;
 				}
 				
