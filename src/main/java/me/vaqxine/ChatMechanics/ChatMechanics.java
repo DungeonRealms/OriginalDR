@@ -972,18 +972,23 @@ public class ChatMechanics implements Listener {
 		
 		if(to_send.size() <= 0) { return; // Don't show debug.
 		}
-		
+
 		ChatColor p_color = getPlayerColor(p, p);
 		
-		JSONMessage toSend = normal;
-		if(hasAdultFilter(p.getName())) {
-			toSend = filter;
+		if(normal != null){
+			
+			JSONMessage toSend = normal;
+			if(hasAdultFilter(p.getName())) {
+				toSend = filter;
+			}
+			
+			toSend.setText(prefix + p_color + aprefix);
+			toSend.sendToPlayer(p);
+		}else{
+			p.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
 		}
-		
-		toSend.setText(prefix + p_color + aprefix);
 
 		sendHologramChat(p, personal_msg, prefix, p_color);
-		toSend.sendToPlayer(p);
 		
 		log.info(ChatColor.stripColor("" + p.getName() + ": " + msg));
 	}
