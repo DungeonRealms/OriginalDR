@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
@@ -3929,7 +3929,8 @@ public class ItemMechanics implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @SuppressWarnings("deprecation")
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -3945,6 +3946,7 @@ public class ItemMechanics implements Listener {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
         Player p = e.getEntity();
@@ -3956,6 +3958,7 @@ public class ItemMechanics implements Listener {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerOpen(PlayerQuitEvent e) {
         Player p = e.getPlayer();
@@ -3967,6 +3970,7 @@ public class ItemMechanics implements Listener {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerOpenInv(InventoryOpenEvent e) {
         Player p = (Player) e.getPlayer();
@@ -5684,6 +5688,7 @@ public class ItemMechanics implements Listener {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerCancelled(final InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
@@ -5908,6 +5913,7 @@ public class ItemMechanics implements Listener {
         return quiver;
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerThrowItem(PlayerDropItemEvent e) {
         if (e.getItemDrop().getItemStack().getType() == Material.ARROW) {

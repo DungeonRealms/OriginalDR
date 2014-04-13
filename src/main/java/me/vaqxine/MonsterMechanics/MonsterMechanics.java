@@ -2183,7 +2183,6 @@ public class MonsterMechanics implements Listener {
 		chunks_to_unload.remove(loc);
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onEntityDamageLava(EntityDamageEvent event) {
 		if(event.getEntity() instanceof Player) return;
