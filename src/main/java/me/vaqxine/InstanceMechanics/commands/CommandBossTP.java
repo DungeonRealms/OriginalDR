@@ -56,7 +56,8 @@ public class CommandBossTP implements CommandExecutor {
 		
 		if(percent_alive >= 25.0D && !instance_name.equalsIgnoreCase("OneWolfeDungeon")) {
 			// Too many monsters still alive, no TP.
-			int mobs_to_kill = (int) (total_mobs - (Math.round(((percent_alive - 25.0D) / 100.0D) * (double) total_mobs)));
+		    //150 -> 150 - (Percent alive = 50% -> 25% -> 25% / 100 -> .25 * 150 -> 37.5) -> 150 - 37.5 -> 112.5
+			int mobs_to_kill = (int) (Math.round(((percent_alive - 25.0D) / 100.0D) * (double) total_mobs));
 			if(mobs_to_kill > 0) {
 				for(Player pl : cb.getBlock().getWorld().getPlayers()) {
 					pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " move on to the boss room of this instance until you kill at least " + ChatColor.BOLD + mobs_to_kill + ChatColor.RED + " more monsters.");
