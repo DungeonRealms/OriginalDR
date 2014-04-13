@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import me.vaqxine.Main;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
+import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.PartyMechanics.PartyMechanics;
 
 import org.bukkit.ChatColor;
@@ -12,7 +14,12 @@ import org.bukkit.World.Environment;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class CommandInstance implements CommandExecutor {
 	
@@ -56,6 +63,24 @@ public class CommandInstance implements CommandExecutor {
 			}
 			InstanceMechanics.syncLoadNewInstance(new_instance, false, false); // Load new instance.
 			p.sendMessage(ChatColor.GRAY + "Loading: " + new_instance + " . . .");
+		}
+		if(sub_cmd.equalsIgnoreCase("wipe")){
+		    if(InstanceMechanics.isInstance(p.getWorld().getName())){
+		        int killed = 0;
+		    for(LivingEntity e : p.getWorld().getLivingEntities()){
+		        if(e instanceof Item || e instanceof Player)continue;
+		        List<ItemStack> items = new ArrayList<ItemStack>();
+		        if(MonsterMechanics.mob_loot.containsKey(e)){
+		            items = MonsterMechanics.mob_loot.get(e);
+		        }
+		        EntityDeathEvent event = new EntityDeathEvent(e, items);
+		        //Call the even since damage doesnt like working >.>
+		        Main.plugin.getServer().getPluginManager().callEvent(event);
+		        e.remove();
+		        killed++;
+		         } 
+		        p.sendMessage(ChatColor.RED + "Clearing " + killed + " mobs.");
+		    }
 		}
 		if(sub_cmd.equalsIgnoreCase("unload")) {
 			String instance_name = args[1];
