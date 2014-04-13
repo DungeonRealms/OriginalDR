@@ -110,7 +110,6 @@ public class ConnectProtocol implements Runnable {
 					if(online_players > 0 && Hive.offline_servers.contains(server_prefix)) {
 						Hive.offline_servers.remove(server_prefix);
 					}
-					if(Main.plugin.isEnabled())return;
 					new BukkitRunnable() {
 						@Override
 						public void run() {
