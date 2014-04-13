@@ -2,6 +2,8 @@ package me.vaqxine.jsonlib;
 
 import net.minecraft.server.v1_7_R2.ChatSerializer;
 import net.minecraft.server.v1_7_R2.PacketPlayOutChat;
+import net.minecraft.util.com.google.gson.JsonArray;
+import net.minecraft.util.com.google.gson.JsonObject;
 
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
@@ -9,12 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
-@SuppressWarnings("unchecked")
 public class JSONMessage {
 	
-	private JSONObject json = new JSONObject();
+	private JsonObject json;
 	
 	public JSONMessage() {
 		new JSONMessage("");
@@ -25,14 +25,15 @@ public class JSONMessage {
 	}
 	
 	public JSONMessage(String text, ChatColor color) {
-		json.put("text", text);
-		json.put("color", color.name().toLowerCase());
-		json.put("extra", new JSONArray());
+		json = new JsonObject();
+		json.addProperty("text", text);
+		json.addProperty("color", color.name().toLowerCase());
+		json.add("extra", new JsonArray());
 	}
 	
-	private JSONArray getExtra() {
-		if(!json.containsKey("extra")) json.put("extra", new JSONArray());
-		return (JSONArray) json.get("extra");
+	private JsonArray getExtra() {
+		if(!json.has("extra")) json.add("extra", new JsonArray());
+		return (JsonArray) json.get("extra");
 	}
 	
 	public void addText(String text) {
@@ -40,30 +41,30 @@ public class JSONMessage {
 	}
 	
 	public void addText(String text, ChatColor color) {
-		JSONObject data = new JSONObject();
-		data.put("text", text);
-		data.put("color", color.name().toLowerCase());
+		JsonObject data = new JsonObject();
+		data.addProperty("text", text);
+		data.addProperty("color", color.name().toLowerCase());
 		getExtra().add(data);
 	}
 	
 	public void addInsertionText(String text, ChatColor color, String insertion){
-		JSONObject o = new JSONObject();
-		o.put("text", text);
-		o.put("color", color.name().toLowerCase());
-		o.put("insertion", insertion);
+		JsonObject o = new JsonObject();
+		o.addProperty("text", text);
+		o.addProperty("color", color.name().toLowerCase());
+		o.addProperty("insertion", insertion);
 		getExtra().add(o);
 	}
 
 	public void addURL(String text, ChatColor color, String url) {
-		JSONObject o = new JSONObject();
-		o.put("text", text);
-		o.put("color", color.name().toLowerCase());
+		JsonObject o = new JsonObject();
+		o.addProperty("text", text);
+		o.addProperty("color", color.name().toLowerCase());
 		
-		JSONObject u = new JSONObject();
-		u.put("action", "open_url");
-		u.put("value", url);
+		JsonObject u = new JsonObject();
+		u.addProperty("action", "open_url");
+		u.addProperty("value", url);
 		
-		o.put("clickEvent", u);
+		o.add("clickEvent", u);
 		getExtra().add(o);
 	}
 	
@@ -75,51 +76,72 @@ public class JSONMessage {
 	public void addItem(ItemStack item, String text, ChatColor color) {
 		if(item == null) return;
 		
-		JSONObject o = new JSONObject();
-		o.put("text", text);
-		o.put("color", color.name().toLowerCase());
+		JsonObject o = new JsonObject();
+		o.addProperty("text", text);
+		o.addProperty("color", color.name().toLowerCase());
 		
-		JSONObject a = new JSONObject();
-		a.put("action", "show_item");
+		JsonObject a = new JsonObject();
+		a.addProperty("action", "show_item");
 
-		String x = "{id:" + item.getTypeId() + ",Damage:" + item.getDurability();
+		JsonObject i = new JsonObject();
+		i.addProperty("id", item.getTypeId());
+		i.addProperty("Damage", item.getDurability());
 		
 		if(item.getItemMeta() != null && (item.getItemMeta().getDisplayName() != null || (item.getItemMeta().getLore() != null && item.getItemMeta().getLore().size() > 0))) {
-			x += ",tag:{display:{";
+			JsonObject x = new JsonObject();
+			JsonObject v = new JsonObject();
 			
 			ItemMeta m = item.getItemMeta();
-			if(m.getDisplayName() != null) x += "Name:" + m.getDisplayName();
-			if(m.getLore() != null) x += "Lore:" + JSONArray.toJSONString(m.getLore());
+			if(m.getDisplayName() != null) v.addProperty("Name", m.getDisplayName());
+			if(m.getLore() != null)	v.addProperty("Lore", "%LORE%");
 			
-			x += "}}";
+			x.add("display", v);
+			i.add("tag", x);
 		}
-		x += "}";
 		
-		a.put("value", x);
-		o.put("hoverEvent", a);
+		String is = i.toString();
+		is = is.replace("\"", "");
+		
+		if(is.contains("%LORE%")){
+			String lore = JSONArray.toJSONString(item.getItemMeta().getLore());
+			lore = lore.replace(":", "|");
+			lore = lore.replace("\\", "");
+			is = is.replace("%LORE%", lore);
+		}
+		
+		a.addProperty("value", is);
+		o.add("hoverEvent", a);
 		getExtra().add(o);
 	}
 	
 	public void addSuggestCommand(String text, ChatColor color, String cmd) {
-		JSONObject o = new JSONObject();
-		o.put("text", text);
-		o.put("color", color.name().toLowerCase());
+		JsonObject o = new JsonObject();
+		o.addProperty("text", text);
+		o.addProperty("color", color.name().toLowerCase());
 		
-		JSONObject u = new JSONObject();
-		u.put("action", "suggest_command");
-		u.put("value", cmd);
+		JsonObject u = new JsonObject();
+		u.addProperty("action", "suggest_command");
+		u.addProperty("value", cmd);
 		
-		o.put("clickEvent", u);
+		o.add("clickEvent", u);
 		getExtra().add(o);
 	}
 	
 	@Override
 	public String toString(){
-		return json.toJSONString();
+		return json.toString();
 	}
 	
 	public void sendToPlayer(Player p){
-		((CraftPlayer) p).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(json.toJSONString()), true));
+		((CraftPlayer) p).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(json.toString()), true));
+	}
+	
+	public void setColor(ChatColor color){
+		json.addProperty("color", color.name().toLowerCase());
+	}
+	
+	public void setText(String text){
+		json.addProperty("text", text);
 	}
 	
 }

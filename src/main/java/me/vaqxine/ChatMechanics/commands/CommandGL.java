@@ -6,9 +6,11 @@ import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
+import me.vaqxine.jsonlib.JSONMessage;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -75,6 +77,30 @@ public class CommandGL implements CommandExecutor {
 			trade = true;
 		}
 		
+		String prefix = ChatMechanics.getPlayerPrefix(p);
+		String message = ChatMechanics.fixCapsLock(msg);
+		
+		JSONMessage filter = null;
+		JSONMessage normal = null;
+		String aprefix = p.getName() + ": " + ChatColor.WHITE;
+		if(message.contains("@i@") && p.getItemInHand().getType() != Material.AIR) {
+			String[] split = message.split("@i@");
+			String after = "";
+			String before = "";
+			if(split.length > 0) before = split[0];
+			if(split.length > 1) after = split[1];
+			
+			normal = new JSONMessage(prefix + ChatColor.WHITE + aprefix, ChatColor.WHITE);
+			normal.addText(before + " ");
+			normal.addItem(p.getItemInHand(), ChatColor.BOLD + "SHOW", ChatColor.UNDERLINE);
+			normal.addText(after);
+
+			filter = new JSONMessage(prefix + ChatColor.WHITE + aprefix, ChatColor.WHITE);
+			filter.addText(ChatMechanics.censorMessage(before) + " ");
+			filter.addItem(p.getItemInHand(), ChatColor.BOLD + "SHOW", ChatColor.UNDERLINE);
+			filter.addText(ChatMechanics.censorMessage(after));
+		}
+		
 		for(Player pl : Bukkit.getServer().getOnlinePlayers()) {
 			if(CommunityMechanics.isPlayerOnIgnoreList(p, pl.getName()) || CommunityMechanics.isPlayerOnIgnoreList(pl, p.getName())) {
 				continue; // Either sender has the sendie ignored or vise versa,
@@ -94,30 +120,33 @@ public class CommandGL implements CommandExecutor {
 							// island.
 			}
 			
-			ChatColor p_color = ChatMechanics.getPlayerColor(p, pl);
-			String prefix = ChatMechanics.getPlayerPrefix(p);
-			
-			String personal_msg = msg;
-			if(ChatMechanics.hasAdultFilter(pl.getName())) {
-				personal_msg = ChatMechanics.censorMessage(msg);
-			}
-			
-			personal_msg = ChatMechanics.fixCapsLock(personal_msg);
-			
-			if(personal_msg.endsWith(" ")) {
-				personal_msg = personal_msg.substring(0, personal_msg.length() - 1);
-			}
-			
-			if(trade == false) {
-				pl.sendMessage(ChatColor.AQUA + "<" + ChatColor.BOLD + "G" + ChatColor.AQUA + ">" + " " + prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
-			}
-			if(trade == true) {
-				pl.sendMessage(ChatColor.GREEN + "<" + ChatColor.BOLD + "T" + ChatColor.GREEN + ">" + " " + prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
+			if(normal != null){
+				JSONMessage toSend = normal;
+				if(ChatMechanics.hasAdultFilter(pl.getName())) {
+					toSend = filter;
+				}
+				ChatColor p_color = ChatMechanics.getPlayerColor(p, pl);
+				
+				if(trade){
+					toSend.setText(ChatColor.GREEN + "<" + ChatColor.BOLD + "T" + ChatColor.GREEN + ">" + " " + prefix + p_color + aprefix);
+				}else{
+					toSend.setText(ChatColor.AQUA + "<" + ChatColor.BOLD + "G" + ChatColor.AQUA + ">" + " " + prefix + p_color + aprefix);
+				}
+				
+				toSend.sendToPlayer(pl);
+			}else{
+				ChatColor p_color = ChatMechanics.getPlayerColor(p, p);
+				
+				if(trade){
+					pl.sendMessage(ChatColor.GREEN + "<" + ChatColor.BOLD + "T" + ChatColor.GREEN + ">" + " " + prefix + p_color + aprefix + message);
+				}else{
+					pl.sendMessage(ChatColor.AQUA + "<" + ChatColor.BOLD + "G" + ChatColor.AQUA + ">" + " " + prefix + p_color + aprefix + message);
+				}
 			}
 		}
 		
-		String prefix = ChatMechanics.getPlayerPrefix(p);
 		Main.log.info(ChatColor.stripColor("" + "<" + "G" + ">" + " " + prefix + p.getName() + ": " + msg));
+		
 		return true;
 	}
 	

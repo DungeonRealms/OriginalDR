@@ -31,6 +31,7 @@ import me.vaqxine.PartyMechanics.PartyMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.config.Config;
+import me.vaqxine.jsonlib.JSONMessage;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
 
 import org.bukkit.Bukkit;
@@ -446,7 +447,9 @@ public class ChatMechanics implements Listener {
 	    hologram_chat.remove(e.getPlayer().getName());
 	    }
 	}
-	@EventHandler
+	
+	
+	//@EventHandler
 	// TODO: Make this toggleable.
 	public void onPlayerChatTabCompleteEvent(PlayerChatTabCompleteEvent e) {
 		final Player p = e.getPlayer();
@@ -746,7 +749,7 @@ public class ChatMechanics implements Listener {
 		String msg = e.getMessage();
 		final Player p = e.getPlayer();
 		
-		
+
 		if(mute_list.containsKey(p.getName())){
 			if(mute_list.get(p.getName()) == 0) mute_list.remove(p.getName());
 		}
@@ -759,6 +762,7 @@ public class ChatMechanics implements Listener {
 		
 		if(PartyMechanics.party_only.contains(p.getName())) {
 			p.performCommand("p " + msg);
+
 			return;
 		}
 		
@@ -803,12 +807,6 @@ public class ChatMechanics implements Listener {
 			// msg.length());
 			if(raw_msg.substring(0, 1).equalsIgnoreCase(" ")) {
 				raw_msg = raw_msg.substring(1, raw_msg.length());
-			}
-			
-			if(mute_list.containsKey(p.getName())) {
-				long time_left = mute_list.get(p.getName());
-				p.sendMessage(ChatColor.RED + "You are currently " + ChatColor.BOLD + "GLOBALLY MUTED" + ChatColor.RED + ". You will be unmuted in " + time_left + " minute(s).");
-				return;
 			}
 			
 			if(to_send.size() <= 0) {
@@ -877,71 +875,7 @@ public class ChatMechanics implements Listener {
 			}, 2L);
 			return;
 		}
-		
-		// Normal message sending starts here.
-		if(to_send.size() <= 0) {
-			ChatColor p_color = getPlayerColor(p, p);
-			String prefix = getPlayerPrefix(p);
-			
-			String personal_msg = msg;
-			if(hasAdultFilter(p.getName())) {
-				personal_msg = censorMessage(msg);
-			}
-			
-			personal_msg = fixCapsLock(personal_msg);
-			
-			if(personal_msg.endsWith(" ")) {
-				personal_msg = personal_msg.substring(0, personal_msg.length() - 1);
-			}
-			
-			p.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
-			p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "No one heard you.");
-			sendHologramChat(p, personal_msg, prefix, p_color);
-			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() {
-					sending_message.remove(p.getName());
-				}
-			}, 2L);
-		}
-		
-		for(Player pl : to_send) {
-			ChatColor p_color = getPlayerColor(p, pl);
-			String prefix = getPlayerPrefix(p);
-			String personal_msg = msg;
-			if(hasAdultFilter(pl.getName())) {
-				personal_msg = censorMessage(msg);
-			}
-			
-			personal_msg = fixCapsLock(personal_msg);
-			
-			if(personal_msg.endsWith(" ")) {
-				personal_msg = personal_msg.substring(0, personal_msg.length() - 1);
-			}
-			
-			pl.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
-		}
-		
-		for(Player pl : secret_send) {
-			ChatColor p_color = getPlayerColor(p, pl);
-			String prefix = getPlayerPrefix(p);
-			String personal_msg = msg;
-			if(hasAdultFilter(pl.getName())) {
-				personal_msg = censorMessage(msg);
-			}
-			
-			personal_msg = fixCapsLock(personal_msg);
-			
-			if(personal_msg.endsWith(" ")) {
-				personal_msg = personal_msg.substring(0, personal_msg.length() - 1);
-			}
-			
-			pl.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
-		}
-		
-		if(to_send.size() <= 0) { return; // Don't show debug.
-		}
-		
-		ChatColor p_color = getPlayerColor(p, p);
+
 		String prefix = getPlayerPrefix(p);
 		
 		String personal_msg = msg;
@@ -954,8 +888,103 @@ public class ChatMechanics implements Listener {
 		if(personal_msg.endsWith(" ")) {
 			personal_msg = personal_msg.substring(0, personal_msg.length() - 1);
 		}
+		
+		String message = fixCapsLock(e.getMessage());
+		
+		JSONMessage filter = null;
+		JSONMessage normal = null;
+		String aprefix = p.getName() + ": " + ChatColor.WHITE;
+		if(message.contains("@i@") && e.getPlayer().getItemInHand().getType() != Material.AIR) {
+			String[] split = message.split("@i@");
+			String after = "";
+			String before = "";
+			if(split.length > 0) before = split[0];
+			if(split.length > 1) after = split[1];
+			
+			normal = new JSONMessage(prefix + ChatColor.WHITE + aprefix, ChatColor.WHITE);
+			normal.addText(before + " ");
+			normal.addItem(e.getPlayer().getItemInHand(), ChatColor.BOLD + "SHOW", ChatColor.UNDERLINE);
+			normal.addText(after);
+
+			filter = new JSONMessage(prefix + ChatColor.WHITE + aprefix, ChatColor.WHITE);
+			filter.addText(censorMessage(before) + " ");
+			filter.addItem(e.getPlayer().getItemInHand(), ChatColor.BOLD + "SHOW", ChatColor.UNDERLINE);
+			filter.addText(censorMessage(after));
+		}
+		
+		// Normal message sending starts here.
+		if(to_send.size() <= 0) {
+			ChatColor p_color = getPlayerColor(p, p);
+			if(normal != null){
+				JSONMessage toSend = normal;
+				if(hasAdultFilter(p.getName())) {
+					toSend = filter;
+				}
+
+				toSend.setText(prefix + p_color + aprefix);
+				
+				toSend.sendToPlayer(p);
+			}else{
+				p.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
+			}
+			p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "No one heard you.");
+			sendHologramChat(p, personal_msg, prefix, p_color);
+			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+				public void run() {
+					sending_message.remove(p.getName());
+				}
+			}, 2L);
+		}
+
+		for(Player pl : to_send) {
+			if(normal != null){
+				JSONMessage toSend = normal;
+				if(hasAdultFilter(pl.getName())) {
+					toSend = filter;
+				}
+				ChatColor p_color = getPlayerColor(p, pl);
+				
+				toSend.setText(prefix + p_color + aprefix);
+				
+				toSend.sendToPlayer(pl);
+			}else{
+				ChatColor p_color = getPlayerColor(p, p);
+				pl.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
+			}
+		}
+		
+		for(Player pl : secret_send) {
+			if(normal != null){
+				JSONMessage toSend = normal;
+				if(hasAdultFilter(pl.getName())) {
+					toSend = filter;
+				}
+				ChatColor p_color = getPlayerColor(p, pl);
+				
+				toSend.setText(prefix + p_color + aprefix);
+				
+				toSend.sendToPlayer(pl);
+			}else{
+				ChatColor p_color = getPlayerColor(p, p);
+				pl.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
+			}
+		}
+		
+		if(to_send.size() <= 0) { return; // Don't show debug.
+		}
+		
+		ChatColor p_color = getPlayerColor(p, p);
+		
+		JSONMessage toSend = normal;
+		if(hasAdultFilter(p.getName())) {
+			toSend = filter;
+		}
+		
+		toSend.setText(prefix + p_color + aprefix);
+
 		sendHologramChat(p, personal_msg, prefix, p_color);
-		p.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
+		toSend.sendToPlayer(p);
+		
 		log.info(ChatColor.stripColor("" + p.getName() + ": " + msg));
 	}
 	
