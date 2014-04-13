@@ -1266,7 +1266,10 @@ public class EcashMechanics implements Listener {
 					pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " use this item on an untradeable item.");
 					return;
 				}
-				
+				if(ProfessionMechanics.isSkillItem(x_current)){
+				    pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " modify this item.");
+				    return;
+				}
 				if(x_current.getType() == Material.WRITTEN_BOOK || x_current.getType() == Material.NETHER_STAR || x_current.getType() == Material.QUARTZ) {
 					pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " modify this item.");
 					return;
@@ -1336,7 +1339,10 @@ public class EcashMechanics implements Listener {
 					pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " use this item on an untradeable item.");
 					return;
 				}
-				
+				if(ProfessionMechanics.isSkillItem(o_current)){
+				    pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " modify this item.");
+				    return;
+				}
 				if(ItemMechanics.getDamageData(x_current).equalsIgnoreCase("no") && ItemMechanics.getArmorData(x_current).equalsIgnoreCase("no") && !ProfessionMechanics.isSkillItem(x_current)) {
 					pl.sendMessage(ChatColor.RED + "You can only use this E-CASH item on weapon and armor.");
 					return;
