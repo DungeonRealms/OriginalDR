@@ -6169,106 +6169,22 @@ public class ItemMechanics implements Listener {
             }
         }
         if (r == 1) {
-            if (tier == 1) {
-                return iGen.AxeGenorator(Material.WOOD_AXE, false, null);
-            }
-            if (tier == 2) {
-                return iGen.AxeGenorator(Material.STONE_AXE, false, null);
-            }
-            if (tier == 3) {
-                return iGen.AxeGenorator(Material.IRON_AXE, false, null);
-            }
-            if (tier == 4) {
-                return iGen.AxeGenorator(Material.DIAMOND_AXE, false, null);
-            }
-            if (tier == 5) {
-                return iGen.AxeGenorator(Material.GOLD_AXE, false, null);
-            }
+            return iGen.AxeGenorator(Material.GOLD_AXE, false, null);
         }
         if (r == 2) {
-            if (tier == 1) {
-                return iGen.BowGenorator(tier, false, null);
-            }
-            if (tier == 2) {
-                return iGen.BowGenorator(tier, false, null);
-            }
-            if (tier == 3) {
-                return iGen.BowGenorator(tier, false, null);
-            }
-            if (tier == 4) {
-                return iGen.BowGenorator(tier, false, null);
-            }
-            if (tier == 5) {
-                return iGen.BowGenorator(tier, false, null);
-            }
+        	return iGen.BowGenorator(tier, false, null);
         }
         if (r == 3) {
-            if (tier == 1) {
-                return iGen.HelmetGenerator(tier, false, null);
-            }
-            if (tier == 2) {
-                return iGen.HelmetGenerator(tier, false, null);
-            }
-            if (tier == 3) {
-                return iGen.HelmetGenerator(tier, false, null);
-            }
-            if (tier == 4) {
-                return iGen.HelmetGenerator(tier, false, null);
-            }
-            if (tier == 5) {
-                return iGen.HelmetGenerator(tier, false, null);
-            }
+            return iGen.HelmetGenerator(tier, false, null);
         }
         if (r == 4) {
-            if (tier == 1) {
-                return iGen.BootGenerator(tier, false, null);
-            }
-            if (tier == 2) {
-                return iGen.BootGenerator(tier, false, null);
-            }
-            if (tier == 3) {
-                return iGen.BootGenerator(tier, false, null);
-            }
-            if (tier == 4) {
-                return iGen.BootGenerator(tier, false, null);
-            }
-            if (tier == 5) {
-                return iGen.BootGenerator(tier, false, null);
-            }
+            return iGen.BootGenerator(tier, false, null);
         }
         if (r == 5) {
-            if (tier == 1) {
-                return iGen.LeggingsGenerator(tier, false, null);
-            }
-            if (tier == 2) {
-                return iGen.LeggingsGenerator(tier, false, null);
-            }
-            if (tier == 3) {
-                return iGen.LeggingsGenerator(tier, false, null);
-            }
-            if (tier == 4) {
-                return iGen.LeggingsGenerator(tier, false, null);
-            }
-            if (tier == 5) {
-                return iGen.LeggingsGenerator(tier, false, null);
-            }
+            return iGen.LeggingsGenerator(tier, false, null);
         }
         if (r == 6) {
-            if (tier == 1) {
-                return iGen.ChestPlateGenerator(tier, false, null);
-            }
-            if (tier == 2) {
-                return iGen.ChestPlateGenerator(tier, false, null);
-            }
-            if (tier == 3) {
-                return iGen.ChestPlateGenerator(tier, false, null);
-            }
-            if (tier == 4) {
-                return iGen.ChestPlateGenerator(tier, false, null);
-            }
-            if (tier == 5) {
-                return iGen.ChestPlateGenerator(tier, false, null);
-            }
+            return iGen.ChestPlateGenerator(tier, false, null);
         }
         if (r == 7) {
             if (tier == 1) {
