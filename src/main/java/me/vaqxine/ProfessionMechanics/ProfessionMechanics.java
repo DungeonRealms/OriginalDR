@@ -1454,7 +1454,7 @@ public class ProfessionMechanics implements Listener {
 	
 	public int getBreakChance(ItemStack is) {
 		int i_level = getItemLevel(is);
-		int win = 40;
+		int win = 50;
 		
 		/*
 		Material m = is.getType();
