@@ -99,6 +99,9 @@ commands:
   togglestarterpack:
     description: Toggles getting starter items.
     usage: /<command>
+  toggleglobalchat:
+    description: Toggles talking in global chat
+    usage: /<command>
   tips:
     description: Get a random tip.
     usage: /<command>

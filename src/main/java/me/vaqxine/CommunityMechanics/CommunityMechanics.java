@@ -34,6 +34,7 @@ import me.vaqxine.CommunityMechanics.commands.CommandToggleChaos;
 import me.vaqxine.CommunityMechanics.commands.CommandToggleFF;
 import me.vaqxine.CommunityMechanics.commands.CommandToggleFilter;
 import me.vaqxine.CommunityMechanics.commands.CommandToggleGlobal;
+import me.vaqxine.CommunityMechanics.commands.CommandToggleGlobalChat;
 import me.vaqxine.CommunityMechanics.commands.CommandToggleGuild;
 import me.vaqxine.CommunityMechanics.commands.CommandToggleIndicator;
 import me.vaqxine.CommunityMechanics.commands.CommandToggleParty;
@@ -192,6 +193,7 @@ public class CommunityMechanics implements Listener {
 		Main.plugin.getCommand("toggletips").setExecutor(new CommandToggleTips());
 		Main.plugin.getCommand("toggletradechat").setExecutor(new CommandToggleTradeChat());
 		Main.plugin.getCommand("toggleindicator").setExecutor(new CommandToggleIndicator());
+		Main.plugin.getCommand("toggleglobalchat").setExecutor(new CommandToggleGlobalChat());
 		
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		
@@ -256,6 +258,7 @@ public class CommunityMechanics implements Listener {
 		toggle_map.add("toggleprofile");
 		toggle_map.add("togglestarterpack");
 		toggle_map.add("toggleindicator");
+		toggle_map.add("toggleglobalchat");
 		
 		CrossServerPacketThread = new CrossServerPacketThread();
 		CrossServerPacketThread.start();
@@ -1438,6 +1441,9 @@ public class CommunityMechanics implements Listener {
 		}
 		if(toggle.equalsIgnoreCase("toggleindicator")) {
 			desc += "Toggles damage indicators when in combat.";
+		}
+		if(toggle.equalsIgnoreCase("toggleglobalchat")) {
+			desc += "Toggles talking only in global chat.";
 		}
 		return desc;
 	}

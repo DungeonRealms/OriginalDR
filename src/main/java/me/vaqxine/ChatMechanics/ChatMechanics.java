@@ -771,6 +771,11 @@ public class ChatMechanics implements Listener {
 			return;
 		}
 		
+		if(CommunityMechanics.toggle_list.get(p.getName()).contains("globalchat")) {
+			p.performCommand("gl  " + msg);
+			return;
+		}
+		
 		sending_message.add(p.getName());
 		
 		List<Player> to_send = new ArrayList<Player>();
