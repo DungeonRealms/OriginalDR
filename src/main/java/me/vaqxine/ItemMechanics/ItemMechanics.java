@@ -3472,9 +3472,15 @@ public class ItemMechanics implements Listener {
     }
 
     public void convertVanillaArrows(Inventory inv) {
-        for (ItemStack is : inv.getContents()) {
+        outer: for (ItemStack is : inv.getContents()) {
             if (is == null || is.getType() != Material.ARROW) {
                 continue;
+            }
+            if(is.getItemMeta() != null){
+            	for(String x : is.getItemMeta().getLore()){
+            		if(x.contains("page")) continue outer;
+            		if(x.contains("Page")) continue outer;
+            	}
             }
             if (inv.getSize() >= 35 && inv.getItem(35) != null && inv.getItem(35) == is) {
                 if (!is.hasItemMeta()) {
