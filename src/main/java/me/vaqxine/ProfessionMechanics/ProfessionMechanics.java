@@ -1453,9 +1453,12 @@ public class ProfessionMechanics implements Listener {
 	}
 	
 	public int getBreakChance(ItemStack is) {
+		int i_level = getItemLevel(is);
+		int win = 40;
+		
+		/*
 		Material m = is.getType();
 		int win = 50; // Default is 50%.
-		int i_level = getItemLevel(is);
 		if(m == Material.WOOD_PICKAXE) {
 			win += ((i_level) * 2); // +2% per level. 
 		}
@@ -1470,7 +1473,10 @@ public class ProfessionMechanics implements Listener {
 		}
 		if(m == Material.GOLD_PICKAXE) {
 			win += ((i_level - 80) * 2); // +2% per level. 
-		}
+		} */
+		
+		win += ((i_level % 20) * 3);
+		
 		return win;
 	}
 	
