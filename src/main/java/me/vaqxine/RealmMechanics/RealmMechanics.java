@@ -12,6 +12,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.CodeSource;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +60,7 @@ import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.config.Config;
+import me.vaqxine.database.ConnectionPool;
 import me.vaqxine.holograms.Hologram;
 import net.minecraft.server.v1_7_R2.DataWatcher;
 import net.minecraft.server.v1_7_R2.Packet;
@@ -1273,7 +1277,6 @@ public class RealmMechanics implements Listener {
 		List<Player> plist = new ArrayList<Player>();
 		for(Player pl : p_realm.getPlayers()) {
 			pl.sendMessage(ChatColor.RED + "The owner of this realm has LOGGED OUT.");
-			pl.sendMessage(ChatColor.RED + "You will be kicked out of the realm immediately.");
 			plist.add(pl);
 		}
 		
@@ -2368,6 +2371,22 @@ public class RealmMechanics implements Listener {
 		
 		if(e.getAction() == Action.RIGHT_CLICK_BLOCK && i.getType() == Material.NETHER_STAR) {
 			e.setCancelled(true);
+
+			boolean loaded = false;
+			PreparedStatement pst;
+			try {
+				pst = ConnectionPool.getConnection().prepareStatement("SELECT realm_loaded FROM player_database WHERE p_name='" + p.getName() + "'");
+				pst.execute();
+				ResultSet rs = pst.getResultSet();
+				loaded = rs.getBoolean("realm_loaded");
+			} catch(SQLException e1) {
+				e1.printStackTrace();
+			}
+			
+			if(loaded){
+				p.sendMessage(ChatColor.RED + "Your realm is still being uploaded from another shard.");
+				return;
+			}
 			
 			if(TutorialMechanics.onTutorialIsland(p)) {
 				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " open a portal to your realm until you have completed Tutorial Island.");
@@ -2644,7 +2663,7 @@ public class RealmMechanics implements Listener {
 			}
 			offline_player_realms.remove(p.getName());
 			uploading_realms.remove(p.getName());
-			setRealmLoadStatusSQL(p.getName(), false);
+			//setRealmLoadStatusSQL(p.getName(), false);
 		}
 		
 		if(p.getInventory().all(Material.NETHER_STAR).size() > 1) {
