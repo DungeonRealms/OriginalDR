@@ -506,9 +506,15 @@ public class HearthstoneMechanics implements Listener {
     }
 
     public static ItemStack getHearthstoneItem(Player p) {
+        Hearthstone hs = getHearthStone(p.getName());
+        if(hs == null){
+            return createCustomItem(new ItemStack(Material.QUARTZ), ChatColor.YELLOW.toString() + ChatColor.BOLD + "Hearthstone",
+                    Arrays.asList(ChatColor.GRAY + "Teleports you to your home town.", ChatColor.GRAY + "Talk to an Innkeeper to change your home town.",
+                            ChatColor.GREEN + "Location: Cyrennica"));
+        }
         ItemStack hearthstone_item = createCustomItem(new ItemStack(Material.QUARTZ), ChatColor.YELLOW.toString() + ChatColor.BOLD + "Hearthstone",
                 Arrays.asList(ChatColor.GRAY + "Teleports you to your home town.", ChatColor.GRAY + "Talk to an Innkeeper to change your home town.",
-                        ChatColor.GREEN + "Location: " + getHearthStone(p.getName()).getName()));
+                        ChatColor.GREEN + "Location: " + hs.getName()));
 
         return hearthstone_item;
     }
