@@ -33,7 +33,6 @@ import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
 import net.minecraft.server.v1_7_R2.EntityLiving;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
-import net.minecraft.server.v1_7_R2.NBTTagList;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
 
@@ -6190,7 +6189,21 @@ public class ItemMechanics implements Listener {
             }
         }
         if (r == 1) {
-            return iGen.AxeGenorator(Material.WOOD_AXE, false, null);
+            if (tier == 1) {
+                return iGen.AxeGenorator(Material.WOOD_AXE, false, null);
+            }
+            if (tier == 2) {
+                return iGen.AxeGenorator(Material.STONE_AXE, false, null);
+            }
+            if (tier == 3) {
+                return iGen.AxeGenorator(Material.IRON_AXE, false, null);
+            }
+            if (tier == 4) {
+                return iGen.AxeGenorator(Material.DIAMOND_AXE, false, null);
+            }
+            if (tier == 5) {
+                return iGen.AxeGenorator(Material.GOLD_AXE, false, null);
+            }
         }
         if (r == 2) {
         	return iGen.BowGenorator(tier, false, null);
