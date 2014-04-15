@@ -2378,6 +2378,7 @@ public class RealmMechanics implements Listener {
 				pst = ConnectionPool.getConnection().prepareStatement("SELECT realm_loaded FROM player_database WHERE p_name='" + p.getName() + "'");
 				pst.execute();
 				ResultSet rs = pst.getResultSet();
+				rs.next();
 				loaded = rs.getBoolean("realm_loaded");
 			} catch(SQLException e1) {
 				e1.printStackTrace();
