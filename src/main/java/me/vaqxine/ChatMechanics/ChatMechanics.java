@@ -359,7 +359,7 @@ public class ChatMechanics implements Listener {
 		}
 		
 		if(op.isOp() || rank.equalsIgnoreCase("GM")) {
-			if(p_name.equalsIgnoreCase("Vaquxine") || p_name.equalsIgnoreCase("iFamasssxD")) {
+			if(Main.isDev(p_name)) {
 				return_string += "" + ChatColor.DARK_AQUA + ChatColor.BOLD.toString() + "DEV" + " " + ChatColor.GRAY;
 			} else {
 				return return_string + ChatColor.AQUA + ChatColor.BOLD.toString() + "GM" + " " + ChatColor.AQUA;
