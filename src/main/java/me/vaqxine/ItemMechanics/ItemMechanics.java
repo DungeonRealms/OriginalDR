@@ -3536,7 +3536,6 @@ public class ItemMechanics implements Listener {
 
         // int bow_tier = getItemTier(p.getItemInHand());
         if (!doesPlayerHaveAnyArrows(p)) {
-            Main.dl(doesPlayerHaveAnyArrows(p));
             e.setCancelled(true);
             if (arrow_replace.containsKey(p.getName())) {
                 PlayerArrowReplace par = arrow_replace.get(p.getName());
@@ -5863,7 +5862,6 @@ public class ItemMechanics implements Listener {
             if (is == null || is.getType() == Material.AIR) {
                 continue;
             }
-            Main.dl(is);
             if (is.getType() == Material.ARROW) {
                 if (is.getAmount() == 1) {
                     is.setType(Material.AIR);
