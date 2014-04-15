@@ -3477,7 +3477,7 @@ public class ItemMechanics implements Listener {
             if (is == null || is.getType() != Material.ARROW) {
                 continue;
             }
-            if(is.getItemMeta() != null){
+            if(is.getItemMeta() != null && is.getItemMeta().getLore() != null){
             	for(String x : is.getItemMeta().getLore()){
             		if(x.contains("page")) continue outer;
             		if(x.contains("Page")) continue outer;
