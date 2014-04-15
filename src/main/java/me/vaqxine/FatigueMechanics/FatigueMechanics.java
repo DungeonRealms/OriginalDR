@@ -368,7 +368,7 @@ public class FatigueMechanics implements Listener {
 		
 		if(m == Material.BOW) { // Arrow shooting. Bow punch will be addressed at event level.
 			int tier = ItemMechanics.getItemTier(i);
-			if(tier == 1) { return 0.8F; }
+			if(tier == 1) { return 0.08F; }
 			if(tier == 2) { return 0.10F; }
 			if(tier == 3) { return 0.11F; }
 			if(tier == 4) { return 0.13F; }

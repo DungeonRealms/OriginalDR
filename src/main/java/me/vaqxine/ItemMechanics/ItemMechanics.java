@@ -2810,6 +2810,7 @@ public class ItemMechanics implements Listener {
             if (p.getItemInHand().getType() == Material.BOW) {
                 int bow_tier = getItemTier(p.getItemInHand());
                 // if(!doesPlayerHaveArrows(p, bow_tier)) {
+                Main.d(doesPlayerHaveAnyArrows(p));
                 if (!doesPlayerHaveAnyArrows(p)) {
                     p.playSound(p.getLocation(), Sound.IRONGOLEM_HIT, 0.3F, 2.0F);
                     e.setCancelled(true);
@@ -2832,21 +2833,22 @@ public class ItemMechanics implements Listener {
 
     public static boolean doesPlayerHaveAnyArrows(Player p) {
         for (ItemStack is : p.getInventory()) {
-            if (is == null || is.getType() == Material.AIR || is.getType() != Material.ARROW || is.getType() != Material.FLOWER_POT_ITEM) {
+            if (is == null || is.getType() == Material.AIR) {
                 continue;
             }
-                if (is.getType() == Material.FLOWER_POT_ITEM) {
-                    int amount = getQuiverAmount(is);
-                    if (amount > 0) {
-                        return true;
-                    }
-                    if (p.getInventory().all(Material.FLOWER_POT_ITEM).entrySet().size() > 1) {
-                        continue;
-                    }
-                }
-                if (p.getInventory().contains(Material.ARROW)) {
+            if (is.getType() == Material.ARROW) {
+                // They have an arrow so they have arrows.
+                Main.d("THEY HAVE ARROWS");
+                return true;
+            }
+            if (is.getType() == Material.FLOWER_POT_ITEM) {
+                int amount = getQuiverAmount(is);
+                if (amount > 0) {
+                    Main.d("THEY HAVE ARROWS YO");
                     return true;
                 }
+            }
+
         }
         return false;
     }
@@ -3535,6 +3537,7 @@ public class ItemMechanics implements Listener {
 
         // int bow_tier = getItemTier(p.getItemInHand());
         if (!doesPlayerHaveAnyArrows(p)) {
+            Main.dl(doesPlayerHaveAnyArrows(p));
             e.setCancelled(true);
             if (arrow_replace.containsKey(p.getName())) {
                 PlayerArrowReplace par = arrow_replace.get(p.getName());
@@ -3547,7 +3550,11 @@ public class ItemMechanics implements Listener {
         }
 
         int tier = subtractArrow(p);
-
+        if (tier == 0) {
+            Main.d("DUDE THE TIER WAS 0");
+        } else {
+            Main.d(tier);
+        }
         int bow_tier = getItemTier(p.getItemInHand());
 
         Arrow a = (Arrow) e.getProjectile();
@@ -3937,12 +3944,12 @@ public class ItemMechanics implements Listener {
     }
 
     @SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (e.hasItem() && e.getItem().getType() == Material.BOW) {
-                if (!p.getInventory().contains(Material.AIR) && p.getInventory().contains(Material.FLOWER_POT_ITEM) && doesPlayerHaveAnyArrows(p)) {
+                if (!p.getInventory().contains(Material.ARROW) && p.getInventory().contains(Material.FLOWER_POT_ITEM) && doesPlayerHaveAnyArrows(p)) {
                     if (arrow_replace.containsKey(p.getName()))
                         return;
                     arrow_replace.put(p.getName(), new PlayerArrowReplace(p, p.getInventory().getItem(35), 35));
@@ -5854,40 +5861,51 @@ public class ItemMechanics implements Listener {
 
     public int subtractArrow(Player pl) {
         for (ItemStack is : pl.getInventory().getContents()) {
-            if (is == null || !(is.getType() == Material.AIR || is.getType() == Material.FLOWER_POT_ITEM)) {
+            if (is == null || is.getType() == Material.AIR) {
                 continue;
             }
-            if (is.getType() == Material.FLOWER_POT_ITEM) {
-                ItemMeta im = is.getItemMeta();
-                int highest_tier = 0;
-                int amount_of_arrows = 0;
-                for (String line : im.getLore()) {
-                    if (ChatColor.stripColor(line).contains("Tier")) {
-                        int tier_arrow = Integer.parseInt(ChatColor.stripColor(line).split("Tier ")[1].split(":")[0]);
-                        if (tier_arrow > highest_tier) {
-                            // Check to see if there are any arrows
-                            int amount = Integer.parseInt(ChatColor.stripColor(line).split(": ")[1]);
-                            if (amount > 0) {
-                                // Set the arrow since they have one
-                                amount_of_arrows = amount;
-                                highest_tier = tier_arrow;
-                            }
-                        }
-                    }
-                }
-                int max_amount = getQuiverAmount(is);
-                replaceQuiverLore(is, highest_tier, amount_of_arrows - 1, max_amount - 1, getMaxQuiverHold(is));
-                return highest_tier;
-            }
+            Main.dl(is);
             if (is.getType() == Material.ARROW) {
                 if (is.getAmount() == 1) {
                     is.setType(Material.AIR);
                 } else {
                     is.setAmount(is.getAmount() - 1);
                 }
+                int tier = getItemTier(is);
+                Main.d("TIER OF ARROW : " + getItemTier(is));
+                Main.d("DATA: " + is.getItemMeta());
+                Main.d(is.getAmount());
+                if (tier <= 0){
+                    continue;
+                }
                 return getItemTier(is);
             }
+            if (is.getType() == Material.FLOWER_POT_ITEM) {
+                if (getQuiverAmount(is) <= 0) {
+                    Main.d("RETURNING 0 ON LINE 5870");
+                    return 0;
+                }
+                int highest_tier = 0;
+                int amount_of_arrows = 0;
+                for (int i = 6; i > 0; i--) {
+                    if (getTierArrowsInQuiver(is, i) <= 0) {
+                        continue;
+                    }
+                    if (highest_tier < i) {
+                        highest_tier = i;
+                    }
+                    amount_of_arrows = getTierArrowsInQuiver(is, i);
+                }
+
+                int max_amount = getQuiverAmount(is);
+                replaceQuiverLore(is, highest_tier, amount_of_arrows - 1, max_amount - 1, getMaxQuiverHold(is));
+                Main.d("RETURNING HIGHEST TIER ON LINE 5870");
+                Main.d("TIER: " + highest_tier);
+                return highest_tier;
+            }
+
         }
+        Main.d("RETURNING 0 ON LINE 5895");
         return 0;
     }
 
@@ -6052,9 +6070,12 @@ public class ItemMechanics implements Listener {
         }
 
         try {
+            net.minecraft.server.v1_7_R2.NBTTagList cpe = new net.minecraft.server.v1_7_R2.NBTTagList();
             NBTTagCompound tag = new NBTTagCompound();
             tag.setByte("Id", (byte) 6);
-            ((NBTTagList) i.tag.get("CustomPotionEffects")).add(tag);
+            // ((NBTTagList)i.tag.getList("CustomPotionEffects", 0)).add(tag);
+            cpe.add(tag);
+            i.tag.set("CustomPotionEffects", cpe);
         } catch (NullPointerException npe) {
             return CraftItemStack.asBukkitCopy(i);
         }
