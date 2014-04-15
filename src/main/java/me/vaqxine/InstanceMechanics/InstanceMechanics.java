@@ -1412,6 +1412,7 @@ public class InstanceMechanics implements Listener {
 			zipfile.close();
 		} catch(Exception e) {
 			log.info("Error while extracting file " + archive);
+			e.printStackTrace();
 		}
 	}
 	
