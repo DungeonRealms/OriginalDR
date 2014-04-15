@@ -2195,7 +2195,7 @@ public class MonsterMechanics implements Listener {
 		        event.getEntity().setFireTicks(30);
 		    }
 		}
-		if(isLavaNearby(event.getEntity().getLocation(), 5)){
+		if(isLavaNearby(event.getEntity().getLocation(), 3)){
 		    event.setCancelled(true);
 		    event.setDamage(0);
 		    event.getEntity().setFireTicks(0);
