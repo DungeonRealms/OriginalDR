@@ -432,6 +432,7 @@ public class InstanceMechanics implements Listener {
 											total_mobs.put(w.getName(), total_mob_count);
 											mob_kill_count.put(w.getName(), 0);
 											log.info("[InstanceMechanics] Total mob count for instance " + w.getName() + ": " + total_mob_count);
+											pl.sendMessage(ChatColor.LIGHT_PURPLE.toString() + "<" + ChatColor.BOLD + "P" + ChatColor.LIGHT_PURPLE + ">" + " You have to kill '" + ChatColor.UNDERLINE + total_mob_count + ChatColor.LIGHT_PURPLE + "' mobs.");
 										}
 									}, 40L);
 									
