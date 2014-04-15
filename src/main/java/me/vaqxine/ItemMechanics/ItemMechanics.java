@@ -6190,7 +6190,7 @@ public class ItemMechanics implements Listener {
             }
         }
         if (r == 1) {
-            return iGen.AxeGenorator(Material.GOLD_AXE, false, null);
+            return iGen.AxeGenorator(Material.WOOD_AXE, false, null);
         }
         if (r == 2) {
         	return iGen.BowGenorator(tier, false, null);
