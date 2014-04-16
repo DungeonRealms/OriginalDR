@@ -453,7 +453,7 @@ public class HearthstoneMechanics implements Listener {
                 if (p.getInventory().firstEmpty() != -1) {
                     p.getInventory().setItem(p.getInventory().firstEmpty(), getHearthstoneItem(p));
                 } else {
-                    // They didnt have a hearthstone or any room... gg
+                    // They didnt have a hearthstone or any room ... gg
                     p.getInventory().setItem(35, getHearthstoneItem(p));
                 }
             }

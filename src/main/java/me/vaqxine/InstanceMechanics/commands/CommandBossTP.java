@@ -126,7 +126,7 @@ public class CommandBossTP implements CommandExecutor {
 		
 		if(cb.getBlock().getWorld().getName().contains("OneWolfeDungeon")) {
 		    //TODO: SET THE LOCATION
-			Location loc = new Location(cb.getBlock().getWorld(), -54, 158, 646); // TODO: onewolf - spawn his wolf pet as well
+			Location loc = new Location(cb.getBlock().getWorld(), -71, 176, 18); // TODO: onewolf - spawn his wolf pet as well
 			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.ZOMBIE, "goblin", "Aceron The Wicked");
 			BossMechanics.boss_map.put(boss, "aceron");
 			for(Player pl : boss.getWorld().getPlayers()) {

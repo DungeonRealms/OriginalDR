@@ -5894,7 +5894,48 @@ public class MonsterMechanics implements Listener {
 			le.setMetadata("mobname", new FixedMetadataValue(Main.plugin, ChatColor.GOLD.toString() + ChatColor.UNDERLINE.toString() + custom_name));
 			le.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, "tnt_bandit"));
 		}
-		
+		/*BOSS DROPS HERE*/
+		if(custom_name.equalsIgnoreCase("Aceron the Wicked")){
+		    boots = ItemGenerators.customGenerator("aceronboots");
+		    legs = ItemGenerators.customGenerator("aceronlegs");
+		    chest = ItemGenerators.customGenerator("aceronplate");
+		    helmet = ItemGenerators.customGenerator("aceronhelms");
+		    weapon = ItemGenerators.customGenerator("aceronsword");
+		    
+		    //Add the item to the gearlist
+		    gear_list.add(weapon);
+            gear_list.add(boots);
+            gear_list.add(legs);
+            gear_list.add(chest);
+            gear_list.add(helmet);
+            
+            weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
+            
+            if(boots != null) {
+                boots.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
+            }
+            if(helmet != null) {
+                helmet.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
+            }
+            if(chest != null) {
+                chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
+            }
+            if(legs != null) {
+                legs.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
+            }
+            
+            ent.setEquipment(0, CraftItemStack.asNMSCopy(weapon));
+            ent.setEquipment(1, CraftItemStack.asNMSCopy(boots));
+            ent.setEquipment(2, CraftItemStack.asNMSCopy(legs));
+            ent.setEquipment(3, CraftItemStack.asNMSCopy(chest));
+            ent.setEquipment(4, CraftItemStack.asNMSCopy(helmet));
+            
+            LivingEntity le = (LivingEntity) e;
+            le.setCustomName(ChatColor.GOLD.toString() + ChatColor.UNDERLINE.toString() + custom_name);
+            le.setCustomNameVisible(true);
+            le.setMetadata("mobname", new FixedMetadataValue(Main.plugin, ChatColor.GOLD.toString() + ChatColor.UNDERLINE.toString() + custom_name));
+            le.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, "aceron"));
+		}
 		if(custom_name.equalsIgnoreCase("Burick The Fanatic")) {
 			boots = ItemGenerators.customGenerator("up_boots");
 			legs = ItemGenerators.customGenerator("up_legs");
@@ -6004,7 +6045,7 @@ public class MonsterMechanics implements Listener {
 		dmg_range.add((int) Math.round(min_dmg));
 		dmg_range.add((int) Math.round(max_dmg));
 		
-		total_hp = (total_hp * 6.00D);
+		total_hp = (total_hp * 4.5D);
 		
 		if(custom_name.contains("Mad Bandit Pyromancer")) {
 			total_hp = total_hp * 2.00D;
