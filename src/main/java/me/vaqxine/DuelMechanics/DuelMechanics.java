@@ -1175,10 +1175,26 @@ public class DuelMechanics implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Player quitter = e.getPlayer();
+		//So they are both offline..
+		if(duel_countdown.containsKey(quitter) && Bukkit.getPlayer(duel_map.get(quitter.getName())) == null) {
+		    String opponent = duel_map.get(quitter.getName());
+            duel_countdown.remove(quitter);
+            duel_map.remove(quitter.getName());
+            duel_map.remove(opponent);
+            in_duel.remove(quitter);
+            in_duel.remove(opponent);
+            duel_stake.remove(quitter.getName());
+            duel_countdown.remove(opponent);
+            duel_countdown.remove(quitter.getName());
+            in_duel_window.remove(quitter.getName());
+            in_duel_window.remove(opponent);
+            return;
+         }
 		
 		if(duel_countdown.containsKey(quitter)) {
 			duel_countdown.remove(quitter);
 		}
+		
 		
 		duel_request_cooldown.remove(quitter);
 		
@@ -1597,11 +1613,17 @@ public class DuelMechanics implements Listener {
 		}
 		
 		Player new_winner = Bukkit.getPlayer(winner.getName());
+		if(new_winner == null || !new_winner.isOnline()){
+		    //the winner is offline as well so destroy the loot..	
+		        duel_stake.remove(winner.getName());
+		        duel_stake.remove(looser.getName());
+		    return;
+		}
 		new_winner.openInventory(loot);
 		new_winner.sendMessage(ChatColor.YELLOW + "Loot menu opened.");
-		
 		duel_stake.remove(winner.getName());
-		duel_stake.remove(looser.getName());
+        duel_stake.remove(looser.getName());
+	
 	}
 	
 	public boolean InWGRegion(Player p) {
