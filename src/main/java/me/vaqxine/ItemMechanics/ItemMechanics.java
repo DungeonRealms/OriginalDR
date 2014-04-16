@@ -31,6 +31,7 @@ import me.vaqxine.PartyMechanics.PartyMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
+import me.vaqxine.managers.PlayerManager;
 import net.minecraft.server.v1_7_R2.EntityLiving;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
 import net.minecraft.server.v1_7_R2.Packet;
@@ -3439,8 +3440,8 @@ public class ItemMechanics implements Listener {
                 }
             }
 
-            if (CommunityMechanics.toggle_list.containsKey(p.getName())) {
-                if (CommunityMechanics.toggle_list.get(p.getName()).contains("debug") && e.getDamage() > 0) {
+            if(PlayerManager.getPlayerModel(p).getToggleList() != null){
+            	if(PlayerManager.getPlayerModel(p).getToggleList().contains("debug") && e.getDamage() > 0){
                     // p.sendMessage(ChatColor.GRAY + "DEBUG: " + damage_to_reduce + " DMG (original: " + damage + ")"); -50HP [-5%A -> -25DMG]
                     p.sendMessage(ChatColor.RED + "        " + ChatColor.BOLD + "-" + ChatColor.RED + (int) e.getDamage() + ChatColor.RED + ChatColor.BOLD
                             + "HP" + ChatColor.GRAY + " [-" + calculateArmorVal(p) + "%A -> -" + damage_to_reduce + ChatColor.BOLD + "DMG" + ChatColor.GRAY
@@ -3673,11 +3674,9 @@ public class ItemMechanics implements Listener {
         Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
             public void run() {
                 Hologram hg = new Hologram(Main.plugin, ChatColor.RED.toString() + (int) dmg + ChatColor.RED + ChatColor.BOLD + " DMG");
-                boolean toggled = (CommunityMechanics.toggle_list.containsKey(p_attacker.getName()) && CommunityMechanics.toggle_list.get(p_attacker.getName())
-                        .contains("indicator"));
+                boolean toggled = (PlayerManager.getPlayerModel(p_attacker).getToggleList() != null && PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("indicator"));
                 if (f_is_player == true) {
-                    if (CommunityMechanics.toggle_list.containsKey(p_attacker.getName())
-                            && CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("debug")) {
+                	if(PlayerManager.getPlayerModel(p_attacker).getToggleList() != null && PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")){
                         p_attacker.sendMessage(ChatColor.RED + "        " + (int) dmg + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> "
                                 + ((Player) le).getName());
                     }
@@ -3686,8 +3685,7 @@ public class ItemMechanics implements Listener {
                     }
                 }
                 if (f_is_player == false) {
-                    if (CommunityMechanics.toggle_list.containsKey(p_attacker.getName())
-                            && CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("debug")) {
+                	if(PlayerManager.getPlayerModel(p_attacker).getToggleList() != null && PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")){
                         String mob_name = MonsterMechanics.getMobType(ent, false);
                         p_attacker.sendMessage(ChatColor.RED + "        " + (int) dmg + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> " + mob_name + " ["
                                 + ((int) MonsterMechanics.getMHealth(ent)) + "HP]");
@@ -3771,7 +3769,7 @@ public class ItemMechanics implements Listener {
             }
         }
         final double dmg_d = dmg;
-        if (CommunityMechanics.toggle_list.get(p.getName()).contains("debug")) {
+        if(PlayerManager.getPlayerModel(p).getToggleList().contains("debug")){
             final boolean f_is_player = is_player;
             Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                 public void run() {
@@ -3830,7 +3828,7 @@ public class ItemMechanics implements Listener {
 
         final double dmg = e.getDamage();
 
-        if (CommunityMechanics.toggle_list.containsKey(p_attacker.getName()) && CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("debug")) {
+        if(PlayerManager.getPlayerModel(p_attacker).getToggleList() != null && PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")) {
             final boolean f_is_player = is_player;
             Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                 public void run() {
@@ -3894,7 +3892,7 @@ public class ItemMechanics implements Listener {
             }
         }
 
-        if (CommunityMechanics.toggle_list.get(p.getName()).contains("debug")) {
+        if(PlayerManager.getPlayerModel(p).getToggleList().contains("debug")){
             final boolean f_is_player = is_player;
             Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                 public void run() {
@@ -4176,7 +4174,7 @@ public class ItemMechanics implements Listener {
                         .sendPacketNearby(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), 24,
                                 ((CraftWorld) p.getWorld()).getHandle().dimension, particles);
 
-                if (CommunityMechanics.toggle_list.get(p.getName()).contains("debug")) {
+                if(PlayerManager.getPlayerModel(p).getToggleList().contains("debug")){
                     p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP"
                             + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p.getName())) + "/" + (int) getMaxHP(p) + "HP]");
                 }
@@ -4406,8 +4404,8 @@ public class ItemMechanics implements Listener {
 
             }
 
-            if (!(DuelMechanics.duel_map.containsKey(p_attacker.getName())) && CommunityMechanics.toggle_list.containsKey(p_attacker.getName())) {
-                if (CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("pvp")) {
+            if (!(DuelMechanics.duel_map.containsKey(p_attacker.getName())) && PlayerManager.getPlayerModel(p_attacker).getToggleList() != null) {
+            	if(PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("pvp")){
                     // Don't damage another player.
                     // p_attacker.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " attack the lawful player (" +
                     // p.getName() + ") with /togglepvp enabled.");
@@ -4624,7 +4622,7 @@ public class ItemMechanics implements Listener {
                             .sendPacketNearby(p_attacker.getLocation().getX(), p_attacker.getLocation().getY(), p_attacker.getLocation().getZ(), 24,
                                     ((CraftWorld) p_attacker.getWorld()).getHandle().dimension, particles);
 
-                    if (CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("debug")) {
+                    if(PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")){
                         p_attacker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP"
                                 + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p_attacker.getName())) + "/" + (int) getMaxHP(p_attacker) + "HP]");
                     }
@@ -4858,7 +4856,7 @@ public class ItemMechanics implements Listener {
                         .sendPacketNearby(p_attacker.getLocation().getX(), p_attacker.getLocation().getY(), p_attacker.getLocation().getZ(), 24,
                                 ((CraftWorld) p_attacker.getWorld()).getHandle().dimension, particles);
 
-                if (CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("debug")) {
+                if(PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")){
                     p_attacker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP"
                             + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p_attacker.getName())) + "/" + (int) getMaxHP(p_attacker) + "HP]");
                 }
@@ -5092,7 +5090,7 @@ public class ItemMechanics implements Listener {
                         .sendPacketNearby(p_attacker.getLocation().getX(), p_attacker.getLocation().getY(), p_attacker.getLocation().getZ(), 24,
                                 ((CraftWorld) p_attacker.getWorld()).getHandle().dimension, particles);
 
-                if (CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("debug")) {
+                if(PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")){
                     p_attacker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP"
                             + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p_attacker.getName())) + "/" + (int) getMaxHP(p_attacker) + "HP]");
                 }
@@ -5369,7 +5367,7 @@ public class ItemMechanics implements Listener {
                         .sendPacketNearby(p_attacker.getLocation().getX(), p_attacker.getLocation().getY(), p_attacker.getLocation().getZ(), 24,
                                 ((CraftWorld) p_attacker.getWorld()).getHandle().dimension, particles);
 
-                if (CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("debug")) {
+                if(PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")){
                     p_attacker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP"
                             + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p_attacker.getName())) + "/" + (int) getMaxHP(p_attacker) + "HP]");
                 }

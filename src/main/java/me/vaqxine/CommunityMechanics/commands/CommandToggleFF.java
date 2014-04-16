@@ -2,7 +2,7 @@ package me.vaqxine.CommunityMechanics.commands;
 
 import java.util.List;
 
-import me.vaqxine.CommunityMechanics.CommunityMechanics;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -31,18 +31,18 @@ public class CommandToggleFF implements CommandExecutor {
 			return true;
 		}
 		
-		if(CommunityMechanics.toggle_list.get(p.getName()).contains("ff")) {
-			List<String> ltoggle_list = CommunityMechanics.toggle_list.get(p.getName());
+		if(PlayerManager.getPlayerModel(p).getToggleList().contains("ff")){
+			List<String> ltoggle_list = PlayerManager.getPlayerModel(p).getToggleList();
 			ltoggle_list.remove("ff");
-			CommunityMechanics.toggle_list.put(p.getName(), ltoggle_list);
+			PlayerManager.getPlayerModel(p).setToggleList(ltoggle_list);
 			p.sendMessage(ChatColor.RED + "Friendly Fire - " + ChatColor.BOLD + "DISABLED");
 			return true;
 		}
 		
-		if(!CommunityMechanics.toggle_list.get(p.getName()).contains("ff")) {
-			List<String> ltoggle_list = CommunityMechanics.toggle_list.get(p.getName());
+		if(!PlayerManager.getPlayerModel(p).getToggleList().contains("ff")) {
+			List<String> ltoggle_list = PlayerManager.getPlayerModel(p).getToggleList();
 			ltoggle_list.add("ff");
-			CommunityMechanics.toggle_list.put(p.getName(), ltoggle_list);
+			PlayerManager.getPlayerModel(p).setToggleList(ltoggle_list);
 			p.sendMessage(ChatColor.GREEN + "Friendly Fire - " + ChatColor.BOLD + "ENABLED");
 			return true;
 		}

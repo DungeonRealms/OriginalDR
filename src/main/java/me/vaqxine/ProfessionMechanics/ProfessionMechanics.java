@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 
 import me.vaqxine.Main;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
-import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
@@ -35,6 +34,7 @@ import me.vaqxine.ProfessionMechanics.commands.CommandSetOre;
 import me.vaqxine.ProfessionMechanics.commands.CommandShowFish;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
+import me.vaqxine.managers.PlayerManager;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
 
@@ -1237,7 +1237,7 @@ public class ProfessionMechanics implements Listener {
 		
 		int needed_exp = getEXPNeeded(getItemLevel(is), skill);
 		
-		if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("debug")) {
+		if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){
 			pl.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "          +" + ChatColor.YELLOW + (int) amount + ChatColor.BOLD + " EXP" + ChatColor.YELLOW + ChatColor.GRAY + " [" + cur_exp + ChatColor.BOLD + "/" + ChatColor.GRAY + (int) needed_exp + " EXP]");
 		}
 		
@@ -1357,7 +1357,7 @@ public class ProfessionMechanics implements Listener {
 									if(stat_val > cur_stat_val) { // New stat is better.
 										new_lore.remove(val);
 										new_lore.add(stat); // Remove old stat, add new one to lore list.
-										if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("debug")) {
+										if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){
 											pl.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "       " + item_name.toUpperCase() + " UPGRADED: " + stat);
 										}
 										guuci = true; // We're good.
@@ -1371,7 +1371,7 @@ public class ProfessionMechanics implements Listener {
 							}
 							if(exists == false) {
 								new_lore.add(stat);
-								if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("debug")) {
+								if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){
 									pl.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "       " + item_name.toUpperCase() + " GAINED: " + stat);
 								}
 								guuci = true;
@@ -2171,8 +2171,8 @@ public class ProfessionMechanics implements Listener {
 						continue;
 					} // They have max HP.
 					//amount_to_heal += getHealthRegenAmount(p);
-					
-					if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("debug")) {
+
+					if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){
 						pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + ChatColor.GREEN + (int) amount_to_heal + ChatColor.BOLD + " HP" + ChatColor.GREEN + " FROM " + is.getItemMeta().getDisplayName() + ChatColor.GRAY + " [" + ((int) current_hp + (int) amount_to_heal) + "/" + (int) max_hp + "HP]");
 					}
 					
@@ -2429,8 +2429,8 @@ public class ProfessionMechanics implements Listener {
 							continue;
 						} // They have max HP.
 						//amount_to_heal += getHealthRegenAmount(p);
-						
-						if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("debug")) {
+
+						if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){
 							pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "+" + ChatColor.GREEN + (int) amount_to_heal + ChatColor.BOLD + " HP" + ChatColor.GREEN + " FROM " + is.getItemMeta().getDisplayName() + ChatColor.GRAY + " [" + ((int) current_hp + (int) amount_to_heal) + "/" + (int) max_hp + "HP]");
 						}
 						
@@ -2619,8 +2619,8 @@ public class ProfessionMechanics implements Listener {
 				double current_hp = HealthMechanics.getPlayerHP(pl.getName());
 				if(current_hp + 1 > max_hp) { return; } // They have max HP.
 				//amount_to_heal += getHealthRegenAmount(p);
-				
-				if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("debug")) {
+
+				if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){
 					pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "          +" + ChatColor.GREEN + (int) amount_to_heal + ChatColor.BOLD + " HP" + ChatColor.GRAY + " [" + ((int) current_hp + (int) amount_to_heal) + "/" + (int) max_hp + "HP]");
 				}
 				
@@ -2791,7 +2791,7 @@ public class ProfessionMechanics implements Listener {
 								// Full inventory!
 								pl.getWorld().dropItem(pl.getLocation(), fish);
 							}
-							if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("debug")) {
+							if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){
 								pl.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "          DOUBLE FISH CATCH" + ChatColor.YELLOW + " (2x)");
 							}
 						}
@@ -2813,7 +2813,7 @@ public class ProfessionMechanics implements Listener {
 								// Full inventory!
 								pl.getWorld().dropItem(pl.getLocation(), fish);
 							}
-							if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("debug")) {
+							if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){
 								pl.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "          TRIPLE FISH CATCH" + ChatColor.YELLOW + " (3x)");
 							}
 						}
@@ -3413,7 +3413,7 @@ public class ProfessionMechanics implements Listener {
 				int doi_double_drop = new Random().nextInt(100) + 1;
 				if(getDoubleDropChance(is) >= doi_double_drop) {
 					drop.setAmount(2);
-					if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("debug")) {
+					if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){
 						pl.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "          DOUBLE ORE DROP" + ChatColor.YELLOW + " (2x)");
 					}
 				}
@@ -3421,7 +3421,7 @@ public class ProfessionMechanics implements Listener {
 				int doi_triple_drop = new Random().nextInt(100) + 1;
 				if(getTripleDropChance(is) >= doi_triple_drop) {
 					drop.setAmount(3);
-					if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("debug")) {
+					if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){
 						pl.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "          TRIPLE ORE DROP" + ChatColor.YELLOW + " (3x)");
 					}
 				}
@@ -3455,8 +3455,8 @@ public class ProfessionMechanics implements Listener {
 					// Drop on floor so that the itemPickup event is fired, put gems in pouch first, etc, etc.
 					pl.getWorld().dropItemNaturally(pl.getLocation(), MoneyMechanics.makeGems(amount_to_drop));
 					//}
-					
-					if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("debug")) {
+
+					if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){
 						pl.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "          FOUND " + amount_to_drop + " GEM(s)" + ChatColor.YELLOW + "");
 					}
 				}

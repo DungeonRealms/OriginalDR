@@ -25,7 +25,7 @@ import org.bukkit.inventory.ItemStack;
 public class PlayerModel {
 	
 	private String name;
-	private List<String> achievements = new ArrayList<String>();
+	private String achievements;
 	private long globalChatDelay;
 	private Location deathLocation;
 	private long muteTime;
@@ -279,6 +279,7 @@ public class PlayerModel {
 	private boolean enchantScroll;
 	private boolean onIsland;
 	private WeatherType weather;
+	private long lastLocalLogin;
 	
 	public PlayerModel(String name) {
 		this.name = name;
@@ -292,11 +293,11 @@ public class PlayerModel {
 		return Bukkit.getOfflinePlayer(name);
 	}
 
-	public List<String> getAchievements() {
+	public String getAchievements() {
 		return achievements;
 	}
 
-	public void setAchievements(List<String> achievements) {
+	public void setAchievements(String achievements) {
 		this.achievements = achievements;
 	}
 
@@ -2322,6 +2323,14 @@ public class PlayerModel {
 
 	public void setWeather(WeatherType weather) {
 		this.weather = weather;
+	}
+
+	public long getLastLocalLogin() {
+		return lastLocalLogin;
+	}
+
+	public void setLastLocalLogin(long lastLocalLogin) {
+		this.lastLocalLogin = lastLocalLogin;
 	}
 	
 }

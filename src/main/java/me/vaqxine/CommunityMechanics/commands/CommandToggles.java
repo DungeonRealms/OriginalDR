@@ -2,6 +2,7 @@ package me.vaqxine.CommunityMechanics.commands;
 
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,7 +39,7 @@ public class CommandToggles implements CommandExecutor {
 		Inventory toggle_menu = Bukkit.createInventory(null, 18, "Toggle Menu");
 		ItemStack divider = ItemMechanics.signCustomItem(Material.THIN_GLASS, (short) 0, " ", "");
 		
-		if(!(CommunityMechanics.toggle_list.containsKey(p.getName()))) {
+		if(PlayerManager.getPlayerModel(p).getToggleList() == null || PlayerManager.getPlayerModel(p).getToggleList().size() == 0){
 			// No toggles, show all red.
 			int x = -1;
 			while(x < (toggle_count - 1)) {
@@ -46,16 +47,16 @@ public class CommandToggles implements CommandExecutor {
 				String toggle = CommunityMechanics.toggle_map.get(x);
 				toggle_menu.setItem(x, CommunityMechanics.generateToggleButton(toggle, false));
 			}
-		} else if(CommunityMechanics.toggle_list.containsKey(p.getName())) {
+		} else {
 			// Some toggles.
 			int x = -1;
 			while(x < (toggle_count - 1)) {
 				x++;
 				String toggle = CommunityMechanics.toggle_map.get(x);
 				if(toggle.equalsIgnoreCase("toggletradechat")) {
-					toggle_menu.setItem(x, CommunityMechanics.generateToggleButton(toggle, CommunityMechanics.toggle_list.get(p.getName()).contains("tchat")));
+					toggle_menu.setItem(x, CommunityMechanics.generateToggleButton(toggle, PlayerManager.getPlayerModel(p).getToggleList().contains("tchat")));
 				} else {
-					toggle_menu.setItem(x, CommunityMechanics.generateToggleButton(toggle, CommunityMechanics.toggle_list.get(p.getName()).contains(toggle.replaceAll("toggle", ""))));
+					toggle_menu.setItem(x, CommunityMechanics.generateToggleButton(toggle, PlayerManager.getPlayerModel(p).getToggleList().contains(toggle.replaceAll("toggle", ""))));
 				}
 				
 			}

@@ -2,7 +2,7 @@ package me.vaqxine.CommunityMechanics.commands;
 
 import java.util.List;
 
-import me.vaqxine.CommunityMechanics.CommunityMechanics;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -31,18 +31,18 @@ public class CommandToggleProfile implements CommandExecutor {
 			return true;
 		}
 		
-		if(CommunityMechanics.toggle_list.get(p.getName()).contains("profile")) {
-			List<String> ltoggle_list = CommunityMechanics.toggle_list.get(p.getName());
+		if(PlayerManager.getPlayerModel(p).getToggleList().contains("profile")){
+			List<String> ltoggle_list = PlayerManager.getPlayerModel(p).getToggleList();
 			ltoggle_list.remove("profile");
-			CommunityMechanics.toggle_list.put(p.getName(), ltoggle_list);
+			PlayerManager.getPlayerModel(p).setToggleList(ltoggle_list);
 			p.sendMessage(ChatColor.GREEN + "Online Profile - " + ChatColor.BOLD + "ENABLED");
 			return true;
 		}
 		
-		if(!CommunityMechanics.toggle_list.get(p.getName()).contains("profile")) {
-			List<String> ltoggle_list = CommunityMechanics.toggle_list.get(p.getName());
+		if(!PlayerManager.getPlayerModel(p).getToggleList().contains("profile")){
+			List<String> ltoggle_list = PlayerManager.getPlayerModel(p).getToggleList();
 			ltoggle_list.add("profile");
-			CommunityMechanics.toggle_list.put(p.getName(), ltoggle_list);
+			PlayerManager.getPlayerModel(p).setToggleList(ltoggle_list);
 			p.sendMessage(ChatColor.RED + "Online Profile - " + ChatColor.BOLD + "DISABLED");
 			return true;
 		}

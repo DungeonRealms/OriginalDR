@@ -12,8 +12,6 @@ import java.util.logging.Logger;
 import me.confuser.barapi.BarAPI;
 import me.vaqxine.Main;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
-import me.vaqxine.ChatMechanics.ChatMechanics;
-import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.FatigueMechanics.FatigueMechanics;
 import me.vaqxine.Hive.Hive;
@@ -27,6 +25,7 @@ import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
+import me.vaqxine.managers.PlayerManager;
 import net.minecraft.server.v1_7_R2.EntityLiving;
 
 import org.bukkit.Bukkit;
@@ -821,7 +820,7 @@ public class HealthMechanics implements Listener {
 				} // They have max HP.
 				//amount_to_heal += getHealthRegenAmount(p);
 				
-				if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("debug")) {
+				if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){
 					pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "       +" + ChatColor.GREEN + (int) amount_to_heal + ChatColor.BOLD + " HP" + ChatColor.GREEN + " FROM " + p.getName() + ChatColor.GRAY + " [" + ((int) current_hp + (int) amount_to_heal) + "/" + (int) max_hp + "HP]");
 				}
 				
@@ -972,7 +971,7 @@ public class HealthMechanics implements Listener {
 							return;
 						}
 						
-						if(CommunityMechanics.toggle_list.get(p.getName()).contains("debug")) {
+						if(PlayerManager.getPlayerModel(p).getToggleList().contains("debug")){
 							p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "       +" + ChatColor.GREEN + (int) amount_to_heal + ChatColor.BOLD + " HP" + ChatColor.GRAY + " [" + (int) (current_hp + amount_to_heal) + "/" + (int) max_hp + "HP]");
 						}
 						
@@ -1482,7 +1481,7 @@ public class HealthMechanics implements Listener {
 		
 		final String p_name = p.getName();
 		
-		if((ChatMechanics.death_loc.containsKey(p_name) && !DuelMechanics.isDamageDisabled(ChatMechanics.death_loc.get(p_name))) && !(CommunityMechanics.toggle_list.containsKey(p_name) && CommunityMechanics.toggle_list.get(p_name).contains("starterpack"))) {
+		if((PlayerManager.getPlayerModel(p_name).getDeathLocation() != null && !DuelMechanics.isDamageDisabled(PlayerManager.getPlayerModel(p_name).getDeathLocation())) && !(PlayerManager.getPlayerModel(p_name).getToggleList() != null && PlayerManager.getPlayerModel(p_name).getToggleList().contains("starterpack"))) {
 			// Make sure they didn't die in a safe zone.
 			try {
 				p.getInventory().setItem(p.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.generateNoobWeapon()));
@@ -1757,8 +1756,8 @@ public class HealthMechanics implements Listener {
 			if(KarmaMechanics.getRawAlignment(p.getName()).equalsIgnoreCase("good") && KarmaMechanics.plast_hit.containsKey(p.getName()) && (System.currentTimeMillis() - KarmaMechanics.last_hit_time.get(p.getName()) <= (6 * 1000))) {
 				if(Bukkit.getPlayer(KarmaMechanics.plast_hit.get(p.getName())) != null) {
 					Player p_attacker = Bukkit.getPlayer(KarmaMechanics.plast_hit.get(p.getName()));
-					if(CommunityMechanics.toggle_list.containsKey(p_attacker.getName())) {
-						if(CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("chaos")) {
+					if(PlayerManager.getPlayerModel(p_attacker).getToggleList() != null){
+						if(PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("chaos")){
 							// Don't kill the player.
 							//p_attacker.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " attack the lawful player (" + p.getName() + ") with /togglepvp enabled.");
 							e.setCancelled(true);
@@ -1881,8 +1880,8 @@ public class HealthMechanics implements Listener {
 			// Check to see if they have /togglepvp
 			if(Bukkit.getPlayer(KarmaMechanics.plast_hit.get(p.getName())) != null) {
 				Player p_attacker = Bukkit.getPlayer(KarmaMechanics.plast_hit.get(p.getName()));
-				if(CommunityMechanics.toggle_list.containsKey(p_attacker.getName())) {
-					if(CommunityMechanics.toggle_list.get(p_attacker.getName()).contains("chaos")) {
+				if(PlayerManager.getPlayerModel(p_attacker).getToggleList() != null){
+					if(PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("chaos")){
 						// Don't kill the player.
 						p_attacker.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " attack the lawful player (" + p.getName() + ") with /togglepvp enabled.");
 						e.setCancelled(true);
@@ -1919,7 +1918,7 @@ public class HealthMechanics implements Listener {
 			}
 			if(!DuelMechanics.duel_map.containsKey(p.getName()) && !(DuelMechanics.isDamageDisabled(p.getLocation()))) {
 				// They're not in a duel, not in a cooldown, and damage is enabled.
-				ChatMechanics.death_loc.put(p.getName(), p.getLocation());
+				PlayerManager.getPlayerModel(p).setDeathLocation(p.getLocation());
 				p.setSneaking(false);
 				p.setHealth(0);
 				//p.setLevel(0);

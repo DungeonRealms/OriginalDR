@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import me.vaqxine.Main;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,7 +34,7 @@ public class TipMechanics implements Listener {
 		if(tip == null) { return; }
 		
 		for(Player pl : Bukkit.getServer().getOnlinePlayers()) {
-			if(CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("tips")) {
+			if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("tips")) {
 				continue; // Skip them, they don't want tips.
 			}
 			pl.sendMessage(ChatColor.YELLOW.toString() + ChatColor.BOLD.toString() + ">>" + ChatColor.YELLOW + " TIP - " + ChatColor.GRAY + tip);

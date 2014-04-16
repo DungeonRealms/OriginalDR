@@ -22,6 +22,7 @@ import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RecordMechanics.RecordMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -293,8 +294,8 @@ public class KarmaMechanics implements Listener {
 			}
 			
 			if(getRawAlignment(attacker.getName()).equalsIgnoreCase("good")) { // They were good until now!
-				if(CommunityMechanics.toggle_list.containsKey(attacker.getName())) {
-					if(CommunityMechanics.toggle_list.get(attacker.getName()).contains("pvp")) {
+				if(PlayerManager.getPlayerModel(attacker).getToggleList() != null){
+					if(PlayerManager.getPlayerModel(attacker).getToggleList().contains("pvp")){
 						e.setCancelled(true);
 						e.setDamage(0);
 						attacker.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " deal damage to other players while you have /togglepvp on.");
@@ -328,8 +329,8 @@ public class KarmaMechanics implements Listener {
 				last_attack_time.put(attacker.getName(), System.currentTimeMillis());
 				
 				if(getRawAlignment(attacker.getName()).equalsIgnoreCase("good")) { // They were good until now!
-					if(CommunityMechanics.toggle_list.containsKey(attacker.getName())) {
-						if(CommunityMechanics.toggle_list.get(attacker.getName()).contains("pvp")) {
+					if(PlayerManager.getPlayerModel(attacker).getToggleList() != null){
+						if(PlayerManager.getPlayerModel(attacker).getToggleList().contains("pvp")){
 							e.setCancelled(true);
 							e.setDamage(0);
 							attacker.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " deal damage to other players while you have /togglepvp on.");

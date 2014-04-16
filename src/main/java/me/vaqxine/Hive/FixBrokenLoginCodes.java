@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.database.ConnectionPool;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -138,8 +138,8 @@ public class FixBrokenLoginCodes extends Thread {
 				KarmaMechanics.align_map.remove(p_name);
 				KarmaMechanics.align_time.remove(p_name);
 				
-				CommunityMechanics.ignore_list.remove(p_name);
-				CommunityMechanics.buddy_list.remove(p_name);
+				PlayerManager.getPlayerModel(p_name).setIgnoreList(new ArrayList<String>());
+				PlayerManager.getPlayerModel(p_name).setBuddyList(new ArrayList<String>());
 				
 				HealthMechanics.noob_player_warning.remove(p_name);
 				HealthMechanics.noob_players.remove(p_name);

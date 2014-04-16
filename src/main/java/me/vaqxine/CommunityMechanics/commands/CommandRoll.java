@@ -4,6 +4,7 @@ import java.util.Random;
 
 import me.vaqxine.ChatMechanics.ChatMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -45,14 +46,14 @@ public class CommandRoll implements CommandExecutor {
 			return true;
 		}
 		
-		if(CommunityMechanics.roll_delay.containsKey(p.getName())) {
-			long last_roll = CommunityMechanics.roll_delay.get(p.getName());
+		if(PlayerManager.getPlayerModel(p).getRollDelay() > 0){
+			long last_roll = PlayerManager.getPlayerModel(p).getRollDelay();
 			if((System.currentTimeMillis() - last_roll) <= 1000) {
 				// Less than a second since last roll, stop spamming.
 				return true;
 			}
 		}
-		CommunityMechanics.roll_delay.put(p.getName(), System.currentTimeMillis());
+		PlayerManager.getPlayerModel(p).setRollDelay(System.currentTimeMillis());
 		
 		int roll;
 		try {

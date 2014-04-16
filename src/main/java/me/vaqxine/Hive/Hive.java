@@ -34,7 +34,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import me.vaqxine.Main;
-import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.ChatMechanics.ChatMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
@@ -71,6 +70,7 @@ import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.config.Config;
 import me.vaqxine.database.ConnectionPool;
+import me.vaqxine.managers.PlayerManager;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutEntityEquipment;
@@ -1292,15 +1292,15 @@ public class Hive implements Listener {
         String buddy_list = "";
         String ignore_list = "";
         
-        if(CommunityMechanics.buddy_list.containsKey(p_name)) {
-            List<String> lbuddy_list = CommunityMechanics.buddy_list.get(p_name);
+        if(PlayerManager.getPlayerModel(p_name).getBuddyList() != null){
+            List<String> lbuddy_list = PlayerManager.getPlayerModel(p_name).getBuddyList();
             for(String s : lbuddy_list) {
                 buddy_list += StringEscapeUtils.escapeSql(s + ",");
             }
         }
         
-        if(CommunityMechanics.ignore_list.containsKey(p_name)) {
-            List<String> lignore_list = CommunityMechanics.ignore_list.get(p_name);
+        if(PlayerManager.getPlayerModel(p_name).getIgnoreList() != null){
+            List<String> lignore_list = PlayerManager.getPlayerModel(p_name).getIgnoreList();
             for(String s : lignore_list) {
                 ignore_list += StringEscapeUtils.escapeSql(s + ",");
             }
@@ -1308,8 +1308,8 @@ public class Hive implements Listener {
         
         String toggles = "";
         
-        if(CommunityMechanics.toggle_list.containsKey(p_name)) {
-            final List<String> ltoggle_list = CommunityMechanics.toggle_list.get(p_name);
+        if(PlayerManager.getPlayerModel(p_name).getToggleList() != null){
+            final List<String> ltoggle_list = PlayerManager.getPlayerModel(p_name).getToggleList();
             for(String s : ltoggle_list) {
                 toggles += s + ",";
             }
@@ -1358,8 +1358,8 @@ public class Hive implements Listener {
         }
         
         String achievments = "";
-        if(AchievmentMechanics.achievment_map.containsKey(p_name)) {
-            achievments = AchievmentMechanics.achievment_map.get(p_name);
+        if(PlayerManager.getPlayerModel(p_name).getAchievements() != null){
+        	achievments = PlayerManager.getPlayerModel(p_name).getAchievements();
         }
         
         String ecash_storage = "";
@@ -1394,9 +1394,9 @@ public class Hive implements Listener {
         KarmaMechanics.align_map.remove(p_name);
         KarmaMechanics.align_time.remove(p_name);
         KarmaMechanics.saved_gear.remove(p_name);
-        CommunityMechanics.ignore_list.remove(p_name);
-        CommunityMechanics.buddy_list.remove(p_name);
-        CommunityMechanics.toggle_list.remove(p_name);
+        PlayerManager.getPlayerModel(p_name).setIgnoreList(new ArrayList<String>());
+        PlayerManager.getPlayerModel(p_name).setBuddyList(new ArrayList<String>());
+        PlayerManager.getPlayerModel(p_name).setToggleList(new ArrayList<String>());
         HealthMechanics.noob_player_warning.remove(p_name);
         HealthMechanics.noob_players.remove(p_name);
         RealmMechanics.realm_title.remove(p_name);
@@ -1437,7 +1437,7 @@ public class Hive implements Listener {
                 online_today.add(p_name);
             }
             
-            CommunityMechanics.local_last_login.put(p_name, rs.getLong("last_login_time"));
+            PlayerManager.getPlayerModel(p_name).setLastLocalLogin(rs.getLong("last_login_time"));
             // Used for certain cooldown events and such.
             
             PermissionMechanics.setRank(p_name, rs.getString("rank"), false);
@@ -1463,7 +1463,7 @@ public class Hive implements Listener {
                 }
             }
             
-            CommunityMechanics.toggle_list.put(p_name, ltoggle_list);
+            PlayerManager.getPlayerModel(p_name).setToggleList(ltoggle_list);
             // Toggles for a multitude of different settings.
             
             List<String> pet_data = new ArrayList<String>();
@@ -1490,7 +1490,7 @@ public class Hive implements Listener {
                 }
             }
             
-            CommunityMechanics.buddy_list.put(p_name, lbuddy_list);
+            PlayerManager.getPlayerModel(p_name).setBuddyList(lbuddy_list);
             // Friend list!
             
             List<String> lignore_list = new ArrayList<String>();
@@ -1503,7 +1503,7 @@ public class Hive implements Listener {
                 }
             }
             
-            CommunityMechanics.ignore_list.put(p_name, lignore_list);
+            PlayerManager.getPlayerModel(p_name).setIgnoreList(lignore_list);
             // Ignore list!
             
             RealmMechanics.realm_tier.put(p_name, rs.getInt("realm_tier"));
@@ -1600,7 +1600,7 @@ public class Hive implements Listener {
             if(achievments == null) {
                 achievments = "";
             }
-            AchievmentMechanics.achievment_map.put(p_name, achievments);
+            PlayerManager.getPlayerModel(p_name).setAchievements(achievments);
             
             String ecash_storage = rs.getString("ecash_storage");
             if(ecash_storage != null) {
@@ -2166,9 +2166,8 @@ public class Hive implements Listener {
             return server_num;
         }
         
-        if(CommunityMechanics.player_server_num.containsKey(p_name)) { return CommunityMechanics.player_server_num.get(p_name);
+        if(PlayerManager.getPlayerModel(p_name).getServerNum() > 0) return PlayerManager.getPlayerModel(p_name).getServerNum();
         // If it doesn't contain, the servers could not be synced properly or they're a -2, just let SQL take care of the rest.
-        }
         
         if(sql == true) {
             //p_name = p_name.replaceAll("\"", "\\");
@@ -2237,7 +2236,7 @@ public class Hive implements Listener {
             
             pst.executeUpdate();
             
-            CommunityMechanics.player_server_num.put(p_name, server_num);
+            PlayerManager.getPlayerModel(p_name).setServerNum(server_num);
             
             List<Object> qdata = new ArrayList<Object>();
             qdata.add("@server_num@" + p_name + ":" + server_num);
@@ -2399,7 +2398,7 @@ public class Hive implements Listener {
         qdata.add(true);
         CommunityMechanics.social_query_list.put(p_name, qdata);
         //CommunityMechanics.sendPacketCrossServer("@server_num@" + p_name + ":" + -1, -1, true);
-        CommunityMechanics.player_server_num.put(p_name, -1);
+        PlayerManager.getPlayerModel(p_name).setServerNum(-1);
         
     }
     
@@ -2823,9 +2822,7 @@ public class Hive implements Listener {
             }
         }
         
-        if(CommunityMechanics.local_last_login.containsKey(p_name)) {
-            CommunityMechanics.local_last_login.remove(p_name);
-        }
+        if(PlayerManager.getPlayerModel(p_name).getLastLocalLogin() > 0) PlayerManager.getPlayerModel(p_name).setLastLocalLogin(0);
         
         try {
             setPlayerServer(p_name);

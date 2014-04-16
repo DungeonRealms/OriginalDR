@@ -24,6 +24,7 @@ import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.config.Config;
 import me.vaqxine.enums.CC;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -558,7 +559,7 @@ public class ConnectProtocol implements Runnable {
 					String p_name = inputLine.substring(inputLine.lastIndexOf("@") + 1, inputLine.indexOf(":"));
 					int server_num = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.length()));
 					
-					CommunityMechanics.player_server_num.put(p_name, server_num);
+					PlayerManager.getPlayerModel(p_name).setServerNum(server_num);
 				}
 				
 				if(inputLine.startsWith("[sq_online]")) {
@@ -573,8 +574,8 @@ public class ConnectProtocol implements Runnable {
 					}
 					
 					for(Player pl : Bukkit.getServer().getOnlinePlayers()) {
-						if(CommunityMechanics.buddy_list.containsKey(pl.getName())) {
-							List<String> lbuddy_list = CommunityMechanics.buddy_list.get(pl.getName());
+						if(PlayerManager.getPlayerModel(pl).getBuddyList() != null) {
+							List<String> lbuddy_list = PlayerManager.getPlayerModel(pl).getBuddyList();
 							if(lbuddy_list.contains(p_name)) {
 								// Tell them! and update book!
 								
@@ -598,8 +599,8 @@ public class ConnectProtocol implements Runnable {
 					}
 					
 					for(Player pl : Bukkit.getServer().getOnlinePlayers()) {
-						if(CommunityMechanics.buddy_list.containsKey(pl.getName())) {
-							List<String> lbuddy_list = CommunityMechanics.buddy_list.get(pl.getName());
+						if(PlayerManager.getPlayerModel(pl).getBuddyList() != null) {
+							List<String> lbuddy_list = PlayerManager.getPlayerModel(pl).getBuddyList();
 							if(lbuddy_list.contains(p_name)) {
 								// Tell them! and update book!
 								pl.sendMessage(ChatColor.YELLOW + p_name + " has logged out of " + server_name + ".");
@@ -983,7 +984,7 @@ public class ConnectProtocol implements Runnable {
 					
 					if(Bukkit.getPlayer(p_to_name) != null) {
 						Player p_to = Bukkit.getPlayer(p_to_name);
-						if(!PermissionMechanics.getRank(p_from_name).equalsIgnoreCase("gm") && !PermissionMechanics.getRank(p_from_name).equalsIgnoreCase("pmod") && CommunityMechanics.toggle_list.get(p_to.getName()).contains("tells") && !(CommunityMechanics.isPlayerOnBuddyList(p_to, p_from_name))) {
+						if(!PermissionMechanics.getRank(p_from_name).equalsIgnoreCase("gm") && !PermissionMechanics.getRank(p_from_name).equalsIgnoreCase("pmod") && PlayerManager.getPlayerModel(p_to).getToggleList().contains("tells") && !(CommunityMechanics.isPlayerOnBuddyList(p_to, p_from_name))) {
 							String result = "#" + p_from_name + "/" + p_to_name + "=" + "notells,";
 							sendResultCrossServer(server_ip, result, server_num);
 							in.close();
@@ -1020,9 +1021,9 @@ public class ConnectProtocol implements Runnable {
 						
 						p_to.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "FROM (" + from_server + ") " + ChatColor.WHITE + guild_prefix + ChatColor.RESET + from_prefix + c + p_from_name + ":" + ChatColor.WHITE + to_personal_msg);
 						
-						if(!(CommunityMechanics.last_reply.containsKey(p_to.getName())) || !CommunityMechanics.last_reply.get(p_to.getName()).equalsIgnoreCase(p_from_name)) {
+						if(PlayerManager.getPlayerModel(p_to).getLastReply() == null || !PlayerManager.getPlayerModel(p_to).getLastReply().equalsIgnoreCase(p_from_name)){
 							p_to.playSound(p_to.getLocation(), Sound.CHICKEN_EGG_POP, 2F, 1.2F);
-							CommunityMechanics.last_reply.put(p_to.getName(), p_from_name);
+							PlayerManager.getPlayerModel(p_to).setLastReply(p_from_name);
 						}
 						
 						String result = "#" + p_from_name + "/" + to_prefix + to_c.toString() + p_to_name + "=" + "online," + Bukkit.getMotd().substring(0, Bukkit.getMotd().indexOf(" ")) + ":" + message;

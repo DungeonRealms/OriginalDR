@@ -2,7 +2,7 @@ package me.vaqxine.CommunityMechanics.commands;
 
 import java.util.List;
 
-import me.vaqxine.CommunityMechanics.CommunityMechanics;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -31,18 +31,18 @@ public class CommandToggleTells implements CommandExecutor {
 			return true;
 		}
 		
-		if(CommunityMechanics.toggle_list.get(p.getName()).contains("tells")) {
-			List<String> ltoggle_list = CommunityMechanics.toggle_list.get(p.getName());
+		if(PlayerManager.getPlayerModel(p).getToggleList().contains("tells")) {
+			List<String> ltoggle_list = PlayerManager.getPlayerModel(p).getToggleList();
 			ltoggle_list.remove("tells");
-			CommunityMechanics.toggle_list.put(p.getName(), ltoggle_list);
+			PlayerManager.getPlayerModel(p).setToggleList(ltoggle_list);
 			p.sendMessage(ChatColor.GREEN + "Non-BUD Private Messages - " + ChatColor.BOLD + "ENABLED");
 			return true;
 		}
 		
-		if(!CommunityMechanics.toggle_list.get(p.getName()).contains("tells")) {
-			List<String> ltoggle_list = CommunityMechanics.toggle_list.get(p.getName());
+		if(!PlayerManager.getPlayerModel(p).getToggleList().contains("tells")){
+			List<String> ltoggle_list = PlayerManager.getPlayerModel(p).getToggleList();
 			ltoggle_list.add("tells");
-			CommunityMechanics.toggle_list.put(p.getName(), ltoggle_list);
+			PlayerManager.getPlayerModel(p).setToggleList(ltoggle_list);
 			p.sendMessage(ChatColor.RED + "Non-BUD Private Messages - " + ChatColor.BOLD + "DISABLED");
 			return true;
 		}

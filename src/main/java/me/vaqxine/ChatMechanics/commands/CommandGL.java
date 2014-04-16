@@ -7,6 +7,7 @@ import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.jsonlib.JSONMessage;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -48,8 +49,8 @@ public class CommandGL implements CommandExecutor {
 		
 		String rank = PermissionMechanics.getRank(p.getName());
 		
-		if(ChatMechanics.global_chat_delay.containsKey(p.getName())) {
-			long old_time = ChatMechanics.global_chat_delay.get(p.getName());
+		if(PlayerManager.getPlayerModel(p).getGlobalChatDelay() != 0) {
+			long old_time = PlayerManager.getPlayerModel(p).getGlobalChatDelay();
 			long cur_time = System.currentTimeMillis();
 			
 			int personal_delay = ChatMechanics.GChat_Delay;
@@ -70,7 +71,7 @@ public class CommandGL implements CommandExecutor {
 			}
 		}
 		
-		ChatMechanics.global_chat_delay.put(p.getName(), System.currentTimeMillis());
+		PlayerManager.getPlayerModel(p).setGlobalChatDelay(System.currentTimeMillis());
 		
 		boolean trade = false;
 		if(ChatMechanics.hasTradeKeyword(msg)) {
@@ -107,11 +108,11 @@ public class CommandGL implements CommandExecutor {
 							// no need for them to be able to see each other's
 							// messages.
 			}
-			if(trade == false && CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("global")) {
+			if(trade == false && PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("global")) {
 				continue; // They have global off, and only want to hear from
 							// their buds.
 			}
-			if(trade == true && CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("tchat")) {
+			if(trade == true && PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("tchat")) {
 				continue; // They have global off, and only want to hear from
 							// their buds.
 			}

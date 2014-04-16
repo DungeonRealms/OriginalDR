@@ -2,6 +2,7 @@ package me.vaqxine.PartyMechanics.commands;
 
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.PartyMechanics.PartyMechanics;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,7 +36,7 @@ public class CommandPInvite implements CommandExecutor {
 			return true;
 		}
 		
-		if(CommunityMechanics.toggle_list.containsKey(p_name) && CommunityMechanics.toggle_list.get(p_name).contains("party")) {
+		if(PlayerManager.getPlayerModel(p_name).getToggleList() != null && PlayerManager.getPlayerModel(p_name).getToggleList().contains("party")){
 			if(!CommunityMechanics.isPlayerOnBuddyList(p_name, p.getName())) {
 				// They're not buddies and this player doesn't want non-bud invites.
 				p.sendMessage(ChatColor.RED + p_name + " has Non-BUD party invites " + ChatColor.BOLD + "DISABLED");

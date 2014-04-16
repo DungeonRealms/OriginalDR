@@ -18,6 +18,7 @@ import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RestrictionMechanics.RestrictionMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.TradeMechanics.commands.CommandToggleTrade;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -536,7 +537,7 @@ public class TradeMechanics implements Listener {
 				return;
 			}
 			
-			if(CommunityMechanics.toggle_list.containsKey(tradie.getName()) && CommunityMechanics.toggle_list.get(tradie.getName()).contains("trade")) {
+			if(PlayerManager.getPlayerModel(tradie).getToggleList() != null && PlayerManager.getPlayerModel(tradie).getToggleList().contains("trade")){
 				trader.sendMessage(ChatColor.YELLOW + tradie.getName() + " has trade disabled.");
 				e.setCancelled(true);
 				Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {

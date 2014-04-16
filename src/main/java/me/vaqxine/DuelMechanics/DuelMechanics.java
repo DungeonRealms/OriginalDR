@@ -27,6 +27,7 @@ import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.enums.CC;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -1893,12 +1894,12 @@ public class DuelMechanics implements Listener {
 			return;
 		}*/
 		
-		if(CommunityMechanics.toggle_list.get(attacker.getName()).contains("duel") || CommunityMechanics.toggle_list.get(attacked.getName()).contains("duel") || CommunityMechanics.isPlayerOnIgnoreList(attacked, attacker.getName()) || CommunityMechanics.isPlayerOnIgnoreList(attacker, attacked.getName())) {
-			if(CommunityMechanics.toggle_list.get(attacker.getName()).contains("duel")) {
+		if(PlayerManager.getPlayerModel(attacker).getToggleList().contains("duel") || PlayerManager.getPlayerModel(attacked).getToggleList().contains("duel") || CommunityMechanics.isPlayerOnIgnoreList(attacked, attacker.getName()) || CommunityMechanics.isPlayerOnIgnoreList(attacker, attacked.getName())) {
+			if(PlayerManager.getPlayerModel(attacker).getToggleList().contains("duel")){
 				attacker.sendMessage(ChatColor.RED + "You currently have dueling requests " + ChatColor.UNDERLINE + "DISABLED." + ChatColor.RED + " To re-enable dueling, type '/toggleduel'");
 				return;
 			}
-			if(CommunityMechanics.toggle_list.get(attacked.getName()).contains("duel")) {
+			if(PlayerManager.getPlayerModel(attacked).getToggleList().contains("duel")){
 				attacker.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + attacked.getName() + ChatColor.RED + " has dueling " + ChatColor.UNDERLINE + "DISABLED.");
 				return;
 			}

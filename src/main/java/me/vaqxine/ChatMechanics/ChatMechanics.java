@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
@@ -32,6 +31,7 @@ import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.config.Config;
 import me.vaqxine.jsonlib.JSONMessage;
+import me.vaqxine.managers.PlayerManager;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
 
 import org.bukkit.Bukkit;
@@ -65,8 +65,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class ChatMechanics implements Listener {
 	public static Logger log = Logger.getLogger("Minecraft");
 	
-	public static HashMap<String, Long> global_chat_delay = new HashMap<String, Long>();
-	public static HashMap<String, Location> death_loc = new HashMap<String, Location>();
 	public static ConcurrentHashMap<String, Long> mute_list = new ConcurrentHashMap<String, Long>();
 	public static ConcurrentHashMap<String, Long> hologram_chat = new ConcurrentHashMap<String, Long>();
 	public static CopyOnWriteArrayList<String> sending_message = new CopyOnWriteArrayList<String>();
@@ -210,7 +208,7 @@ public class ChatMechanics implements Listener {
 	 */
 	
 	public static boolean hasAdultFilter(String p_name) {
-		if(CommunityMechanics.toggle_list.containsKey(p_name) && CommunityMechanics.toggle_list.get(p_name).contains("filter")) { return false; // Filter
+		if(PlayerManager.getPlayerModel(p_name).getToggleList() != null && PlayerManager.getPlayerModel(p_name).getToggleList().contains("filter")) { return false; // Filter
 																																				// is
 																																				// disabled.
 		}
@@ -476,13 +474,13 @@ public class ChatMechanics implements Listener {
 			return;
 		}
 		
-		if(CommunityMechanics.toggle_list.containsKey(p.getName()) && CommunityMechanics.toggle_list.get(p.getName()).contains("global")) {
+		if(PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("global")){
 			p.sendMessage(ChatColor.RED + "You currently have global messaging " + ChatColor.BOLD + "DISABLED." + ChatColor.RED + " Type '/toggleglobal' to re-enable.");
 			return;
 		}
 		
-		if(global_chat_delay.containsKey(p.getName())) {
-			long old_time = global_chat_delay.get(p.getName());
+		if(PlayerManager.getPlayerModel(p).getGlobalChatDelay() != 0) {
+			long old_time = PlayerManager.getPlayerModel(p).getGlobalChatDelay();
 			long cur_time = System.currentTimeMillis();
 			
 			int personal_delay = GChat_Delay;
@@ -503,14 +501,14 @@ public class ChatMechanics implements Listener {
 			}
 		}
 		
-		global_chat_delay.put(p.getName(), System.currentTimeMillis());
+		PlayerManager.getPlayerModel(p).setGlobalChatDelay(System.currentTimeMillis());
 		
 		boolean trade = false;
 		if(hasTradeKeyword(msg)) {
 			trade = true;
 		}
 		
-		if(trade == true && CommunityMechanics.toggle_list.containsKey(p.getName()) && CommunityMechanics.toggle_list.get(p.getName()).contains("tchat")) {
+		if(trade && PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("tchat")){
 			p.sendMessage(ChatColor.RED + "You currently have trade chat messaging " + ChatColor.BOLD + "DISABLED." + ChatColor.RED + " Type '/toggletradechat' to re-enable.");
 			return;
 		}
@@ -521,11 +519,11 @@ public class ChatMechanics implements Listener {
 							// no need for them to be able to see each other's
 							// messages.
 			}
-			if(trade == false && CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("global")) {
+			if(!trade && PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("global")){
 				continue; // They have global off, and only want to hear from
 							// their buds.
 			}
-			if(trade == true && CommunityMechanics.toggle_list.containsKey(pl.getName()) && CommunityMechanics.toggle_list.get(pl.getName()).contains("tchat")) {
+			if(trade && PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("tchat")){
 				continue; // They have trade chat off, and only want to hear
 							// from their buds.
 			}
@@ -701,7 +699,7 @@ public class ChatMechanics implements Listener {
 				}
 			}
 			
-			Location ldeath_loc = death_loc.get(dead.getName());
+			Location ldeath_loc = PlayerManager.getPlayerModel(dead).getDeathLocation();
 			if(ldeath_loc == null) {
 				ldeath_loc = e.getEntity().getLocation();
 			}
@@ -771,7 +769,7 @@ public class ChatMechanics implements Listener {
 			return;
 		}
 		
-		if(CommunityMechanics.toggle_list.get(p.getName()).contains("globalchat")) {
+		if(PlayerManager.getPlayerModel(p).getToggleList().contains("globalchat")){
 			p.performCommand("gl  " + msg);
 			return;
 		}

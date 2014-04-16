@@ -58,6 +58,7 @@ import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.config.Config;
 import me.vaqxine.database.ConnectionPool;
+import me.vaqxine.managers.PlayerManager;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutEntityEquipment;
@@ -101,45 +102,6 @@ public class CommunityMechanics implements Listener {
 	
 	public static HashMap<Integer, String> server_list = new HashMap<Integer, String>();
 	// Server #, Server IP
-	
-	public static HashMap<String, String> last_reply = new HashMap<String, String>();
-	// Stores information for /r <msg>, PLAYER_NAME, LAST_MESSAGE_RECIEVED
-	
-	public static HashMap<String, Long> last_pm = new HashMap<String, Long>();
-	// Last time a PM was sent by a player. Prevents PM spam cross server and
-	// such.
-	
-	public static HashMap<String, List<String>> buddy_list = new HashMap<String, List<String>>();
-	// Player_name, List of all buddy names.
-	
-	public static HashMap<String, List<String>> ignore_list = new HashMap<String, List<String>>();
-	// Player_name, List of all players on ignore_list.
-	
-	public static HashMap<String, List<String>> toggle_list = new HashMap<String, List<String>>();
-	// All ticked togglable options.
-	
-	public static HashMap<String, Long> local_last_login = new HashMap<String, Long>();
-	// Locally cached information for the last time a player logged in, used in
-	// community book for Last Online:
-	
-	public static HashMap<String, List<String>> local_confirmed_buddies = new HashMap<String, List<String>>();
-	// Player_name, A list of all players who have been queried / tested to be
-	// buddies of the player.
-	
-	public static HashMap<String, List<String>> local_confirmed_ignores = new HashMap<String, List<String>>();
-	// Player_name, A list of all players who have been queried / tested to be
-	// on ignore list of the player.
-	
-	public static ConcurrentHashMap<String, Long> last_book_click = new ConcurrentHashMap<String, Long>();
-	// Determines if the community book should regenerate itself again when
-	// opened.
-	
-	public static HashMap<String, Long> roll_delay = new HashMap<String, Long>();
-	// Delay between using /roll -- prevents spam and abuse, currently 1s.
-	
-	public static volatile HashMap<String, Integer> player_server_num = new HashMap<String, Integer>();
-	// Stores online status of players on other servers, updated through
-	// sockets.
 	
 	public static HashMap<Integer, Socket> sock_list = new HashMap<Integer, Socket>();
 	// Server num, Active socket
@@ -290,7 +252,7 @@ public class CommunityMechanics implements Listener {
 					sent_to_s = msg.substring(1, msg.length());
 				}
 				
-				if(CommunityMechanics.toggle_list.get(sent_from_s).contains("tells") && (!(CommunityMechanics.isPlayerOnBuddyList(sent_from, sent_to_s)))) { // They
+				if(PlayerManager.getPlayerModel(sent_from_s).getToggleList().contains("tells") && (!(CommunityMechanics.isPlayerOnBuddyList(sent_from, sent_to_s)))) { // They
 																																								// have
 																																								// tells
 																																								// disabled
@@ -310,14 +272,14 @@ public class CommunityMechanics implements Listener {
 				}
 				
 				if(sent_to_s.equalsIgnoreCase("")) {
-					if(!CommunityMechanics.last_reply.containsKey(sent_from_s)) {
+					if(PlayerManager.getPlayerModel(p_name).getLastReply() == null){
 						sent_from.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "ERROR: " + ChatColor.RED + "You have no conversation to respond to!");
 						continue;
 					}
-					sent_to_s = CommunityMechanics.last_reply.get(sent_from_s);
+					sent_to_s = PlayerManager.getPlayerModel(p_name).getLastReply();
 				}
 				
-				if(!PermissionMechanics.getRank(sent_from.getName()).equalsIgnoreCase("gm") && (CommunityMechanics.ignore_list.get(sent_from_s).contains(sent_to_s) || CommunityMechanics.socialQuery(sent_from_s, sent_to_s, "CHECK_FOE"))) {
+				if(!PermissionMechanics.getRank(sent_from.getName()).equalsIgnoreCase("gm") && (PlayerManager.getPlayerModel(sent_from).getIgnoreList().contains(sent_to_s) || CommunityMechanics.socialQuery(sent_from_s, sent_to_s, "CHECK_FOE"))) {
 					sent_from.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + sent_to_s + ChatColor.RED + " is OFFLINE.");
 					continue;
 				}
@@ -371,10 +333,10 @@ public class CommunityMechanics implements Listener {
 					Player sent_to_p = Bukkit.getPlayer(sent_to_s);
 					sent_to_s = sent_to_p.getName();
 					
-					CommunityMechanics.last_pm.put(sent_from_s, System.currentTimeMillis());
+					PlayerManager.getPlayerModel(sent_from_s).setLastPMTime(System.currentTimeMillis());
 					
-					if(!sent_from.isOp() && (CommunityMechanics.toggle_list.get(sent_to_p.getName()).contains("tells") && !(CommunityMechanics.isPlayerOnBuddyList(sent_to_p, sent_from_s))) || (CommunityMechanics.toggle_list.get(sent_from_s).contains("tells") && !(CommunityMechanics.isPlayerOnBuddyList(sent_from, sent_to_p.getName())))) {
-						if(CommunityMechanics.toggle_list.get(sent_to_p.getName()).contains("tells")) {
+					if(!sent_from.isOp() && (PlayerManager.getPlayerModel(sent_to_p).getToggleList().contains("tells") && !(CommunityMechanics.isPlayerOnBuddyList(sent_to_p, sent_from_s))) || (PlayerManager.getPlayerModel(sent_from_s).getToggleList().contains("tells") && !(CommunityMechanics.isPlayerOnBuddyList(sent_from, sent_to_p.getName())))) {
+						if(PlayerManager.getPlayerModel(sent_to_p).getToggleList().contains("tells")){
 							sent_from.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + sent_to_p.getName() + ChatColor.RED + " currently has private messaging " + ChatColor.UNDERLINE + "DISABLED.");
 							continue;
 						}
@@ -417,9 +379,9 @@ public class CommunityMechanics implements Listener {
 					
 					sent_to_p.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "FROM " + from_prefix + st_c + sent_from_s + ":" + ChatColor.WHITE + to_personal_msg);
 					sent_from.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "TO " + to_prefix + sf_c + sent_to_p.getName() + ":" + ChatColor.WHITE + from_personal_msg);
-					if(!(CommunityMechanics.last_reply.containsKey(sent_to_p.getName())) || !CommunityMechanics.last_reply.get(sent_to_p.getName()).equalsIgnoreCase(sent_from_s)) {
+					if(PlayerManager.getPlayerModel(sent_to_p).getLastReply() == null || !PlayerManager.getPlayerModel(sent_to_p).getLastReply().equalsIgnoreCase(sent_from_s)){
 						sent_to_p.playSound(sent_to_p.getLocation(), Sound.CHICKEN_EGG_POP, 2F, 1.2F);
-						CommunityMechanics.last_reply.put(sent_to_p.getName(), sent_from_s);
+						PlayerManager.getPlayerModel(sent_to_p).setLastReply(sent_from_s);
 					}
 				} else if(!(sent_to_server.equalsIgnoreCase(local_server))) {
 					List<Object> query = new ArrayList<Object>();
@@ -663,8 +625,8 @@ public class CommunityMechanics implements Listener {
 		String new_line = "\n" + ChatColor.WHITE.toString() + "`" + "\n";
 		ItemStack i = new ItemStack(Material.WRITTEN_BOOK, 1);
 		List<String> the_pages = new ArrayList<String>();
-		List<String> lbuddy_list = buddy_list.get(p.getName());
-		List<String> lignore_list = ignore_list.get(p.getName());
+		List<String> lbuddy_list = PlayerManager.getPlayerModel(p).getBuddyList();
+		List<String> lignore_list = PlayerManager.getPlayerModel(p).getIgnoreList();
 		
 		int buddies_printed = 0;
 		boolean first_buddy_page = true;
@@ -724,7 +686,7 @@ public class CommunityMechanics implements Listener {
 			return null;
 		}
 		
-		if(lbuddy_list == null || lbuddy_list.size() == 0 || !(buddy_list.containsKey(p.getName()))) {
+		if(lbuddy_list == null || lbuddy_list.size() == 0 || PlayerManager.getPlayerModel(p).getBuddyList() == null) {
 			the_pages.add(ChatColor.BLACK.toString() + "" + ChatColor.BOLD.toString() + ChatColor.UNDERLINE.toString() + "     Buddy List" + "      " + "\n" + ChatColor.BLACK.toString() + ChatColor.BOLD.toString() + "@<PLAYER> <MSG>" + "\n" + ChatColor.BLACK.toString() + "Sends <MSG> to <PLAYER>." + new_line + ChatColor.BLACK.toString() + ChatColor.BOLD.toString() + "/add <PLAYER>" + "\n" + ChatColor.BLACK.toString() + "Adds PLAYER to buddy list." + new_line + ChatColor.BLACK.toString() + ChatColor.BOLD.toString() + "/delete <PLAYER>" + "\n" + ChatColor.BLACK.toString() + "Deletes PLAYER from all lists.");
 		}
 		
@@ -885,7 +847,7 @@ public class CommunityMechanics implements Listener {
 			}
 		}
 		
-		if(lignore_list == null || lignore_list.size() == 0 || !(ignore_list.containsKey(p.getName()))) {
+		if(lignore_list == null || lignore_list.size() == 0 || PlayerManager.getPlayerModel(p).getIgnoreList() == null) {
 			the_pages.add(ChatColor.BLACK.toString() + "" + ChatColor.BOLD.toString() + ChatColor.UNDERLINE.toString() + "    Ignore List" + "     " + new_line + ChatColor.BLACK.toString() + ChatColor.BOLD.toString() + "/ignore <PLAYER>" + "\n" + ChatColor.BLACK.toString() + "Adds PLAYER to ignore list." + new_line + ChatColor.BLACK.toString() + ChatColor.BOLD.toString() + "/delete <PLAYER>" + "\n" + ChatColor.BLACK.toString() + "Deletes PLAYER from all lists.");
 		}
 		
@@ -977,7 +939,7 @@ public class CommunityMechanics implements Listener {
 	}
 	
 	public static long getLastLogin(String p_name, boolean set) {
-		if(local_last_login.containsKey(p_name)) { return local_last_login.get(p_name); }
+		if(PlayerManager.getPlayerModel(p_name).getLastLocalLogin() > 0) return PlayerManager.getPlayerModel(p_name).getLastLocalLogin();
 		
 		Connection con = null;
 		PreparedStatement pst = null;
@@ -990,7 +952,7 @@ public class CommunityMechanics implements Listener {
 			ResultSet rs = pst.getResultSet();
 			if(!rs.next()) { return -1L; }
 			long amount = rs.getLong("last_login_time");
-			local_last_login.put(p_name, amount);
+			PlayerManager.getPlayerModel(p_name).setLastLocalLogin(amount);
 			return amount;
 			
 		} catch(SQLException ex) {
@@ -1047,33 +1009,33 @@ public class CommunityMechanics implements Listener {
 		Connection con = null;
 		PreparedStatement pst = null;
 		
-		if(!(buddy_list.containsKey(p.getName())) && !(ignore_list.containsKey(p.getName()))) { return; }
+		if(PlayerManager.getPlayerModel(p).getBuddyList() == null && PlayerManager.getPlayerModel(p).getIgnoreList() == null) { return; }
 		
 		String buddy_list_string = "";
 		String ignore_list_string = "";
 		
-		if(buddy_list.containsKey(p.getName())) {
-			List<String> lbuddy_list = buddy_list.get(p.getName());
+		if(PlayerManager.getPlayerModel(p).getBuddyList() != null) {
+			List<String> lbuddy_list = PlayerManager.getPlayerModel(p).getBuddyList();
 			for(String s : lbuddy_list) {
 				buddy_list_string += s + ",";
 			}
 		}
 		
-		if(ignore_list.containsKey(p.getName())) {
-			List<String> lignore_list = ignore_list.get(p.getName());
+		if(PlayerManager.getPlayerModel(p).getIgnoreList() != null) {
+			List<String> lignore_list = PlayerManager.getPlayerModel(p).getIgnoreList();
 			for(String s : lignore_list) {
 				ignore_list_string += s + ",";
 			}
 			
 		}
 		try {
-			if(buddy_list.containsKey(p.getName())) {
+			if(PlayerManager.getPlayerModel(p).getBuddyList() != null) {
 				pst = ConnectionPool.getConnection().prepareStatement("INSERT INTO player_database (p_name, buddy_list)" + " VALUES" + "('" + p.getName() + "', '" + StringEscapeUtils.escapeSql(buddy_list_string) + "') ON DUPLICATE KEY UPDATE buddy_list='" + StringEscapeUtils.escapeSql(buddy_list_string) + "'");
 				
 				pst.executeUpdate();
 			}
 			
-			if(ignore_list.containsKey(p.getName())) {
+			if(PlayerManager.getPlayerModel(p).getIgnoreList() != null){
 				pst = ConnectionPool.getConnection().prepareStatement("INSERT INTO player_database (p_name, ignore_list)" + " VALUES" + "('" + p.getName() + "', '" + StringEscapeUtils.escapeSql(ignore_list_string) + "') ON DUPLICATE KEY UPDATE ignore_list='" + StringEscapeUtils.escapeSql(ignore_list_string) + "'");
 				
 				pst.executeUpdate();
@@ -1142,24 +1104,24 @@ public class CommunityMechanics implements Listener {
 	}
 	
 	public static boolean isPlayerOnBuddyList(Player p, String p_to_check_name) {
-		if(!(buddy_list.containsKey(p.getName())) || buddy_list.get(p.getName()) == null) { return false; }
-		for(String s : buddy_list.get(p.getName())) {
+		if(PlayerManager.getPlayerModel(p).getBuddyList() == null) { return false; }
+		for(String s : PlayerManager.getPlayerModel(p).getBuddyList()) {
 			if(s.equalsIgnoreCase(p_to_check_name)) { return true; }
 		}
 		return false;
 	}
 	
 	public static boolean isPlayerOnBuddyList(String p_name, String p_to_check_name) {
-		if(!(buddy_list.containsKey(p_name))) { return false; }
-		for(String s : buddy_list.get(p_name)) {
+		if(PlayerManager.getPlayerModel(p_name).getBuddyList() == null) { return false; }
+		for(String s : PlayerManager.getPlayerModel(p_name).getBuddyList()) {
 			if(s.equalsIgnoreCase(p_to_check_name)) { return true; }
 		}
 		return false;
 	}
 	
 	public static boolean isPlayerOnIgnoreList(Player p, String p_to_check_name) {
-		if(!(ignore_list.containsKey(p.getName()))) { return false; }
-		for(String s : ignore_list.get(p.getName())) {
+		if(PlayerManager.getPlayerModel(p).getIgnoreList() == null) return false;
+		for(String s : PlayerManager.getPlayerModel(p).getIgnoreList()) {
 			if(s.equalsIgnoreCase(p_to_check_name)) { return true; }
 		}
 		return false;
@@ -1183,12 +1145,12 @@ public class CommunityMechanics implements Listener {
 		
 		if(op.isOp() && meta_data.equalsIgnoreCase("CHECK_BUD")) { return false; }
 		
-		if(local_confirmed_buddies.containsKey(local_player) && (meta_data.equalsIgnoreCase("CHECK_BUD"))) {
-			if(local_confirmed_buddies.get(local_player).contains(remote_player)) { return true; }
+		if(PlayerManager.getPlayerModel(local_player).getLocalConfirmedBuddies() != null && (meta_data.equalsIgnoreCase("CHECK_BUD"))) {
+			if(PlayerManager.getPlayerModel(local_player).getLocalConfirmedBuddies().contains(remote_player)) { return true; }
 		}
 		
-		if(local_confirmed_ignores.containsKey(local_player) && (meta_data.equalsIgnoreCase("CHECK_FOE"))) {
-			if(local_confirmed_ignores.get(local_player).contains(remote_player)) { return true; }
+		if(PlayerManager.getPlayerModel(local_player).getLocalConfirmedIgnores() != null && (meta_data.equalsIgnoreCase("CHECK_FOE"))) {
+			if(PlayerManager.getPlayerModel(local_player).getLocalConfirmedIgnores().contains(remote_player)) { return true; }
 		}
 		
 		if(remote_player != null && Bukkit.getPlayer(remote_player) != null) {
@@ -1197,25 +1159,25 @@ public class CommunityMechanics implements Listener {
 			if(p_check == null) { return false; }
 			
 			if(meta_data.equalsIgnoreCase("CHECK_BUD")) {
-				if(!buddy_list.containsKey(p_check.getName())) { return false; }
-				for(String s : buddy_list.get(p_check.getName())) {
+				if(PlayerManager.getPlayerModel(p_check).getBuddyList() == null) { return false; }
+				for(String s : PlayerManager.getPlayerModel(p_check).getBuddyList()) {
 					if(s.equalsIgnoreCase(local_player)) {
-						List<String> confirmed_buds = local_confirmed_buddies.get(local_player);
+						List<String> confirmed_buds = PlayerManager.getPlayerModel(local_player).getLocalConfirmedBuddies();
 						confirmed_buds.add(p_check.getName());
-						local_confirmed_buddies.put(local_player, confirmed_buds);
+						PlayerManager.getPlayerModel(local_player).setLocalConfirmedBuddies(confirmed_buds);
 						return true;
 					}
 				}
 			}
 			
 			if(meta_data.equalsIgnoreCase("CHECK_FOE")) {
-				if(!ignore_list.containsKey(p_check.getName())) { return false; }
-				if(ignore_list.get(p_check.getName()).contains(local_player)) {
-					for(String s : ignore_list.get(p_check.getName())) {
+				if(PlayerManager.getPlayerModel(p_check).getIgnoreList() == null) return false;
+				if(PlayerManager.getPlayerModel(p_check).getIgnoreList().contains(local_player)){
+					for(String s : PlayerManager.getPlayerModel(p_check).getIgnoreList()) {
 						if(s.equalsIgnoreCase(local_player)) {
-							List<String> confirmed_foes = local_confirmed_ignores.get(local_player);
+							List<String> confirmed_foes = PlayerManager.getPlayerModel(local_player).getLocalConfirmedIgnores();
 							confirmed_foes.add(p_check.getName());
-							local_confirmed_ignores.put(local_player, confirmed_foes);
+							PlayerManager.getPlayerModel(local_player).setLocalConfirmedBuddies(confirmed_foes);
 							return true;
 						}
 					}
@@ -1284,12 +1246,12 @@ public class CommunityMechanics implements Listener {
 	
 	public static void addBuddy(Player host, String new_friend_name) {
 		List<String> cur_list = new ArrayList<String>();
-		if(buddy_list.containsKey(host.getName())) {
-			cur_list = buddy_list.get(host.getName());
+		if(PlayerManager.getPlayerModel(host).getBuddyList() != null) {
+			cur_list = PlayerManager.getPlayerModel(host).getBuddyList();
 		}
 		
 		cur_list.add(new_friend_name);
-		buddy_list.put(host.getName(), cur_list);
+		PlayerManager.getPlayerModel(host).setBuddyList(cur_list);
 		
 		upload_social_lists(host);
 	}
@@ -1297,12 +1259,12 @@ public class CommunityMechanics implements Listener {
 	public static void addIgnore(Player host, String new_friend_name) {
 		// boolean first_add = false;
 		List<String> cur_list = new ArrayList<String>();
-		if(ignore_list.containsKey(host.getName())) {
-			cur_list = ignore_list.get(host.getName());
+		if(PlayerManager.getPlayerModel(host).getIgnoreList() != null){
+			cur_list = PlayerManager.getPlayerModel(host).getIgnoreList();
 		}
 		
 		cur_list.add(new_friend_name);
-		ignore_list.put(host.getName(), cur_list);
+		PlayerManager.getPlayerModel(host).setIgnoreList(cur_list);
 		
 		upload_social_lists(host);
 	}
@@ -1310,7 +1272,7 @@ public class CommunityMechanics implements Listener {
 	public static void deleteFromAllLists(Player host, String to_remove) {
 		
 		if(isPlayerOnBuddyList(host, to_remove)) {
-			List<String> cur_list = buddy_list.get(host.getName());
+			List<String> cur_list = PlayerManager.getPlayerModel(host).getBuddyList();
 			String save_s = "";
 			for(String s : cur_list) {
 				if(s.equalsIgnoreCase(to_remove)) {
@@ -1321,7 +1283,7 @@ public class CommunityMechanics implements Listener {
 			
 			if(save_s.length() > 0) {
 				cur_list.remove(save_s);
-				buddy_list.put(host.getName(), cur_list);
+				PlayerManager.getPlayerModel(host).setBuddyList(cur_list);
 				host.sendMessage(ChatColor.YELLOW + "" + save_s + ChatColor.YELLOW + " has been removed from your BUDDY list.");
 				return; // We can return, if they were on buddy list they won't
 						// be on ignore.
@@ -1329,7 +1291,7 @@ public class CommunityMechanics implements Listener {
 		}
 		
 		if(isPlayerOnIgnoreList(host, to_remove)) {
-			List<String> cur_list = ignore_list.get(host.getName());
+			List<String> cur_list = PlayerManager.getPlayerModel(host).getIgnoreList();
 			String save_s = "";
 			for(String s : cur_list) {
 				if(s.equalsIgnoreCase(to_remove)) {
@@ -1340,7 +1302,7 @@ public class CommunityMechanics implements Listener {
 			
 			if(save_s.length() > 0) {
 				cur_list.remove(save_s);
-				ignore_list.put(host.getName(), cur_list);
+				PlayerManager.getPlayerModel(host).setIgnoreList(cur_list);
 				host.sendMessage(ChatColor.YELLOW + "" + save_s + ChatColor.YELLOW + " has been removed from your IGNORE list.");
 				return;
 			}
@@ -1351,8 +1313,8 @@ public class CommunityMechanics implements Listener {
 	}
 	
 	public static int getBuddyListLength(String p_name) {
-		if(!(buddy_list.containsKey(p_name))) { return 0; }
-		return buddy_list.get(p_name).size();
+		if(PlayerManager.getPlayerModel(p_name).getBuddyList() == null) { return 0; }
+		return PlayerManager.getPlayerModel(p_name).getBuddyList().size();
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -1365,7 +1327,7 @@ public class CommunityMechanics implements Listener {
 				Player hurt = (Player) e.getEntity();
 				
 				if(isPlayerOnBuddyList(attacker, hurt.getName())) {
-					if(!toggle_list.get(attacker.getName()).contains("ff")) {
+					if(!PlayerManager.getPlayerModel(attacker).getToggleList().contains("ff")){
 						if(DuelMechanics.duel_map.containsKey(attacker.getName()) && DuelMechanics.duel_map.containsKey(hurt.getName())) { return; }
 						e.setCancelled(true); // Friendly fire is OFF.
 						e.setDamage(0);
@@ -1384,7 +1346,7 @@ public class CommunityMechanics implements Listener {
 					Player hurt = (Player) e.getEntity();
 					
 					if(isPlayerOnBuddyList(shooter, hurt.getName())) {
-						if(!toggle_list.get(shooter.getName()).contains("ff")) {
+						if(!PlayerManager.getPlayerModel(shooter).getToggleList().contains("ff")){
 							if(DuelMechanics.duel_map.containsKey(shooter.getName()) && DuelMechanics.duel_map.containsKey(hurt.getName())) { return; }
 							e.setCancelled(true); // Friendly fire is OFF.
 							e.setDamage(0);
@@ -1651,8 +1613,8 @@ public class CommunityMechanics implements Listener {
 		if(!e.getMessage().startsWith("@")) { return; }
 		e.setCancelled(true);
 		
-		if(last_pm.containsKey(e.getPlayer().getName())) {
-			long last = last_pm.get(e.getPlayer().getName());
+		if(PlayerManager.getPlayerModel(e.getPlayer()).getLastPMTime() > 0){
+			long last = PlayerManager.getPlayerModel(e.getPlayer()).getLastPMTime();
 			if((System.currentTimeMillis() - last) <= 500) { return; // Do
 																		// nothing,
 																		// been
@@ -1845,8 +1807,8 @@ public class CommunityMechanics implements Listener {
 	public void onPlayerJoin(final PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		
-		local_confirmed_buddies.put(p.getName(), new ArrayList<String>());
-		local_confirmed_ignores.put(p.getName(), new ArrayList<String>());
+		PlayerManager.getPlayerModel(p).setLocalConfirmedBuddies(new ArrayList<String>());
+		PlayerManager.getPlayerModel(p).setLocalConfirmedIgnores(new ArrayList<String>());
 		
 		Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {
@@ -1855,16 +1817,12 @@ public class CommunityMechanics implements Listener {
 				
 				if(p == null) { return; }
 				
-				if(toggle_list.containsKey(p.getName()) && toggle_list.get(p.getName()).size() > 0) { // They
-																										// have
-																										// something
-																										// off/on.
-					
-					if(toggle_list.get(p.getName()).contains("tradechat")) {
-						List<String> toggles = toggle_list.get(p.getName());
+				if(PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().size() > 0){
+					if(PlayerManager.getPlayerModel(p).getToggleList().contains("tradechat")){
+						List<String> toggles = PlayerManager.getPlayerModel(p).getToggleList();
 						toggles.remove("tradechat");
 						toggles.add("tchat");
-						toggle_list.put(p.getName(), toggles);
+						PlayerManager.getPlayerModel(p).setToggleList(toggles);
 					}
 					
 					p.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "     To manage your gameplay settings, use " + ChatColor.YELLOW + ChatColor.UNDERLINE + "/toggles");
@@ -1930,12 +1888,12 @@ public class CommunityMechanics implements Listener {
 					 */
 					
 				} else {
-					toggle_list.put(p.getName(), new ArrayList<String>());
+					PlayerManager.getPlayerModel(p).setToggleList(new ArrayList<String>());
 				}
 				
 				updateCommBook(p);
 				
-				if(buddy_list.containsKey(p.getName())) {
+				if(PlayerManager.getPlayerModel(p).getBuddyList() != null) {
 					List<Object> data = new ArrayList<Object>();
 					data.add("[sq_online]" + p.getName() + ":" + Bukkit.getServer().getMotd().substring(0, Bukkit.getServer().getMotd().indexOf(" ")));
 					data.add(null);
@@ -1946,14 +1904,14 @@ public class CommunityMechanics implements Listener {
 					// getServer().getMotd().substring(0,
 					// getServer().getMotd().indexOf(" ")), 0, true); // Will
 					// tell all buddy's on all servers he's online.
-					if(!(buddy_list.containsKey(p.getName()))) { return; // They
+					if(PlayerManager.getPlayerModel(p).getBuddyList() == null) { return; // They
 																			// logged
 																			// out.
 																			// Delay
 																			// from
 																			// sendPacketCrossServer.
 					}
-					for(String s : buddy_list.get(p.getName())) {
+					for(String s : PlayerManager.getPlayerModel(p).getBuddyList()) {
 						if(Bukkit.getPlayer(s) != null) {
 							Player local_bud = Bukkit.getPlayer(s);
 							if(socialQuery(p.getName(), local_bud.getName(), "CHECK_BUD")) {
@@ -2001,8 +1959,8 @@ public class CommunityMechanics implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		final Player p = e.getPlayer();
-		if(buddy_list.containsKey(p.getName())) {
-			final List<String> lbuddy_list = buddy_list.get(p.getName());
+		if(PlayerManager.getPlayerModel(p).getBuddyList() != null) {
+			final List<String> lbuddy_list = PlayerManager.getPlayerModel(p).getBuddyList();
 			
 			new BukkitRunnable() {
 				@Override
@@ -2056,10 +2014,10 @@ public class CommunityMechanics implements Listener {
 		if(e.hasItem() && e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			final Player p = e.getPlayer();
 			if(isSocialBook(e.getItem())) {
-				if(!(last_book_click.containsKey(p.getName())) || (System.currentTimeMillis() - last_book_click.get(p.getName())) > (2 * 1000)) {
+				if(PlayerManager.getPlayerModel(p).getLastBookClick() == 0 || (System.currentTimeMillis() - PlayerManager.getPlayerModel(p).getLastBookClick()) > (2 * 1000)) {
 					updateCombatPage(p);
 					p.closeInventory();
-					last_book_click.put(p.getName(), System.currentTimeMillis());
+					PlayerManager.getPlayerModel(p).setLastBookClick(System.currentTimeMillis());
 				}
 				p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F);
 				return;
@@ -2084,7 +2042,8 @@ public class CommunityMechanics implements Listener {
 						return;
 					}
 					
-					if(CommunityMechanics.toggle_list.get(new_bud.getName()).contains("party")) {
+					
+					if(PlayerManager.getPlayerModel(new_bud).getToggleList().contains("party")){
 						if(!CommunityMechanics.isPlayerOnBuddyList(new_bud.getName(), p.getName())) {
 							// They're not buddies and this player doesn't want
 							// non-bud invites.

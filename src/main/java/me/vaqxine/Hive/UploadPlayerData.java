@@ -17,6 +17,7 @@ import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RecordMechanics.RecordMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -84,8 +85,8 @@ public class UploadPlayerData extends Thread {
 				KarmaMechanics.align_map.remove(p_name);
 				KarmaMechanics.align_time.remove(p_name);
 				
-				CommunityMechanics.ignore_list.remove(p_name);
-				CommunityMechanics.buddy_list.remove(p_name);
+				PlayerManager.getPlayerModel(p_name).setIgnoreList(new ArrayList<String>());
+				PlayerManager.getPlayerModel(p_name).setBuddyList(new ArrayList<String>());
 				
 				HealthMechanics.noob_player_warning.remove(p_name);
 				HealthMechanics.noob_players.remove(p_name);
@@ -106,9 +107,9 @@ public class UploadPlayerData extends Thread {
 				Hive.player_ecash.remove(p_name);
 				KarmaMechanics.align_map.remove(p_name);
 				KarmaMechanics.align_time.remove(p_name);
-				CommunityMechanics.ignore_list.remove(p_name);
-				CommunityMechanics.buddy_list.remove(p_name);
-				CommunityMechanics.toggle_list.remove(p_name);
+				PlayerManager.getPlayerModel(p_name).setIgnoreList(new ArrayList<String>());
+				PlayerManager.getPlayerModel(p_name).setBuddyList(new ArrayList<String>());
+				PlayerManager.getPlayerModel(p_name).setToggleList(new ArrayList<String>());
 				HealthMechanics.noob_player_warning.remove(p_name);
 				HealthMechanics.noob_players.remove(p_name);
 				RealmMechanics.realm_title.remove(p_name);
@@ -131,7 +132,7 @@ public class UploadPlayerData extends Thread {
 				
 				Thread.sleep(50);
 				//CommunityMechanics.sendPacketCrossServer("@server_num@" + p_name + ":" + Hive.getServerNumFromPrefix(server_prefix), -1, true);
-				CommunityMechanics.player_server_num.put(p_name, Hive.getServerNumFromPrefix(server_prefix));
+				PlayerManager.getPlayerModel(p_name).setServerNum(Hive.getServerNumFromPrefix(server_prefix));
 				Thread.sleep(50);
 				
 				ByteArrayOutputStream b = new ByteArrayOutputStream();

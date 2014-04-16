@@ -1,6 +1,5 @@
 package me.vaqxine.AchievmentMechanics;
 
-import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -14,6 +13,7 @@ import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,10 +31,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 @SuppressWarnings("deprecation")
 public class AchievmentMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
-	
-	public static HashMap<String, String> achievment_map = new HashMap<String, String>();
-	
-	// Player Name, List of ',' deliminated achievement file names (w/o .png)
 	
 	public void onEnable() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
@@ -173,12 +169,12 @@ public class AchievmentMechanics implements Listener {
 	public static void addAchievment(String p_name, String a) {
 		if(hasAchievment(p_name, a)) { return; }
 		
-		if(!(achievment_map.containsKey(p_name))) {
-			achievment_map.put(p_name, a);
+		if(PlayerManager.getPlayerModel(p_name).getAchievements() == null) {
+			PlayerManager.getPlayerModel(p_name).setAchievements(a);
 			return;
 		}
 		
-		String o_a = achievment_map.get(p_name);
+		String o_a = PlayerManager.getPlayerModel(p_name).getAchievements();
 		
 		if(o_a.endsWith(",")) {
 			o_a = o_a + a + ",";
@@ -186,7 +182,7 @@ public class AchievmentMechanics implements Listener {
 			o_a = o_a + "," + a + ",";
 		}
 		
-		achievment_map.put(p_name, o_a);
+		PlayerManager.getPlayerModel(p_name).setAchievements(o_a);
 		
 		if(Bukkit.getPlayer(p_name) != null) {
 			Player pl = Bukkit.getPlayer(p_name);
@@ -235,8 +231,8 @@ public class AchievmentMechanics implements Listener {
 	
 	public static int getExplorerAchievmentCount(String p_name) {
 		int count = 0;
-		if(achievment_map.containsKey(p_name)) {
-			for(String s : achievment_map.get(p_name).split(",")) {
+		if(PlayerManager.getPlayerModel(p_name).getAchievements() != null) {
+			for(String s : PlayerManager.getPlayerModel(p_name).getAchievements().split(",")) {
 				if(s.toLowerCase().contains("explorer:")) {
 					count++;
 				}
@@ -247,8 +243,8 @@ public class AchievmentMechanics implements Listener {
 	}
 	
 	public static boolean hasAchievment(String p_name, String a) {
-		if(!achievment_map.containsKey(p_name)) { return false; }
-		String al = achievment_map.get(p_name);
+		if(PlayerManager.getPlayerModel(p_name).getAchievements() == null) { return false; }
+		String al = PlayerManager.getPlayerModel(p_name).getAchievements();
 		for(String achiev : al.split(",")) {
 			if(achiev.equalsIgnoreCase(a)) { return true; }
 		}

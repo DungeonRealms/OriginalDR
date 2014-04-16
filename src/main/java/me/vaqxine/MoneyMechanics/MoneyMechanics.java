@@ -29,6 +29,7 @@ import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.database.ConnectionPool;
+import me.vaqxine.managers.PlayerManager;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -2180,7 +2181,7 @@ public class MoneyMechanics implements Listener {
 				public void run() {
 					if((it == null || it.isDead())) {
 						p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
-						if(CommunityMechanics.toggle_list.containsKey(p.getName()) && CommunityMechanics.toggle_list.get(p.getName()).contains("debug")) {
+						if(PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("debug")) {
 							p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "                                 +" + ChatColor.GREEN + (int) (amount) + ChatColor.BOLD + "G" + ChatColor.GREEN);
 						}
 					}

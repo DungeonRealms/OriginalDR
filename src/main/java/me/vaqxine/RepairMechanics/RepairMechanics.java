@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import me.vaqxine.Main;
-import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
@@ -15,6 +14,7 @@ import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
+import me.vaqxine.managers.PlayerManager;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
 
@@ -828,8 +828,8 @@ public class RepairMechanics implements Listener {
 			Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(p.getLocation().getX()), (int) Math.round(p.getLocation().getY() + 2), (int) Math.round(p.getLocation().getZ()), particleID, false);
 			((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), 36, ((CraftWorld) p.getWorld()).getHandle().dimension, particles);
 			
-			if(CommunityMechanics.toggle_list.containsKey(p.getName())) {
-				if(CommunityMechanics.toggle_list.get(p.getName()).contains("debug")) {
+			if(PlayerManager.getPlayerModel(p).getToggleList() != null){
+				if(PlayerManager.getPlayerModel(p).getToggleList().contains("debug")){
 					double new_percent = getPercentForDurabilityValue(in_slot, item_type);
 					p.sendMessage(ChatColor.GREEN + "                  " + ChatColor.BOLD + "+" + ChatColor.GREEN + percent_to_recover + "% DURABILITY" + ChatColor.BOLD + " -> " + ChatColor.GREEN + new_percent + "% TOTAL");
 				}
