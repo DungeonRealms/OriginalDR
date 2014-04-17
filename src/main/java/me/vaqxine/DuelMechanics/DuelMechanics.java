@@ -890,7 +890,7 @@ public class DuelMechanics implements Listener {
 				}
 			}
 			if(duel_stake.containsKey(attacker.getName())) {
-				rewardLoot(attacker, attacked);
+				//rewardLoot(attacker, attacked);
 			}
 		}
 	}
@@ -1317,7 +1317,7 @@ public class DuelMechanics implements Listener {
 			attacker.closeInventory();
 			
 			if(duel_stake.containsKey(attacker.getName())) {
-				rewardLoot(attacker, attacked);
+				//rewardLoot(attacker, attacked);
 			}
 		}
 	}
@@ -1486,7 +1486,7 @@ public class DuelMechanics implements Listener {
 					attacker.sendMessage(attacker_color + attacker_prefix + attacker.getName() + ChatColor.GREEN + " has " + ChatColor.UNDERLINE + "DEFEATED" + ChatColor.RESET + " " + attacked_color + attacked_prefix + attacked.getName() + ChatColor.GREEN + " in a duel.");
 					
 					if(duel_stake.containsKey(attacker.getName())) {
-						rewardLoot(attacker, attacked);
+						//rewardLoot(attacker, attacked);
 					}
 				}
 				
@@ -1583,7 +1583,7 @@ public class DuelMechanics implements Listener {
 				}
 				
 				if(duel_stake.containsKey(attacker.getName())) {
-					rewardLoot(attacker, attacked);
+					//rewardLoot(attacker, attacked);
 				}
 				e.setCancelled(true);
 				System.out.print("DUEL > DMG: " + e.getDamage() + " Winner: " + attacker.getName() + " Loser: " + attacked.getName() + " Losers HP:" + attacked.getHealth() + " HP: " + HealthMechanics.getPlayerHP(attacked.getName()));

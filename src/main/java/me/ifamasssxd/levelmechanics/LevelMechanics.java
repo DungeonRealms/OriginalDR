@@ -2,6 +2,8 @@ package me.ifamasssxd.levelmechanics;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import me.vaqxine.managers.PlayerManager;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,7 +15,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class LevelMechanics implements Listener {
 
-    public static ConcurrentHashMap<String, PlayerLevel> player_level = new ConcurrentHashMap<String, PlayerLevel>();
 
     // Player name, PlayerLevel data
 
@@ -40,30 +41,32 @@ public class LevelMechanics implements Listener {
     }
 
     public static PlayerLevel getPlayerData(Player p) {
-        if (!player_level.containsKey(p.getName())) {
-            return new PlayerLevel(p.getName());
+        if (PlayerManager.getPlayerModel(p.getName()).getPlayerLevel() != null) {
+            PlayerLevel pl = new PlayerLevel(p.getName());
+            PlayerManager.getPlayerModel(p).setPlayerLevel(pl);
+            return pl;
         }
-        return player_level.get(p.getName());
+        return PlayerManager.getPlayerModel(p.getName()).getPlayerLevel();
     }
 
     public static PlayerLevel getPlayerData(String p_name) {
-        if (!player_level.containsKey(p_name)) {
+        if (PlayerManager.getPlayerModel(p_name).getPlayerLevel() != null) {
             return new PlayerLevel(p_name);
         }
-        return player_level.get(p_name);
+        return PlayerManager.getPlayerModel(p_name).getPlayerLevel();
     }
 
     public static int getPlayerLevel(Player p) {
-        if (!player_level.containsKey(p.getName())) {
+        if (PlayerManager.getPlayerModel(p).getPlayerLevel() != null) {
             return new PlayerLevel(p.getName()).getLevel();
         }
-        return player_level.get(p.getName()).getLevel();
+        return PlayerManager.getPlayerModel(p).getPlayerLevel().getLevel();
     }
 
     public static int getPlayerLevel(String p_name) {
-        if (!player_level.containsKey(p_name)) {
+        if (PlayerManager.getPlayerModel(p_name).getPlayerLevel() != null) {
             return new PlayerLevel(p_name).getLevel();
         }
-        return player_level.get(p_name).getLevel();
+        return PlayerManager.getPlayerModel(p_name).getPlayerLevel().getLevel();
     }
 }

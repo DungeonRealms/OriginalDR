@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.vaqxine.Main;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.database.ConnectionPool;
+import me.vaqxine.managers.PlayerManager;
 
 public class PlayerLevel {
 
@@ -21,7 +22,7 @@ public class PlayerLevel {
     public PlayerLevel(String p_name) {
         this.p_name = p_name;
         loadData();
-        LevelMechanics.player_level.put(p_name, this);
+        PlayerManager.getPlayerModel(p_name).setPlayerLevel(this);
     }
 
     public void setPlayer(Player p) {
@@ -29,20 +30,28 @@ public class PlayerLevel {
     }
 
     public void addXP(int xp) {
-        
-    }
-    
-    public static int getEXPNeeded(int level, String stat) {
-        if(stat.equalsIgnoreCase("mining")) {
-            if(level == 1) { return 176; // formula doens't work on level 1.
-            }
-            if(level == 75) { return 0; // green bar
-            }
-            int previous_level = level - 1;
-            return (int) (Math.pow((previous_level), 2) + ((previous_level) * 20) + 150 + ((previous_level) * 4) + getEXPNeeded((previous_level), stat));
+        int xp_needed = getEXPNeeded(getLevel());
+        if (getXP() + xp > xp_needed) {
+            int xp_remaining = (getXP() + xp) - xp_needed;
+            levelUp(true);
+            setXP(xp_remaining);
+        } else {
+            //No remaining xp
+            levelUp(true);
         }
-        return 0;
     }
+
+    private int getEXPNeeded(int level) {
+        if (level == 1) {
+            return 176; // formula doens't work on level 1.
+        }
+        if (level == 75) {
+            return 0; // green bar
+        }
+        int previous_level = level - 1;
+        return (int) (Math.pow((previous_level), 2) + ((previous_level) * 20) + 150 + ((previous_level) * 4) + getEXPNeeded((previous_level)));
+    }
+
     public void saveData(boolean useHive, boolean remove) {
         final String pst = "UPDATE player_database SET player_level = " + getLevel() + ", player_xp = " + getXP() + " WHERE p_name = " + p_name + ";";
         if (useHive) {
@@ -60,10 +69,15 @@ public class PlayerLevel {
             }.runTaskAsynchronously(Main.plugin);
 
         }
-        if(remove){
-            LevelMechanics.player_level.remove(p_name);
+        if (remove) {
+            PlayerManager.getPlayerModel(p_name).setPlayerLevel(null);
             return;
         }
+    }
+
+    public void levelUp(boolean alert) {
+        setLevel(getLevel() + 1);
+        setXP(0);
     }
 
     public void loadData() {
@@ -90,7 +104,7 @@ public class PlayerLevel {
 
     public void sendInsertUpdate() {
         try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
-                "INSERT INTO player_database(p_name, player_level, player_xp) VALUES (?, 1, 0) ON DUPLICATE KEY UPDATE p_name = ?")) {
+                "INSERT INTO player_database(p_name, player_level, player_xp) VALUES (?, 1, 0) ON DUPLICATE KEY UPDATE p_name = ?;")) {
             pst.setString(1, p_name);
             pst.setString(2, p_name);
             pst.executeUpdate();

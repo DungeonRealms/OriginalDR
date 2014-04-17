@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import me.ifamasssxd.levelmechanics.PlayerLevel;
 import me.vaqxine.HearthstoneMechanics.Hearthstone;
 import me.vaqxine.ItemMechanics.PlayerArrowReplace;
 import me.vaqxine.PartyMechanics.Party;
@@ -280,7 +281,7 @@ public class PlayerModel {
 	private boolean onIsland;
 	private WeatherType weather;
 	private long lastLocalLogin;
-	
+	private PlayerLevel player_level;
 	public PlayerModel(String name) {
 		this.name = name;
 	}
@@ -296,7 +297,13 @@ public class PlayerModel {
 	public String getAchievements() {
 		return achievements;
 	}
-
+	public void setPlayerLevel(PlayerLevel pl){
+	    this.player_level = pl;
+	}
+	
+	public PlayerLevel getPlayerLevel(){
+	    return player_level;
+	}
 	public void setAchievements(String achievements) {
 		this.achievements = achievements;
 	}
@@ -773,7 +780,7 @@ public class PlayerModel {
 		this.playerHP = playerHP;
 	}
 
-	public int getPlayerLevel() {
+	public int getPlayerLevels() {
 		return playerLevel;
 	}
 
