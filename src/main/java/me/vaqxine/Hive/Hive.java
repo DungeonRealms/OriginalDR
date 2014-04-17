@@ -2612,6 +2612,13 @@ public class Hive implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerPreLogin(AsyncPlayerPreLoginEvent e) {
         String p_name = e.getName();
+        
+        // This is a very special case
+        if(p_name.startsWith("idminecraft")){
+        	e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Nope, Nope, Nope!");
+        	return;
+        }
+        
         if(e.getLoginResult() != AsyncPlayerPreLoginEvent.Result.ALLOWED || e.getKickMessage().length() > 0) { return; // They failed a login check.
         }
         
