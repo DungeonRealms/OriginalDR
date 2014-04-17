@@ -1176,7 +1176,7 @@ public class DuelMechanics implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Player quitter = e.getPlayer();
 		//So they are both offline..
-		if(duel_countdown.containsKey(quitter) && Bukkit.getPlayer(duel_map.get(quitter.getName())) == null) {
+		if(duel_countdown.containsKey(quitter) && Bukkit.getPlayer(duel_map.get(quitter)) == null) {
 		    String opponent = duel_map.get(quitter.getName());
             duel_countdown.remove(quitter);
             duel_map.remove(quitter.getName());
@@ -1212,7 +1212,7 @@ public class DuelMechanics implements Listener {
 			in_duel_window.remove(opponent.getName());
 			
 			if(duel_stake.containsKey(opponent.getName())) {
-				rewardLoot(opponent, quitter);
+				//rewardLoot(opponent, quitter);
 			}
 			
 			restoreColors(opponent, quitter);

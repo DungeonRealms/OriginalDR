@@ -94,8 +94,9 @@ public class CommandDRBan implements CommandExecutor {
 			public void run() {
 				try {
 					Thread.sleep(100);
+					ModerationMechanics.BanPlayer(p_name, unban_date, f_reason, f_banner, f_perm);
 				} catch(Exception err) {} // Wait 100ms -- this should occur after function has returned.
-				ModerationMechanics.BanPlayer(p_name, unban_date, f_reason, f_banner, f_perm);
+				//ModerationMechanics.BanPlayer(p_name, unban_date, f_reason, f_banner, f_perm); wtf?
 			}
 		});
 		ban_player.start();
