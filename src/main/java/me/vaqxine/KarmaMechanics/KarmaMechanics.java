@@ -356,6 +356,12 @@ public class KarmaMechanics implements Listener {
 		if(e.getEntity() instanceof Player) {
 			final Player p = (Player) e.getEntity();
 			boolean impossible_kill = false;
+			for(ItemStack items : new ArrayList<ItemStack>(e.getDrops())){
+			    if(ItemMechanics.isSoulbound(items)){
+			        //Remove all soulbound items.
+			        e.getDrops().remove(items);
+			    }
+			}
 			if(saved_gear.containsKey(p.getName())) {
 				// They already have saved gear, so they shouldn't drop anything, logging in after a while.
 				e.getDrops().clear();

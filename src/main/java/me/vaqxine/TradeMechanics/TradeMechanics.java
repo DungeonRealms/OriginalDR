@@ -10,6 +10,7 @@ import me.vaqxine.Main;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.ParticleEffect;
+import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.MerchantMechanics.MerchantMechanics;
 import me.vaqxine.ModerationMechanics.ModerationMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
@@ -1025,7 +1026,7 @@ public class TradeMechanics implements Listener {
 						if(is == null) {
 							continue;
 						}
-						if(PetMechanics.isPermUntradeable(is) || !(RealmMechanics.isItemTradeable(is))) {
+						if(PetMechanics.isPermUntradeable(is) || !(RealmMechanics.isItemTradeable(is)) || ItemMechanics.isSoulbound(is)) {
 							tradeWin.remove(is);
 						}
 					}

@@ -1492,7 +1492,7 @@ public class ShopMechanics implements Listener {
 					if(is == null) {
 						continue;
 					}
-					if(!(RealmMechanics.isItemTradeable(is)) || PetMechanics.isPermUntradeable(is) || CommunityMechanics.isSocialBook(is) || is.getType() == Material.QUARTZ ||is.getType() == Material.NETHER_STAR || InstanceMechanics.isDungeonItem(is)) {
+					if(!(RealmMechanics.isItemTradeable(is)) || ItemMechanics.isSoulbound(is) || PetMechanics.isPermUntradeable(is) || CommunityMechanics.isSocialBook(is) || is.getType() == Material.QUARTZ ||is.getType() == Material.NETHER_STAR || InstanceMechanics.isDungeonItem(is)) {
 						to_remove.add(is);
 					}
 				}

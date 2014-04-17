@@ -1607,7 +1607,7 @@ public class DuelMechanics implements Listener {
 			if(is == null) {
 				continue;
 			}
-			if(PetMechanics.isPermUntradeable(is) || !(RealmMechanics.isItemTradeable(is))) {
+			if(PetMechanics.isPermUntradeable(is) || !(RealmMechanics.isItemTradeable(is)) || ItemMechanics.isSoulbound(is)) {
 				loot.remove(is);
 			}
 		}

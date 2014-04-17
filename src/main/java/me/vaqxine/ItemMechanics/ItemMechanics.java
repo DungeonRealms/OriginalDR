@@ -3699,7 +3699,28 @@ public class ItemMechanics implements Listener {
             }
         }, 1L);
     }
-
+    public static ItemStack makeSoulBound(ItemStack is){
+        ItemMeta im = is.getItemMeta();
+        List<String> lore = new ArrayList<String>();
+        if(im.hasLore()){
+            lore = im.getLore();
+        }
+        lore.add(ChatColor.DARK_RED.toString() + ChatColor.ITALIC.toString() + "Soulbound");
+        im.setLore(lore);
+        is.setItemMeta(im);
+        return is;
+    }
+    
+    public static boolean isSoulbound(ItemStack is){
+        if(is.hasItemMeta() && is.getItemMeta().hasLore()){
+            for(String s : is.getItemMeta().getLore()){
+                if(ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase(ChatColor.DARK_RED.toString() + ChatColor.ITALIC.toString() + "soulbound")){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     // @EventHandler(priority = EventPriority.HIGHEST)
     public static void ArrowDebugListener(final EntityDamageByEntityEvent e) {
         if (!(e.getDamager().getType() == EntityType.ARROW)) {

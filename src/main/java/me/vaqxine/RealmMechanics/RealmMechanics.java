@@ -2712,7 +2712,7 @@ public class RealmMechanics implements Listener {
 				if(is == null || is.getType() == Material.AIR) {
 					continue;
 				}
-				if(!(isItemTradeable(is)) || PetMechanics.isPermUntradeable(is) || CommunityMechanics.isSocialBook(is) || is.getType() == Material.NETHER_STAR) {
+				if(!(isItemTradeable(is)) || PetMechanics.isPermUntradeable(is) || ItemMechanics.isSoulbound(is) || CommunityMechanics.isSocialBook(is) || is.getType() == Material.NETHER_STAR) {
 					to_remove.add(is);
 				}
 				if(ItemMechanics.isArmor(is) || !ItemMechanics.getDamageData(is).equalsIgnoreCase("no") || is.getType() == Material.EMERALD || is.getType() == Material.PAPER || MoneyMechanics.isGemPouch(is)) {

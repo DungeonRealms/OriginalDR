@@ -5030,7 +5030,6 @@ public class MonsterMechanics implements Listener {
 			ItemStack in_hand = pl.getItemInHand();
 			int tier = ItemMechanics.getItemTier(in_hand);
 			int mob_tier = MonsterMechanics.getMobTier(ent);
-			
 			if(mob_tier >= 4) {
 				never_unload_home = true;
 			}
@@ -5737,7 +5736,7 @@ public class MonsterMechanics implements Listener {
 		Entity e = null;
 		e = l.getWorld().spawnEntity(l, et);
 		EntityLiving ent = ((CraftLivingEntity) e).getHandle();
-		
+		double hp_mult = 1D;
 		custom_name = custom_name.replaceAll("_", "");
 		
 		if((meta_data.equalsIgnoreCase("wither") && e instanceof CraftSkeleton)) {
@@ -5770,6 +5769,7 @@ public class MonsterMechanics implements Listener {
 		
 		if(custom_name.equalsIgnoreCase("The Infernal Abyss")) {
 			// TODO: Custom armor set.
+		    hp_mult = 4D;
 			chest = ItemGenerators.customGenerator("infernalchest");
 			legs = ItemGenerators.customGenerator("infernallegging");
 			helmet = ItemGenerators.customGenerator("infernalhelmet");
@@ -5812,6 +5812,7 @@ public class MonsterMechanics implements Listener {
 		}
 		
 		if(custom_name.equalsIgnoreCase("Mayel The Cruel")) {
+		    hp_mult = 6D;
 			chest = ItemGenerators.customGenerator("mayelchest");
 			legs = ItemGenerators.customGenerator("mayelpants");
 			//helmet = ItemGenerators.customGenerator("mayelhelmet"); Needs skin head
@@ -5857,7 +5858,7 @@ public class MonsterMechanics implements Listener {
 		
 		if(custom_name.equalsIgnoreCase("Mad Bandit Pyromancer")) {
 			// TODO: Custom armor set.
-			
+			hp_mult = 6;
 			boots = ItemGenerators.BootGenerator(2, false, null);
 			legs = ItemGenerators.LeggingsGenerator(1, false, null);
 			chest = ItemGenerators.ChestPlateGenerator(1, false, null);
@@ -5896,6 +5897,7 @@ public class MonsterMechanics implements Listener {
 		}
 		/*BOSS DROPS HERE*/
 		if(custom_name.equalsIgnoreCase("Aceron the Wicked")){
+		    hp_mult = 6D;
 		    boots = ItemGenerators.customGenerator("aceronboots");
 		    legs = ItemGenerators.customGenerator("aceronlegs");
 		    chest = ItemGenerators.customGenerator("aceronplate");
@@ -5937,6 +5939,7 @@ public class MonsterMechanics implements Listener {
             le.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, "aceron"));
 		}
 		if(custom_name.equalsIgnoreCase("Burick The Fanatic")) {
+		    hp_mult = 6D;
 			boots = ItemGenerators.customGenerator("up_boots");
 			legs = ItemGenerators.customGenerator("up_legs");
 			chest = ItemGenerators.customGenerator("up_chest");
@@ -6045,7 +6048,7 @@ public class MonsterMechanics implements Listener {
 		dmg_range.add((int) Math.round(min_dmg));
 		dmg_range.add((int) Math.round(max_dmg));
 		
-		total_hp = (total_hp * 4.5D);
+		total_hp = (total_hp * hp_mult);
 		
 		if(custom_name.contains("Mad Bandit Pyromancer")) {
 			total_hp = total_hp * 2.00D;
