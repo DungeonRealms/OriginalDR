@@ -20,6 +20,7 @@ import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.enums.CC;
+import me.vaqxine.jsonlib.JSONMessage;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -254,6 +255,20 @@ public class BossMechanics implements Listener {
         }
         return return_list;
     }
+    
+	public void announceBossDrop(final ItemStack item, final List<Player> toPlayers){
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				JSONMessage m = new JSONMessage("The boss has dropped: ", ChatColor.DARK_PURPLE);
+				m.addItem(item, (item.getItemMeta().getDisplayName() == null) ? "SHOW" : item.getItemMeta().getDisplayName());
+				for(Player p : toPlayers){
+					if(p == null) continue;
+					m.sendToPlayer(p);
+				}
+			}
+		}.runTaskLater(Main.plugin, 5L);
+	}
 
     @SuppressWarnings("deprecation")
     @EventHandler
@@ -329,6 +344,7 @@ public class BossMechanics implements Listener {
 
                     Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
                     item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
+                    announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
                 }
 
                 int gem_drop = new Random().nextInt(2500 - 1000) + 1000;
@@ -421,6 +437,7 @@ public class BossMechanics implements Listener {
                             ItemStack reward = ItemMechanics.makeSoulBound(possible_drops.get(new Random().nextInt(possible_drops.size())));
                             Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
                             item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
+                            announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
                         }
 
                         int gem_drop = new Random().nextInt(12000 - 10000) + 10000;
@@ -517,6 +534,7 @@ public class BossMechanics implements Listener {
                     ItemStack reward = ItemMechanics.makeSoulBound(possible_drops.get(new Random().nextInt(possible_drops.size())));
                     Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
                     item.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, ""));
+                    announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
                 }
 
                 int gem_drop = new Random().nextInt(250 - 100) + 100;
