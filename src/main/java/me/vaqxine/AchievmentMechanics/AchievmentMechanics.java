@@ -3,6 +3,7 @@ package me.vaqxine.AchievmentMechanics;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import me.ifamasssxd.levelmechanics.LevelMechanics;
 import me.vaqxine.Main;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;
@@ -100,6 +101,7 @@ public class AchievmentMechanics implements Listener {
 					}
 					if(region.equalsIgnoreCase("crestguard")) {
 						addAchievment(pl.getName(), "Explorer: Avalon Peaks");
+						
 						continue;
 					}
 					if(region.equalsIgnoreCase("cstrip6")) {
@@ -183,7 +185,7 @@ public class AchievmentMechanics implements Listener {
 		}
 		
 		PlayerManager.getPlayerModel(p_name).setAchievements(o_a);
-		
+		//LevelMechanics.addXP(p, 1000);
 		if(Bukkit.getPlayer(p_name) != null) {
 			Player pl = Bukkit.getPlayer(p_name);
 			if(!Hive.first_login.contains(pl.getName()) && Hive.forum_usergroup.containsKey(pl.getName()) && Hive.forum_usergroup.get(pl.getName()) == -1) {

@@ -2102,7 +2102,44 @@ public class ItemMechanics implements Listener {
         }
         return false;
     }
-
+    
+    public static boolean isAxe(ItemStack is){
+        Material m = is.getType();
+        if(m == Material.WOOD_AXE || m == Material.GOLD_AXE || m == Material.STONE_AXE  || m == Material.IRON_AXE  || m == Material.DIAMOND_AXE ){
+            return true;
+        }
+        return false;
+    }
+    
+    public static boolean isSword(ItemStack is){
+        Material m = is.getType();
+        if(m == Material.WOOD_SWORD || m == Material.GOLD_SWORD || m == Material.STONE_SWORD  || m == Material.IRON_SWORD  || m == Material.DIAMOND_SWORD ){
+            return true;
+        }
+        return false;
+    }
+    
+    public static boolean isPolearm(ItemStack is){
+        Material m = is.getType();
+        if(m == Material.WOOD_SPADE || m == Material.GOLD_SPADE || m == Material.STONE_SPADE  || m == Material.IRON_SPADE  || m == Material.DIAMOND_SPADE ){
+            return true;
+        }
+        return false;
+    }
+    public static boolean isStaff(ItemStack is){
+        Material m = is.getType();
+        if(m == Material.WOOD_HOE || m == Material.GOLD_HOE || m == Material.STONE_HOE  || m == Material.IRON_HOE  || m == Material.DIAMOND_HOE ){
+            return true;
+        }
+        return false;
+    }
+    public static boolean isBow(ItemStack is){
+        Material m = is.getType();
+        if(m == Material.BOW){
+            return true;
+        }
+        return false;
+    }
     public static boolean isWeapon(ItemStack i) {
         if (getDamageData(i).equalsIgnoreCase("no")) {
             return false;

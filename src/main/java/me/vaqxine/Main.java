@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import me.ifamasssxd.levelmechanics.LevelMechanics;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.BossMechanics.BossMechanics;
 import me.vaqxine.ChatMechanics.ChatMechanics;
@@ -113,7 +114,7 @@ public class Main extends JavaPlugin implements Listener {
 		
 		getServer().getPluginManager().registerEvents(new ScoreboardMechanics(), this);
 		getServer().getPluginManager().registerEvents(this, this);
-		
+		getServer().getPluginManager().registerEvents(new LevelMechanics(), this);
 		getCommand("isunomadyet").setExecutor(new CommandIsUnoMadYet());
 		
 		hearthstoneMechanics = new HearthstoneMechanics();

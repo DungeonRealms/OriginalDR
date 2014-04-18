@@ -22,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import me.ifamasssxd.levelmechanics.LevelMechanics;
 import me.vaqxine.Main;
 import me.vaqxine.ChatMechanics.ChatMechanics;
 import me.vaqxine.CommunityMechanics.commands.CommandAdd;
@@ -685,7 +686,11 @@ public class CommunityMechanics implements Listener {
 			npe.printStackTrace();
 			return null;
 		}
-		
+		the_pages.add(ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + "  ** LEVEL/EXP **\n\n" + 
+		ChatColor.BLACK + ChatColor.BOLD + "     LEVEL\n\n" + 
+		"         " + ChatColor.BLACK + LevelMechanics.getPlayerLevel(p) + "\n\n" + ChatColor.BLACK + ChatColor.BOLD + 
+		"          XP" + "\n" + ChatColor.BLACK + 
+		"         " + LevelMechanics.getPlayerData(p).getXP() + " / " + LevelMechanics.getPlayerData(p).getEXPNeeded(LevelMechanics.getPlayerLevel(p)));
 		if(lbuddy_list == null || lbuddy_list.size() == 0 || PlayerManager.getPlayerModel(p).getBuddyList() == null) {
 			the_pages.add(ChatColor.BLACK.toString() + "" + ChatColor.BOLD.toString() + ChatColor.UNDERLINE.toString() + "     Buddy List" + "      " + "\n" + ChatColor.BLACK.toString() + ChatColor.BOLD.toString() + "@<PLAYER> <MSG>" + "\n" + ChatColor.BLACK.toString() + "Sends <MSG> to <PLAYER>." + new_line + ChatColor.BLACK.toString() + ChatColor.BOLD.toString() + "/add <PLAYER>" + "\n" + ChatColor.BLACK.toString() + "Adds PLAYER to buddy list." + new_line + ChatColor.BLACK.toString() + ChatColor.BOLD.toString() + "/delete <PLAYER>" + "\n" + ChatColor.BLACK.toString() + "Deletes PLAYER from all lists.");
 		}

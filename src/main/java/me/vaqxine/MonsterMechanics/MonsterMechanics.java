@@ -66,6 +66,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftSkeleton;
 import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
@@ -151,7 +152,7 @@ public class MonsterMechanics implements Listener {
 	static HashMap<Entity, Integer> mob_armor = new HashMap<Entity, Integer>();
 	static HashMap<Entity, Integer> mob_tier = new HashMap<Entity, Integer>();
 	public static HashMap<Entity, List<ItemStack>> mob_loot = new HashMap<Entity, List<ItemStack>>();
-	
+	public static HashMap<Entity, Integer> mob_level = new HashMap<Entity, Integer>();
 	// Special mob attacks START.
 	static ConcurrentHashMap<Entity, Integer> special_attack = new ConcurrentHashMap<Entity, Integer>();
 	static ConcurrentHashMap<Entity, Integer> power_strike = new ConcurrentHashMap<Entity, Integer>();
@@ -5541,6 +5542,7 @@ public class MonsterMechanics implements Listener {
 		}
 		
 		mob_health.remove(ent);
+		mob_level.remove(ent);
 		max_mob_health.remove(ent);
 		mob_damage.remove(ent);
 		mob_tier.remove(ent);
@@ -5732,7 +5734,7 @@ public class MonsterMechanics implements Listener {
 	}
 	
 	public static Entity spawnBossMob(Location l, EntityType et, String meta_data, String custom_name) {
-		
+		int mob_t = 0;
 		Entity e = null;
 		e = l.getWorld().spawnEntity(l, et);
 		EntityLiving ent = ((CraftLivingEntity) e).getHandle();
@@ -5770,6 +5772,7 @@ public class MonsterMechanics implements Listener {
 		if(custom_name.equalsIgnoreCase("The Infernal Abyss")) {
 			// TODO: Custom armor set.
 		    hp_mult = 4D;
+		    mob_t = 4;
 			chest = ItemGenerators.customGenerator("infernalchest");
 			legs = ItemGenerators.customGenerator("infernallegging");
 			helmet = ItemGenerators.customGenerator("infernalhelmet");
@@ -5813,6 +5816,7 @@ public class MonsterMechanics implements Listener {
 		
 		if(custom_name.equalsIgnoreCase("Mayel The Cruel")) {
 		    hp_mult = 6D;
+		    mob_t = 1;
 			chest = ItemGenerators.customGenerator("mayelchest");
 			legs = ItemGenerators.customGenerator("mayelpants");
 			//helmet = ItemGenerators.customGenerator("mayelhelmet"); Needs skin head
@@ -5858,6 +5862,7 @@ public class MonsterMechanics implements Listener {
 		
 		if(custom_name.equalsIgnoreCase("Mad Bandit Pyromancer")) {
 			// TODO: Custom armor set.
+		    mob_t = 1;
 			hp_mult = 6;
 			boots = ItemGenerators.BootGenerator(2, false, null);
 			legs = ItemGenerators.LeggingsGenerator(1, false, null);
@@ -5898,6 +5903,7 @@ public class MonsterMechanics implements Listener {
 		/*BOSS DROPS HERE*/
 		if(custom_name.equalsIgnoreCase("Aceron the Wicked")){
 		    hp_mult = 6D;
+		    mob_t = 4;
 		    boots = ItemGenerators.customGenerator("aceronboots");
 		    legs = ItemGenerators.customGenerator("aceronlegs");
 		    chest = ItemGenerators.customGenerator("aceronplate");
@@ -5940,6 +5946,7 @@ public class MonsterMechanics implements Listener {
 		}
 		if(custom_name.equalsIgnoreCase("Burick The Fanatic")) {
 		    hp_mult = 6D;
+		    mob_t= 3;
 			boots = ItemGenerators.customGenerator("up_boots");
 			legs = ItemGenerators.customGenerator("up_legs");
 			chest = ItemGenerators.customGenerator("up_chest");
@@ -6055,7 +6062,32 @@ public class MonsterMechanics implements Listener {
 		}
 		
 		BossMechanics.boss_event_log.put(e, "");
-		
+		int mob_l = 1;
+		int tier = mob_t;
+        if(tier == 1){
+            mob_l = 1;
+        }else if(tier == 2){
+            mob_l = 20;
+        }else if(tier == 3){
+            mob_l = 40;
+        }else if(tier == 4){
+            mob_l = 60;
+        }else if(tier == 5){
+            mob_l = 80;
+        }
+        if(ItemMechanics.isSword(weapon)){
+            mob_l += new Random().nextInt(20);
+        }else if(ItemMechanics.isAxe(weapon)){
+            mob_l += new Random().nextInt(20);
+        }else if(ItemMechanics.isStaff(weapon)){
+            mob_l += new Random().nextInt(15);
+        }else if(ItemMechanics.isPolearm(weapon)){
+            mob_l += new Random().nextInt(10);
+        }else if(ItemMechanics.isBow(weapon)){
+            mob_l +=  new Random().nextInt(10);
+        }
+        
+        mob_level.put(e, mob_l);
 		max_mob_health.put(e, (int) total_hp);
 		mob_health.put(e, (int) total_hp);
 		mob_damage.put(e, dmg_range);
@@ -6632,7 +6664,33 @@ public class MonsterMechanics implements Listener {
 			dmg_range.set(1, (int) ((double) (dmg_range.get(1) * 1.5D)));
 			total_armor = (int) (((double) total_armor * 1.5D));
 		}
+		ItemStack weap = CraftItemStack.asBukkitCopy(weapon);
+		int mob_l = 1;
+		if(tier == 1){
+		    mob_l = 1;
+		}else if(tier == 2){
+		    mob_l = 20;
+		}else if(tier == 3){
+		    mob_l = 40;
+        }else if(tier == 4){
+            mob_l = 60;
+        }else if(tier == 5){
+            mob_l = 80;
+        }
+		if(ItemMechanics.isSword(weap)){
+		    mob_l += new Random().nextInt(20);
+		}else if(ItemMechanics.isAxe(weap)){
+		    mob_l += new Random().nextInt(20);
+		}else if(ItemMechanics.isStaff(weap)){
+		    mob_l += new Random().nextInt(15);
+        }else if(ItemMechanics.isPolearm(weap)){
+            mob_l += new Random().nextInt(10);
+        }else if(ItemMechanics.isBow(weap)){
+            mob_l +=  new Random().nextInt(10);
+        }
 		
+		total_hp += total_hp * ((mob_l * .001)) + new Random().nextInt(mob_l);
+		mob_level.put(e, mob_l);
 		max_mob_health.put(e, (int) total_hp);
 		mob_health.put(e, (int) total_hp);
 		mob_damage.put(e, dmg_range);
@@ -7332,6 +7390,12 @@ public class MonsterMechanics implements Listener {
 		}
 		
 		return e;
+	}
+	public static int getMobLevel(Entity e){
+	    if(!mob_level.containsKey(e)){
+	        return 1;
+	    }
+	    return mob_level.get(e);
 	}
 	public boolean isHostile(EntityType e){
 	    if(e == EntityType.SKELETON || e == EntityType.ZOMBIE || e == EntityType.SPIDER || e == EntityType.CAVE_SPIDER || e == EntityType.BLAZE || e == EntityType.WITCH || e == EntityType.WOLF || e == EntityType.ENDERMAN || e == EntityType.IRON_GOLEM || e == EntityType.SILVERFISH || e == EntityType.MAGMA_CUBE){

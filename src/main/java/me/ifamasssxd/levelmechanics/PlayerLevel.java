@@ -4,10 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.vaqxine.Main;
+import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.database.ConnectionPool;
 import me.vaqxine.managers.PlayerManager;
@@ -19,9 +22,19 @@ public class PlayerLevel {
     int level;
     int xp;
 
-    public PlayerLevel(String p_name) {
+    public PlayerLevel(String p_name, boolean aSync) {
         this.p_name = p_name;
-        loadData();
+        if (aSync) {
+            new BukkitRunnable() {
+                public void run() {
+                    // TODO Auto-generated method stub
+                    loadData();
+                }
+            }.runTaskAsynchronously(Main.plugin);
+        } else {
+            loadData();
+        }
+
         PlayerManager.getPlayerModel(p_name).setPlayerLevel(this);
     }
 
@@ -34,22 +47,32 @@ public class PlayerLevel {
         if (getXP() + xp > xp_needed) {
             int xp_remaining = (getXP() + xp) - xp_needed;
             levelUp(true);
-            setXP(xp_remaining);
+            addXP(xp_remaining);
         } else {
-            //No remaining xp
+            // No remaining xp
             levelUp(true);
         }
+        saveData(true, false);
+        if (PlayerManager.getPlayerModel(p_name).getToggleList() != null && PlayerManager.getPlayerModel(p_name).getToggleList().contains("debug")) {
+            p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "          +" + ChatColor.YELLOW + (int) xp + ChatColor.BOLD + " EXP" + ChatColor.YELLOW
+                    + ChatColor.GRAY + " [" + getXP() + ChatColor.BOLD + "/" + ChatColor.GRAY + (int) getEXPNeeded(getLevel()) + " EXP]");
+
+        }
+        CommunityMechanics.generateCommBook(p);
     }
 
-    private int getEXPNeeded(int level) {
-        if (level == 1) {
-            return 176; // formula doens't work on level 1.
+    public int getEXPNeeded(int level) {
+        if (level >= 1) {
+            if (level == 1) {
+                return 176; // formula doens't work on level 1.
+            }
+            if (level == 100) {
+                return 0;
+            }
+            int previous_level = level - 1;
+            return (int) (Math.pow((previous_level), 2) + ((previous_level) * 20) + 150 + ((previous_level) * 4) + getEXPNeeded(previous_level));
         }
-        if (level == 75) {
-            return 0; // green bar
-        }
-        int previous_level = level - 1;
-        return (int) (Math.pow((previous_level), 2) + ((previous_level) * 20) + 150 + ((previous_level) * 4) + getEXPNeeded((previous_level)));
+        return 0;
     }
 
     public void saveData(boolean useHive, boolean remove) {
@@ -78,13 +101,23 @@ public class PlayerLevel {
     public void levelUp(boolean alert) {
         setLevel(getLevel() + 1);
         setXP(0);
+        if (alert) {
+            if (p == null) {
+                Main.d("PLAYER " + p_name + " WAS NULL FOR SOME REASON!");
+            }
+            p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "         " + " LEVEL UP! " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel() - 1)
+                    + ChatColor.BOLD + " -> " + ChatColor.YELLOW + ChatColor.UNDERLINE + getLevel());
+            p.playSound(p.getLocation(), Sound.LEVEL_UP, 0.5F, 1F);
+        }
+
     }
 
     public void loadData() {
-        try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement("SELECT player_level, player_xp FROM player_database WHERE p_name = ?;")) {
-            pst.setString(1, p_name);
+        try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
+                "SELECT player_level, player_xp FROM player_database WHERE p_name = '" + p_name + "';")) {
             ResultSet rs = pst.executeQuery();
             if (!rs.first()) {
+                Main.d(p_name + " was loaded for the first time.");
                 sendInsertUpdate();
                 // Newcomer in these parts.
                 setLevel(1);
@@ -104,9 +137,8 @@ public class PlayerLevel {
 
     public void sendInsertUpdate() {
         try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
-                "INSERT INTO player_database(p_name, player_level, player_xp) VALUES (?, 1, 0) ON DUPLICATE KEY UPDATE p_name = ?;")) {
-            pst.setString(1, p_name);
-            pst.setString(2, p_name);
+                "INSERT INTO player_database(p_name, player_level, player_xp) VALUES ('" + p_name + "', 1, 0) ON DUPLICATE KEY UPDATE p_name = '" + p_name
+                        + "';")) {
             pst.executeUpdate();
             pst.close();
         } catch (SQLException e) {

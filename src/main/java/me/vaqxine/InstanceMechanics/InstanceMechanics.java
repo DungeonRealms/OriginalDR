@@ -754,26 +754,19 @@ public class InstanceMechanics implements Listener {
 			tier_color = ChatColor.YELLOW;
 		}
 		
-		if(percent >= 30 && tokens_to_give == 0) {
-			// A
-			tokens_to_give = 1300 + new Random().nextInt(250);
-		} else if(percent >= 15 && tokens_to_give == 0) {
-			// B
-			tokens_to_give = 800 + new Random().nextInt(333);
-		} else if(percent >= -15 && tokens_to_give == 0) {
-			// C
-			tokens_to_give = 750 + new Random().nextInt(250);
-		} else if(percent >= -30 && tokens_to_give == 0) {
-			// D
-			tokens_to_give = 400 + new Random().nextInt(200);
-		} else if(percent < -30 && tokens_to_give == 0) {
-			// F
-			tokens_to_give = 100 + new Random().nextInt(50);
+		if(instance_template.toLowerCase().contains("t1dungeon")){
+		    tokens_to_give = 750 + new Random().nextInt(150);
+		}else if(instance_template.toLowerCase().contains("dodungeon")){
+		    tokens_to_give = 900 + new Random().nextInt(300);
+		}else if(instance_template.toLowerCase().contains("fireydungeon")){
+		    tokens_to_give = 1000 + new Random().nextInt(500);
+		}else if(instance_template.toLowerCase().contains("onewolfedungeon")){
+		    tokens_to_give = 1200 + new Random().nextInt(750);
 		}
 		
 		if(Bukkit.getPlayer(p_name) != null) {
 			Player pl = Bukkit.getPlayer(p_name);
-			pl.sendMessage(tier_color.toString() + ChatColor.BOLD + "       " + "Dungeon Grade: " + getGrade(percent));
+			//pl.sendMessage(tier_color.toString() + ChatColor.BOLD + "       " + "Dungeon Grade: " + getGrade(percent));
 			pl.sendMessage(tier_color + "You have gained " + ChatColor.UNDERLINE + tokens_to_give + " Portal Shards" + tier_color + " for completing this Dungeon.");
 		}
 		
