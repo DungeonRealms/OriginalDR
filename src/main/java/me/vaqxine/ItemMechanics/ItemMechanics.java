@@ -3751,7 +3751,7 @@ public class ItemMechanics implements Listener {
     public static boolean isSoulbound(ItemStack is){
         if(is.hasItemMeta() && is.getItemMeta().hasLore()){
             for(String s : is.getItemMeta().getLore()){
-                if(ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase(ChatColor.DARK_RED.toString() + ChatColor.ITALIC.toString() + "soulbound")){
+                if(ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("soulbound")){
                     return true;
                 }
             }

@@ -7,14 +7,11 @@ import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.enums.CC;
 import me.vaqxine.managers.PlayerManager;
 
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -32,6 +29,9 @@ public class LevelMechanics implements Listener {
     public void onEntityDeathEvent(EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Player)
             return;
+        if(e.getDamage() <= 0){
+            return;
+        }
         if ((e.getDamage() - MonsterMechanics.getMHealth(e.getEntity())) <= 0) {
             int mob_level = MonsterMechanics.getMobLevel(e.getEntity());
             Main.d(mob_level);
@@ -56,7 +56,7 @@ public class LevelMechanics implements Listener {
         getPlayerData(e.getPlayer()).saveData(false, true);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         PlayerManager.getPlayerModel(e.getPlayer().getName()).getPlayerLevel().setPlayer(e.getPlayer());
         Main.d("SETTING THE PLAYERS PLAYER DATA!", CC.RED);
@@ -75,7 +75,7 @@ public class LevelMechanics implements Listener {
     }
 
     public static PlayerLevel getPlayerData(Player p) {
-        if (PlayerManager.getPlayerModel(p.getName()).getPlayerLevel() != null) {
+        if (PlayerManager.getPlayerModel(p.getName()).getPlayerLevel() == null) {
             PlayerLevel pl = new PlayerLevel(p.getName(), true);
             PlayerManager.getPlayerModel(p).setPlayerLevel(pl);
             return pl;
@@ -84,7 +84,7 @@ public class LevelMechanics implements Listener {
     }
 
     public static PlayerLevel getPlayerData(String p_name) {
-        if (PlayerManager.getPlayerModel(p_name).getPlayerLevel() != null) {
+        if (PlayerManager.getPlayerModel(p_name).getPlayerLevel() == null) {
             return new PlayerLevel(p_name, true);
         }
         return PlayerManager.getPlayerModel(p_name).getPlayerLevel();
@@ -107,7 +107,7 @@ public class LevelMechanics implements Listener {
     }
 
     public static int getPlayerLevel(String p_name) {
-        if (PlayerManager.getPlayerModel(p_name).getPlayerLevel() != null) {
+        if (PlayerManager.getPlayerModel(p_name).getPlayerLevel() == null) {
             return new PlayerLevel(p_name, true).getLevel();
         }
         return PlayerManager.getPlayerModel(p_name).getPlayerLevel().getLevel();

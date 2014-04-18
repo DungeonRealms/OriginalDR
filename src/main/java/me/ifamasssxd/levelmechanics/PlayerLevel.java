@@ -22,7 +22,7 @@ public class PlayerLevel {
     String p_name;
     int level;
     int xp;
-
+    
     public PlayerLevel(String p_name, boolean aSync) {
         this.p_name = p_name;
         if (aSync) {
@@ -45,7 +45,7 @@ public class PlayerLevel {
 
     public void addXP(int xp) {
         int xp_needed = getEXPNeeded(getLevel());
-        if (getXP() + xp > xp_needed) {
+        if (getXP() + xp >= xp_needed) {
             int xp_remaining = (getXP() + xp) - xp_needed;
             levelUp(true);
             if (xp_remaining < 0) {
@@ -68,7 +68,7 @@ public class PlayerLevel {
     }
 
     public int getEXPNeeded(int level) {
-        if (level >= 1) {
+        if (level >= 0) {
             if (level == 1) {
                 return 176; // formula doens't work on level 1.
             }
@@ -105,19 +105,20 @@ public class PlayerLevel {
     }
 
     public void levelUp(boolean alert) {
-        setLevel(getLevel() + 1);
+
         setXP(0);
         if (alert) {
             if (p == null) {
                 checkPlayer();
             }
-            p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "         " + " LEVEL UP! " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel() - 1)
-                    + ChatColor.BOLD + " -> " + ChatColor.YELLOW + ChatColor.UNDERLINE + getLevel());
+            p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "         " + " LEVEL UP! " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel())
+                    + ChatColor.BOLD + " -> " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel() + 1));
             p.playSound(p.getLocation(), Sound.LEVEL_UP, 0.5F, 1F);
         }
-
+        setLevel(getLevel() + 1);
     }
 
+    @SuppressWarnings("deprecation")
     public void checkPlayer() {
         this.p = Bukkit.getPlayer(p_name);
     }
