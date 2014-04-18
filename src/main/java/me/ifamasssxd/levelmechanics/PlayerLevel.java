@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -47,13 +48,18 @@ public class PlayerLevel {
         if (getXP() + xp > xp_needed) {
             int xp_remaining = (getXP() + xp) - xp_needed;
             levelUp(true);
-            addXP(xp_remaining);
+            if (xp_remaining < 0) {
+                addXP(xp_remaining);
+            }
         } else {
             // No remaining xp
-            levelUp(true);
+            setXP(getXP() + xp);
         }
         saveData(true, false);
         if (PlayerManager.getPlayerModel(p_name).getToggleList() != null && PlayerManager.getPlayerModel(p_name).getToggleList().contains("debug")) {
+            if (p == null) {
+                checkPlayer();
+            }
             p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "          +" + ChatColor.YELLOW + (int) xp + ChatColor.BOLD + " EXP" + ChatColor.YELLOW
                     + ChatColor.GRAY + " [" + getXP() + ChatColor.BOLD + "/" + ChatColor.GRAY + (int) getEXPNeeded(getLevel()) + " EXP]");
 
@@ -76,7 +82,7 @@ public class PlayerLevel {
     }
 
     public void saveData(boolean useHive, boolean remove) {
-        final String pst = "UPDATE player_database SET player_level = " + getLevel() + ", player_xp = " + getXP() + " WHERE p_name = " + p_name + ";";
+        final String pst = "UPDATE player_database SET player_level = " + getLevel() + ", player_xp = " + getXP() + " WHERE p_name = '" + p_name + "';";
         if (useHive) {
             Hive.sql_query.add(pst);
         } else {
@@ -103,7 +109,7 @@ public class PlayerLevel {
         setXP(0);
         if (alert) {
             if (p == null) {
-                Main.d("PLAYER " + p_name + " WAS NULL FOR SOME REASON!");
+                checkPlayer();
             }
             p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "         " + " LEVEL UP! " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel() - 1)
                     + ChatColor.BOLD + " -> " + ChatColor.YELLOW + ChatColor.UNDERLINE + getLevel());
@@ -112,9 +118,13 @@ public class PlayerLevel {
 
     }
 
+    public void checkPlayer() {
+        this.p = Bukkit.getPlayer(p_name);
+    }
+
     public void loadData() {
         try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
-                "SELECT player_level, player_xp FROM player_database WHERE p_name = '" + p_name + "';")) {
+                "SELECT player_level, player_xp FROM player_database WHERE p_name = '" + p_name + "'")) {
             ResultSet rs = pst.executeQuery();
             if (!rs.first()) {
                 Main.d(p_name + " was loaded for the first time.");
@@ -138,7 +148,7 @@ public class PlayerLevel {
     public void sendInsertUpdate() {
         try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
                 "INSERT INTO player_database(p_name, player_level, player_xp) VALUES ('" + p_name + "', 1, 0) ON DUPLICATE KEY UPDATE p_name = '" + p_name
-                        + "';")) {
+                        + "'")) {
             pst.executeUpdate();
             pst.close();
         } catch (SQLException e) {

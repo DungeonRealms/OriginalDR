@@ -6678,9 +6678,9 @@ public class MonsterMechanics implements Listener {
             mob_l = 80;
         }
 		if(ItemMechanics.isSword(weap)){
-		    mob_l += new Random().nextInt(20);
+		    mob_l += new Random().nextInt(tier == 1 ? 19 : 20);
 		}else if(ItemMechanics.isAxe(weap)){
-		    mob_l += new Random().nextInt(20);
+		    mob_l += new Random().nextInt(tier == 1 ? 19 : 20);
 		}else if(ItemMechanics.isStaff(weap)){
 		    mob_l += new Random().nextInt(15);
         }else if(ItemMechanics.isPolearm(weap)){
@@ -6690,12 +6690,13 @@ public class MonsterMechanics implements Listener {
         }
 		
 		total_hp += total_hp * ((mob_l * .001)) + new Random().nextInt(mob_l);
+		mob_tier.put(e, tier);
 		mob_level.put(e, mob_l);
 		max_mob_health.put(e, (int) total_hp);
 		mob_health.put(e, (int) total_hp);
 		mob_damage.put(e, dmg_range);
 		mob_armor.put(e, total_armor);
-		mob_tier.put(e, tier);
+		
 		mob_last_hurt.put(e, System.currentTimeMillis());
 		mob_last_hit.put(e, System.currentTimeMillis());
 		

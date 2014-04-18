@@ -25,47 +25,29 @@ public class LevelMechanics implements Listener {
 
     @EventHandler
     public void onAsyncLogin(AsyncPlayerPreLoginEvent e) {
-        Main.d("CALLED FOR " + e.getName(), CC.BLUE);
         new PlayerLevel(e.getName(), false);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onEntityDeathEvent(EntityDeathEvent e) {
+    public void onEntityDeathEvent(EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Player)
             return;
-        EntityDamageEvent eDamage = e.getEntity().getLastDamageCause();
-        if (eDamage == null) {
-            Main.d("There was no EntityDamageEvent..");
-            return;
-        }
-        // It wasnt a player kill
-        if (!(eDamage instanceof EntityDamageByEntityEvent)) {
-            Main.d("WASNT ENTITYDAMAGEBYENTITY");
-            return;
+        if ((e.getDamage() - MonsterMechanics.getMHealth(e.getEntity())) <= 0) {
+            int mob_level = MonsterMechanics.getMobLevel(e.getEntity());
+            Main.d(mob_level);
+            Player killer = (Player) e.getDamager();
+            int level = getPlayerLevel(killer);
+            // EX Tier 5 -> 500XP
+            int xp = mob_level * 15 + new Random().nextInt(50) + 5;
+            double multiplier = 1D;
+            if (level > mob_level) {
+                // Higher level so 70% XP
+                multiplier *= .7D;
+            }
+            xp *= multiplier;
+            addXP(killer, xp);
         }
 
-        EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) eDamage;
-        Main.d("Was entityDamageEvent");
-        // Not a player damage or arrow
-        if (!(event.getDamager() instanceof Player) && !(event.getDamager() instanceof Arrow)) {
-            Main.d("The damage wasnt by a player though");
-            return;
-        }
-        // TODO: MAKE MOBS HAVE LEVELS
-        Main.d("The damage was a player!  Yea!");
-        int mob_level = MonsterMechanics.getMobLevel(e.getEntity());
-        Main.d(mob_level);
-        Player killer = (Player) event.getDamager();
-        int level = getPlayerLevel(killer);
-        // EX Tier 5 -> 500XP
-        int xp = mob_level * 15 + new Random().nextInt(50) + 5;
-        double multiplier = 1D;
-        if (level > mob_level) {
-            // Higher level so 70% XP
-            multiplier *= .7D;
-        }
-        xp *= multiplier;
-        addXP(killer, xp);
     }
 
     @EventHandler
