@@ -48,7 +48,7 @@ public class PlayerLevel {
         if (getXP() + xp >= xp_needed) {
             int xp_remaining = (getXP() + xp) - xp_needed;
             levelUp(true);
-            if (xp_remaining < 0) {
+            if (xp_remaining > 0) {
                 addXP(xp_remaining);
             }
         } else {
@@ -70,13 +70,13 @@ public class PlayerLevel {
     public int getEXPNeeded(int level) {
         if (level >= 0) {
             if (level == 1) {
-                return 176; // formula doens't work on level 1.
+                return 300; // formula doens't work on level 1.
             }
             if (level == 100) {
                 return 0;
             }
             int previous_level = level - 1;
-            return (int) (Math.pow((previous_level), 2) + ((previous_level) * 20) + 150 + ((previous_level) * 4) + getEXPNeeded(previous_level));
+            return (int) (Math.pow((previous_level), 2) + ((previous_level) * 20) + 200 + ((previous_level) * 4) + getEXPNeeded(previous_level));
         }
         return 0;
     }

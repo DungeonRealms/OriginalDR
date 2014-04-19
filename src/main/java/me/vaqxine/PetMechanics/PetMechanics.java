@@ -1195,7 +1195,7 @@ public class PetMechanics implements Listener {
 		if(inv_name.contains("@") || inv_name.contains(p.getName())) {
 			if(e.getCurrentItem() != null) {
 				ItemStack cur_item = e.getCurrentItem();
-				if(isPermUntradeable(cur_item) || !(RealmMechanics.isItemTradeable(cur_item)) || !(ItemMechanics.isSoulbound(cur_item))) {
+				if(isPermUntradeable(cur_item) || !(RealmMechanics.isItemTradeable(cur_item)) || ItemMechanics.isSoulbound(cur_item)) {
 					e.setCancelled(true);
 				}
 			}

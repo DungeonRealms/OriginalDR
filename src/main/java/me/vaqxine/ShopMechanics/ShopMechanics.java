@@ -1474,7 +1474,7 @@ public class ShopMechanics implements Listener {
 		
 		if(slot == (shop_slots - 1) && e.getInventory().getTitle().contains("@")) { // Open / Close button.
 			e.setCancelled(true);
-			if((!(shop_stock.containsKey(p.getName())) || !e.getInventory().getName().equalsIgnoreCase(shop_stock.get(p.getName()).getName())) && !PermissionMechanics.getRank(p.getName()).equalsIgnoreCase("gm")) {
+			if((!(shop_stock.containsKey(p.getName())) || !e.getInventory().getName().equalsIgnoreCase(shop_stock.get(p.getName()).getName())) && !p.isOp()) {
 				p.sendMessage(ChatColor.RED + "You can't do that.");
 				return;
 			}
@@ -1617,7 +1617,7 @@ public class ShopMechanics implements Listener {
 				
 				if(price == 0 && (!i.contains(e.getCursor().getType()) || ((hasCustomName(e.getCursor())) && e.getCursor().getType() != Material.POTION)) && !(e.isShiftClick())) {
 					
-					if(!RealmMechanics.isItemTradeable(i_added) || InstanceMechanics.isDungeonItem(i_added)) {
+					if(!RealmMechanics.isItemTradeable(i_added) || InstanceMechanics.isDungeonItem(i_added) || ItemMechanics.isSoulbound(i_added)) {
 						//p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " perform this action with an " + ChatColor.ITALIC + "untradeable" + ChatColor.RED + " item.");
 						e.setCancelled(true);
 						p.updateInventory();
@@ -1683,7 +1683,7 @@ public class ShopMechanics implements Listener {
 						
 						to_stock = e.getCursor();
 						
-						if(!RealmMechanics.isItemTradeable(to_stock) || InstanceMechanics.isDungeonItem(to_stock)) {
+						if(!RealmMechanics.isItemTradeable(to_stock) || InstanceMechanics.isDungeonItem(to_stock) || ItemMechanics.isSoulbound(to_stock)) {
 							//p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " perform this action with an " + ChatColor.ITALIC + "untradeable" + ChatColor.RED + " item.");
 							e.setCancelled(true);
 							p.updateInventory();
@@ -1728,7 +1728,7 @@ public class ShopMechanics implements Listener {
 						if(slot >= (i.getSize() - 1)) {
 							ItemStack cur_item = e.getCurrentItem();
 							
-							if(!RealmMechanics.isItemTradeable(cur_item) || CommunityMechanics.isSocialBook(cur_item) || cur_item.getType() == Material.NETHER_STAR || cur_item.getType() == Material.QUARTZ|| InstanceMechanics.isDungeonItem(cur_item)) {
+							if(!RealmMechanics.isItemTradeable(cur_item) || ItemMechanics.isSoulbound(cur_item) || CommunityMechanics.isSocialBook(cur_item) || cur_item.getType() == Material.NETHER_STAR || cur_item.getType() == Material.QUARTZ|| InstanceMechanics.isDungeonItem(cur_item)) {
 								//p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " perform this action with an " + ChatColor.ITALIC + "untradeable" + ChatColor.RED + " item.");
 								e.setCancelled(true);
 								p.updateInventory();

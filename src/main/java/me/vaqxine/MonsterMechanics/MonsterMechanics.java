@@ -149,7 +149,7 @@ public class MonsterMechanics implements Listener {
 	public static ConcurrentHashMap<Entity, Integer> mob_health = new ConcurrentHashMap<Entity, Integer>();
 	static HashMap<Entity, Integer> max_mob_health = new HashMap<Entity, Integer>();
 	public static HashMap<Entity, List<Integer>> mob_damage = new HashMap<Entity, List<Integer>>();
-	static HashMap<Entity, Integer> mob_armor = new HashMap<Entity, Integer>();
+	public static HashMap<Entity, Integer> mob_armor = new HashMap<Entity, Integer>();
 	static HashMap<Entity, Integer> mob_tier = new HashMap<Entity, Integer>();
 	public static HashMap<Entity, List<ItemStack>> mob_loot = new HashMap<Entity, List<ItemStack>>();
 	public static HashMap<Entity, Integer> mob_level = new HashMap<Entity, Integer>();
@@ -732,7 +732,13 @@ public class MonsterMechanics implements Listener {
 		ent.yaw = (float) (newYaw - 90);
 		ent.pitch = (float) newPitch;
 	}
-	
+	public static int getMaxMobHealth(Entity e){
+	    if(max_mob_health.containsKey(e)){
+	        return max_mob_health.get(e);
+	    }
+	    Main.d(e + " was not in the system..");
+	    return 0;
+	}
 	public void tickPowerStrike() {
 		List<Entity> to_remove = new ArrayList<Entity>();
 		
@@ -5739,6 +5745,7 @@ public class MonsterMechanics implements Listener {
 		e = l.getWorld().spawnEntity(l, et);
 		EntityLiving ent = ((CraftLivingEntity) e).getHandle();
 		double hp_mult = 1D;
+		double dmg_mult = 1D;
 		custom_name = custom_name.replaceAll("_", "");
 		
 		if((meta_data.equalsIgnoreCase("wither") && e instanceof CraftSkeleton)) {
@@ -5772,6 +5779,7 @@ public class MonsterMechanics implements Listener {
 		if(custom_name.equalsIgnoreCase("The Infernal Abyss")) {
 			// TODO: Custom armor set.
 		    hp_mult = 4D;
+		    dmg_mult = 1.3D;
 		    mob_t = 4;
 			chest = ItemGenerators.customGenerator("infernalchest");
 			legs = ItemGenerators.customGenerator("infernallegging");
@@ -5816,6 +5824,7 @@ public class MonsterMechanics implements Listener {
 		
 		if(custom_name.equalsIgnoreCase("Mayel The Cruel")) {
 		    hp_mult = 6D;
+		    dmg_mult = 1.3D;
 		    mob_t = 1;
 			chest = ItemGenerators.customGenerator("mayelchest");
 			legs = ItemGenerators.customGenerator("mayelpants");
@@ -5863,6 +5872,7 @@ public class MonsterMechanics implements Listener {
 		if(custom_name.equalsIgnoreCase("Mad Bandit Pyromancer")) {
 			// TODO: Custom armor set.
 		    mob_t = 1;
+		    dmg_mult = 2.5D;
 			hp_mult = 6;
 			boots = ItemGenerators.BootGenerator(2, false, null);
 			legs = ItemGenerators.LeggingsGenerator(1, false, null);
@@ -5900,10 +5910,40 @@ public class MonsterMechanics implements Listener {
 			le.setMetadata("mobname", new FixedMetadataValue(Main.plugin, ChatColor.GOLD.toString() + ChatColor.UNDERLINE.toString() + custom_name));
 			le.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, "tnt_bandit"));
 		}
-		/*BOSS DROPS HERE*/
+		if(custom_name.equalsIgnoreCase("Diner of Bones")){
+		    mob_t = 1;
+            dmg_mult = 2.5D;
+            hp_mult = 6;
+            boots = ItemGenerators.BootGenerator(4, false, null);
+            legs = ItemGenerators.LeggingsGenerator(4, false, null);
+            chest = ItemGenerators.ChestPlateGenerator(4, false, null);
+            helmet = ItemGenerators.HelmetGenerator(4, false, null);
+            weapon = ItemGenerators.AxeGenorator(Material.DIAMOND_AXE, false, null);
+            
+            gear_list.add(weapon);
+            gear_list.add(boots);
+            gear_list.add(legs);
+            gear_list.add(chest);
+            
+            ent.setEquipment(0, CraftItemStack.asNMSCopy(weapon));
+            ent.setEquipment(1, CraftItemStack.asNMSCopy(boots));
+            ent.setEquipment(2, CraftItemStack.asNMSCopy(legs));
+            ent.setEquipment(3, CraftItemStack.asNMSCopy(chest));
+            
+            LivingEntity le = (LivingEntity) e;
+            le.setCustomName(ChatColor.GOLD.toString() + ChatColor.UNDERLINE.toString() + custom_name);
+            le.setCustomNameVisible(true);
+            le.setMetadata("mobname", new FixedMetadataValue(Main.plugin, ChatColor.GOLD.toString() + ChatColor.UNDERLINE.toString() + custom_name));
+            le.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, "wolf"));
+            BossMechanics.boss_map.put(le, "aceron_wolf");
+		}
+		if(custom_name.equalsIgnoreCase("Wicked Gatekeeper")){
+		   //TODO: WORK
+		}
 		if(custom_name.equalsIgnoreCase("Aceron the Wicked")){
 		    hp_mult = 6D;
 		    mob_t = 4;
+		    dmg_mult = 2.5D;
 		    boots = ItemGenerators.customGenerator("aceronboots");
 		    legs = ItemGenerators.customGenerator("aceronlegs");
 		    chest = ItemGenerators.customGenerator("aceronplate");
@@ -5943,9 +5983,12 @@ public class MonsterMechanics implements Listener {
             le.setCustomNameVisible(true);
             le.setMetadata("mobname", new FixedMetadataValue(Main.plugin, ChatColor.GOLD.toString() + ChatColor.UNDERLINE.toString() + custom_name));
             le.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, "aceron"));
+            //Atleast a 8 second cooldown on the first jump
+            BossMechanics.last_jump.put(le, System.currentTimeMillis() +  (10 * 8));
 		}
 		if(custom_name.equalsIgnoreCase("Burick The Fanatic")) {
 		    hp_mult = 6D;
+		    dmg_mult = 2.5D;
 		    mob_t= 3;
 			boots = ItemGenerators.customGenerator("up_boots");
 			legs = ItemGenerators.customGenerator("up_legs");
@@ -6050,8 +6093,8 @@ public class MonsterMechanics implements Listener {
 		List<Integer> dmg_range = new ArrayList<Integer>();
 		min_dmg += ((double) min_dmg * (double) total_armor_dmg);
 		max_dmg += ((double) max_dmg * (double) total_armor_dmg);
-		min_dmg = ((double) min_dmg * 2.50D);
-		max_dmg = ((double) max_dmg * 2.50D);
+		min_dmg = ((double) min_dmg * dmg_mult);
+		max_dmg = ((double) max_dmg * dmg_mult);
 		dmg_range.add((int) Math.round(min_dmg));
 		dmg_range.add((int) Math.round(max_dmg));
 		
@@ -6105,7 +6148,7 @@ public class MonsterMechanics implements Listener {
 		Entity e = null;
 		
 		if(custom_name != null && custom_name.equalsIgnoreCase("Mad_Bandit_Pyromancer")) { return spawnBossMob(l, et, "bandit", "Mad Bandit Pyromancer"); }
-		
+		if(custom_name != null && custom_name.equalsIgnoreCase("Wicked_Gatekeeper")) {return spawnBossMob(l, et, "goblin", "Wicked Gatekeeper"); }
 		if(et == EntityType.PIG_ZOMBIE) {
 			et = EntityType.SKELETON;
 			meta_data = "";

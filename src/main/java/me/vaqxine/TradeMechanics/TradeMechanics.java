@@ -499,7 +499,7 @@ public class TradeMechanics implements Listener {
 		
 		if(!RealmMechanics.isItemTradeable(being_dropped)) { return; }
 		
-		if(CommunityMechanics.isSocialBook(e.getItemDrop().getItemStack()) ||e.getItemDrop().getItemStack().getType() == Material.QUARTZ || e.getItemDrop().getItemStack().getType() == Material.NETHER_STAR) { return; }
+		if(CommunityMechanics.isSocialBook(e.getItemDrop().getItemStack()) || ItemMechanics.isSoulbound(e.getItemDrop().getItemStack()) ||e.getItemDrop().getItemStack().getType() == Material.QUARTZ || e.getItemDrop().getItemStack().getType() == Material.NETHER_STAR) { return; }
 		
 		if(e.isCancelled()) { return; }
 		

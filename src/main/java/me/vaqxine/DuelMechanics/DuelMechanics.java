@@ -116,7 +116,7 @@ public class DuelMechanics implements Listener {
 	public static HashMap<String, Integer> duel_max_armor_tier = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> duel_max_weapon_tier = new HashMap<String, Integer>();
 	
-	static HashMap<String, Inventory> duel_stake = new HashMap<String, Inventory>();
+	//static HashMap<String, Inventory> duel_stake = new HashMap<String, Inventory>();
 	
 	public static HashMap<Player, Integer> duel_countdown = new HashMap<Player, Integer>();
 	public static HashMap<Player, Integer> duel_request_cooldown = new HashMap<Player, Integer>();
@@ -124,7 +124,7 @@ public class DuelMechanics implements Listener {
 	static HashMap<Player, Inventory> duel_secure = new HashMap<Player, Inventory>();
 	static HashMap<String, Location> duel_start_location = new HashMap<String, Location>();
 	
-	List<String> in_duel_window = new ArrayList<String>();
+	//List<String> in_duel_window = new ArrayList<String>();
 	public static List<Player> in_duel = new ArrayList<Player>();
 	public static List<String> warned_players = new ArrayList<String>();
 	
@@ -390,7 +390,8 @@ public class DuelMechanics implements Listener {
 	public void startDuel(Player attacker, Player attacked) {
 		duel_request.remove(attacked.getName());
 		duel_request.remove(attacker.getName());
-		
+		duel_start_location.put(attacker.getName(), attacker.getLocation());
+		duel_start_location.put(attacked.getName(), attacked.getLocation());
 		attacker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Duel stake ACCEPTED -> Opponent: " + ChatColor.GREEN + "" + ChatColor.BOLD + attacked.getName() + ChatColor.GREEN + "");
 		attacker.sendMessage(ChatColor.YELLOW + "Duel will begin in 10 seconds...");
 		
@@ -404,7 +405,12 @@ public class DuelMechanics implements Listener {
 		
 		attacker.eject();
 		attacked.eject();
-		
+		duel_map.put(attacker.getName(), attacked.getName());
+		duel_map.put(attacked.getName(), attacker.getName());
+		duel_max_armor_tier.put(attacker.getName(), 5);
+		duel_max_weapon_tier.put(attacker.getName(), 5);
+		duel_max_armor_tier.put(attacked.getName(), 5);
+        duel_max_weapon_tier.put(attacked.getName(), 5);
 		duel_countdown.put(attacker, 10);
 		duel_countdown.put(attacked, 10);
 	}
@@ -486,7 +492,7 @@ public class DuelMechanics implements Listener {
 		return t0_weapon_icon; // Default.
 	}
 	
-	public void loadDuelMenu(final Player attacker, final Player attacked) {
+	/*public void loadDuelMenu(final Player attacker, final Player attacked) {
 		
 		duel_start_location.put(attacker.getName(), attacker.getLocation());
 		duel_start_location.put(attacked.getName(), attacked.getLocation());
@@ -514,22 +520,23 @@ public class DuelMechanics implements Listener {
 		DuelWindow.setItem(34, divider);
 		DuelWindow.setItem(35, divider);
 		
-		attacker.openInventory(DuelWindow);
-		attacked.openInventory(DuelWindow);
 		
-		attacker.sendMessage(ChatColor.YELLOW + "Duel Menu Opened.");
-		attacker.sendMessage(ChatColor.GRAY + "Place staked items here.");
-		attacker.sendMessage(ChatColor.GRAY + "No stakes required.");
+		//attacker.openInventory(DuelWindow);
+		//attacked.openInventory(DuelWindow);
 		
-		attacked.sendMessage(ChatColor.YELLOW + "Duel Menu Opened.");
-		attacked.sendMessage(ChatColor.GRAY + "Place staked items here.");
-		attacked.sendMessage(ChatColor.GRAY + "No stakes required.");
+		//attacker.sendMessage(ChatColor.YELLOW + "Duel Menu Opened.");
+		//attacker.sendMessage(ChatColor.GRAY + "Place staked items here.");
+		//attacker.sendMessage(ChatColor.GRAY + "No stakes required.");
+		
+		//attacked.sendMessage(ChatColor.YELLOW + "Duel Menu Opened.");
+		//attacked.sendMessage(ChatColor.GRAY + "Place staked items here.");
+		//attacked.sendMessage(ChatColor.GRAY + "No stakes required.");
 		
 		attacker.playSound(attacker.getLocation(), Sound.WOOD_CLICK, 1F, 0.8F);
 		attacked.playSound(attacked.getLocation(), Sound.WOOD_CLICK, 1F, 0.8F);
 		
-		in_duel_window.add(attacked.getName());
-		in_duel_window.add(attacker.getName());
+		//in_duel_window.add(attacked.getName());
+		//in_duel_window.add(attacker.getName());
 		
 		duel_map.remove(attacker.getName());
 		duel_map.remove(attacked.getName());
@@ -540,20 +547,15 @@ public class DuelMechanics implements Listener {
 		duel_max_weapon_tier.remove(attacked.getName());
 		duel_max_armor_tier.remove(attacked.getName());
 		
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-			public void run() {
-				if(in_duel_window.contains(attacked.getName()) && in_duel_window.contains(attacker.getName())) {
 					duel_map.put(attacker.getName(), attacked.getName());
 					duel_map.put(attacked.getName(), attacker.getName());
-				}
-			}
-		}, 4L);
-	}
+		startDuel(attacker, attacked);
+	}*/
 	
 	@EventHandler(priority = EventPriority.LOW)
 	public void DuelWindowQuitMonitor(PlayerQuitEvent e) {
 		Player closer = e.getPlayer();
-		if(!(in_duel_window.contains(closer.getName()))) { return; }
+		//if(!(in_duel_window.contains(closer.getName()))) { return; }
 		
 		if(!(duel_map.containsKey(closer.getName()))) {
 			// This could be an issue since we have a 10 tick delay on opening the menu...
@@ -568,8 +570,8 @@ public class DuelMechanics implements Listener {
 			duel_request.remove(closer.getName());
 			duel_request.remove(close_partner);
 			duel_secure.remove(closer);
-			in_duel_window.remove(closer.getName());
-			in_duel_window.remove(close_partner);
+			//in_duel_window.remove(closer.getName());
+			//in_duel_window.remove(close_partner);
 			return;
 		}
 		
@@ -673,8 +675,8 @@ public class DuelMechanics implements Listener {
 			duel_request.remove(duel_partner.getName());
 			duel_secure.remove(closer);
 			duel_secure.remove(duel_partner);
-			in_duel_window.remove(closer.getName());
-			in_duel_window.remove(duel_partner.getName());
+			//in_duel_window.remove(closer.getName());
+			//in_duel_window.remove(duel_partner.getName());
 			
 			duel_partner.closeInventory();
 			
@@ -682,7 +684,7 @@ public class DuelMechanics implements Listener {
 		}
 	}
 	
-	@EventHandler
+	/*@EventHandler
 	public void onInventoryOpenEvent(InventoryOpenEvent e) {
 		Player p = (Player) e.getPlayer();
 		if(in_duel_window.contains(p.getName()) && duel_map.containsKey(p.getName()) && Bukkit.getPlayer(duel_map.get(p.getName())) != null) {
@@ -690,7 +692,7 @@ public class DuelMechanics implements Listener {
 				e.setCancelled(true);
 			}
 		}
-	}
+	}*/
 	
 	@EventHandler
 	public void onSpoilersMenuCloseEvent(InventoryCloseEvent e) {
@@ -715,12 +717,12 @@ public class DuelMechanics implements Listener {
 	public void onInventoryCloseEvent(InventoryCloseEvent e) {
 		Player closer = (Player) e.getPlayer();
 		if(!(e.getInventory().getName().contains(closer.getName())) || !e.getInventory().contains(Material.BONE)) { return; }
-		if(!in_duel_window.contains(closer.getName())) { return; }
+		//if(!in_duel_window.contains(closer.getName())) { return; }
 		if(!(duel_map.containsKey(closer.getName()))) { return; }
 		Player trade_partner = Bukkit.getPlayer(duel_map.get(closer.getName()));
 		
-		in_duel_window.remove(closer.getName());
-		in_duel_window.remove(trade_partner.getName());
+		//in_duel_window.remove(closer.getName());
+		//in_duel_window.remove(trade_partner.getName());
 		
 		boolean left_side = false;
 		Inventory tradeInv = closer.getOpenInventory().getTopInventory();
@@ -845,9 +847,9 @@ public class DuelMechanics implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		Player p = (Player) e.getEntity();
-		if(in_duel_window.contains(p)) {
-			p.closeInventory();
-		}
+		//if(in_duel_window.contains(p)) {
+			//p.closeInventory();
+		//}
 		if(in_duel.contains(p)) {
 			// They were in a duel, this shouldn't be possible. Save all their items.
 			//p.setLevel(50); // Give them a level value so it reconginizes illegit death.
@@ -889,9 +891,9 @@ public class DuelMechanics implements Listener {
 					pl.sendMessage(pl_attacker_color + pl_attacker_prefix + attacker.getName() + ChatColor.GREEN + " has " + ChatColor.UNDERLINE + "KNOCKED OUT" + " " + ChatColor.WHITE + pl_attacked_color + pl_attacked_prefix + attacked.getName() + ChatColor.GREEN + " in a duel.");
 				}
 			}
-			if(duel_stake.containsKey(attacker.getName())) {
+			/*if(duel_stake.containsKey(attacker.getName())) {
 				//rewardLoot(attacker, attacked);
-			}
+			}*/
 		}
 	}
 	
@@ -900,7 +902,8 @@ public class DuelMechanics implements Listener {
 		if(!(e.getWhoClicked().getType() == EntityType.PLAYER)) { return; }
 		final Player clicker = (Player) e.getWhoClicked();
 		if(!(duel_map.containsKey(clicker.getName()))) { return; }
-		if(!(in_duel_window.contains(clicker.getName()))) { return; }
+		//if(!(in_duel_window.contains(clicker.getName()))) { return; }
+		if(true)return;
 		Inventory tradeWin = e.getInventory();
 		
 		if(e.getCurrentItem() == null) { return; }
@@ -1140,15 +1143,15 @@ public class DuelMechanics implements Listener {
 						}
 					}
 					
-					if(loot.getSize() > 0) {
+					/*if(loot.getSize() > 0) {
 						duel_stake.put(tradie.getName(), loot);
 						duel_stake.put(clicker.getName(), loot);
-					}
+					}*/
 					
 					duel_secure.remove(clicker);
 					duel_secure.remove(tradie);
-					in_duel_window.remove(clicker.getName());
-					in_duel_window.remove(tradie.getName());
+					//in_duel_window.remove(clicker.getName());
+					//in_duel_window.remove(tradie.getName());
 					
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 						public void run() {
@@ -1183,11 +1186,11 @@ public class DuelMechanics implements Listener {
             duel_map.remove(opponent);
             in_duel.remove(quitter);
             in_duel.remove(opponent);
-            duel_stake.remove(quitter.getName());
+            //duel_stake.remove(quitter.getName());
             duel_countdown.remove(opponent);
             duel_countdown.remove(quitter.getName());
-            in_duel_window.remove(quitter.getName());
-            in_duel_window.remove(opponent);
+            //in_duel_window.remove(quitter.getName());
+           // in_duel_window.remove(opponent);
             return;
          }
 		
@@ -1205,15 +1208,15 @@ public class DuelMechanics implements Listener {
 			duel_map.remove(opponent.getName());
 			in_duel.remove(quitter);
 			in_duel.remove(opponent);
-			duel_stake.remove(quitter.getName());
+			//duel_stake.remove(quitter.getName());
 			duel_countdown.remove(opponent.getName());
 			duel_countdown.remove(quitter.getName());
-			in_duel_window.remove(quitter.getName());
-			in_duel_window.remove(opponent.getName());
+			//in_duel_window.remove(quitter.getName());
+			//in_duel_window.remove(opponent.getName());
 			
-			if(duel_stake.containsKey(opponent.getName())) {
+			/*if(duel_stake.containsKey(opponent.getName())) {
 				//rewardLoot(opponent, quitter);
-			}
+			}*/
 			
 			restoreColors(opponent, quitter);
 		}
@@ -1316,9 +1319,9 @@ public class DuelMechanics implements Listener {
 			attacked.closeInventory();
 			attacker.closeInventory();
 			
-			if(duel_stake.containsKey(attacker.getName())) {
+			/*if(duel_stake.containsKey(attacker.getName())) {
 				//rewardLoot(attacker, attacked);
-			}
+			}*/
 		}
 	}
 	
@@ -1400,7 +1403,7 @@ public class DuelMechanics implements Listener {
 		
 		final Player attacker = (Player) ent_attacker;
 		
-		if(in_duel_window.contains(attacked.getName())) {
+		/*if(in_duel_window.contains(attacked.getName())) {
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
 					attacked.updateInventory();
@@ -1438,7 +1441,7 @@ public class DuelMechanics implements Listener {
 			e.setCancelled(true);
 			e.setDamage(0);
 			return;
-		}
+		}*/
 		
 		if(!(e.getCause() == DamageCause.ENTITY_ATTACK) && !(e.getCause() == DamageCause.PROJECTILE)) {
 			// Fire, fall, etc damage.
@@ -1485,9 +1488,9 @@ public class DuelMechanics implements Listener {
 					
 					attacker.sendMessage(attacker_color + attacker_prefix + attacker.getName() + ChatColor.GREEN + " has " + ChatColor.UNDERLINE + "DEFEATED" + ChatColor.RESET + " " + attacked_color + attacked_prefix + attacked.getName() + ChatColor.GREEN + " in a duel.");
 					
-					if(duel_stake.containsKey(attacker.getName())) {
+					/*if(duel_stake.containsKey(attacker.getName())) {
 						//rewardLoot(attacker, attacked);
-					}
+					}*/
 				}
 				
 				duel_request_cooldown.put(attacked, 10);
@@ -1582,9 +1585,9 @@ public class DuelMechanics implements Listener {
 					}
 				}
 				
-				if(duel_stake.containsKey(attacker.getName())) {
+				/*if(duel_stake.containsKey(attacker.getName())) {
 					//rewardLoot(attacker, attacked);
-				}
+				}*/
 				e.setCancelled(true);
 				System.out.print("DUEL > DMG: " + e.getDamage() + " Winner: " + attacker.getName() + " Loser: " + attacked.getName() + " Losers HP:" + attacked.getHealth() + " HP: " + HealthMechanics.getPlayerHP(attacked.getName()));
 				e.setDamage(0);
@@ -1600,7 +1603,7 @@ public class DuelMechanics implements Listener {
 		e.setDamage(0);
 	}
 	
-	public void rewardLoot(final Player winner, Player looser) {
+	/*public void rewardLoot(final Player winner, Player looser) {
 		Inventory loot = duel_stake.get(winner.getName());
 		
 		for(ItemStack is : loot.getContents()) {
@@ -1624,7 +1627,7 @@ public class DuelMechanics implements Listener {
 		duel_stake.remove(winner.getName());
         duel_stake.remove(looser.getName());
 	
-	}
+	}*/
 	
 	public boolean InWGRegion(Player p) {
 		try {
@@ -1898,8 +1901,8 @@ public class DuelMechanics implements Listener {
 				// TODO: Start duel.
 				e.setCancelled(true);
 				e.setDamage(0);
-				loadDuelMenu(attacker, attacked);
-				//startDuel(attacker, attacked);
+				//loadDuelMenu(attacker, attacked);
+				startDuel(attacker, attacked);
 				return;
 			} else {
 				attacker.sendMessage(ChatColor.YELLOW + attacked.getName() + " already has a pending duel request from another user.");

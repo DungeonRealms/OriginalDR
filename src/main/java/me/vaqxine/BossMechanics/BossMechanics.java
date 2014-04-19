@@ -1,7 +1,9 @@
 package me.vaqxine.BossMechanics;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,6 +11,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+import me.ifamasssxd.levelmechanics.LevelMechanics;
 import me.vaqxine.Main;
 import me.vaqxine.BossMechanics.commands.CommandSpawnBoss;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
@@ -71,7 +74,10 @@ public class BossMechanics implements Listener {
 
     public static HashMap<Entity, String> boss_event_log = new HashMap<Entity, String>();
     // Contains events the boss has already gone through.
-
+    public static HashSet<Entity> is_jumping = new HashSet<Entity>();
+    public static HashMap<Entity, Long> last_jump = new HashMap<Entity, Long>();
+    public static HashSet<Entity> invincible_mob = new HashSet<Entity>();
+    public static HashMap<Entity, List<Entity>> aceron_minions = new HashMap<Entity, List<Entity>>();
     /*
      * public static ConcurrentHashMap<Entity, Entity> boss_link = new ConcurrentHashMap<Entity, Entity>(); // (Unholy Priest) Entity, The Blaze Entity
      */
@@ -88,7 +94,7 @@ public class BossMechanics implements Listener {
     public void onEnable() {
 
         Main.plugin.getCommand("spawnboss").setExecutor(new CommandSpawnBoss());
-
+        Main.plugin.getServer().getPluginManager().registerEvents(new AceronListener(), Main.plugin);
         Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
         new BukkitRunnable() {
@@ -106,13 +112,22 @@ public class BossMechanics implements Listener {
                 }
             }
         }.runTaskTimerAsynchronously(Main.plugin, 10L * 20L, 10L);
-
+        // Aceron
         new BukkitRunnable() {
-            @Override
             public void run() {
-
+                for (Entry<Entity, Long> e : last_jump.entrySet()) {
+                    long time = e.getValue();
+                    Entity ent = e.getKey();
+                    // So they dont jump in the air -_-
+                    if (time <= System.currentTimeMillis() && !invincible_mob.contains(ent)) {
+                        // They can jump again.
+                        if (!is_jumping.contains(ent)) {
+                            groundSlam(ent);
+                        }
+                    }
+                }
             }
-        };
+        }.runTaskTimerAsynchronously(Main.plugin, 10, 3 * 20);
 
         new BukkitRunnable() {
             @Override
@@ -169,7 +184,32 @@ public class BossMechanics implements Listener {
                 }
             }
         }.runTaskTimerAsynchronously(Main.plugin, 10L * 20L, 20L);
-
+        new BukkitRunnable() {
+            public void run() {
+                // This will only be for aceron
+                for (Entity boss : last_jump.keySet()) {
+                    if (Math.random() >= .5D) {
+                        int cur_hp = MonsterMechanics.getMHealth(boss);
+                        int max_hp = MonsterMechanics.getMaxMobHealth(boss);
+                        double percent_hp = (1.0f * cur_hp / max_hp) * 100;
+                        if ((percent_hp <= 60 && percent_hp >= 30) && !invincible_mob.contains(boss) && !is_jumping.contains(boss)) {
+                            Item i = boss
+                                    .getLocation()
+                                    .getWorld()
+                                    .dropItemNaturally(
+                                            boss.getWorld().getPlayers()
+                                                    .get(boss.getWorld().getPlayers().size() == 1 ? 0 : boss.getWorld().getPlayers().size()).getLocation(),
+                                            new ItemStack(Material.EMERALD, 1));
+                            i.setMetadata("greedy", new FixedMetadataValue(Main.plugin, ""));
+                            i.setPickupDelay(1000);
+                            for (Player p : boss.getWorld().getPlayers()) {
+                                p.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Aceron the Wicked:" + ChatColor.WHITE + " Taste my riches!");
+                            }
+                        }
+                    }
+                }
+            }
+        }.runTaskTimerAsynchronously(Main.plugin, 0, 10 * 10);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -255,20 +295,59 @@ public class BossMechanics implements Listener {
         }
         return return_list;
     }
-    
-	public void announceBossDrop(final ItemStack item, final List<Player> toPlayers){
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				JSONMessage m = new JSONMessage("The boss has dropped: ", ChatColor.DARK_PURPLE);
-				m.addItem(item, (item.getItemMeta().getDisplayName() == null) ? "SHOW" : item.getItemMeta().getDisplayName());
-				for(Player p : toPlayers){
-					if(p == null) continue;
-					m.sendToPlayer(p);
-				}
-			}
-		}.runTaskLater(Main.plugin, 5L);
-	}
+
+    public void groundSlam(final Entity boss) {
+        boss.setVelocity(new Vector(0, 1.3, 0));
+        is_jumping.add(boss);
+        new BukkitRunnable() {
+            public void run() {
+                // Died mid air?
+                if (boss != null && !boss.isDead()) {
+                    if (boss.isOnGround()) {
+                        cancel();
+                        // 10 seconds till next one
+                        last_jump.put(boss, System.currentTimeMillis() + (10 * 1000));
+                        if (is_jumping.contains(boss)) {
+                            is_jumping.remove(boss);
+                        }
+                        new BukkitRunnable() {
+
+                            public void run() {
+                                try {
+                                    ParticleEffect.sendToLocation(ParticleEffect.HUGE_EXPLOSION, boss.getLocation(), 0F, 0F, 0F, .3F, 15);
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                                for (Entity e : boss.getNearbyEntities(15, 15, 15)) {
+                                    if (e instanceof Player) {
+                                        Player p = (Player) e;
+                                        // Max 1500 atleast 500 - Seems fair
+                                        p.damage(new Random().nextInt(1000) + 1000, boss);
+                                    }
+                                }
+                            }
+                        }.runTask(Main.plugin);
+
+                    }
+                }
+            }
+        }.runTaskTimerAsynchronously(Main.plugin, 2L, 1L);
+    }
+
+    public void announceBossDrop(final ItemStack item, final List<Player> toPlayers) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                JSONMessage m = new JSONMessage("The boss has dropped: ", ChatColor.DARK_PURPLE);
+                m.addItem(item, (item.getItemMeta().getDisplayName() == null) ? "SHOW" : item.getItemMeta().getDisplayName());
+                for (Player p : toPlayers) {
+                    if (p == null)
+                        continue;
+                    m.sendToPlayer(p);
+                }
+            }
+        }.runTaskLater(Main.plugin, 5L);
+    }
 
     @SuppressWarnings("deprecation")
     @EventHandler
@@ -352,8 +431,96 @@ public class BossMechanics implements Listener {
                     gem_drop -= 5;
                     ent.getWorld().dropItemNaturally(ent.getLocation(), MoneyMechanics.makeGems(5));
                 }
+                for (Player p : ent.getWorld().getPlayers()) {
+                    LevelMechanics.addXP(p, 5000);
+                }
             }
+            if (boss_map.get(ent).equalsIgnoreCase("aceron")) {
+                
+                try {
+                    ParticleEffect.sendToLocation(ParticleEffect.LAVA, ent.getLocation().add(0, 2, 0), new Random().nextFloat(), new Random().nextFloat(),
+                            new Random().nextFloat(), 1F, 150);
+                } catch (Exception err) {
+                    err.printStackTrace();
+                }
+                ent.getWorld().playSound(ent.getLocation(), Sound.ENDERDRAGON_DEATH, 1, 1);
+                server_message = ChatColor.GOLD.toString() + ChatColor.BOLD + ">> " + ChatColor.GOLD + "The Greed King " + ChatColor.UNDERLINE
+                        + "Aceron the Wicked" + ChatColor.RESET + ChatColor.GOLD + " has been slain by a group of adventurers!";
 
+                try {
+                    ParticleEffect.sendToLocation(ParticleEffect.FIREWORKS_SPARK, ent.getLocation().add(0, 2, 0), new Random().nextFloat(),
+                            new Random().nextFloat(), new Random().nextFloat(), 0.2F, 200);
+                } catch (Exception err) {
+                    err.printStackTrace();
+                }
+
+                LivingEntity le = (LivingEntity) ent;
+                int do_i_drop_gear = new Random().nextInt(100);
+                if (do_i_drop_gear < 80) { // 80% chance!
+                    List<ItemStack> possible_drops = new ArrayList<ItemStack>();
+                    for (ItemStack is : le.getEquipment().getArmorContents()) {
+                        if (is == null || is.getType() == Material.AIR || is.getTypeId() == 144 || is.getTypeId() == 397) { // Monster
+                                                                                                                            // heads
+                                                                                                                            // (bandit)!
+                            continue;
+                        }
+                        ItemMeta im = is.getItemMeta();
+                        if (im.hasEnchants()) {
+                            for (Map.Entry<Enchantment, Integer> data : im.getEnchants().entrySet()) {
+                                is.removeEnchantment(data.getKey());
+                            }
+                        }
+                        is.removeEnchantment(Enchantment.LOOT_BONUS_MOBS);
+                        is.removeEnchantment(Enchantment.KNOCKBACK);
+                        is.removeEnchantment(EnchantMechanics.getCustomEnchant());
+                        is.setItemMeta(im);
+
+                        possible_drops.add(is);
+                    }
+
+                    ItemStack weapon = le.getEquipment().getItemInHand();
+                    ItemMeta im = weapon.getItemMeta();
+                    if (im.hasEnchants()) {
+                        for (Map.Entry<Enchantment, Integer> data : im.getEnchants().entrySet()) {
+                            im.removeEnchant(data.getKey());
+                        }
+                    }
+                    weapon.removeEnchantment(Enchantment.LOOT_BONUS_MOBS);
+                    weapon.removeEnchantment(Enchantment.KNOCKBACK);
+                    weapon.removeEnchantment(EnchantMechanics.getCustomEnchant());
+                    weapon.setItemMeta(im);
+
+                    possible_drops.add(weapon);
+
+                    ItemStack reward = ItemMechanics.makeSoulBound(possible_drops.get(new Random().nextInt(possible_drops.size())));
+
+                    Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
+                    item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
+                    announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
+                }
+                int gem_drop = new Random().nextInt(2000) + 10000;
+                while (gem_drop > 0) {
+                    gem_drop -= 500;
+                    short real_id = 777;
+                    ItemStack money = new ItemStack(Material.PAPER, 1, real_id);
+                    ent.getWorld().dropItemNaturally(
+                            ent.getLocation(),
+                            MoneyMechanics.signBankNote(money, ChatColor.GREEN.toString() + "Bank Note", ChatColor.WHITE.toString() + ChatColor.BOLD.toString()
+                                    + "Value:" + ChatColor.WHITE.toString() + " " + 500 + " Gems" + "," + ChatColor.GRAY.toString()
+                                    + "Exchange at any bank for GEM(s)"));
+                }
+                for(Entity ents : ent.getWorld().getEntities()){
+                    if(ents instanceof Player)continue;
+                    if(ents instanceof Item)continue;
+                    ents.remove();
+                }
+                boss_map.remove(ent);
+                last_jump.remove(ent);
+                invincible_mob.remove(ent);
+                for (Player p : ent.getWorld().getPlayers()) {
+                    LevelMechanics.addXP(p, 10000);
+                }
+            }
             if (boss_map.get(ent).equalsIgnoreCase("fire_demon")) {
 
                 try {
@@ -440,7 +607,7 @@ public class BossMechanics implements Listener {
                             announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
                         }
 
-                        int gem_drop = new Random().nextInt(12000 - 10000) + 10000;
+                        int gem_drop = new Random().nextInt(2000) + 10000;
                         while (gem_drop > 0) {
                             gem_drop -= 500;
                             short real_id = 777;
@@ -477,7 +644,9 @@ public class BossMechanics implements Listener {
                         boss_map.remove(ent);
                     }
                 }, 60L);
-
+                for (Player p : ent.getWorld().getPlayers()) {
+                    LevelMechanics.addXP(p, 10000);
+                }
             }
 
             if (boss_map.get(ent).equalsIgnoreCase("bandit_leader")) {
@@ -541,6 +710,9 @@ public class BossMechanics implements Listener {
                 while (gem_drop > 0) {
                     gem_drop -= 5;
                     ent.getWorld().dropItemNaturally(ent.getLocation(), MoneyMechanics.makeGems(5));
+                }
+                for (Player p : ent.getWorld().getPlayers()) {
+                    LevelMechanics.addXP(p, 500);
                 }
             }
 

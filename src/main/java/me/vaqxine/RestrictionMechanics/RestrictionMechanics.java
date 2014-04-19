@@ -765,11 +765,11 @@ public class RestrictionMechanics implements Listener {
 			// TODO: Find out why.
 		}
 		
-		if(i.getType() == Material.NETHER_STAR ||i.getType() == Material.QUARTZ|| CommunityMechanics.isSocialBook(i) || (!(RealmMechanics.isItemTradeable(i)) && !(i.getType() == Material.PAPER))) {
+		if(i.getType() == Material.NETHER_STAR ||i.getType() == Material.QUARTZ|| ItemMechanics.isSoulbound(i) ||CommunityMechanics.isSocialBook(i) || (!(RealmMechanics.isItemTradeable(i)) && !(i.getType() == Material.PAPER))) {
 			//e.setCancelled(true);// - Currently broken as of 11/9/12, causes meta data to delete.
 			e.getItemDrop().remove();
 			if(i.getType() == Material.NETHER_STAR || PetMechanics.isPermUntradeable(i) || ItemMechanics.isSoulbound(i)|| i.getType() == Material.QUARTZ|| CommunityMechanics.isSocialBook(i)) {
-				if(PetMechanics.isPermUntradeable(i)) {
+				if(PetMechanics.isPermUntradeable(i) || ItemMechanics.isSoulbound(i)) {
 					p.getInventory().setItem(p.getInventory().firstEmpty(), i);
 					Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 						public void run() {

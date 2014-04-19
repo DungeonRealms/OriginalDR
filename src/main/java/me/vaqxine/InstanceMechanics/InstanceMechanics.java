@@ -390,7 +390,10 @@ public class InstanceMechanics implements Listener {
 					if(open_instances.contains(instance_name) && Bukkit.getServer().getWorld(instance_name) != null) {
 						instance_loaded.put(instance_name, true);
 						World w = Bukkit.getServer().getWorld(instance_name);
-						
+						if(w.getName().contains("OneWolfeDungeon")){
+						    w.setSpawnLocation(234, 34, -9);
+						}
+						    
 						// The instance is now loaded.
 						for(String s : instance_party.get(instance_name)) {
 							if(Bukkit.getServer().getPlayer(s) != null) {

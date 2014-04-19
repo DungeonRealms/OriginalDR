@@ -25,23 +25,32 @@ public class LevelMechanics implements Listener {
         new PlayerLevel(e.getName(), false);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDeathEvent(EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Player)
             return;
-        if(e.getDamage() <= 0){
+        if (e.getDamage() <= 0) {
             return;
         }
-        if ((e.getDamage() - MonsterMechanics.getMHealth(e.getEntity())) <= 0) {
+        if ((MonsterMechanics.getMHealth(e.getEntity()) - e.getDamage()) <= 0) {
             int mob_level = MonsterMechanics.getMobLevel(e.getEntity());
             Main.d(mob_level);
+            if (!(e.getDamager() instanceof Player))
+                return;
             Player killer = (Player) e.getDamager();
             int level = getPlayerLevel(killer);
-            // EX Tier 5 -> 500XP
             int xp = mob_level * 15 + new Random().nextInt(50) + 5;
+            if ((level + 3) < mob_level) {
+                // No XP
+                xp = 0;
+                return;
+            }
+            // EX Tier 5 -> 500XP
+
             double multiplier = 1D;
             if (level > mob_level) {
                 // Higher level so 70% XP
+
                 multiplier *= .7D;
             }
             xp *= multiplier;
@@ -59,7 +68,7 @@ public class LevelMechanics implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         PlayerManager.getPlayerModel(e.getPlayer().getName()).getPlayerLevel().setPlayer(e.getPlayer());
-        Main.d("SETTING THE PLAYERS PLAYER DATA!", CC.RED);
+        // Main.d("SETTING THE PLAYERS PLAYER DATA!", CC.RED);
     }
 
     public static void addXP(Player p, int xp) {
