@@ -9,7 +9,6 @@ import net.minecraft.server.v1_7_R2.EntityWolf;
 import net.minecraft.server.v1_7_R2.PathfinderGoalFloat;
 import net.minecraft.server.v1_7_R2.PathfinderGoalLeapAtTarget;
 import net.minecraft.server.v1_7_R2.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_7_R2.PathfinderGoalRandomTargetNonTamed;
 import net.minecraft.server.v1_7_R2.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R2.World;
 
@@ -24,6 +23,7 @@ public class CustomWolf extends EntityWolf {
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, 0.4F));
         this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, EntityHuman.class, 1.0D, true));
+        setTamed(false);
         // this.targetSelector.a(1, new PathfinderGoalRandomTargetNonTamed(this, EntityHuman.class, 200, false));
     }
 

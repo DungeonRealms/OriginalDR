@@ -22,13 +22,14 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
 
 public class AceronListener implements Listener {
 
@@ -214,6 +215,15 @@ public class AceronListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onPlayerClick(PlayerInteractEvent e) {
+        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (players_greedy.contains(e.getPlayer().getName())){
+                e.setCancelled(true);
+            }
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent e) {
         if (e.getEntity().getWorld().getName().toLowerCase().contains("onewolfedungeon")) {
@@ -247,8 +257,8 @@ public class AceronListener implements Listener {
                 int max_hp = MonsterMechanics.getMaxMobHealth(boss);
                 // Stupid Java Arithmetic -_-
                 double percent_hp = (1.0f * cur_hp / max_hp) * 100;
-                if (percent_hp <= 30 && !BossMechanics.is_jumping.contains(boss)
-                        && !BossMechanics.invincible_mob.contains(boss) && !spawned_wolf.contains(boss)) {
+                if (percent_hp <= 30 && !BossMechanics.is_jumping.contains(boss) && !BossMechanics.invincible_mob.contains(boss)
+                        && !spawned_wolf.contains(boss)) {
                     // They did 30% HP on aceron
                     Wolf wolf = (Wolf) MonsterMechanics.spawnBossMob(boss.getLocation(), EntityType.WOLF, "", "Diner of Bones");
                     aceron_wolf.put(boss, wolf);

@@ -192,7 +192,7 @@ public class BossMechanics implements Listener {
                         int cur_hp = MonsterMechanics.getMHealth(boss);
                         int max_hp = MonsterMechanics.getMaxMobHealth(boss);
                         double percent_hp = (1.0f * cur_hp / max_hp) * 100;
-                        if ((percent_hp <= 60 && percent_hp >= 30) && !invincible_mob.contains(boss) && !is_jumping.contains(boss)) {
+                        if ((percent_hp <= 60) && !invincible_mob.contains(boss) && !is_jumping.contains(boss)) {
                             new BukkitRunnable() {
 
                                 public void run() {
@@ -205,7 +205,7 @@ public class BossMechanics implements Listener {
                                                             .get(boss.getWorld().getPlayers().size() == 1 ? 0 : boss.getWorld().getPlayers().size())
                                                             .getLocation(), new ItemStack(Material.EMERALD, 1));
                                     i.setMetadata("greedy", new FixedMetadataValue(Main.plugin, ""));
-                                    i.setPickupDelay(1);
+                                    i.setPickupDelay(3);
                                 }
                             }.runTask(Main.plugin);
                             for (Player p : boss.getWorld().getPlayers()) {
@@ -215,7 +215,7 @@ public class BossMechanics implements Listener {
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(Main.plugin, 0, 10 * 10);
+        }.runTaskTimerAsynchronously(Main.plugin, 0, 10 * 20);
         new BukkitRunnable() {
             @Override
             public void run() {
