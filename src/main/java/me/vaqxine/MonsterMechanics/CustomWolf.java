@@ -17,13 +17,14 @@ public class CustomWolf extends EntityWolf {
 
     public CustomWolf(World world) {
         super(world);
-        // TODO Auto-generated constructor stub
+        a(0.6F, 0.8F);
+        getNavigation().a(true);
         clearGoalSelectors();
         setAngry(true);
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, 0.4F));
         this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, EntityHuman.class, 1.0D, true));
-        this.targetSelector.a(1, new PathfinderGoalRandomTargetNonTamed(this, EntityHuman.class, 200, false));
+        // this.targetSelector.a(1, new PathfinderGoalRandomTargetNonTamed(this, EntityHuman.class, 200, false));
     }
 
     @SuppressWarnings("rawtypes")

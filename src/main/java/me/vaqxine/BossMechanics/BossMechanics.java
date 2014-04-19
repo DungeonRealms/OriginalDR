@@ -1,6 +1,5 @@
 package me.vaqxine.BossMechanics;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -206,7 +205,7 @@ public class BossMechanics implements Listener {
                                                             .get(boss.getWorld().getPlayers().size() == 1 ? 0 : boss.getWorld().getPlayers().size())
                                                             .getLocation(), new ItemStack(Material.EMERALD, 1));
                                     i.setMetadata("greedy", new FixedMetadataValue(Main.plugin, ""));
-                                    i.setPickupDelay(1000);
+                                    i.setPickupDelay(1);
                                 }
                             }.runTask(Main.plugin);
                             for (Player p : boss.getWorld().getPlayers()) {

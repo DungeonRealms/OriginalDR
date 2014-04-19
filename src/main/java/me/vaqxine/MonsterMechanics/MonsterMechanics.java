@@ -5742,11 +5742,13 @@ public class MonsterMechanics implements Listener {
 		int mob_t = 0;
 		Entity e = null;
 		if(et == EntityType.WOLF){
+		    //Main.d("SPAWNED A CUSTOM WOLF!");
 		    net.minecraft.server.v1_7_R2.World ws = ((CraftWorld) l.getWorld()).getHandle();
             CustomWolf wolf = new CustomWolf(ws);
-            wolf.teleportTo(l, true);
+            wolf.setLocation(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
             ws.addEntity(wolf);
             //Custom wolf to attack peoples
+           // Main.d("LOCATION:" + wolf.getBukkitEntity().getLocation()); 
             e = wolf.getBukkitEntity();
 		}else{
 		    e = l.getWorld().spawnEntity(l, et);

@@ -1,7 +1,6 @@
 package me.vaqxine.BossMechanics;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
@@ -248,9 +247,9 @@ public class AceronListener implements Listener {
                 int max_hp = MonsterMechanics.getMaxMobHealth(boss);
                 // Stupid Java Arithmetic -_-
                 double percent_hp = (1.0f * cur_hp / max_hp) * 100;
-                if (percent_hp <= 30 && !aceron_wolf.containsKey(boss) && !BossMechanics.is_jumping.contains(boss)
+                if (percent_hp <= 30 && !BossMechanics.is_jumping.contains(boss)
                         && !BossMechanics.invincible_mob.contains(boss) && !spawned_wolf.contains(boss)) {
-                    // They did 30% HP and aceron
+                    // They did 30% HP on aceron
                     Wolf wolf = (Wolf) MonsterMechanics.spawnBossMob(boss.getLocation(), EntityType.WOLF, "", "Diner of Bones");
                     aceron_wolf.put(boss, wolf);
                     spawned_wolf.add(boss);
