@@ -29,7 +29,6 @@ import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.LootMechanics.LootMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
-import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;

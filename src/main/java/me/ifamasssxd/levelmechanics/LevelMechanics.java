@@ -4,7 +4,6 @@ import java.util.Random;
 
 import me.vaqxine.Main;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
-import me.vaqxine.enums.CC;
 import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.entity.Player;

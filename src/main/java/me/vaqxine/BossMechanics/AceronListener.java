@@ -1,6 +1,8 @@
 package me.vaqxine.BossMechanics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -8,9 +10,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import me.vaqxine.Main;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
+import me.vaqxine.enums.CC;
+import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -25,9 +30,11 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+
 public class AceronListener implements Listener {
 
     public ConcurrentHashMap<Entity, Entity> aceron_wolf = new ConcurrentHashMap<Entity, Entity>();
+    public HashSet<Entity> spawned_wolf = new HashSet<Entity>();
     public ConcurrentHashMap<String, Long> players_greedy = new ConcurrentHashMap<String, Long>();
 
     @EventHandler
@@ -147,9 +154,10 @@ public class AceronListener implements Listener {
         if (!(e.getDamager() instanceof Wolf))
             return;
         Entity wolf = e.getDamager();
-        if (e.getDamage() <= 0) {
+        if (e.getDamage() <= 0 || e.isCancelled()) {
             return;
         }
+        Player p = (Player) e.getEntity();
         if (aceron_wolf.containsValue(wolf)) {
             Entity boss = null;
             for (Entry<Entity, Entity> wolves : aceron_wolf.entrySet()) {
@@ -168,17 +176,42 @@ public class AceronListener implements Listener {
                 // Crit dat bitch
                 // 50% crit
                 e.setDamage(e.getDamage() * 1.5);
+                if (PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("debug")) {
+                    p.sendMessage(ChatColor.RED + "          ** WOLF -> CRITICAL STIKE **");
+                    p.playSound(p.getLocation(), Sound.BURP, 1, .3F);
+                }
                 critted = true;
             }
             if (should_i_frenzy <= 20 && !critted) {
                 // Hits are throttled so it doesnt just double damage.
+                if (PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("debug")) {
+                    p.sendMessage(ChatColor.RED + "          ** WOLF -> FRENZIED **");
+                    p.playSound(p.getLocation(), Sound.BURP, 1, .3F);
+                }
                 e.setDamage(e.getDamage() * 2);
             }
             int amount_to_heal = (int) e.getDamage();
             // Heal the boss
+            Main.d("Healed the boss " + boss + " by " + CC.GREEN + amount_to_heal + " OLD HP: " + MonsterMechanics.getMHealth(boss) + " NEW HP: "
+                    + (MonsterMechanics.getMHealth(boss) + amount_to_heal));
             MonsterMechanics.mob_health.put(boss, (MonsterMechanics.getMHealth(boss) + amount_to_heal));
+
             // p.sendMessage(ChatColor.GOLD.toString() + ChatColor.UNDERLINE + "Aceron the Wicked:" + ChatColor.WHITE +
             // " Thank you Diner, their health is much appreciated!") ;
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDamageWithGreed(EntityDamageByEntityEvent e) {
+        if (!(e.getDamager() instanceof Player)) {
+            return;
+
+        }
+        Player p = (Player) e.getDamager();
+        if (players_greedy.containsKey(p.getName())) {
+            e.setCancelled(true);
+            e.setDamage(0);
+            return;
         }
     }
 
@@ -213,15 +246,14 @@ public class AceronListener implements Listener {
                 }
                 int cur_hp = MonsterMechanics.getMHealth(boss);
                 int max_hp = MonsterMechanics.getMaxMobHealth(boss);
-                //Stupid Java Arithmetic -_-
+                // Stupid Java Arithmetic -_-
                 double percent_hp = (1.0f * cur_hp / max_hp) * 100;
-                Main.d("CURRENT HP: " + cur_hp + " MAX: " + max_hp);
-                Main.d(percent_hp);
                 if (percent_hp <= 30 && !aceron_wolf.containsKey(boss) && !BossMechanics.is_jumping.contains(boss)
-                        && !BossMechanics.invincible_mob.contains(boss)) {
+                        && !BossMechanics.invincible_mob.contains(boss) && !spawned_wolf.contains(boss)) {
                     // They did 30% HP and aceron
                     Wolf wolf = (Wolf) MonsterMechanics.spawnBossMob(boss.getLocation(), EntityType.WOLF, "", "Diner of Bones");
                     aceron_wolf.put(boss, wolf);
+                    spawned_wolf.add(boss);
                     wolf.setAngry(true);
                     for (Player p : boss.getWorld().getPlayers()) {
                         p.sendMessage(ChatColor.GOLD.toString() + ChatColor.UNDERLINE + "Aceron the Wicked:" + ChatColor.WHITE + " Dinner is served.");

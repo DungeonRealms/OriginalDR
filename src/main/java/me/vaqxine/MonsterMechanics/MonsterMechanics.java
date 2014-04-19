@@ -66,7 +66,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftSkeleton;
 import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
@@ -5742,7 +5741,16 @@ public class MonsterMechanics implements Listener {
 	public static Entity spawnBossMob(Location l, EntityType et, String meta_data, String custom_name) {
 		int mob_t = 0;
 		Entity e = null;
-		e = l.getWorld().spawnEntity(l, et);
+		if(et == EntityType.WOLF){
+		    net.minecraft.server.v1_7_R2.World ws = ((CraftWorld) l.getWorld()).getHandle();
+            CustomWolf wolf = new CustomWolf(ws);
+            wolf.teleportTo(l, true);
+            ws.addEntity(wolf);
+            //Custom wolf to attack peoples
+            e = wolf.getBukkitEntity();
+		}else{
+		    e = l.getWorld().spawnEntity(l, et);
+		}
 		EntityLiving ent = ((CraftLivingEntity) e).getHandle();
 		double hp_mult = 1D;
 		double dmg_mult = 1D;

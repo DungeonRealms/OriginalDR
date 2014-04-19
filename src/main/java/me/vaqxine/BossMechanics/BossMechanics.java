@@ -184,24 +184,31 @@ public class BossMechanics implements Listener {
                 }
             }
         }.runTaskTimerAsynchronously(Main.plugin, 10L * 20L, 20L);
+
         new BukkitRunnable() {
             public void run() {
                 // This will only be for aceron
-                for (Entity boss : last_jump.keySet()) {
+                for (final Entity boss : last_jump.keySet()) {
                     if (Math.random() >= .5D) {
                         int cur_hp = MonsterMechanics.getMHealth(boss);
                         int max_hp = MonsterMechanics.getMaxMobHealth(boss);
                         double percent_hp = (1.0f * cur_hp / max_hp) * 100;
                         if ((percent_hp <= 60 && percent_hp >= 30) && !invincible_mob.contains(boss) && !is_jumping.contains(boss)) {
-                            Item i = boss
-                                    .getLocation()
-                                    .getWorld()
-                                    .dropItemNaturally(
-                                            boss.getWorld().getPlayers()
-                                                    .get(boss.getWorld().getPlayers().size() == 1 ? 0 : boss.getWorld().getPlayers().size()).getLocation(),
-                                            new ItemStack(Material.EMERALD, 1));
-                            i.setMetadata("greedy", new FixedMetadataValue(Main.plugin, ""));
-                            i.setPickupDelay(1000);
+                            new BukkitRunnable() {
+
+                                public void run() {
+                                    // TODO Auto-generated method stub
+                                    Item i = boss
+                                            .getLocation()
+                                            .getWorld()
+                                            .dropItemNaturally(
+                                                    boss.getWorld().getPlayers()
+                                                            .get(boss.getWorld().getPlayers().size() == 1 ? 0 : boss.getWorld().getPlayers().size())
+                                                            .getLocation(), new ItemStack(Material.EMERALD, 1));
+                                    i.setMetadata("greedy", new FixedMetadataValue(Main.plugin, ""));
+                                    i.setPickupDelay(1000);
+                                }
+                            }.runTask(Main.plugin);
                             for (Player p : boss.getWorld().getPlayers()) {
                                 p.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Aceron the Wicked:" + ChatColor.WHITE + " Taste my riches!");
                             }
@@ -436,7 +443,7 @@ public class BossMechanics implements Listener {
                 }
             }
             if (boss_map.get(ent).equalsIgnoreCase("aceron")) {
-                
+
                 try {
                     ParticleEffect.sendToLocation(ParticleEffect.LAVA, ent.getLocation().add(0, 2, 0), new Random().nextFloat(), new Random().nextFloat(),
                             new Random().nextFloat(), 1F, 150);
@@ -509,12 +516,13 @@ public class BossMechanics implements Listener {
                                     + "Value:" + ChatColor.WHITE.toString() + " " + 500 + " Gems" + "," + ChatColor.GRAY.toString()
                                     + "Exchange at any bank for GEM(s)"));
                 }
-                for(Entity ents : ent.getWorld().getEntities()){
-                    if(ents instanceof Player)continue;
-                    if(ents instanceof Item)continue;
+                for (Entity ents : ent.getWorld().getEntities()) {
+                    if (ents instanceof Player)
+                        continue;
+                    if (ents instanceof Item)
+                        continue;
                     ents.remove();
                 }
-                boss_map.remove(ent);
                 last_jump.remove(ent);
                 invincible_mob.remove(ent);
                 for (Player p : ent.getWorld().getPlayers()) {

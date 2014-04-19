@@ -11,6 +11,7 @@ import net.minecraft.server.v1_7_R2.EntityInsentient;
 import net.minecraft.server.v1_7_R2.EntityIronGolem;
 import net.minecraft.server.v1_7_R2.EntitySpider;
 import net.minecraft.server.v1_7_R2.EntityTypes;
+import net.minecraft.server.v1_7_R2.EntityWolf;
 import net.minecraft.server.v1_7_R2.EntityZombie;
 
 import org.bukkit.entity.EntityType;
@@ -20,7 +21,7 @@ public enum CustomEntityType {
 	
 	ZOMBIE("Zombie", 54, EntityType.ZOMBIE, EntityZombie.class, ZombieArcher.class),
 	IRON_GOLEM("IronGolem", 99, EntityType.IRON_GOLEM, EntityIronGolem.class, Golem.class),
-	SPIDER_MOUNT("Spider", 52, EntityType.SPIDER, EntitySpider.class, MountSpider.class);
+	SPIDER_MOUNT("Spider", 52, EntityType.SPIDER, EntitySpider.class, MountSpider.class), WOLF("Wolf", 95, EntityType.WOLF, EntityWolf.class, CustomWolf.class);
 	
 	private String name;
 	private int id;
