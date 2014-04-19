@@ -1160,6 +1160,27 @@ public class MonsterMechanics implements Listener {
 			if(!(mob_last_hit.containsKey(ent))) {
 				continue;
 			}
+			//Main.d("Size: " + mob_target.keySet().size() + " Last time hit: " + (System.currentTimeMillis() - mob_last_hit.get(ent)));
+			/*if((System.currentTimeMillis() - mob_last_hit.get(ent)) > 500){
+			    String target = mob_target.get(ent);
+                if(Bukkit.getPlayer(target) != null) {
+                    Player pl = Bukkit.getPlayer(target);
+                    if(!pl.getWorld().getName().equalsIgnoreCase(ent.getWorld().getName())) {
+                        continue;
+                    }
+                    //Main.d("MOB SHOULD BE HITTING " + target);
+                    if(ent.getLocation().distance(pl.getLocation()) < 2.5){
+                        //Main.d("DISTANCE: " + ent.getLocation().distance(pl.getLocation()));
+                        if(!DuelMechanics.isDamageDisabled(pl.getLocation())){
+                        pl.damage(1, ent);
+                        ent.teleport(pl.getLocation().add(0, .3, 0));
+                        continue;
+                        }
+                    }
+                    
+                }
+			}*/
+			
 			if((System.currentTimeMillis() - mob_last_hit.get(ent)) > 2 * 1000) {
 				String target = mob_target.get(ent);
 				if(Bukkit.getPlayer(target) != null) {
@@ -1167,6 +1188,7 @@ public class MonsterMechanics implements Listener {
 					if(!pl.getWorld().getName().equalsIgnoreCase(ent.getWorld().getName())) {
 						continue;
 					}
+					
 					double y_diff = Math.abs(pl.getLocation().getY() - ent.getLocation().getY());
 					if(pl.getLocation().getBlock().getType() == Material.LADDER || pl.getLocation().getBlock().getType() == Material.VINE) {
 						continue;
@@ -1189,6 +1211,7 @@ public class MonsterMechanics implements Listener {
 					}
 				}
 			}
+		
 		}
 		
 	}
@@ -4312,17 +4335,15 @@ public class MonsterMechanics implements Listener {
 		
 		if(!mob_last_hit.containsKey(ent)) {
 			mob_last_hit.put(ent, System.currentTimeMillis());
-		} else if(mob_last_hit.containsKey(ent)) {
-			long last_hit = mob_last_hit.get(ent);
-			mob_last_hit.put(ent, System.currentTimeMillis());
-			
-			if((System.currentTimeMillis() - last_hit) < Delay.MELEE.delay) {
-				e.setCancelled(true);
-				e.setDamage(0);
-				return; // A half-second hasn't passed since the mob last hit someone. 1/5th of a second
-			}
-		}
-		
+	    } else if(mob_last_hit.containsKey(ent)) {
+	        if((System.currentTimeMillis() - mob_last_hit.get(ent)) < Delay.MELEE.delay) {
+	            e.setCancelled(true);
+	            e.setDamage(0);
+	            return; // A half-second hasn't passed since the mob last hit someone. 1/5th of a second
+	        }
+	        mob_last_hit.put(ent, System.currentTimeMillis());
+	    }
+
 		// if(e.getDamage() <= 0){return;} // ISSUE?
 		
 		boolean is_elite = false;
@@ -4408,7 +4429,13 @@ public class MonsterMechanics implements Listener {
 		e.setDamage(dmg);
 		
 	}
-	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerTargeted(EntityTargetLivingEntityEvent e){
+	    if(e.isCancelled())return;
+	    if(e.getTarget() instanceof Player){
+	        mob_target.put(e.getEntity(), ((Player)e.getTarget()).getName());
+	    }
+	}
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerDamageMonsterEvent(EntityDamageByEntityEvent e) {
 		if(!(e.getDamager() instanceof Player) && !(e.getDamager() instanceof Projectile)) { return; }
@@ -5743,13 +5770,14 @@ public class MonsterMechanics implements Listener {
 		Entity e = null;
 		if(et == EntityType.WOLF){
 		    //Main.d("SPAWNED A CUSTOM WOLF!");
-		    net.minecraft.server.v1_7_R2.World ws = ((CraftWorld) l.getWorld()).getHandle();
+		   /* net.minecraft.server.v1_7_R2.World ws = ((CraftWorld) l.getWorld()).getHandle();
             CustomWolf wolf = new CustomWolf(ws);
             wolf.setLocation(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
             ws.addEntity(wolf);
             //Custom wolf to attack peoples
            // Main.d("LOCATION:" + wolf.getBukkitEntity().getLocation()); 
-            e = wolf.getBukkitEntity();
+            e = wolf.getBukkitEntity();*/
+		    e = l.getWorld().spawnEntity(l, et);
 		}else{
 		    e = l.getWorld().spawnEntity(l, et);
 		}

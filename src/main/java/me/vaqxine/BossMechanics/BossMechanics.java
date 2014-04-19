@@ -200,10 +200,8 @@ public class BossMechanics implements Listener {
                                     Item i = boss
                                             .getLocation()
                                             .getWorld()
-                                            .dropItemNaturally(
-                                                    boss.getWorld().getPlayers()
-                                                            .get(boss.getWorld().getPlayers().size() == 1 ? 0 : boss.getWorld().getPlayers().size())
-                                                            .getLocation(), new ItemStack(Material.EMERALD, 1));
+                                            .dropItemNaturally(boss.getWorld().getPlayers().get((boss.getWorld().getPlayers().size() - 1)).getLocation(),
+                                                    new ItemStack(Material.EMERALD, 1));
                                     i.setMetadata("greedy", new FixedMetadataValue(Main.plugin, ""));
                                     i.setPickupDelay(3);
                                 }

@@ -190,7 +190,7 @@ public class AceronListener implements Listener {
                 }
                 e.setDamage(e.getDamage() * 2);
             }
-            int amount_to_heal = (int) e.getDamage();
+            int amount_to_heal =  (int)(e.getDamage() * .2D);
             // Heal the boss
             Main.d("Healed the boss " + boss + " by " + CC.GREEN + amount_to_heal + " OLD HP: " + MonsterMechanics.getMHealth(boss) + " NEW HP: "
                     + (MonsterMechanics.getMHealth(boss) + amount_to_heal));
@@ -236,8 +236,12 @@ public class AceronListener implements Listener {
                 if (e.getDamage() <= 0)
                     return;
                 Entity boss = e.getEntity();
+                int cur_hp = MonsterMechanics.getMHealth(boss);
+                int max_hp = MonsterMechanics.getMaxMobHealth(boss);
+                // Stupid Java Arithmetic -_-
+                double percent_hp = (1.0f * cur_hp / max_hp) * 100;
                 int should_i_retreat = new Random().nextInt(100);
-                if (should_i_retreat <= 5 && !BossMechanics.is_jumping.contains(boss)) { // 5% chance of that
+                if (should_i_retreat <= 5 && !BossMechanics.is_jumping.contains(boss) && percent_hp > .5) { // 5% chance of that
                     BossMechanics.boss_saved_location.put(boss, boss.getLocation());
                     List<Entity> ents = new ArrayList<Entity>();
                     int amount_to_spawn = new Random().nextInt(2) + 3;
@@ -253,10 +257,7 @@ public class AceronListener implements Listener {
                     }
                     return;
                 }
-                int cur_hp = MonsterMechanics.getMHealth(boss);
-                int max_hp = MonsterMechanics.getMaxMobHealth(boss);
-                // Stupid Java Arithmetic -_-
-                double percent_hp = (1.0f * cur_hp / max_hp) * 100;
+                
                 if (percent_hp <= 30 && !BossMechanics.is_jumping.contains(boss) && !BossMechanics.invincible_mob.contains(boss)
                         && !spawned_wolf.contains(boss)) {
                     // They did 30% HP on aceron
