@@ -14,6 +14,8 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import me.vaqxine.Main;
 import me.vaqxine.ChatMechanics.ChatMechanics;
@@ -465,6 +467,12 @@ public class GuildMechanics implements Listener {
 			
 			if(step == 1) { // Guild name given, check for illegal types.
 				String guild_name = e.getMessage();
+				Pattern pattern = Pattern.compile("^([A-Za-z]|[0-9])+$");
+				Matcher matcher = pattern.matcher(guild_name);
+				if (!matcher.find()) {
+				    pl.sendMessage(ChatColor.RED + "You guild name can only contain alphanumerical values.");
+				    return;
+				}
 				if(guild_creation_name_check.containsKey(pl.getName())) {
 					// SQL is going.
 					if(guild_creation_name_check.get(pl.getName()) == 0) {
@@ -513,7 +521,12 @@ public class GuildMechanics implements Listener {
 			
 			if(step == 2) { // Guild handle given. [CCG]
 				String guild_handle = e.getMessage();
-				
+				Pattern pattern = Pattern.compile("^([A-Za-z]|[0-9])+$");
+				Matcher matcher = pattern.matcher(guild_handle);
+				if (!matcher.find()) {
+				    pl.sendMessage(ChatColor.RED + "Your guild tag can only contain alphanumerical values. Please try again");
+				    return;
+				}
 				if((guild_creation_name_check.containsKey(pl.getName()))) {
 					if(guild_creation_name_check.get(pl.getName()) == 0) {
 						// Still SQL querying.

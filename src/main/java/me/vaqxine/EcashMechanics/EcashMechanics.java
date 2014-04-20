@@ -837,8 +837,10 @@ public class EcashMechanics implements Listener {
 			// We're sending some global chat w/ a messenger!
 			String msg = e.getMessage();
 			if(msg.contains(".com") || msg.contains(".net") || msg.contains(".org") || msg.contains("http://") || msg.contains("www.")) {
-				pl.sendMessage(ChatColor.RED + "No " + ChatColor.UNDERLINE + "URL's" + ChatColor.RED + " in your global messages please!");
-				return;
+			    if(!pl.isOp()){
+			        pl.sendMessage(ChatColor.RED + "No " + ChatColor.UNDERLINE + "URL's" + ChatColor.RED + " in your global messages please!");
+			        return;
+			    }
 			}
 			
 			if(msg.equalsIgnoreCase("cancel")) {
@@ -1122,7 +1124,10 @@ public class EcashMechanics implements Listener {
 			
 			msg = ChatColor.stripColor(ChatMechanics.censorMessage(msg));
 			// Censor all cuss words.
-			
+			if(containsSymbols(msg)){
+			    pl.sendMessage(ChatColor.RED + "Your message cannot contain symbols. Please type your name again.");
+			    return;
+			}
 			if(msg.length() > 40) {
 				pl.sendMessage(ChatColor.RED + "Your message is " + msg.length() + "/40 characters. Please shorten it.");
 				return;
@@ -1163,7 +1168,12 @@ public class EcashMechanics implements Listener {
 			item_name_change.remove(pl.getName());
 		}
 	}
-	
+	public boolean containsSymbols(String s){
+	    if(s.contains("-") || s.contains("[") || s.contains("]") || s.contains("%") || s.contains("$") || s.contains("#") || s.contains("@") || s.contains("!") || s.contains("^") || s.contains("+") || s.contains("=")){
+	        return true;
+	    }
+	    return false;
+	}
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Player pl = e.getPlayer();

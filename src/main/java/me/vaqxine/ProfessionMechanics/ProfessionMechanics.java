@@ -207,7 +207,7 @@ public class ProfessionMechanics implements Listener {
 	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		instance = this;
-		
+		//checkForLootBuffs();
 		Main.plugin.getCommand("hidefish").setExecutor(new CommandHideFish());
 		Main.plugin.getCommand("prof").setExecutor(new CommandProf());
 		Main.plugin.getCommand("setfish").setExecutor(new CommandSetFish());
@@ -1943,6 +1943,7 @@ public class ProfessionMechanics implements Listener {
 	}
 	
 	public void applySkillEnchant(ItemStack is, String enchant) {
+	    if(!isSkillItem(is))return;
 		List<String> new_lore = new ArrayList<String>();
 		String skill = getSkillType(is);
 		

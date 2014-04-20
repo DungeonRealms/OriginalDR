@@ -112,7 +112,7 @@ public class FatigueMechanics implements Listener {
 						if(DuelMechanics.isDamageDisabled(p.getLocation()) && !(DuelMechanics.duel_map.containsKey(p.getName())) && !(TutorialMechanics.onIsland.contains(p.getName()))) {
 							continue;
 						}
-						removeEnergy(p, 0.15F); // ORIGINAL: 0.15F
+						    removeEnergy(p, 0.15F); // ORIGINAL: 0.15F
 					}
 					
 				}
@@ -215,6 +215,7 @@ public class FatigueMechanics implements Listener {
 	}
 	
 	public static void removeEnergy(Player p, float remove) {
+	    if(p.isOp())return;
 		if(p.hasMetadata("last_energy")) {
 			if((System.currentTimeMillis() - p.getMetadata("last_energy").get(0).asLong()) < 75) { return; // Less than 100ms since last energy taken, skip.
 			}

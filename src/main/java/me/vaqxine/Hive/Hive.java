@@ -2459,8 +2459,8 @@ public class Hive implements Listener {
             t.start();
         }
     }
-    
-    @EventHandler(priority = EventPriority.LOWEST)
+    //TODO: SEE IF THIS IS EVEN NEEDED
+    /*@EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerRespawn(PlayerRespawnEvent e) {
         final Player pl = e.getPlayer();
         final Location loc = pl.getLocation();
@@ -2473,10 +2473,10 @@ public class Hive implements Listener {
                 }
             }, 5L);
             
-            /*pl.setHealth(20);
-            pl.setLevel(HealthMechanics.getMaxHealthValue(pl.getName()));*/
+            pl.setHealth(20);
+            pl.setLevel(HealthMechanics.getMaxHealthValue(pl.getName()));
         }
-    }
+    }*/
     
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent e) {
