@@ -30,12 +30,7 @@ public class CommandL implements CommandExecutor {
 			msg = msg.substring(0, (msg.length() - 1));
 		}
 		
-		if(ChatMechanics.sending_message.contains(p.getName())) {
-			ChatMechanics.sending_message.remove(p.getName());
-			return true;
-		}
 		
-		ChatMechanics.sending_message.add(p.getName());
 		
 		if(ChatMechanics.mute_list.containsKey(p.getName())) {
 			long time_left = ChatMechanics.mute_list.get(p.getName());
@@ -92,12 +87,6 @@ public class CommandL implements CommandExecutor {
 			
 			p.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
 			p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "No one heard you.");
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					ChatMechanics.sending_message.remove(p.getName());
-				}
-			}.runTaskLaterAsynchronously(Main.plugin, 2L);
 		}
 		
 		for(Player pl : to_send) {
@@ -153,12 +142,6 @@ public class CommandL implements CommandExecutor {
 		
 		p.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
 		Main.log.info(ChatColor.stripColor("" + p.getName() + ": " + msg));
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				ChatMechanics.sending_message.remove(p.getName());
-			}
-		}.runTaskLaterAsynchronously(Main.plugin, 2L);
 		return true;
 	}
 	

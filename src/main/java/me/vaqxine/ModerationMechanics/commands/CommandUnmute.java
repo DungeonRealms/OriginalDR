@@ -43,7 +43,6 @@ public class CommandUnmute implements CommandExecutor {
 		
 		ChatMechanics.mute_list.remove(p_name_2unmute);
 		ChatMechanics.setMuteStateSQL(p_name_2unmute);
-		
 		if(p != null) {
 			p.sendMessage(ChatColor.AQUA + "You have " + ChatColor.BOLD + "UNMUTED " + ChatColor.AQUA + p_name_2unmute);
 		} else if(p == null) {

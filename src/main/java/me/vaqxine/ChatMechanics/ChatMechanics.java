@@ -1,10 +1,7 @@
 package me.vaqxine.ChatMechanics;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +9,6 @@ import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.vaqxine.Main;
@@ -29,7 +25,7 @@ import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.PartyMechanics.PartyMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
-import me.vaqxine.config.Config;
+import me.vaqxine.database.ConnectionPool;
 import me.vaqxine.jsonlib.JSONMessage;
 import me.vaqxine.managers.PlayerManager;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
@@ -59,7 +55,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 @SuppressWarnings("deprecation")
 public class ChatMechanics implements Listener {
@@ -67,12 +62,12 @@ public class ChatMechanics implements Listener {
 	
 	public static ConcurrentHashMap<String, Long> mute_list = new ConcurrentHashMap<String, Long>();
 	public static ConcurrentHashMap<String, Long> hologram_chat = new ConcurrentHashMap<String, Long>();
-	public static CopyOnWriteArrayList<String> sending_message = new CopyOnWriteArrayList<String>();
+	//public static CopyOnWriteArrayList<String> sending_message = new CopyOnWriteArrayList<String>();
 	public static List<String> recent_death = new ArrayList<String>();
 	
 	public static int GChat_Delay = 2;
 	
-	public static List<String> bad_words = new ArrayList<String>(Arrays.asList("shit", "fuck", "cunt", "bitch", "whore", "slut", "wank", "asshole", "cock", "dick", "clit", "homo", "fag", "queer", "nigger", "dike", "dyke", "retard", "motherfucker", "vagina", "boob", "pussy", "rape", "gay", "penis", "cunt", "twat", "titty"));
+	public static List<String> bad_words = new ArrayList<String>(Arrays.asList("shit", "fuck", "cunt", "bitch", "whore", "slut", "wank", "asshole", "cock", "dick", "clit", "homo", "fag", "queer", "nigger", "dike", "dyke", "retard", "motherfucker", "vagina", "boob", "pussy", "rape", "gay", "penis", "cunt", "titty"));
 	
 	public static volatile CopyOnWriteArrayList<String> async_mute_update = new CopyOnWriteArrayList<String>();
 	// Controls the LoginProcessThread to getMuteSQL().
@@ -104,9 +99,7 @@ public class ChatMechanics implements Listener {
 							p.sendMessage(ChatColor.GREEN + "Your " + ChatColor.BOLD + "GLOBAL MUTE" + ChatColor.GREEN + " has expired.");
 							p.sendMessage("");
 						}
-					}
-					
-					else if(minutes_left > 0) {
+					}else if(minutes_left > 0) {
 						mute_list.put(p_name, minutes_left);
 					}
 					
@@ -151,30 +144,53 @@ public class ChatMechanics implements Listener {
 		log.info("[ChatMechanics] has been disabled.");
 	}
 	
-	public static void setMuteStateSQL(String p_name) {
+    public static void setMuteStateSQL(String p_name) {
 		long unmute_time = 0;
 		
 		if(mute_list.containsKey(p_name)) {
 			unmute_time = mute_list.get(p_name);
 		}
-		
-		Hive.sql_query.add("INSERT INTO mute_map (pname, unmute)" + " VALUES" + "('" + p_name + "', '" + unmute_time + "') ON DUPLICATE KEY UPDATE unmute = '" + unmute_time + "'");
+		try(PreparedStatement pst = ConnectionPool.getConnection().prepareStatement("UPDATE mute_map SET unmute = ? WHERE pname = ?")){
+		    pst.setLong(1, unmute_time);
+		    pst.setString(2, p_name);
+		    pst.executeUpdate();
+		    pst.close();
+		}catch(Exception e){
+		    e.printStackTrace();
+		}
+		//Hive.sql_query.add("INSERT INTO mute_map (pname, unmute)" + " VALUES" + "('" + p_name + "', '" + unmute_time + "') ON DUPLICATE KEY UPDATE unmute = '" + unmute_time + "'");
 	}
 	
 	public static void getMuteStateSQL(String p_name) {
-		Connection con = null;
+		try(PreparedStatement pst = ConnectionPool.getConnection().prepareStatement("SELECT unmute FROM mute_map WHERE pname = ?")){
+		    pst.setString(1, p_name);
+		    ResultSet rst = pst.executeQuery();
+		    if(!rst.first()){
+		        //Not muted so no mute >.>
+		        mute_list.remove(p_name);
+		        updateFirstMuteMap(p_name);
+		    }else{
+		        mute_list.put(p_name, rst.getLong("unmute"));
+		    }
+		    pst.close();
+		}catch(Exception e){
+		    e.printStackTrace();
+		}
+
+	   /*
+	    Connection con = null;
+	    
 		PreparedStatement pst = null;
 		
 		try {
 			con = DriverManager.getConnection(Config.sql_url, Config.sql_user, Config.sql_password);
 			pst = con.prepareStatement(
-			/* Was the wrong data searching for */
 			"SELECT unmute FROM mute_map WHERE pname = '" + p_name + "'");
 			
 			pst.execute();
 			ResultSet rs = pst.getResultSet();
 			if(!rs.next()) {
-				// mute_list.remove(p_name);
+				mute_list.remove(p_name);
 				return;
 			}
 			long unmute = rs.getLong("unmute");
@@ -195,9 +211,19 @@ public class ChatMechanics implements Listener {
 			} catch(SQLException ex) {
 				log.log(Level.WARNING, ex.getMessage(), ex);
 			}
-		}
+		}*/
 	}
 	
+	
+	public static void updateFirstMuteMap(String p_name){
+	    try(PreparedStatement pre = ConnectionPool.getConnection().prepareStatement("INSERT IGNORE INTO mute_map(pname, unmute) VALUES (?, ?) ON DUPLICATE KEY UPDATE unmute = ?")){
+	        pre.setString(1, p_name);
+            pre.setLong(2, 0);
+            pre.setLong(3, 0);
+	    }catch(Exception e){
+            e.printStackTrace();
+        }
+	}
 	// DEPRECIATED, mute_list's value is now minutes until unmute (time
 	// conversion issues)
 	/*
@@ -246,7 +272,7 @@ public class ChatMechanics implements Listener {
 		String rank = PermissionMechanics.getRank(p.getName());
 		
 		if(p.isOp() || rank.equalsIgnoreCase("GM")) {
-			if(p.getName().equalsIgnoreCase("Vaquxine")) { return ChatColor.DARK_AQUA; }
+			if(p.getName().equalsIgnoreCase("Vaquxine") || Main.isDev(p.getName())) { return ChatColor.DARK_AQUA; }
 			return ChatColor.AQUA;
 		}
 		
@@ -441,25 +467,20 @@ public class ChatMechanics implements Listener {
 	}
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e){
+	    setMuteStateSQL(e.getPlayer().getName());
 	    if(hologram_chat.containsKey(e.getPlayer().getName())){
 	    hologram_chat.remove(e.getPlayer().getName());
 	    }
 	}
 	
 	
-	//@EventHandler
+	@EventHandler
 	// TODO: Make this toggleable.
 	public void onPlayerChatTabCompleteEvent(PlayerChatTabCompleteEvent e) {
 		final Player p = e.getPlayer();
 		String msg = e.getChatMessage();
 		String rank = PermissionMechanics.getRank(p.getName());
-		
-		if(sending_message.contains(p.getName())) {
-			sending_message.remove(p.getName());
-			return;
-		}
-		
-		sending_message.add(p.getName());
+		//sending_message.add(p.getName());
 		p.closeInventory();
 		
 		if(TutorialMechanics.onTutorialIsland(p) && !(p.isOp())) {
@@ -557,12 +578,7 @@ public class ChatMechanics implements Listener {
 		String prefix = getPlayerPrefix(p);
 		log.info(ChatColor.stripColor("" + "<" + "G" + ">" + " " + prefix + p.getName() + ": " + msg));
 		
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				sending_message.remove(p.getName());
-			}
-		}.runTaskLater(Main.plugin, 2L);
+
 		
 	}
 	
@@ -774,7 +790,6 @@ public class ChatMechanics implements Listener {
 			return;
 		}
 		
-		sending_message.add(p.getName());
 		
 		List<Player> to_send = new ArrayList<Player>();
 		List<Player> secret_send = new ArrayList<Player>();
@@ -871,11 +886,6 @@ public class ChatMechanics implements Listener {
 			ChatColor p_color = getPlayerColor(p, p);
 			p.sendMessage(ChatColor.GRAY + "" + p_color + p.getName() + ChatColor.GRAY + " " + raw_msg);
 			log.info(ChatColor.stripColor("EMOTE: " + p.getName() + " " + raw_msg));
-			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() {
-					sending_message.remove(p.getName());
-				}
-			}, 2L);
 			return;
 		}
 
@@ -932,11 +942,6 @@ public class ChatMechanics implements Listener {
 			}
 			p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "No one heard you.");
 			sendHologramChat(p, personal_msg, prefix, p_color);
-			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() {
-					sending_message.remove(p.getName());
-				}
-			}, 2L);
 		}
 
 		for(Player pl : to_send) {
@@ -1015,15 +1020,15 @@ public class ChatMechanics implements Listener {
 	            if(personal_msg.length() < 20){
 	                lines.add(personal_msg);
 	            }
-	            if(personal_msg.length() > 20 && personal_msg.length() < 40){
+	            if(personal_msg.length() >= 20 && personal_msg.length() < 40){
 	                String double_string = personal_msg;
 	                lines.add(double_string.substring(0, personal_msg.length()));
 	            }
-	            if(personal_msg.length() > 40 && personal_msg.length() < 60){
+	            if(personal_msg.length() >= 40 && personal_msg.length() < 60){
 	                String otherString = personal_msg;
 	                lines.add(otherString.substring(40, personal_msg.length()));
 	            }
-	            if(personal_msg.length() > 60 && personal_msg.length() < 80){
+	            if(personal_msg.length() >= 60 && personal_msg.length() <= 80){
 	                String otherString = personal_msg;
 	                lines.add(otherString.substring(40, personal_msg.length()));
 	            }

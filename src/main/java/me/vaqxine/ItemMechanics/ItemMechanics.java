@@ -2876,11 +2876,11 @@ public class ItemMechanics implements Listener {
                 } else if (p_tier == 2) {
                     to_give = Math.random() >= .5F ? EnchantMechanics.t2_armor_scroll : EnchantMechanics.t2_wep_scroll;
                 } else if (p_tier == 3) {
-                    to_give = Math.random() >= .5F ? EnchantMechanics.t2_armor_scroll : EnchantMechanics.t2_wep_scroll;
+                    to_give = Math.random() >= .5F ? EnchantMechanics.t3_armor_scroll : EnchantMechanics.t3_wep_scroll;
                 } else if (p_tier == 4) {
-                    to_give = Math.random() >= .5F ? EnchantMechanics.t2_armor_scroll : EnchantMechanics.t2_wep_scroll;
+                    to_give = Math.random() >= .5F ? EnchantMechanics.t4_armor_scroll : EnchantMechanics.t4_wep_scroll;
                 } else if (p_tier == 5) {
-                    to_give = Math.random() >= .5F ? EnchantMechanics.t2_armor_scroll : EnchantMechanics.t2_wep_scroll;
+                    to_give = Math.random() >= .5F ? EnchantMechanics.t5_armor_scroll : EnchantMechanics.t5_wep_scroll;
                 } else {
                     to_give = orb_of_flight;
                 }
