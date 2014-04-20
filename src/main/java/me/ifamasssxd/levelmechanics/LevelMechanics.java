@@ -24,7 +24,7 @@ public class LevelMechanics implements Listener {
         new PlayerLevel(e.getName(), false);
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDeathEvent(EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Player)
             return;
@@ -39,12 +39,10 @@ public class LevelMechanics implements Listener {
             Player killer = (Player) e.getDamager();
             int level = getPlayerLevel(killer);
             int xp = mob_level * 15 + new Random().nextInt(50) + 5;
-            if ((level + 3) < mob_level) {
+            if ((level + 5) < mob_level) {
                 // No XP
                 xp = 0;
-                return;
             }
-            // EX Tier 5 -> 500XP
 
             double multiplier = 1D;
             if (level > mob_level) {
@@ -56,6 +54,21 @@ public class LevelMechanics implements Listener {
             addXP(killer, xp);
         }
 
+    }
+
+    public static int getLevelToUse(int tier) {
+        if (tier == 1) {
+            return 1;
+        } else if (tier == 2) {
+            return 20;
+        } else if (tier == 3) {
+            return 40;
+        } else if (tier == 4) {
+            return 60;
+        } else if (tier == 5) {
+            return 80;
+        }
+        return 1;
     }
 
     @EventHandler
@@ -80,6 +93,22 @@ public class LevelMechanics implements Listener {
             return true;
         }
         return false;
+    }
+
+    public static int getPlayerTier(Player p) {
+        int level = getPlayerLevel(p);
+        if (level < 20) {
+            return 1;
+        } else if (level >= 20 && level < 40) {
+            return 2;
+        } else if (level >= 40 && level < 60) {
+            return 3;
+        } else if (level >= 60 && level < 80) {
+            return 4;
+        } else if (level >= 80) {
+            return 5;
+        }
+        return 1;
     }
 
     public static PlayerLevel getPlayerData(Player p) {

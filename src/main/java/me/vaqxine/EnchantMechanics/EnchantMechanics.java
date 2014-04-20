@@ -196,8 +196,8 @@ public class EnchantMechanics implements Listener {
 			if(!(is.hasItemMeta())) { return 0; }
 			if(!(is.getItemMeta().hasDisplayName())) { return 0; }
 			String name = ChatColor.stripColor(is.getItemMeta().getDisplayName());
-			if(name.startsWith("[")) {
-				int enchant_count = Integer.parseInt(name.substring(name.indexOf("+") + 1, name.lastIndexOf("]")));
+			if(name.startsWith("[+") && name.contains("]")) {
+				int enchant_count = Integer.parseInt(name.split("[+")[1].split("]")[0]);
 				return enchant_count;
 			}
 		} catch(Exception e) {
@@ -212,7 +212,7 @@ public class EnchantMechanics implements Listener {
 	
 	public ItemStack enchantWeapon(ItemStack wep, int enchant_level) {
 		String old_name = wep.getItemMeta().getDisplayName();
-		if(old_name.contains("]")) {
+		if(old_name.contains("[+")) {
 			// It was enchanted before, so we need to trim.
 			old_name = old_name.substring(old_name.indexOf("]") + 1, old_name.length());
 		}

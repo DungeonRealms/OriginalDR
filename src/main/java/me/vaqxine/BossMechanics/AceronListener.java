@@ -247,7 +247,7 @@ public class AceronListener implements Listener {
                     int amount_to_spawn = new Random().nextInt(2) + 3;
                     for (int i = 0; i < amount_to_spawn; i++) {
                         ents.add(MonsterMechanics.spawnTierMob(boss.getLocation(), Math.random() >= .5D ? EntityType.SKELETON : EntityType.ZOMBIE, 4, -1,
-                                boss.getLocation(), false, "", "Greedy Slaves", true));
+                                boss.getLocation(), false, "", "Greedy Slaves", true, 3));
                     }
                     BossMechanics.aceron_minions.put(boss, ents);
                     BossMechanics.invincible_mob.add(boss);

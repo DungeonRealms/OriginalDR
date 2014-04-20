@@ -1,5 +1,7 @@
 package me.vaqxine.MonsterMechanics.commands;
 
+import java.util.Random;
+
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 
 import org.bukkit.ChatColor;
@@ -48,7 +50,7 @@ public class CommandMon implements CommandExecutor {
 			return true;
 		}
 		
-		MonsterMechanics.spawnTierMob(l, EntityType.SKELETON, tier, -1, p.getLocation(), false, "", "", true);
+		MonsterMechanics.spawnTierMob(l, EntityType.SKELETON, tier, -1, p.getLocation(), false, "", "", true, new Random().nextInt(3) + 1);
 		return true;
 	}
 	

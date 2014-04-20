@@ -1,5 +1,6 @@
 package me.vaqxine.LootMechanics.commands;
 
+import me.vaqxine.Main;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.LootMechanics.LootMechanics;
 
@@ -11,6 +12,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class CommandHideLoot implements CommandExecutor {
 	
@@ -37,7 +39,13 @@ public class CommandHideLoot implements CommandExecutor {
 				for(k = -radius; k <= radius; k++) {
 					loc = w.getBlockAt(x + i, y + j, z + k).getLocation();
 					if(LootMechanics.loot_spawns.containsKey(loc) || InstanceMechanics.instance_loot.get(loc.getWorld().getName()).containsKey(loc)) {
-						loc.getBlock().setType(Material.AIR);
+					    final Location tem_loc = loc;
+					    new BukkitRunnable() {
+                            public void run() {
+                                tem_loc.getBlock().setType(Material.AIR);
+                            }
+                        }.runTask(Main.plugin);
+						
 					}
 				}
 			}

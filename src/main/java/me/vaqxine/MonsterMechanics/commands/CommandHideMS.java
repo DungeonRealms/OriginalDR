@@ -39,19 +39,20 @@ public class CommandHideMS implements CommandExecutor {
 		int x = (int) loc.getX();
 		int y = (int) loc.getY();
 		int z = (int) loc.getZ();
-		
+		int count = 0;
 		for(i = -radius; i <= radius; i++) {
 			for(j = -radius; j <= radius; j++) {
 				for(k = -radius; k <= radius; k++) {
 					loc = w.getBlockAt(x + i, y + j, z + k).getLocation();
 					if(MonsterMechanics.mob_spawns.containsKey(loc)) {
 						loc.getBlock().setType(Material.AIR);
+						count++;
 					}
 				}
 			}
 		}
 		
-		p.sendMessage(ChatColor.YELLOW + "Hiding mob spawners in a " + radius + " block radius...");
+		p.sendMessage(ChatColor.YELLOW + "Hiding " + count + " mob spawners in a " + radius + " block radius...");
 		return true;
 	}
 	

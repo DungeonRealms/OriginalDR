@@ -19,7 +19,7 @@ public class CommandMonSpawn implements CommandExecutor {
 		if(sender instanceof BlockCommandSender) {
 			BlockCommandSender cb = (BlockCommandSender) sender;
 			Location loc = cb.getBlock().getLocation().add(0, 2, 0);
-			if(args.length != 5) { return true; }
+			if(args.length != 6) { return true; }
 			
 			String mob_type = args[0];
 			int tier = Integer.parseInt(args[1]);
@@ -152,8 +152,13 @@ public class CommandMonSpawn implements CommandExecutor {
 				et = EntityType.ZOMBIE;
 				// Default to zombie if something went wrong.
 			}
-			
-			MonsterMechanics.spawnTierMob(loc, et, tier, -1, loc, elite, meta_data, custom_name, true);
+			int level_tier = 1;
+			try{
+			    level_tier = Integer.parseInt(args[5]);
+			}catch(Exception e){
+			    level_tier = 1;
+			}
+			MonsterMechanics.spawnTierMob(loc, et, tier, -1, loc, elite, meta_data, custom_name, true, level_tier);
 		}
 		
 		if(sender instanceof Player) {
@@ -161,13 +166,14 @@ public class CommandMonSpawn implements CommandExecutor {
 			
 			if(!(p.isOp())) { return true; }
 			
-			if(args.length != 5) {
-				p.sendMessage("/monspawn <mob_type> <tier> <elite> (meta_data) (custom_name)");
+			if(args.length != 6) {
+				p.sendMessage("/monspawn <mob_type> <tier> <elite> (meta_data) (custom_name) (level_tier)");
 				p.sendMessage("EX: " + ChatColor.GRAY + "/monspawn SKELETON 2 false null null");
 				p.sendMessage(ChatColor.YELLOW + "Mob Types: " + ChatColor.WHITE + "monk | enderman | witch | silverfish | blaze | Magmacube | Daemon | Imp | Acolyte | Lizardman | Naga | Tripoli1 | Ocelot | Skeleton | Skeleton2 | Zombie | Golem | Goblin | Bandit | Spider1 | Spider2 | Troll1 | Cow | Bat | Ocelot | Wolf | Pig | Chicken | Sheep | Mooshroom");
 				
 				p.sendMessage(ChatColor.RED + "<elite> must be either 'true' or 'false'");
 				p.sendMessage(ChatColor.GRAY + "(meta_data) and (custom_name) are optional, do not use meta_data unless you talk to Vaquxine, custom_name cannot contain spaces. Use 'null' if you do not want to set a value for these two options.");
+				p.sendMessage(ChatColor.RED + "(level_tier) must be a number between 1 - 4 and will determine the level tier of the mob. EX: (level_tier 1) with a mob tier of 3 will make the mobs level 40 - 44");
 				return true;
 			}
 			
@@ -179,6 +185,7 @@ public class CommandMonSpawn implements CommandExecutor {
 			
 			String mob_type = args[0];
 			int tier = Integer.parseInt(args[1]);
+			int level_tier = Integer.parseInt(args[5]);
 			boolean elite = false;
 			if(args[2].equalsIgnoreCase("true")) {
 				elite = true;
@@ -309,7 +316,7 @@ public class CommandMonSpawn implements CommandExecutor {
 				// Default to zombie if something went wrong.
 			}
 			
-			MonsterMechanics.spawnTierMob(l, et, tier, -1, l, elite, meta_data, custom_name, true);
+			MonsterMechanics.spawnTierMob(l, et, tier, -1, l, elite, meta_data, custom_name, true, level_tier);
 		}
 		return true;
 	}

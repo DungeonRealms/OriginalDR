@@ -3178,7 +3178,7 @@ public class RealmMechanics implements Listener {
 			if(e.isShiftClick()) {
 				is = e.getCurrentItem();
 				if(e.getRawSlot() >= top.getSize()) {
-					if(!(isItemTradeable(is)) && !(is.getType() == Material.PAPER)) {
+					if(!(isItemTradeable(is)) && !(is.getType() == Material.PAPER) || ItemMechanics.isSoulbound(is)) {
 						e.setCancelled(true);
 						p.updateInventory();
 						p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " perform this action with an " + ChatColor.ITALIC + "untradeable" + ChatColor.RED + " item.");
@@ -3188,7 +3188,7 @@ public class RealmMechanics implements Listener {
 			} else if(!(e.isShiftClick())) {
 				is = e.getCursor();
 				if(e.getRawSlot() < top.getSize()) {
-					if(!(isItemTradeable(is)) && !(is.getType() == Material.PAPER)) {
+					if(!(isItemTradeable(is)) && !(is.getType() == Material.PAPER) || ItemMechanics.isSoulbound(is)) {
 						e.setCancelled(true);
 						p.updateInventory();
 						p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " perform this action with an " + ChatColor.ITALIC + "untradeable" + ChatColor.RED + " item.");
@@ -3231,7 +3231,16 @@ public class RealmMechanics implements Listener {
 		//Add a 5 second delay
 		dropped_item_timer.put(e.getItemDrop(), System.currentTimeMillis() + 5000);
 	}
-	
+	@EventHandler
+	public void onPlayerLeaveClearDrops(PlayerQuitEvent e){
+	    if(dropped_item_owner.containsValue(e.getPlayer().getName())){
+	        for(Entry<Item, String> entries : dropped_item_owner.entrySet()){
+	            if(entries.getValue().equalsIgnoreCase(e.getPlayer().getName())){
+	                
+	            }
+	        }
+	    }
+	}
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerPickup(PlayerPickupItemEvent event) {
 		Player p = event.getPlayer();

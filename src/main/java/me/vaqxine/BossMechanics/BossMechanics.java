@@ -200,8 +200,11 @@ public class BossMechanics implements Listener {
                                     Item i = boss
                                             .getLocation()
                                             .getWorld()
-                                            .dropItemNaturally(boss.getWorld().getPlayers().get((boss.getWorld().getPlayers().size() - 1)).getLocation(),
-                                                    new ItemStack(Material.EMERALD, 1));
+                                            .dropItemNaturally(
+                                                    boss.getWorld()
+                                                            .getPlayers()
+                                                            .get(boss.getWorld().getPlayers().size() == 1 ? 0 : new Random().nextInt(boss.getWorld()
+                                                                    .getPlayers().size() - 1)).getLocation(), new ItemStack(Material.EMERALD, 1));
                                     i.setMetadata("greedy", new FixedMetadataValue(Main.plugin, ""));
                                     i.setPickupDelay(3);
                                 }
@@ -259,7 +262,7 @@ public class BossMechanics implements Listener {
                             loc.getBlock().setType(Material.FIRE);
                             // Chance of spawning some shit.
                             if (new Random().nextInt(20) == 0) {
-                                Entity add = MonsterMechanics.spawnTierMob(loc, EntityType.MAGMA_CUBE, 3, -1, loc, false, "", "Spawn of Inferno", true);
+                                Entity add = MonsterMechanics.spawnTierMob(loc, EntityType.MAGMA_CUBE, 3, -1, loc, false, "", "Spawn of Inferno", true, 4);
                                 add.setFireTicks(Integer.MAX_VALUE);
                             }
                         }

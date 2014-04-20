@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.text.Utilities;
 
 import me.vaqxine.Main;
+import me.ifamasssxd.levelmechanics.LevelMechanics;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
@@ -23,7 +24,8 @@ import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.ItemMechanics.commands.CommandAddWeapon;
-import me.vaqxine.ModerationMechanics.ModerationMechanics;
+import me.vaqxine.MerchantMechanics.MerchantMechanics;
+import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MonsterMechanics.Hologram;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
@@ -184,8 +186,7 @@ public class ItemMechanics implements Listener {
             + ChatColor.RED.toString() + " Active Orb of Peace");
 
     public static ItemStack easter_egg = ItemMechanics.signNewCustomItem(Material.EGG, (short) 1, ChatColor.LIGHT_PURPLE.toString() + "" + "Easter Egg",
-            ChatColor.GRAY.toString() + "Instantly Heals " + ChatColor.UNDERLINE + "ALL" + ChatColor.GRAY.toString() + " health" + "," + ChatColor.LIGHT_PURPLE
-                    + "Rare");
+            ChatColor.GRAY.toString() + "Gives you a random item!" + "," + ChatColor.LIGHT_PURPLE + "Rare");
 
     public static ItemStack t1_arrow = ItemMechanics.signNewCustomItem(Material.ARROW, (short) 1, ChatColor.WHITE.toString() + "" + "Bent Arrow",
             ChatColor.GRAY.toString() + "Increase arrow damage by 5%");
@@ -2102,44 +2103,82 @@ public class ItemMechanics implements Listener {
         }
         return false;
     }
-    
-    public static boolean isAxe(ItemStack is){
+
+    public static boolean isHelmet(ItemStack is) {
         Material m = is.getType();
-        if(m == Material.WOOD_AXE || m == Material.GOLD_AXE || m == Material.STONE_AXE  || m == Material.IRON_AXE  || m == Material.DIAMOND_AXE ){
+        if (m == Material.LEATHER_HELMET || m == Material.GOLD_HELMET || m == Material.DIAMOND_HELMET || m == Material.CHAINMAIL_HELMET
+                || m == Material.IRON_HELMET) {
             return true;
         }
         return false;
     }
-    
-    public static boolean isSword(ItemStack is){
+
+    public static boolean isChestplate(ItemStack is) {
         Material m = is.getType();
-        if(m == Material.WOOD_SWORD || m == Material.GOLD_SWORD || m == Material.STONE_SWORD  || m == Material.IRON_SWORD  || m == Material.DIAMOND_SWORD ){
+        if (m == Material.LEATHER_CHESTPLATE || m == Material.GOLD_CHESTPLATE || m == Material.DIAMOND_CHESTPLATE || m == Material.CHAINMAIL_CHESTPLATE
+                || m == Material.IRON_CHESTPLATE) {
             return true;
         }
         return false;
     }
-    
-    public static boolean isPolearm(ItemStack is){
+
+    public static boolean isLeggings(ItemStack is) {
         Material m = is.getType();
-        if(m == Material.WOOD_SPADE || m == Material.GOLD_SPADE || m == Material.STONE_SPADE  || m == Material.IRON_SPADE  || m == Material.DIAMOND_SPADE ){
+        if (m == Material.LEATHER_LEGGINGS || m == Material.GOLD_LEGGINGS || m == Material.DIAMOND_LEGGINGS || m == Material.CHAINMAIL_LEGGINGS
+                || m == Material.IRON_LEGGINGS) {
             return true;
         }
         return false;
     }
-    public static boolean isStaff(ItemStack is){
+
+    public static boolean isBoots(ItemStack is) {
         Material m = is.getType();
-        if(m == Material.WOOD_HOE || m == Material.GOLD_HOE || m == Material.STONE_HOE  || m == Material.IRON_HOE  || m == Material.DIAMOND_HOE ){
+        if (m == Material.LEATHER_BOOTS || m == Material.GOLD_BOOTS || m == Material.DIAMOND_BOOTS || m == Material.CHAINMAIL_BOOTS || m == Material.IRON_BOOTS) {
             return true;
         }
         return false;
     }
-    public static boolean isBow(ItemStack is){
+
+    public static boolean isAxe(ItemStack is) {
         Material m = is.getType();
-        if(m == Material.BOW){
+        if (m == Material.WOOD_AXE || m == Material.GOLD_AXE || m == Material.STONE_AXE || m == Material.IRON_AXE || m == Material.DIAMOND_AXE) {
             return true;
         }
         return false;
     }
+
+    public static boolean isSword(ItemStack is) {
+        Material m = is.getType();
+        if (m == Material.WOOD_SWORD || m == Material.GOLD_SWORD || m == Material.STONE_SWORD || m == Material.IRON_SWORD || m == Material.DIAMOND_SWORD) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isPolearm(ItemStack is) {
+        Material m = is.getType();
+        if (m == Material.WOOD_SPADE || m == Material.GOLD_SPADE || m == Material.STONE_SPADE || m == Material.IRON_SPADE || m == Material.DIAMOND_SPADE) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isStaff(ItemStack is) {
+        Material m = is.getType();
+        if (m == Material.WOOD_HOE || m == Material.GOLD_HOE || m == Material.STONE_HOE || m == Material.IRON_HOE || m == Material.DIAMOND_HOE) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isBow(ItemStack is) {
+        Material m = is.getType();
+        if (m == Material.BOW) {
+            return true;
+        }
+        return false;
+    }
+
     public static boolean isWeapon(ItemStack i) {
         if (getDamageData(i).equalsIgnoreCase("no")) {
             return false;
@@ -2826,16 +2865,82 @@ public class ItemMechanics implements Listener {
             } else if (pl.getItemInHand().getAmount() == 1) {
                 pl.setItemInHand(new ItemStack(Material.AIR));
             }
-
-            pl.kickPlayer("Illegal Action - Account Flagged!");
-            long unban_date = (System.currentTimeMillis() + (1000 * (72 * 3600)));
-            String reason = "[AUTO] Illegal Item";
-            ModerationMechanics.BanPlayer(pl.getName(), unban_date, reason, "Console", false);
+            int should_i_drop_whiteScroll = new Random().nextInt(1000);
+            int should_i_drop_scroll = new Random().nextInt(100);
+            int should_i_give_orb = new Random().nextInt(100);
+            if (should_i_drop_scroll >= 10) {// 10%
+                int p_tier = LevelMechanics.getPlayerTier(pl);
+                ItemStack to_give = null;
+                if (p_tier == 1) {
+                    to_give = Math.random() >= .5F ? EnchantMechanics.t1_armor_scroll : EnchantMechanics.t1_wep_scroll;
+                } else if (p_tier == 2) {
+                    to_give = Math.random() >= .5F ? EnchantMechanics.t2_armor_scroll : EnchantMechanics.t2_wep_scroll;
+                } else if (p_tier == 3) {
+                    to_give = Math.random() >= .5F ? EnchantMechanics.t2_armor_scroll : EnchantMechanics.t2_wep_scroll;
+                } else if (p_tier == 4) {
+                    to_give = Math.random() >= .5F ? EnchantMechanics.t2_armor_scroll : EnchantMechanics.t2_wep_scroll;
+                } else if (p_tier == 5) {
+                    to_give = Math.random() >= .5F ? EnchantMechanics.t2_armor_scroll : EnchantMechanics.t2_wep_scroll;
+                } else {
+                    to_give = orb_of_flight;
+                }
+                givePlayerItem(pl, to_give);
+                pl.sendMessage(ChatColor.RED + "You crack open the egg and find...");
+                pl.sendMessage(ChatColor.GOLD + "A " + ChatColor.RESET + to_give.getItemMeta().getDisplayName());
+                return;
+            }
+            if (should_i_drop_whiteScroll == 1) {
+                int p_tier = LevelMechanics.getPlayerTier(pl);
+                ItemStack to_give = null;
+                if (p_tier == 1) {
+                    to_give = EnchantMechanics.t1_white_scroll;
+                } else if (p_tier == 2) {
+                    to_give = EnchantMechanics.t2_white_scroll;
+                } else if (p_tier == 3) {
+                    to_give = EnchantMechanics.t3_white_scroll;
+                } else if (p_tier == 4) {
+                    to_give = EnchantMechanics.t4_white_scroll;
+                } else if (p_tier == 5) {
+                    to_give = EnchantMechanics.t5_white_scroll;
+                } else {
+                    to_give = orb_of_flight;
+                }
+                givePlayerItem(pl, to_give);
+                pl.sendMessage(ChatColor.RED + "You crack open the egg and find...");
+                pl.sendMessage(ChatColor.GOLD + "A " + ChatColor.RESET + to_give.getItemMeta().getDisplayName());
+                pl.playSound(pl.getLocation(), Sound.EXPLODE, 1, 1.3F);
+                return;
+            }
+            if (should_i_give_orb == 1) {
+                ItemStack to_give = MerchantMechanics.orb_of_alteration;
+                givePlayerItem(pl, to_give);
+                pl.sendMessage(ChatColor.RED + "You crack open the egg and find...");
+                pl.sendMessage(ChatColor.GOLD + "A " + ChatColor.RESET + to_give.getItemMeta().getDisplayName());
+                pl.playSound(pl.getLocation(), Sound.EXPLODE, 1, 1.3F);
+                return;
+            }
+            // They got none of the other stuff so give them some gems.
+            int amount_of_gems = new Random().nextInt(500) + 1000;
+            ItemStack gem_note = MoneyMechanics.signBankNote(new ItemStack(Material.PAPER, 1), ChatColor.GREEN.toString() + "Bank Note",
+                    ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "Value:" + ChatColor.WHITE.toString() + " " + amount_of_gems + " Gems" + ","
+                            + ChatColor.GRAY.toString() + "Exchange at any bank for GEM(s)");
+            givePlayerItem(pl, gem_note);
+            pl.sendMessage(ChatColor.RED + "You crack open the egg and find...");
+            pl.sendMessage(ChatColor.GOLD.toString() + amount_of_gems + " gems!");
+            pl.playSound(pl.getLocation(), Sound.EXPLODE, 1, 1.3F);
             /*
-             * pl.setLevel(HealthMechanics.getMaxHealthValue(pl.getName())); pl.setHealth(20); pl.getWorld().spawnParticle(pl.getLocation().add(0, 2, 0),
-             * Particle.HEART, 0.35F, 10); pl.playSound(pl.getLocation(), Sound.EAT, 1F, 1F); pl.playSound(pl.getLocation(), Sound.LEVEL_UP, 1F, 1F);
-             * pl.updateInventory();
+             * pl.kickPlayer("Illegal Action - Account Flagged!"); long unban_date = (System.currentTimeMillis() + (1000 * (72 * 3600))); String reason =
+             * "[AUTO] Illegal Item"; ModerationMechanics.BanPlayer(pl.getName(), unban_date, reason, "Console", false);
              */
+
+        }
+    }
+
+    public void givePlayerItem(Player p, ItemStack is) {
+        if (p.getInventory().firstEmpty() == -1) {
+            p.getWorld().dropItem(p.getLocation(), is);
+        } else {
+            p.getInventory().addItem(is);
         }
     }
 
@@ -3477,8 +3582,8 @@ public class ItemMechanics implements Listener {
                 }
             }
 
-            if(PlayerManager.getPlayerModel(p).getToggleList() != null){
-            	if(PlayerManager.getPlayerModel(p).getToggleList().contains("debug") && e.getDamage() > 0){
+            if (PlayerManager.getPlayerModel(p).getToggleList() != null) {
+                if (PlayerManager.getPlayerModel(p).getToggleList().contains("debug") && e.getDamage() > 0) {
                     // p.sendMessage(ChatColor.GRAY + "DEBUG: " + damage_to_reduce + " DMG (original: " + damage + ")"); -50HP [-5%A -> -25DMG]
                     p.sendMessage(ChatColor.RED + "        " + ChatColor.BOLD + "-" + ChatColor.RED + (int) e.getDamage() + ChatColor.RED + ChatColor.BOLD
                             + "HP" + ChatColor.GRAY + " [-" + calculateArmorVal(p) + "%A -> -" + damage_to_reduce + ChatColor.BOLD + "DMG" + ChatColor.GRAY
@@ -3515,11 +3620,13 @@ public class ItemMechanics implements Listener {
             if (is == null || is.getType() != Material.ARROW) {
                 continue;
             }
-            if(is.getItemMeta() != null && is.getItemMeta().getLore() != null){
-            	for(String x : is.getItemMeta().getLore()){
-            		if(x.contains("page")) continue outer;
-            		if(x.contains("Page")) continue outer;
-            	}
+            if (is.getItemMeta() != null && is.getItemMeta().getLore() != null) {
+                for (String x : is.getItemMeta().getLore()) {
+                    if (x.contains("page"))
+                        continue outer;
+                    if (x.contains("Page"))
+                        continue outer;
+                }
             }
             if (inv.getSize() >= 35 && inv.getItem(35) != null && inv.getItem(35) == is) {
                 if (!is.hasItemMeta()) {
@@ -3711,9 +3818,11 @@ public class ItemMechanics implements Listener {
         Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
             public void run() {
                 Hologram hg = new Hologram(Main.plugin, ChatColor.RED.toString() + (int) dmg + ChatColor.RED + ChatColor.BOLD + " DMG");
-                boolean toggled = (PlayerManager.getPlayerModel(p_attacker).getToggleList() != null && PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("indicator"));
+                boolean toggled = (PlayerManager.getPlayerModel(p_attacker).getToggleList() != null && PlayerManager.getPlayerModel(p_attacker).getToggleList()
+                        .contains("indicator"));
                 if (f_is_player == true) {
-                	if(PlayerManager.getPlayerModel(p_attacker).getToggleList() != null && PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")){
+                    if (PlayerManager.getPlayerModel(p_attacker).getToggleList() != null
+                            && PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")) {
                         p_attacker.sendMessage(ChatColor.RED + "        " + (int) dmg + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> "
                                 + ((Player) le).getName());
                     }
@@ -3722,7 +3831,8 @@ public class ItemMechanics implements Listener {
                     }
                 }
                 if (f_is_player == false) {
-                	if(PlayerManager.getPlayerModel(p_attacker).getToggleList() != null && PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")){
+                    if (PlayerManager.getPlayerModel(p_attacker).getToggleList() != null
+                            && PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")) {
                         String mob_name = MonsterMechanics.getMobType(ent, false);
                         p_attacker.sendMessage(ChatColor.RED + "        " + (int) dmg + ChatColor.BOLD + " DMG" + ChatColor.RED + " -> " + mob_name + " ["
                                 + ((int) MonsterMechanics.getMHealth(ent)) + "HP]");
@@ -3736,10 +3846,11 @@ public class ItemMechanics implements Listener {
             }
         }, 1L);
     }
-    public static ItemStack makeSoulBound(ItemStack is){
+
+    public static ItemStack makeSoulBound(ItemStack is) {
         ItemMeta im = is.getItemMeta();
         List<String> lore = new ArrayList<String>();
-        if(im.hasLore()){
+        if (im.hasLore()) {
             lore = im.getLore();
         }
         lore.add(ChatColor.DARK_RED.toString() + ChatColor.ITALIC.toString() + "Soulbound");
@@ -3747,17 +3858,18 @@ public class ItemMechanics implements Listener {
         is.setItemMeta(im);
         return is;
     }
-    
-    public static boolean isSoulbound(ItemStack is){
-        if(is.hasItemMeta() && is.getItemMeta().hasLore()){
-            for(String s : is.getItemMeta().getLore()){
-                if(ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("soulbound")){
+
+    public static boolean isSoulbound(ItemStack is) {
+        if (is.hasItemMeta() && is.getItemMeta().hasLore()) {
+            for (String s : is.getItemMeta().getLore()) {
+                if (ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("soulbound")) {
                     return true;
                 }
             }
         }
         return false;
     }
+
     // @EventHandler(priority = EventPriority.HIGHEST)
     public static void ArrowDebugListener(final EntityDamageByEntityEvent e) {
         if (!(e.getDamager().getType() == EntityType.ARROW)) {
@@ -3827,7 +3939,7 @@ public class ItemMechanics implements Listener {
             }
         }
         final double dmg_d = dmg;
-        if(PlayerManager.getPlayerModel(p).getToggleList().contains("debug")){
+        if (PlayerManager.getPlayerModel(p).getToggleList().contains("debug")) {
             final boolean f_is_player = is_player;
             Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                 public void run() {
@@ -3886,7 +3998,7 @@ public class ItemMechanics implements Listener {
 
         final double dmg = e.getDamage();
 
-        if(PlayerManager.getPlayerModel(p_attacker).getToggleList() != null && PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")) {
+        if (PlayerManager.getPlayerModel(p_attacker).getToggleList() != null && PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")) {
             final boolean f_is_player = is_player;
             Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                 public void run() {
@@ -3950,7 +4062,7 @@ public class ItemMechanics implements Listener {
             }
         }
 
-        if(PlayerManager.getPlayerModel(p).getToggleList().contains("debug")){
+        if (PlayerManager.getPlayerModel(p).getToggleList().contains("debug")) {
             final boolean f_is_player = is_player;
             Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                 public void run() {
@@ -4232,7 +4344,7 @@ public class ItemMechanics implements Listener {
                         .sendPacketNearby(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), 24,
                                 ((CraftWorld) p.getWorld()).getHandle().dimension, particles);
 
-                if(PlayerManager.getPlayerModel(p).getToggleList().contains("debug")){
+                if (PlayerManager.getPlayerModel(p).getToggleList().contains("debug")) {
                     p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP"
                             + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p.getName())) + "/" + (int) getMaxHP(p) + "HP]");
                 }
@@ -4463,7 +4575,7 @@ public class ItemMechanics implements Listener {
             }
 
             if (!(DuelMechanics.duel_map.containsKey(p_attacker.getName())) && PlayerManager.getPlayerModel(p_attacker).getToggleList() != null) {
-            	if(PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("pvp")){
+                if (PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("pvp")) {
                     // Don't damage another player.
                     // p_attacker.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " attack the lawful player (" +
                     // p.getName() + ") with /togglepvp enabled.");
@@ -4680,7 +4792,7 @@ public class ItemMechanics implements Listener {
                             .sendPacketNearby(p_attacker.getLocation().getX(), p_attacker.getLocation().getY(), p_attacker.getLocation().getZ(), 24,
                                     ((CraftWorld) p_attacker.getWorld()).getHandle().dimension, particles);
 
-                    if(PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")){
+                    if (PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")) {
                         p_attacker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP"
                                 + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p_attacker.getName())) + "/" + (int) getMaxHP(p_attacker) + "HP]");
                     }
@@ -4914,7 +5026,7 @@ public class ItemMechanics implements Listener {
                         .sendPacketNearby(p_attacker.getLocation().getX(), p_attacker.getLocation().getY(), p_attacker.getLocation().getZ(), 24,
                                 ((CraftWorld) p_attacker.getWorld()).getHandle().dimension, particles);
 
-                if(PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")){
+                if (PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")) {
                     p_attacker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP"
                             + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p_attacker.getName())) + "/" + (int) getMaxHP(p_attacker) + "HP]");
                 }
@@ -5148,7 +5260,7 @@ public class ItemMechanics implements Listener {
                         .sendPacketNearby(p_attacker.getLocation().getX(), p_attacker.getLocation().getY(), p_attacker.getLocation().getZ(), 24,
                                 ((CraftWorld) p_attacker.getWorld()).getHandle().dimension, particles);
 
-                if(PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")){
+                if (PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")) {
                     p_attacker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP"
                             + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p_attacker.getName())) + "/" + (int) getMaxHP(p_attacker) + "HP]");
                 }
@@ -5425,7 +5537,7 @@ public class ItemMechanics implements Listener {
                         .sendPacketNearby(p_attacker.getLocation().getX(), p_attacker.getLocation().getY(), p_attacker.getLocation().getZ(), 24,
                                 ((CraftWorld) p_attacker.getWorld()).getHandle().dimension, particles);
 
-                if(PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")){
+                if (PlayerManager.getPlayerModel(p_attacker).getToggleList().contains("debug")) {
                     p_attacker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "        +" + ChatColor.GREEN + (int) leech_val + ChatColor.BOLD + " HP"
                             + ChatColor.GRAY + " [" + (int) (HealthMechanics.getPlayerHP(p_attacker.getName())) + "/" + (int) getMaxHP(p_attacker) + "HP]");
                 }
@@ -5928,7 +6040,7 @@ public class ItemMechanics implements Listener {
                 Main.d("TIER OF ARROW : " + getItemTier(is));
                 Main.d("DATA: " + is.getItemMeta());
                 Main.d(is.getAmount());
-                if (tier <= 0){
+                if (tier <= 0) {
                     continue;
                 }
                 return getItemTier(is);
@@ -6260,7 +6372,7 @@ public class ItemMechanics implements Listener {
             }
         }
         if (r == 2) {
-        	return iGen.BowGenorator(tier, false, null);
+            return iGen.BowGenorator(tier, false, null);
         }
         if (r == 3) {
             return iGen.HelmetGenerator(tier, false, null);

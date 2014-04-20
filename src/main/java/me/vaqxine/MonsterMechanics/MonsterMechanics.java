@@ -1455,7 +1455,11 @@ public class MonsterMechanics implements Listener {
 				if(data.get(7) != null) {
 					custom_name = (String) data.get(7);
 				}
-				if(spawnTierMob(local_loc, et, tier, mob_num, loc, elite, meta_data, custom_name, true) != null) {
+				int level_tier = 1;
+				if(data.get(8) != null){
+				    level_tier = (int) data.get(8);
+				}
+				if(spawnTierMob(local_loc, et, tier, mob_num, loc, elite, meta_data, custom_name, true, level_tier) != null) {
 					mobs_being_spawned.remove(data);
 				}
 			} catch(NullPointerException npe) {
@@ -2326,9 +2330,9 @@ public class MonsterMechanics implements Listener {
 				if(new Random().nextInt(10) == 0) {
 					// 10% chance of adds on explosion.
 					Location hit_loc = e.getEntity().getLocation();
-					spawnTierMob(hit_loc, EntityType.MAGMA_CUBE, 2, -1, hit_loc, false, "", "Lesser Spawn of Inferno", true);
-					spawnTierMob(hit_loc, EntityType.MAGMA_CUBE, 2, -1, hit_loc, false, "", "Lesser Spawn of Inferno", true);
-					spawnTierMob(hit_loc, EntityType.MAGMA_CUBE, 2, -1, hit_loc, false, "", "Lesser Spawn of Inferno", true);
+					spawnTierMob(hit_loc, EntityType.MAGMA_CUBE, 2, -1, hit_loc, false, "", "Lesser Spawn of Inferno", true, 3);
+					spawnTierMob(hit_loc, EntityType.MAGMA_CUBE, 2, -1, hit_loc, false, "", "Lesser Spawn of Inferno", true, 3);
+					spawnTierMob(hit_loc, EntityType.MAGMA_CUBE, 2, -1, hit_loc, false, "", "Lesser Spawn of Inferno", true, 3);
 				}
 			}
 		}
@@ -2357,7 +2361,7 @@ public class MonsterMechanics implements Listener {
 					
 					while(number_to_spawn > 0) {
 						number_to_spawn--;
-						spawnTierMob(spawn_loc, EntityType.MAGMA_CUBE, tier_to_spawn, -1, spawn_loc, false, "", "", true);
+						spawnTierMob(spawn_loc, EntityType.MAGMA_CUBE, tier_to_spawn, -1, spawn_loc, false, "", "", true, 3);
 					}
 				}
 				
@@ -2692,7 +2696,12 @@ public class MonsterMechanics implements Listener {
 				
 				//log.info(spawn_data);
 				String loc_range[] = spawn_data.substring(spawn_data.indexOf("#") + 1, spawn_data.lastIndexOf("$")).split("-");
-				
+				int tier_level = 1;
+				if(spawn_data.contains("%")){
+				    tier_level = Integer.parseInt(spawn_data.split("$")[1].split("%")[0]);
+				}else{
+				    tier_level = new Random().nextInt(3) + 1;
+				}
 				int min_xz = Integer.parseInt(loc_range[0]);
 				int max_xz = Integer.parseInt(loc_range[1]);
 				
@@ -2892,6 +2901,7 @@ public class MonsterMechanics implements Listener {
 					main_thread.add(elite);
 					main_thread.add(meta_data);
 					main_thread.add(custom_name);
+					main_thread.add(tier_level);
 					mobs_being_spawned.add(main_thread);
 					
 					//if(spawnTierMob(local_loc, et, tier, mob_num, loc, elite, meta_data) == true){
@@ -3232,7 +3242,7 @@ public class MonsterMechanics implements Listener {
 		
 		int step = mob_spawn_step.get(p);
 		String spawn_data = mob_spawn_data.get(p);
-		// @zombie(custom_name):1-1,skeleton:1-2,skeleton:2-3@30#1-5$
+		// @zombie(custom_name):1-1,skeleton:1-2,skeleton:2-3@30#1-5$4%
 		
 		if(step == 0) {
 			String mob_list = e.getMessage().replaceFirst(" ", "");
@@ -3345,7 +3355,7 @@ public class MonsterMechanics implements Listener {
 			mob_spawn_step.remove(p);
 			mob_spawn_data.remove(p);
 			
-			Location mob_spawner_loc = mob_spawn_location.get(p);
+			final Location mob_spawner_loc = mob_spawn_location.get(p);
 			
 			if(delay == 0 && InstanceMechanics.isInstance(p.getWorld().getName())) {
 				HashMap<Location, String> instance_mob_spawns_copy = new HashMap<Location, String>();
@@ -3380,8 +3390,12 @@ public class MonsterMechanics implements Listener {
 				mob_to_spawn.put(mob_spawner_loc, new_data);
 				loaded_mobs.put(mob_spawner_loc, new_data);
 			}
+			new BukkitRunnable() {
+                public void run() {
+                    mob_spawner_loc.getBlock().setType(Material.AIR);
+                }
+            }.runTask(Main.plugin);
 			
-			mob_spawner_loc.getBlock().setType(Material.AIR);
 			mob_spawn_location.remove(p);
 			
 			p.sendMessage("");
@@ -3759,7 +3773,7 @@ public class MonsterMechanics implements Listener {
 						if(!BossMechanics.boss_event_log.get(ent).contains("ghast")) {
 							BossMechanics.boss_event_log.put(ent, "ghast");
 							
-							Ghast g = (Ghast) ((LivingEntity) spawnTierMob(new Location(ent.getWorld(), -54, 158, 646).add(0, 5, 0), EntityType.GHAST, 4, -1, new Location(ent.getWorld(), -54, 158, 646).add(0, 5, 0), false, "", "Abysal Wraith", true)); //(Ghast)ent.getWorld().spawnEntity(ent.getLocation().add(0, 5, 0), EntityType.GHAST);
+							Ghast g = (Ghast) ((LivingEntity) spawnTierMob(new Location(ent.getWorld(), -54, 158, 646).add(0, 5, 0), EntityType.GHAST, 4, -1, new Location(ent.getWorld(), -54, 158, 646).add(0, 5, 0), false, "", "Abysal Wraith", true, 4)); //(Ghast)ent.getWorld().spawnEntity(ent.getLocation().add(0, 5, 0), EntityType.GHAST);
 							g.setPassenger(ent);
 							
 							double boss_armor = mob_armor.get(ent);
@@ -3802,11 +3816,11 @@ public class MonsterMechanics implements Listener {
 						if(BossMechanics.minion_map.containsKey(ent)) {
 							minion_map = BossMechanics.minion_map.get(ent);
 						}
-						minion_map.add(spawnTierMob(ent.getLocation(), EntityType.MAGMA_CUBE, 3, -1, ent.getLocation(), false, "", "Spawn of Inferno", true));
-						minion_map.add(spawnTierMob(ent.getLocation(), EntityType.MAGMA_CUBE, 3, -1, ent.getLocation(), false, "", "Spawn of Inferno", true));
-						minion_map.add(spawnTierMob(ent.getLocation(), EntityType.MAGMA_CUBE, 3, -1, ent.getLocation(), false, "", "Spawn of Inferno", true));
-						minion_map.add(spawnTierMob(ent.getLocation(), EntityType.MAGMA_CUBE, 3, -1, ent.getLocation(), false, "", "Spawn of Inferno", true));
-						minion_map.add(spawnTierMob(ent.getLocation(), EntityType.MAGMA_CUBE, 3, -1, ent.getLocation(), false, "", "Spawn of Inferno", true));
+						minion_map.add(spawnTierMob(ent.getLocation(), EntityType.MAGMA_CUBE, 3, -1, ent.getLocation(), false, "", "Spawn of Inferno", true, 3));
+						minion_map.add(spawnTierMob(ent.getLocation(), EntityType.MAGMA_CUBE, 3, -1, ent.getLocation(), false, "", "Spawn of Inferno", true, 3));
+						minion_map.add(spawnTierMob(ent.getLocation(), EntityType.MAGMA_CUBE, 3, -1, ent.getLocation(), false, "", "Spawn of Inferno", true, 3));
+						minion_map.add(spawnTierMob(ent.getLocation(), EntityType.MAGMA_CUBE, 3, -1, ent.getLocation(), false, "", "Spawn of Inferno", true, 3));
+						minion_map.add(spawnTierMob(ent.getLocation(), EntityType.MAGMA_CUBE, 3, -1, ent.getLocation(), false, "", "Spawn of Inferno", true, 3));
 					}
 					
 					if(minion_wave < (10 - (percent_hp / 10.0D)) && ent.getVehicle() == null) { // Don't spawn adds on the ghast pls.
@@ -3826,25 +3840,25 @@ public class MonsterMechanics implements Listener {
 						
 						if(minion_type == 0) {
 							if(!enraged) {
-								minion_map.add(spawnTierMob(loc, EntityType.SILVERFISH, 3, -1, loc, false, "", "Abyssal Demon", true));
-								minion_map.add(spawnTierMob(loc, EntityType.SILVERFISH, 3, -1, loc, false, "", "Abyssal Demon", true));
-								minion_map.add(spawnTierMob(loc, EntityType.SILVERFISH, 3, -1, loc, false, "", "Abyssal Demon", true));
-								minion_map.add(spawnTierMob(loc, EntityType.SILVERFISH, 3, -1, loc, false, "", "Abyssal Demon", true));
+								minion_map.add(spawnTierMob(loc, EntityType.SILVERFISH, 3, -1, loc, false, "", "Abyssal Demon", true, 3));
+								minion_map.add(spawnTierMob(loc, EntityType.SILVERFISH, 3, -1, loc, false, "", "Abyssal Demon", true, 3));
+								minion_map.add(spawnTierMob(loc, EntityType.SILVERFISH, 3, -1, loc, false, "", "Abyssal Demon", true, 3));
+								minion_map.add(spawnTierMob(loc, EntityType.SILVERFISH, 3, -1, loc, false, "", "Abyssal Demon", true, 3));
 							} else if(enraged) {
-								minion_map.add(spawnTierMob(loc, EntityType.MAGMA_CUBE, 3, -1, loc, false, "", "Spawn of Inferno", true));
-								minion_map.add(spawnTierMob(loc, EntityType.MAGMA_CUBE, 3, -1, loc, false, "", "Spawn of Inferno", true));
-								minion_map.add(spawnTierMob(loc, EntityType.MAGMA_CUBE, 3, -1, loc, false, "", "Spawn of Inferno", true));
-								minion_map.add(spawnTierMob(loc, EntityType.MAGMA_CUBE, 3, -1, loc, false, "", "Spawn of Inferno", true));
+								minion_map.add(spawnTierMob(loc, EntityType.MAGMA_CUBE, 3, -1, loc, false, "", "Spawn of Inferno", true, 3));
+								minion_map.add(spawnTierMob(loc, EntityType.MAGMA_CUBE, 3, -1, loc, false, "", "Spawn of Inferno", true, 3));
+								minion_map.add(spawnTierMob(loc, EntityType.MAGMA_CUBE, 3, -1, loc, false, "", "Spawn of Inferno", true, 3));
+								minion_map.add(spawnTierMob(loc, EntityType.MAGMA_CUBE, 3, -1, loc, false, "", "Spawn of Inferno", true, 3));
 							}
 						}
 						
 						if(minion_type == 1) {
 							if(!enraged) {
-								minion_map.add(spawnTierMob(loc, EntityType.SILVERFISH, 4, -1, loc, false, "", "Greater Abyssal Demon", true));
-								minion_map.add(spawnTierMob(loc, EntityType.SILVERFISH, 4, -1, loc, false, "", "Greater Abyssal Demon", true));
+								minion_map.add(spawnTierMob(loc, EntityType.SILVERFISH, 4, -1, loc, false, "", "Greater Abyssal Demon", true, 3));
+								minion_map.add(spawnTierMob(loc, EntityType.SILVERFISH, 4, -1, loc, false, "", "Greater Abyssal Demon", true, 3));
 							} else if(enraged) {
-								minion_map.add(spawnTierMob(loc, EntityType.MAGMA_CUBE, 4, -1, loc, false, "", "Demonic Spawn of Inferno", true));
-								minion_map.add(spawnTierMob(loc, EntityType.MAGMA_CUBE, 4, -1, loc, false, "", "Demonic Spawn of Inferno", true));
+								minion_map.add(spawnTierMob(loc, EntityType.MAGMA_CUBE, 4, -1, loc, false, "", "Demonic Spawn of Inferno", true, 3));
+								minion_map.add(spawnTierMob(loc, EntityType.MAGMA_CUBE, 4, -1, loc, false, "", "Demonic Spawn of Inferno", true, 3));
 							}
 						}
 						
@@ -3902,23 +3916,23 @@ public class MonsterMechanics implements Listener {
 					}
 					
 					if(minion_type == 0) {
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, true, "bandit", "Mayel's Elite Pirate", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, true, "bandit", "Mayel's Elite Pirate", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true, 3));
 					}
 					
 					if(minion_type == 1) {
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true, 3));
 					}
 					
 					if(minion_type == 2) {
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "bandit", "Mayel's Pirate Captain", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "bandit", "Mayel's Pirate Captain", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "bandit", "Mayel's Pirate Captain", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "bandit", "Mayel's Pirate Captain", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true, 3));
 					}
 					
 					try {
@@ -4078,33 +4092,33 @@ public class MonsterMechanics implements Listener {
 					List<Entity> minion_map = new ArrayList<Entity>();
 					
 					if(minion_type == 0) {
-						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 3, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, false, "", "", true));
+						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 3, -1, loc, false, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, false, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, false, "", "", true, 3));
 					}
 					if(minion_type == 1) {
-						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true));
+						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, false, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true, 3));
 					}
 					if(minion_type == 2) {
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 3, -1, loc, false, "", "", true));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 3, -1, loc, false, "", "", true, 3));
 					}
 					if(minion_type == 3) {
-						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, true, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 3, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true));
+						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, true, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, false, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 3, -1, loc, false, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true, 3));
 					}
 					if(minion_type == 4) {
-						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, false, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, true, "", "", true));
-						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true));
+						minion_map.add(spawnTierMob(loc, EntityType.ZOMBIE, 2, -1, loc, false, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, true, "", "", true, 3));
+						minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "", "", true, 3));
 					}
 					
 					try {
@@ -5329,7 +5343,7 @@ public class MonsterMechanics implements Listener {
 					}
 					
 					// EASTER EGG DROP CODE
-					/*int do_i_drop_easter = new Random().nextInt(2000);
+					int do_i_drop_easter = new Random().nextInt(2000);
 					if(mob_tier <= 3){
 						if(do_i_drop_easter == 1){ // 0.05% chance
 							Location loc = ent.getLocation();
@@ -5341,7 +5355,7 @@ public class MonsterMechanics implements Listener {
 							Location loc = ent.getLocation();
 							loc.getWorld().dropItemNaturally(loc, CraftItemStack.asCraftCopy(ItemMechanics.easter_egg));
 						}
-					}*/
+					}
 					
 					// HALLOWEEN DROP CODE
 					/*int do_i_drop_candy = new Random().nextInt(1000);
@@ -6181,7 +6195,7 @@ public class MonsterMechanics implements Listener {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static Entity spawnTierMob(Location l, EntityType et, int tier, int mob_num, Location mob_spawner_loc, boolean elite, String meta_data, String custom_name, boolean return_entity) {
+	public static Entity spawnTierMob(Location l, EntityType et, int tier, int mob_num, Location mob_spawner_loc, boolean elite, String meta_data, String custom_name, boolean return_entity, int level) {
 		
 		Entity e = null;
 		
@@ -6745,7 +6759,6 @@ public class MonsterMechanics implements Listener {
 			dmg_range.set(1, (int) ((double) (dmg_range.get(1) * 1.5D)));
 			total_armor = (int) (((double) total_armor * 1.5D));
 		}
-		ItemStack weap = CraftItemStack.asBukkitCopy(weapon);
 		int mob_l = 1;
 		if(tier == 1){
 		    mob_l = 1;
@@ -6758,18 +6771,16 @@ public class MonsterMechanics implements Listener {
         }else if(tier == 5){
             mob_l = 80;
         }
-		if(ItemMechanics.isSword(weap)){
-		    mob_l += new Random().nextInt(tier == 1 ? 19 : 20);
-		}else if(ItemMechanics.isAxe(weap)){
-		    mob_l += new Random().nextInt(tier == 1 ? 19 : 20);
-		}else if(ItemMechanics.isStaff(weap)){
-		    mob_l += new Random().nextInt(15);
-        }else if(ItemMechanics.isPolearm(weap)){
-            mob_l += new Random().nextInt(10);
-        }else if(ItemMechanics.isBow(weap)){
-            mob_l +=  new Random().nextInt(10);
-        }
-		
+		if(level == 1){
+		    mob_l += new Random().nextInt(4);
+		}else if(level == 2){
+		    //40 -> 6 + random = 10 -> 50
+		    mob_l += new Random().nextInt(4) + 6;
+		}else if(level == 3){
+		    mob_l += new Random().nextInt(4) + 11;
+		}else if(level == 4){
+		    mob_l += new Random().nextInt(4) + 15;
+		}
 		total_hp += total_hp * ((mob_l * .001)) + new Random().nextInt(mob_l);
 		mob_tier.put(e, tier);
 		mob_level.put(e, mob_l);
