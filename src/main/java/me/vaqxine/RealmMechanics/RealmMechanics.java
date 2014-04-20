@@ -2507,7 +2507,7 @@ public class RealmMechanics implements Listener {
 			has_portal.put(p.getName(), true);
 			p.setItemInHand(makeTeleportRune(p));
 			makePortal(p.getName(), portal_location.subtract(0, 2, 0), 60);
-			
+			Main.d("SETTING THEIR PORTAL");
 			if(new_realm == true) { // We don't need to load the world if we're just moving the portal.
 				/*Thread t = new Thread(new Runnable() {
 					public void run() {
