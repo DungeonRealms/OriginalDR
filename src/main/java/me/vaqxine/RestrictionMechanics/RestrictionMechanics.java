@@ -24,6 +24,7 @@ import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RestrictionMechanics.commands.CommandList;
 import me.vaqxine.RestrictionMechanics.commands.CommandZone;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
+import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.enums.Armor;
 
 import org.bukkit.Bukkit;
@@ -1440,6 +1441,24 @@ public class RestrictionMechanics implements Listener {
                     }
                     if (b.getType() == Material.BEACON) {
                         // p.sendMessage(ChatColor.RED + "Break this beacon to recieve a random BUFF.");
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onOrbInRealm(InventoryClickEvent e) {
+        if (e.getCurrentItem() != null) {
+            ItemStack is = e.getCurrentItem();
+            Player p = (Player) e.getWhoClicked();
+            if (p.getWorld().getName().toLowerCase().equalsIgnoreCase(main_world_name.toLowerCase())) {
+                // They are in realms
+                if (p.getOpenInventory().getTopInventory().getName() != "container.crafting" && !TradeMechanics.trade_map.containsKey(p.getName())) {
+                    if (is.getType() == Material.MAGMA_CREAM) {
+                        p.sendMessage(ChatColor.RED + "You cannot store Orbs of Alteration in a realm.");
+                        e.setCancelled(true);
+                        return;
                     }
                 }
             }
