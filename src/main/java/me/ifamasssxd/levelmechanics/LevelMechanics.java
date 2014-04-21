@@ -7,6 +7,7 @@ import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -34,16 +35,28 @@ public class LevelMechanics implements Listener {
         if ((MonsterMechanics.getMHealth(e.getEntity()) - e.getDamage()) <= 0) {
             int mob_level = MonsterMechanics.getMobLevel(e.getEntity());
             Main.d(mob_level);
-            if (!(e.getDamager() instanceof Player))
+            if (!(e.getDamager() instanceof Player) && !(e.getDamager() instanceof Projectile))
                 return;
-            Player killer = (Player) e.getDamager();
+            Player killer = null;
+            if (e.getDamager() instanceof Projectile) {
+                if (!(((Projectile) e.getDamager()).getShooter() instanceof Player)) {
+                    return;
+                }
+                killer = (Player) ((Projectile) e.getDamager()).getShooter();
+            } else {
+                killer = (Player) e.getDamager();
+            }
             int level = getPlayerLevel(killer);
             int xp = mob_level * 15 + new Random().nextInt(50) + 5;
-            if ((level + 5) < mob_level) {
+            if ((level) < (mob_level + 5)) {
                 // No XP
                 xp = 0;
             }
-
+            if (level > mob_level + 5) {
+                // mob_level = 10 p_level = 15
+                // .1 * (15-10 -> 5)
+                xp *= .6;
+            }
             double multiplier = 1D;
             if (level > mob_level) {
                 // Higher level so 70% XP

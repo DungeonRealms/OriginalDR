@@ -3678,7 +3678,12 @@ public class ItemMechanics implements Listener {
             p.updateInventory();
             return;
         }
-
+        if (!LevelMechanics.canPlayerUseTier(p, ItemMechanics.getItemTier(e.getBow()))) {
+            p.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level "
+                    + LevelMechanics.getLevelToUse(ItemMechanics.getItemTier(e.getBow())) + " to use this weapon.");
+            e.setCancelled(true);
+            return;
+        }
         // int bow_tier = getItemTier(p.getItemInHand());
         if (!doesPlayerHaveAnyArrows(p)) {
             e.setCancelled(true);
