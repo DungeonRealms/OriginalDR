@@ -159,46 +159,4 @@ public class ScoreboardMechanics implements Listener {
 		main.getObjective(DisplaySlot.BELOW_NAME).getScore(shop_tag).setScore(stock);
 	}
 	
-	public static void setupGuildTeam(String fixed_gname, String handle) {
-		for(Player p : Bukkit.getOnlinePlayers()) {
-			if(ScoreboardMechanics.getBoard(p).getTeam(fixed_gname + ".default") != null) continue;
-			
-			Scoreboard board = ScoreboardMechanics.getBoard(p);
-			Team default_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".default");
-			Team neutral_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".neutral");
-			Team chaotic_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".chaotic");
-			Team gm_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".gm");
-			
-			String g_handle = "[" + handle + "]";
-			
-			default_g.setPrefix(g_handle + ChatColor.RESET.toString() + " ");
-			default_g.setDisplayName(fixed_gname + ".default");
-			neutral_g.setPrefix(ChatColor.YELLOW.toString() + g_handle + ChatColor.YELLOW.toString() + " ");
-			neutral_g.setDisplayName(fixed_gname + ".neutral");
-			chaotic_g.setPrefix(ChatColor.RED.toString() + g_handle + ChatColor.RED.toString() + " ");
-			chaotic_g.setDisplayName(fixed_gname + ".chaotic");
-			gm_g.setPrefix(ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "GM " + ChatColor.AQUA.toString() + g_handle + " ");
-			gm_g.setDisplayName(fixed_gname + ".gm");
-		}
-		
-		if(main.getTeam(fixed_gname + ".default") != null) return;
-		
-		Scoreboard board = main;
-		Team default_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".default");
-		Team neutral_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".neutral");
-		Team chaotic_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".chaotic");
-		Team gm_g = ScoreboardMechanics.getTeam(board, fixed_gname + ".gm");
-		
-		String g_handle = "[" + handle + "]";
-		
-		default_g.setPrefix(g_handle + ChatColor.RESET.toString() + " ");
-		default_g.setDisplayName(fixed_gname + ".default");
-		neutral_g.setPrefix(ChatColor.YELLOW.toString() + g_handle + ChatColor.YELLOW.toString() + " ");
-		neutral_g.setDisplayName(fixed_gname + ".neutral");
-		chaotic_g.setPrefix(ChatColor.RED.toString() + g_handle + ChatColor.RED.toString() + " ");
-		chaotic_g.setDisplayName(fixed_gname + ".chaotic");
-		gm_g.setPrefix(ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "GM " + ChatColor.AQUA.toString() + g_handle + " ");
-		gm_g.setDisplayName(fixed_gname + ".gm");
-	}
-	
 }

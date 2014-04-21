@@ -1651,8 +1651,6 @@ public class GuildMechanics implements Listener {
 			fixed_gname = fixed_gname.substring(0, 8);
 		}
 		
-		ScoreboardMechanics.setupGuildTeam(fixed_gname, guild_handle_map.get(g_name));
-		
 		//team.setAllowFriendlyFire(false);
 	}
 	
