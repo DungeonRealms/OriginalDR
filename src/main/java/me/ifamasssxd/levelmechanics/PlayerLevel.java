@@ -22,9 +22,11 @@ public class PlayerLevel {
     String p_name;
     int level;
     int xp;
-    
+    long next_xp_gain_available;
+
     public PlayerLevel(String p_name, boolean aSync) {
         this.p_name = p_name;
+        next_xp_gain_available = System.currentTimeMillis();
         if (aSync) {
             new BukkitRunnable() {
                 public void run() {
@@ -44,6 +46,11 @@ public class PlayerLevel {
     }
 
     public void addXP(int xp) {
+        // Throttle XP gain by a few seconds
+        if (next_xp_gain_available > System.currentTimeMillis())
+            return;
+        // 3 second delay
+        next_xp_gain_available = System.currentTimeMillis() + 3000;
         int xp_needed = getEXPNeeded(getLevel());
         if (getXP() + xp >= xp_needed) {
             int xp_remaining = (getXP() + xp) - xp_needed;
@@ -55,7 +62,7 @@ public class PlayerLevel {
             // No remaining xp
             setXP(getXP() + xp);
         }
-        saveData(true, false);
+        //saveData(true, false);
         if (PlayerManager.getPlayerModel(p_name).getToggleList() != null && PlayerManager.getPlayerModel(p_name).getToggleList().contains("debug")) {
             if (p == null) {
                 checkPlayer();

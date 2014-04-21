@@ -128,6 +128,7 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -2697,8 +2698,13 @@ public class MonsterMechanics implements Listener {
 				//log.info(spawn_data);
 				String loc_range[] = spawn_data.substring(spawn_data.indexOf("#") + 1, spawn_data.lastIndexOf("$")).split("-");
 				int tier_level = 1;
-				if(spawn_data.contains("%")){
+				if(spawn_data.endsWith("%")){
+				    try{
 				    tier_level = Integer.parseInt(spawn_data.split("$")[1].split("%")[0]);
+				    }catch(Exception e){
+				        //Main.d("Failed to parse int: " + spawn_data);
+				        tier_level = new Random().nextInt(3) + 1;
+				    }
 				}else{
 				    tier_level = new Random().nextInt(3) + 1;
 				}
@@ -3300,7 +3306,6 @@ public class MonsterMechanics implements Listener {
 			mob_spawn_data.put(p, spawn_data);
 			return;
 		}
-		
 		if(step == 1) {
 			int spawn_interval = 60; // Default 60 seconds if something goes
 			// wrong.
@@ -3320,7 +3325,7 @@ public class MonsterMechanics implements Listener {
 			mob_spawn_data.put(p, spawn_data);
 			
 			p.sendMessage("");
-			p.sendMessage(ChatColor.YELLOW + "Step 3 of 3: " + ChatColor.WHITE + "Please enter the min/max range (in blocks) from the mob spawner that mobs can spawn at.");
+			p.sendMessage(ChatColor.YELLOW + "Step 3 of 3: " + ChatColor.WHITE + "Please enter the min/max range (in blocks) from the mob spawner that mobs can spawn at and the level range of the mob.");
 			p.sendMessage(ChatColor.YELLOW + "Note: You must enter a range with a min. val greater than 0, and a max. val less than 30.");
 			p.sendMessage(ChatColor.GRAY + "EX: " + ChatColor.DARK_GRAY + "1-5" + ChatColor.GRAY + " -> Mobs will spawn between 1 and 5 blocks around the mob spawner.");
 			return;
@@ -4699,7 +4704,7 @@ public class MonsterMechanics implements Listener {
 						mob_type = "Goblin";
 						return mob_type;
 					}
-					if(skin_name.equalsIgnoreCase("hway234") || skin_name.equalsIgnoreCase("Xmattpt") || skin_name.equalsIgnoreCase("TheNextPaladin")) {
+					if(/*skin_name.equalsIgnoreCase("hway234") || */skin_name.equalsIgnoreCase("Xmattpt") || skin_name.equalsIgnoreCase("TheNextPaladin")) {
 						mob_type = "Bandit";
 						return mob_type;
 					}
@@ -4770,7 +4775,7 @@ public class MonsterMechanics implements Listener {
 						mob_type = "Goblin";
 						return mob_type;
 					}
-					if(skin_name.equalsIgnoreCase("hway234") || skin_name.equalsIgnoreCase("Xmattpt") || skin_name.equalsIgnoreCase("TheNextPaladin")) {
+					if(/*skin_name.equalsIgnoreCase("hway234") ||*/ skin_name.equalsIgnoreCase("Xmattpt") || skin_name.equalsIgnoreCase("TheNextPaladin")) {
 						mob_type = "Bandit";
 						return mob_type;
 					}
@@ -5806,7 +5811,7 @@ public class MonsterMechanics implements Listener {
 		}
 		
 		if(meta_data.equalsIgnoreCase("bandit")) {
-			int bandit_type = new Random().nextInt(3);
+			int bandit_type = new Random().nextInt(2) + 1;
 			String skin_name = "";
 			
 			if(bandit_type == 0) {
@@ -6160,28 +6165,16 @@ public class MonsterMechanics implements Listener {
 		int mob_l = 1;
 		int tier = mob_t;
         if(tier == 1){
-            mob_l = 1;
+            mob_l = 19;
         }else if(tier == 2){
-            mob_l = 20;
+            mob_l = 39;
         }else if(tier == 3){
-            mob_l = 40;
+            mob_l = 59;
         }else if(tier == 4){
-            mob_l = 60;
+            mob_l = 79;
         }else if(tier == 5){
-            mob_l = 80;
+            mob_l = 100;
         }
-        if(ItemMechanics.isSword(weapon)){
-            mob_l += new Random().nextInt(20);
-        }else if(ItemMechanics.isAxe(weapon)){
-            mob_l += new Random().nextInt(20);
-        }else if(ItemMechanics.isStaff(weapon)){
-            mob_l += new Random().nextInt(15);
-        }else if(ItemMechanics.isPolearm(weapon)){
-            mob_l += new Random().nextInt(10);
-        }else if(ItemMechanics.isBow(weapon)){
-            mob_l +=  new Random().nextInt(10);
-        }
-        
         mob_level.put(e, mob_l);
 		max_mob_health.put(e, (int) total_hp);
 		mob_health.put(e, (int) total_hp);
@@ -6689,12 +6682,12 @@ public class MonsterMechanics implements Listener {
 					ent.setEquipment(3, CraftItemStack.asNMSCopy(chest));
 				}
 				
-				int bandit_type = new Random().nextInt(3);
+				int bandit_type = new Random().nextInt(2) + 1;
 				String skin_name = "";
 				
-				if(bandit_type == 0) {
+				/*if(bandit_type == 0) {
 					skin_name = "hway234";
-				}
+				}*/
 				if(bandit_type == 1) {
 					skin_name = "Xmattpt";
 				}

@@ -60,6 +60,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Horse;
@@ -2998,7 +2999,6 @@ public class ItemMechanics implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerPickupItem(PlayerPickupItemEvent e) {
         final ItemStack is = e.getItem().getItemStack();
-
         if (is.hasItemMeta() && is.getMaxStackSize() == 1) {
             e.getItem().remove();
             e.setCancelled(true);
@@ -6126,7 +6126,7 @@ public class ItemMechanics implements Listener {
     }
 
     @SuppressWarnings("deprecation")
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onPlayerShootWand(PlayerInteractEvent e) {
         Player pl = e.getPlayer();
         if (!e.hasItem()) {
@@ -6136,6 +6136,13 @@ public class ItemMechanics implements Listener {
         if ((e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
                 && (wep.getType() == Material.WOOD_HOE || wep.getType() == Material.STONE_HOE || wep.getType() == Material.IRON_HOE
                         || wep.getType() == Material.DIAMOND_HOE || wep.getType() == Material.GOLD_HOE)) {
+            int item_tier = ItemMechanics.getItemTier(wep);
+            if (!LevelMechanics.canPlayerUseTier(pl, item_tier)) {
+                pl.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level "
+                        + LevelMechanics.getLevelToUse(ItemMechanics.getItemTier(wep)) + " to use this weapon.");
+                e.setCancelled(true);
+                return;
+            }
             if (getDamageData(wep).equalsIgnoreCase("no")
                     || (DuelMechanics.isDamageDisabled(pl.getLocation()) && !DuelMechanics.duel_map.containsKey(pl.getName()))) {
                 // pl.getWorld().spawnParticle(pl.getTargetBlock(null, 2).getLocation(), Particle.MAGIC_CRIT, 0.50F, 20);

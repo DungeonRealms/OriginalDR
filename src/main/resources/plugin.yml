@@ -308,6 +308,9 @@ commands:
   mnote:
     description: Root command.
     usage: /<command>
+  setlevel:
+    description: Sets the player givens level.
+    usage: /<command>
   addhearthstone:
     description: Adds a hearthstone spawn point.
     usage: /<command>

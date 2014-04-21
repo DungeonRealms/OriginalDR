@@ -468,7 +468,8 @@ public class GuildMechanics implements Listener {
 			if(step == 1) { // Guild name given, check for illegal types.
 				String guild_name = e.getMessage();
 				Pattern pattern = Pattern.compile("^([A-Za-z]|[0-9])+$");
-				Matcher matcher = pattern.matcher(guild_name);
+				String guild_replace = guild_name;
+				Matcher matcher = pattern.matcher(guild_replace.replace(" ", ""));
 				if (!matcher.find()) {
 				    pl.sendMessage(ChatColor.RED + "You guild name can only contain alphanumerical values.");
 				    return;

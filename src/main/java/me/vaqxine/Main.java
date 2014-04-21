@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import me.ifamasssxd.levelmechanics.LevelMechanics;
+import me.ifamasssxd.levelmechanics.commands.CommandSetLevel;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.BossMechanics.BossMechanics;
 import me.vaqxine.ChatMechanics.ChatMechanics;
@@ -116,7 +117,7 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(new LevelMechanics(), this);
 		getCommand("isunomadyet").setExecutor(new CommandIsUnoMadYet());
-		
+		getCommand("setlevel").setExecutor(new CommandSetLevel());
 		hearthstoneMechanics = new HearthstoneMechanics();
 		achievmentMechanics = new AchievmentMechanics();
 		bossMechanics = new BossMechanics();

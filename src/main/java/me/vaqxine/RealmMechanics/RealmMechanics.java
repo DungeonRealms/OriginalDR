@@ -2478,8 +2478,10 @@ public class RealmMechanics implements Listener {
 				Location new_portal = new Location(b.getWorld(), b.getX(), b.getY(), b.getZ());
 				old_portal.getBlock().setType(Material.AIR);
 				old_portal.add(0, 1, 0).getBlock().setType(Material.AIR);
-				holograms.get(old_portal).destroy();
-				holograms.remove(old_portal);
+				if(holograms.get(old_portal) != null){
+				    	holograms.get(old_portal).destroy();
+				    	holograms.remove(old_portal);
+				}
 				Bukkit.getWorld(block_world_name).setSpawnLocation(new_portal.getBlockX(), new_portal.getBlockY() + 1, new_portal.getBlockZ());
 				new_portal.getBlock().setType(Material.PORTAL);
 				new_portal.add(0, 1, 0).getBlock().setType(Material.PORTAL);
@@ -2507,7 +2509,6 @@ public class RealmMechanics implements Listener {
 			has_portal.put(p.getName(), true);
 			p.setItemInHand(makeTeleportRune(p));
 			makePortal(p.getName(), portal_location.subtract(0, 2, 0), 60);
-			Main.d("SETTING THEIR PORTAL");
 			if(new_realm == true) { // We don't need to load the world if we're just moving the portal.
 				/*Thread t = new Thread(new Runnable() {
 					public void run() {

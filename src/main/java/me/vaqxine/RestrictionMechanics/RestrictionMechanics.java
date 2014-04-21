@@ -437,6 +437,8 @@ public class RestrictionMechanics implements Listener {
     public void checkPlayersArmorIsValid(Player p) {
         boolean hadIllegalArmor = false;
         for (ItemStack is : p.getInventory().getArmorContents()) {
+            if (is == null || is.getType() == Material.AIR)
+                continue;
             if (!LevelMechanics.canPlayerUseTier(p, ItemMechanics.getItemTier(is))) {
                 hadIllegalArmor = true;
                 if (p.getInventory().firstEmpty() == -1) {
@@ -452,10 +454,10 @@ public class RestrictionMechanics implements Listener {
                     p.getInventory().setChestplate(new ItemStack(Material.AIR));
                 }
                 if (ItemMechanics.isLeggings(is)) {
-                    p.getInventory().setChestplate(new ItemStack(Material.AIR));
+                    p.getInventory().setLeggings(new ItemStack(Material.AIR));
                 }
                 if (ItemMechanics.isBoots(is)) {
-                    p.getInventory().setChestplate(new ItemStack(Material.AIR));
+                    p.getInventory().setBoots(new ItemStack(Material.AIR));
                 }
             }
         }
@@ -595,95 +597,71 @@ public class RestrictionMechanics implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerTryToUseBowOrStaff(PlayerInteractEvent e) {
-        if (!e.hasItem())
-            return;
-        if (ItemMechanics.isStaff(e.getItem()) || ItemMechanics.isBow(e.getItem())) {
-            // Check the staff or bow.
-            ItemStack is = e.getItem();
-            Player p = e.getPlayer();
-            int item_tier = ItemMechanics.getItemTier(is);
-            if (!LevelMechanics.canPlayerUseTier(p, item_tier)) {
-                p.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level "
-                        + LevelMechanics.getLevelToUse(ItemMechanics.getItemTier(is)) + " to use this weapon.");
-                e.setCancelled(true);
-            }
-        }
-
-    }
-
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerTryToEquipArmor(InventoryClickEvent e) {
         if (e.getCurrentItem() != null) {
-            Main.d(e);
             if (e.getClick().equals(ClickType.SHIFT_RIGHT) || e.getClick().equals(ClickType.SHIFT_LEFT)) {
                 ItemStack is = e.getCurrentItem();
                 Player p = (Player) e.getWhoClicked();
-                if (ItemMechanics.isArmor(is)) {
-                    int item_tier = ItemMechanics.getItemTier(is);
-                    boolean cancel = false;
-                    if (!LevelMechanics.canPlayerUseTier(p, item_tier)) {
-                        if (ItemMechanics.isHelmet(is)
-                                && (p.getInventory().getItem(Armor.HELMET.getSlot()) == null || p.getInventory().getItem(Armor.HELMET.getSlot()).getType() == Material.AIR)) {
-                            // they are trying to equip the armor
-                            cancel = true;
-                        }
-                        if (ItemMechanics.isChestplate(is)
-                                && (p.getInventory().getItem(Armor.CHESTPLATE.getSlot()) == null || p.getInventory().getItem(Armor.CHESTPLATE.getSlot())
-                                        .getType() == Material.AIR)) {
-                            // they are trying to equip the armor
-                            cancel = true;
-                        }
+                if (e.getInventory().getName().equalsIgnoreCase("container.crafting")) {
+                    if (ItemMechanics.isArmor(is)) {
+                        int item_tier = ItemMechanics.getItemTier(is);
+                        boolean cancel = false;
+                        if (!LevelMechanics.canPlayerUseTier(p, item_tier)) {
+                            if (ItemMechanics.isHelmet(is)
+                                    && (p.getInventory().getItem(Armor.HELMET.getSlot()) == null || p.getInventory().getItem(Armor.HELMET.getSlot()).getType() == Material.AIR)) {
+                                // they are trying to equip the armor
+                                cancel = true;
+                            }
+                            if (ItemMechanics.isChestplate(is)
+                                    && (p.getInventory().getItem(Armor.CHESTPLATE.getSlot()) == null || p.getInventory().getItem(Armor.CHESTPLATE.getSlot())
+                                            .getType() == Material.AIR)) {
+                                // they are trying to equip the armor
+                                cancel = true;
+                            }
 
-                        if (ItemMechanics.isLeggings(is)
-                                && (p.getInventory().getItem(Armor.LEGGINGS.getSlot()) == null || p.getInventory().getItem(Armor.LEGGINGS.getSlot()).getType() == Material.AIR)) {
-                            // they are trying to equip the armor
-                            cancel = true;
-                        }
+                            if (ItemMechanics.isLeggings(is)
+                                    && (p.getInventory().getItem(Armor.LEGGINGS.getSlot()) == null || p.getInventory().getItem(Armor.LEGGINGS.getSlot())
+                                            .getType() == Material.AIR)) {
+                                // they are trying to equip the armor
+                                cancel = true;
+                            }
 
-                        if (ItemMechanics.isBoots(is)
-                                && (p.getInventory().getItem(Armor.BOOTS.getSlot()) == null || p.getInventory().getItem(Armor.BOOTS.getSlot()).getType() == Material.AIR)) {
-                            // they are trying to equip the armor
-                            cancel = true;
-                        }
-                        if (cancel) {
-                            e.setCancelled(true);
-                            e.setResult(Result.DENY);
-                            p.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level "
-                                    + LevelMechanics.getLevelToUse(item_tier) + " to wear this item.");
+                            if (ItemMechanics.isBoots(is)
+                                    && (p.getInventory().getItem(Armor.BOOTS.getSlot()) == null || p.getInventory().getItem(Armor.BOOTS.getSlot()).getType() == Material.AIR)) {
+                                // they are trying to equip the armor
+                                cancel = true;
+                            }
+                            if (cancel) {
+                                e.setCancelled(true);
+                                e.setResult(Result.DENY);
+                                p.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level "
+                                        + LevelMechanics.getLevelToUse(item_tier) + " to wear this item.");
+                            }
                         }
                     }
                 }
             }
         }
-        if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
-            if (e.getCursor() != null && e.getCursor().getType() != Material.AIR) {
-                ItemStack i = e.getCursor();
-                Player p = (Player) e.getWhoClicked();
-                if (ItemMechanics.isArmor(i) && (e.getSlot() == 39 || e.getSlot() == 38 || e.getSlot() == 37 || e.getSlot() == 36)) {
-                    if (!LevelMechanics.canPlayerUseTier(p, ItemMechanics.getItemTier(i))) {
-                        boolean cancel = false;
-                        if (ItemMechanics.isHelmet(i) && (p.getInventory().getHelmet() == null || p.getInventory().getHelmet().getType() == Material.AIR)
-                                && e.getSlot() == 39) {
-                            cancel = true;
-                        }
-                        if (ItemMechanics.isChestplate(i)
-                                && (p.getInventory().getChestplate() == null || p.getInventory().getChestplate().getType() == Material.AIR)) {
-                            cancel = true;
-                        }
-                        if (ItemMechanics.isLeggings(i) && (p.getInventory().getLeggings() == null || p.getInventory().getLeggings().getType() == Material.AIR)) {
-                            cancel = true;
-                        }
-                        if (ItemMechanics.isBoots(i) && (p.getInventory().getBoots() == null || p.getInventory().getBoots().getType() == Material.AIR)) {
-                            cancel = true;
-                        }
-                        if (cancel) {
-                            e.setCancelled(true);
-                            e.setResult(Result.DENY);
-                            p.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level "
-                                    + LevelMechanics.getLevelToUse(ItemMechanics.getItemTier(i)) + " to wear this item.");
-                        }
+        if (e.getCursor() != null && e.getCursor().getType() != Material.AIR) {
+            ItemStack i = e.getCursor();
+            Player p = (Player) e.getWhoClicked();
+            if (ItemMechanics.isArmor(i) && (e.getSlot() == 39 || e.getSlot() == 38 || e.getSlot() == 37 || e.getSlot() == 36)) {
+                if (!LevelMechanics.canPlayerUseTier(p, ItemMechanics.getItemTier(i))) {
+                    boolean cancel = true;
+                    /*
+                     * if (ItemMechanics.isHelmet(i) && (p.getInventory().getHelmet() == null || p.getInventory().getHelmet().getType() == Material.AIR) &&
+                     * e.getSlot() == 39) { cancel = true; } if (ItemMechanics.isChestplate(i) && (p.getInventory().getChestplate() == null ||
+                     * p.getInventory().getChestplate().getType() == Material.AIR)) { cancel = true; } if (ItemMechanics.isLeggings(i) &&
+                     * (p.getInventory().getLeggings() == null || p.getInventory().getLeggings().getType() == Material.AIR)) { cancel = true; } if
+                     * (ItemMechanics.isBoots(i) && (p.getInventory().getBoots() == null || p.getInventory().getBoots().getType() == Material.AIR)) { cancel =
+                     * true; }
+                     */
+                    if (cancel) {
+                        e.setCancelled(true);
+                        e.setResult(Result.DENY);
+                        p.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level "
+                                + LevelMechanics.getLevelToUse(ItemMechanics.getItemTier(i)) + " to wear this item.");
                     }
                 }
             }

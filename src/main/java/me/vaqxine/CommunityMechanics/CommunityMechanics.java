@@ -2021,7 +2021,8 @@ public class CommunityMechanics implements Listener {
 			if(isSocialBook(e.getItem())) {
 				if(PlayerManager.getPlayerModel(p).getLastBookClick() == 0 || (System.currentTimeMillis() - PlayerManager.getPlayerModel(p).getLastBookClick()) > (2 * 1000)) {
 					updateCombatPage(p);
-					p.closeInventory();
+					//Why close their inventory? The event is called before it so..
+					//p.closeInventory();
 					PlayerManager.getPlayerModel(p).setLastBookClick(System.currentTimeMillis());
 				}
 				p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F);
