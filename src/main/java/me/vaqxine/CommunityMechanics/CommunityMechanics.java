@@ -412,62 +412,26 @@ public class CommunityMechanics implements Listener {
 			System.out.print("Player was null! chatcolor > " + c.toString());
 			return;
 		}
-		if(GuildMechanics.inGuild(pl.getName())) {
-			String g_prefix = GuildMechanics.guild_handle_map.get(GuildMechanics.getGuild(pl.getName()));
-			
-			String fixed_gname = g_prefix;
-			
-			if((g_prefix + ".default").length() > 16) {
-				// Name is too long, let's cut off from g_name.
-				// .default = 8
-				fixed_gname = g_prefix.substring(0, 8);
-			}
-			
-			if(c == ChatColor.WHITE) {
-				ScoreboardMechanics.addPlayerToTeam(fixed_gname + ".default", pl);
-			}
-			
-			if(c == ChatColor.RED) {
-				ScoreboardMechanics.addPlayerToTeam(fixed_gname + ".chaotic", pl);
-			}
-			if(c == ChatColor.DARK_RED) {
-				ScoreboardMechanics.addPlayerToTeam("dark_red", pl);
-			}
-			if(c == ChatColor.YELLOW) {
-				ScoreboardMechanics.addPlayerToTeam(fixed_gname + ".neutral", pl);
-			}
-			if(c == ChatColor.GREEN) {
-				ScoreboardMechanics.addPlayerToTeam("green", pl);
-			}
-			if(c == ChatColor.LIGHT_PURPLE) {
-				ScoreboardMechanics.addPlayerToTeam("purple", pl);
-			}
-			if(c == ChatColor.AQUA) {
-				ScoreboardMechanics.addPlayerToTeam(fixed_gname + ".gm", pl);
-			}
-			return;
-		} else if(!(GuildMechanics.inGuild(pl.getName()))) {
-			if(c == ChatColor.WHITE) {
-				ScoreboardMechanics.addPlayerToTeam("white", pl);
-			}
-			if(c == ChatColor.RED) {
-				ScoreboardMechanics.addPlayerToTeam("red", pl);
-			}
-			if(c == ChatColor.DARK_RED) {
-				ScoreboardMechanics.addPlayerToTeam("dark_red", pl);
-			}
-			if(c == ChatColor.YELLOW) {
-				ScoreboardMechanics.addPlayerToTeam("yellow", pl);
-			}
-			if(c == ChatColor.GREEN) {
-				ScoreboardMechanics.addPlayerToTeam("green", pl);
-			}
-			if(c == ChatColor.LIGHT_PURPLE) {
-				ScoreboardMechanics.addPlayerToTeam("purple", pl);
-			}
-			if(c == ChatColor.AQUA) {
-				ScoreboardMechanics.addPlayerToTeam("aqua", pl);
-			}
+		if(c == ChatColor.WHITE) {
+			ScoreboardMechanics.addPlayerToTeam("white", pl);
+		}
+		if(c == ChatColor.RED) {
+			ScoreboardMechanics.addPlayerToTeam("red", pl);
+		}
+		if(c == ChatColor.DARK_RED) {
+			ScoreboardMechanics.addPlayerToTeam("dark_red", pl);
+		}
+		if(c == ChatColor.YELLOW) {
+			ScoreboardMechanics.addPlayerToTeam("yellow", pl);
+		}
+		if(c == ChatColor.GREEN) {
+			ScoreboardMechanics.addPlayerToTeam("green", pl);
+		}
+		if(c == ChatColor.LIGHT_PURPLE) {
+			ScoreboardMechanics.addPlayerToTeam("purple", pl);
+		}
+		if(c == ChatColor.AQUA) {
+			ScoreboardMechanics.addPlayerToTeam("aqua", pl);
 		}
 	}
 	

@@ -38,7 +38,6 @@ import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
-import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.database.ConnectionPool;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -71,16 +70,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.material.Dye;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.mcsg.double0negative.tabapi.TabAPI;
 
 @SuppressWarnings("deprecation")
 public class GuildMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
-	
-	public static ScoreboardManager manager = null;
-	public static Scoreboard board = null;
 	
 	public static GuildMechanics instance = null;
 	
@@ -191,9 +185,6 @@ public class GuildMechanics implements Listener {
 		Main.plugin.getCommand("gpromote").setExecutor(new CommandGPromote());
 		Main.plugin.getCommand("gquit").setExecutor(new CommandGQuit());
 		Main.plugin.getCommand("guild").setExecutor(new CommandGuild());
-		
-		manager = Bukkit.getScoreboardManager();
-		board = manager.getNewScoreboard();
 		
 		// Player movement event for guild creation.
 		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
@@ -1652,19 +1643,6 @@ public class GuildMechanics implements Listener {
 		}
 		
 		//team.setAllowFriendlyFire(false);
-	}
-	
-	public static void setOverheadGuildTag(String p_name) {
-		if(!(inGuild(p_name))) {
-			//log.info("Player " + p_name + " not in guild, no nametag.");
-			return;
-		}
-		
-		String g_name = getGuild(p_name);
-		
-		setupGuildTeam(g_name);
-		
-		ScoreboardMechanics.addPlayerToTeam(g_name, Bukkit.getPlayer(p_name));
 	}
 	
 	public static void setupGuildData(String p_name, String guild_name) {
