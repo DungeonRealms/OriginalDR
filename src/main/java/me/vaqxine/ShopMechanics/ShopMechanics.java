@@ -16,6 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import me.ifamasssxd.levelmechanics.LevelMechanics;
 import me.vaqxine.Main;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.ChatMechanics.ChatMechanics;
@@ -1900,7 +1901,10 @@ public class ShopMechanics implements Listener {
 						p.closeInventory();
 					}
 				}, 2L);
-				
+				if(!LevelMechanics.canPlayerUseTier(p, ItemMechanics.getItemTier(e.getCurrentItem()))){
+				    p.sendMessage(ChatColor.RED + "This item requires " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level " + LevelMechanics.getLevelToUse(ItemMechanics.getItemTier(e.getCurrentItem())) + " to use this item.");
+				    p.sendMessage(ChatColor.GRAY + "Do you really want to purchase it?");
+				}
 				p.sendMessage(ChatColor.GREEN + "Enter the " + ChatColor.BOLD + "QUANTITY" + ChatColor.GREEN + " you'd like to purchase.");
 				p.sendMessage(ChatColor.GRAY + "MAX: " + being_bought.getAmount() + "X (" + total_price + "g), OR " + price + "g/each.");
 			} else if(e.isShiftClick()) {

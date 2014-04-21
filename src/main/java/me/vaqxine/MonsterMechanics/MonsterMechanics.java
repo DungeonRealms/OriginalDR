@@ -2105,9 +2105,8 @@ public class MonsterMechanics implements Listener {
 
         for (Entity e : to_remove) {
             log.info("[MM] Cleaning up monster, " + e.toString());
-            // mob_spawn_ownership.remove(e);
+            mob_spawn_ownership.remove(e);
         }
-
         // log.info("[MonsterMechanics] spawned_mobs size: " + spawned_mobs.size());
 
         for (Location l : spawned_mobs.keySet()) {
@@ -3049,9 +3048,13 @@ public class MonsterMechanics implements Listener {
          * return_string += cc.toString() + ChatColor.BOLD + "â•‘"; } /*else{ return_string += ChatColor.BLACK.toString() + "|||||" + cc.toString() +
          * ChatColor.BOLD.toString() + "â•‘"; }
          */
+        if (mob_level.containsKey(ent)) {
+            return return_string + ChatColor.LIGHT_PURPLE + " [" + mob_level.get(ent) + "]";
+        } else {
 
-        return return_string;
-        // 20 Bars, that's 5% HP per bar
+            return return_string;
+            // 20 Bars, that's 5% HP per bar
+        }
     }
 
     public static void subtractMHealth(Entity e, int amount) {
@@ -3193,7 +3196,10 @@ public class MonsterMechanics implements Listener {
                         + " seconds");
                 p.sendMessage(ChatColor.YELLOW + "spawn_range: " + ChatColor.WHITE + mob_data.substring(mob_data.indexOf("#") + 1, mob_data.indexOf("$"))
                         + " blocks");
-                p.sendMessage(ChatColor.YELLOW + "mob_level_range: " + ChatColor.WHITE + mob_data.substring(mob_data.indexOf("$") + 1, mob_data.indexOf("%")));
+                if (mob_data.contains("%")) {
+                    p.sendMessage(ChatColor.YELLOW + "mob_level_range: " + ChatColor.WHITE
+                            + mob_data.substring(mob_data.indexOf("$") + 1, mob_data.indexOf("%")));
+                }
                 p.sendMessage(ChatColor.GRAY + "DEBUG: " + mob_data);
             }
         }
@@ -5982,6 +5988,20 @@ public class MonsterMechanics implements Listener {
         double dmg_mult = 1D;
         custom_name = custom_name.replaceAll("_", "");
 
+        int mob_l = 1;
+        int tier = mob_t;
+        if (tier == 1) {
+            mob_l = 19;
+        } else if (tier == 2) {
+            mob_l = 39;
+        } else if (tier == 3) {
+            mob_l = 59;
+        } else if (tier == 4) {
+            mob_l = 79;
+        } else if (tier == 5) {
+            mob_l = 100;
+        }
+        custom_name += ChatColor.LIGHT_PURPLE + "[" + mob_l + "]";
         if ((meta_data.equalsIgnoreCase("wither") && e instanceof CraftSkeleton)) {
             // Make it a wither skeleton.
             ((CraftSkeleton) e).getHandle().setSkeletonType(1);
@@ -6340,19 +6360,7 @@ public class MonsterMechanics implements Listener {
         }
 
         BossMechanics.boss_event_log.put(e, "");
-        int mob_l = 1;
-        int tier = mob_t;
-        if (tier == 1) {
-            mob_l = 19;
-        } else if (tier == 2) {
-            mob_l = 39;
-        } else if (tier == 3) {
-            mob_l = 59;
-        } else if (tier == 4) {
-            mob_l = 79;
-        } else if (tier == 5) {
-            mob_l = 100;
-        }
+
         mob_level.put(e, mob_l);
         max_mob_health.put(e, (int) total_hp);
         mob_health.put(e, (int) total_hp);
@@ -7624,15 +7632,14 @@ public class MonsterMechanics implements Listener {
         if (elite) {
             mob_name_meta = ChatColor.BLACK + "" + ChatColor.BOLD + "" + ChatColor.stripColor(mob_name);
         }
-
+        mob_name_meta += ChatColor.LIGHT_PURPLE + " [" + getMobLevel(le) + "]";
         le.setCustomName(mob_name_meta);
         le.setCustomNameVisible(true);
 
         if (le.getType() == EntityType.ENDERMAN) {
             enderman_list.add((Enderman) le);
         }
-
-        le.setMetadata("mobname", new FixedMetadataValue(Main.plugin, tier_color + mob_name));
+        le.setMetadata("mobname", new FixedMetadataValue(Main.plugin, tier_color + mob_name + ChatColor.LIGHT_PURPLE + " [" + getMobLevel(le) + "]"));
 
         int mount_chance = new Random().nextInt(100);
         if (mount_chance <= 10) {
