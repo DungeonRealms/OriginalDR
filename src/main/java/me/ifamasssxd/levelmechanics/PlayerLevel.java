@@ -37,7 +37,6 @@ public class PlayerLevel {
         } else {
             loadData();
         }
-
         PlayerManager.getPlayerModel(p_name).setPlayerLevel(this);
     }
 
@@ -47,6 +46,8 @@ public class PlayerLevel {
 
     public void addXP(int xp) {
         // Throttle XP gain by a few seconds
+        if (getLevel() >= 100)
+            return;
         if (next_xp_gain_available > System.currentTimeMillis())
             return;
         // 3 second delay
@@ -62,7 +63,7 @@ public class PlayerLevel {
             // No remaining xp
             setXP(getXP() + xp);
         }
-        //saveData(true, false);
+        // saveData(true, false);
         if (PlayerManager.getPlayerModel(p_name).getToggleList() != null && PlayerManager.getPlayerModel(p_name).getToggleList().contains("debug")) {
             if (p == null) {
                 checkPlayer();
@@ -77,7 +78,7 @@ public class PlayerLevel {
     public int getEXPNeeded(int level) {
         if (level >= 0) {
             if (level == 1) {
-                return 300; // formula doens't work on level 1.
+                return 300; // formula doesn't work on level 1.
             }
             if (level == 100) {
                 return 0;

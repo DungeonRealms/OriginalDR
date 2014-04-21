@@ -1533,13 +1533,13 @@ public class DuelMechanics implements Listener {
 			return;
 		} // Duel hasn't started yet here.
 		
-		if(duel_map.get(attacker.getName()).equalsIgnoreCase(attacked.getName())) {
+		if(duel_map.get(attacked.getName()).equalsIgnoreCase(attacker.getName())) {
 			if((HealthMechanics.getPlayerHP(attacked.getName()) - e.getDamage() <= 1)) {
 				RealmMechanics.player_god_mode.put(attacked.getName(), System.currentTimeMillis());
 				attacked.setFireTicks(0);
 				attacked.setFallDistance(0.0F);
 				attacked.removePotionEffect(PotionEffectType.POISON);
-				attacked.setHealth(10);
+				attacked.setHealth(2);
 				HealthMechanics.setPlayerHP(attacked.getName(), 10);
 				//attacked.setLevel(1);
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
@@ -1594,7 +1594,7 @@ public class DuelMechanics implements Listener {
 				return;
 			}
 			
-			e.setCancelled(true);
+			e.setCancelled(false);
 			return;
 			// Cancel any previously made event cancels... if this doesn't work, just do direct damage lool.
 		}

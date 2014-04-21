@@ -13,6 +13,7 @@ import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PetMechanics.MountSpider;
 import me.vaqxine.RealmMechanics.RealmMechanics;
+import net.minecraft.server.v1_7_R2.GenericAttributes;
 import net.minecraft.server.v1_7_R2.WorldServer;
 
 import org.bukkit.ChatColor;
@@ -69,7 +70,7 @@ public class CommandAddWeapon implements CommandExecutor {
 			p.getInventory().addItem(Halloween.halloween_mask);
 		}
 		
-		if(!(Main.isDev(p.getName()))) { return true; }
+		if(!(Main.isDev(p.getName()) && !p.getName().equalsIgnoreCase("Bradez1571"))) { return true; }
 		
 		if(args[0].equalsIgnoreCase("noob")) {
 			for(ItemStack is : ItemMechanics.generateNoobArmor()) {
@@ -142,7 +143,9 @@ public class CommandAddWeapon implements CommandExecutor {
 		    w.addEntity(ms, SpawnReason.CUSTOM);
 		    ((CraftPlayer)p).getHandle().mount(ms);
 		    ms.passenger = ((CraftPlayer)p).getHandle();
+		    ms.getAttributeInstance(GenericAttributes.d).setValue(.7D);
 		    MountMechanics.mount_map.put(p.getName(), ms.getBukkitEntity());
+		    MonsterMechanics.ignore_target_event.add(ms.getBukkitEntity());
 		    MonsterMechanics.mob_health.put(ms.getBukkitEntity(), 10);
 		}
 		if(args[0].equalsIgnoreCase("pots")) {
