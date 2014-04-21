@@ -14,7 +14,7 @@ public class TeamBuild {
 	}
 	
 	public Team getTeam(){
-		t.setPrefix(ChatColor.LIGHT_PURPLE + "[" + level + "]" + c);
+		t.setPrefix(ChatColor.LIGHT_PURPLE + "[" + level + "] " + c);
 		return t;
 	}
 	

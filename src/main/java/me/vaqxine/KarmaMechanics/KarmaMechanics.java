@@ -16,7 +16,6 @@ import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.ItemMechanics.ItemMechanics;
-import me.vaqxine.ModerationMechanics.ModerationMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
@@ -785,13 +784,6 @@ public class KarmaMechanics implements Listener {
 		ChatColor c = null;
 		if(align == null || align.equalsIgnoreCase("")) {
 			align = "good";
-		}
-		
-		if(p_to_send.isOp()) {
-			c = ChatColor.AQUA;
-			if(ModerationMechanics.vanish_list.contains(p_to_send.getName())) { return; }
-			CommunityMechanics.setColor(p_to_send, c);
-			return;
 		}
 		
 		if(align.equalsIgnoreCase("good")) {
