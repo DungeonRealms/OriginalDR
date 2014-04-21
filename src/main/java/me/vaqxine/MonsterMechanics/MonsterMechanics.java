@@ -7632,7 +7632,7 @@ public class MonsterMechanics implements Listener {
         if (elite) {
             mob_name_meta = ChatColor.BLACK + "" + ChatColor.BOLD + "" + ChatColor.stripColor(mob_name);
         }
-        mob_name_meta += ChatColor.LIGHT_PURPLE + " [" + mob_level.get(ent) + "]";
+        mob_name_meta += ChatColor.LIGHT_PURPLE + " [" + getMobLevel(le) + "]";
         le.setCustomName(mob_name_meta);
         le.setCustomNameVisible(true);
 
