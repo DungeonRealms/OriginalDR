@@ -412,27 +412,8 @@ public class CommunityMechanics implements Listener {
 			System.out.print("Player was null! chatcolor > " + c.toString());
 			return;
 		}
-		if(c == ChatColor.WHITE) {
-			ScoreboardMechanics.addPlayerToTeam("white", pl);
-		}
-		if(c == ChatColor.RED) {
-			ScoreboardMechanics.addPlayerToTeam("red", pl);
-		}
-		if(c == ChatColor.DARK_RED) {
-			ScoreboardMechanics.addPlayerToTeam("dark_red", pl);
-		}
-		if(c == ChatColor.YELLOW) {
-			ScoreboardMechanics.addPlayerToTeam("yellow", pl);
-		}
-		if(c == ChatColor.GREEN) {
-			ScoreboardMechanics.addPlayerToTeam("green", pl);
-		}
-		if(c == ChatColor.LIGHT_PURPLE) {
-			ScoreboardMechanics.addPlayerToTeam("purple", pl);
-		}
-		if(c == ChatColor.AQUA) {
-			ScoreboardMechanics.addPlayerToTeam("aqua", pl);
-		}
+		
+		ScoreboardMechanics.setPlayerColor(c, pl);
 	}
 	
 	public static int getPlayerServer(String p_name, boolean refresh) {

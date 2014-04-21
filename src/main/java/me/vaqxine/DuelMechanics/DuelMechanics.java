@@ -11,20 +11,16 @@ import me.vaqxine.Main;
 import me.vaqxine.ChatMechanics.ChatMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.commands.CommandToggleDuel;
-import me.vaqxine.GuildMechanics.GuildMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
 import me.vaqxine.MerchantMechanics.MerchantMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
-import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RecordMechanics.RecordMechanics;
 import me.vaqxine.RestrictionMechanics.RestrictionMechanics;
-import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
-import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.enums.CC;
 import me.vaqxine.managers.PlayerManager;
@@ -51,7 +47,6 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -349,39 +344,8 @@ public class DuelMechanics implements Listener {
 	}
 	
 	public void restoreColors(Player p1, Player p2) {
-		ScoreboardMechanics.removePlayerFromTeam("red", p1);
-		ScoreboardMechanics.removePlayerFromTeam("red", p2);
-		
-		if(GuildMechanics.inGuild(p1.getName())) {
-			String g_name = GuildMechanics.guild_handle_map.get(GuildMechanics.getGuild(p1.getName()));
-			
-			String fixed_gname = g_name;
-			
-			if((g_name + ".default").length() > 16) {
-				// Name is too long, let's cut off from g_name.
-				// .default = 8
-				fixed_gname = g_name.substring(0, 8);
-			}
-			
-			ScoreboardMechanics.removePlayerFromTeam(fixed_gname + ".chaotic", p1);
-			
-			return;
-		}
-		if(GuildMechanics.inGuild(p2.getName())) {
-			String g_name = GuildMechanics.guild_handle_map.get(GuildMechanics.getGuild(p2.getName()));
-			
-			String fixed_gname = g_name;
-			
-			if((g_name + ".default").length() > 16) {
-				// Name is too long, let's cut off from g_name.
-				// .default = 8
-				fixed_gname = g_name.substring(0, 8);
-			}
-			
-			ScoreboardMechanics.removePlayerFromTeam(fixed_gname + ".chaotic", p2);
-			
-			return;
-		}
+		//ScoreboardMechanics.removePlayerFromTeam("red", p1);
+		//ScoreboardMechanics.removePlayerFromTeam("red", p2);
 		
 		KarmaMechanics.sendAlignColor(p2, p1);
 		KarmaMechanics.sendAlignColor(p1, p2);

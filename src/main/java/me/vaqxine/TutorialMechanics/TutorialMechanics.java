@@ -15,7 +15,6 @@ import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.MerchantMechanics.MerchantMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
-import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.ShopMechanics.ShopMechanics;
 import me.vaqxine.TutorialMechanics.commands.CommandSkip;
 import me.vaqxine.TutorialMechanics.commands.CommandTutorial;
@@ -116,7 +115,7 @@ public class TutorialMechanics implements Listener {
 				for(Player pl : Main.plugin.getServer().getOnlinePlayers()) {
 					if(onTutorialIsland(pl)) {
 						if(!onIsland.contains(pl.getName())) onIsland.add(pl.getName());
-						ScoreboardMechanics.addPlayerToTeam("TI", pl);
+						//ScoreboardMechanics.addPlayerToTeam("TI", pl);
 						if(!(pl.hasPotionEffect(PotionEffectType.INVISIBILITY))) {
 							pl.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
 						}
@@ -205,7 +204,7 @@ public class TutorialMechanics implements Listener {
 			}
 			pl.updateInventory();
 			
-			ScoreboardMechanics.addPlayerToTeam("TI", pl);
+			//ScoreboardMechanics.addPlayerToTeam("TI", pl);
 			pl.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
 			pl.setSneaking(true);
 			
@@ -261,7 +260,7 @@ public class TutorialMechanics implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Player pl = e.getPlayer();
 		if(onTutorialIsland(pl)) {
-			ScoreboardMechanics.removePlayerFromTeam("TI", pl);
+			//ScoreboardMechanics.removePlayerFromTeam("TI", pl);
 			pl.removePotionEffect(PotionEffectType.INVISIBILITY);
 		}
 	}
@@ -596,7 +595,7 @@ public class TutorialMechanics implements Listener {
 		completion_delay.remove(pl.getName());
 		leave_confirm.remove(pl.getName());
 		skip_confirm.remove(pl.getName());
-		ScoreboardMechanics.removePlayerFromTeam("TI", pl);
+		//ScoreboardMechanics.removePlayerFromTeam("TI", pl);
 		pl.setSneaking(false);
 		
 		try {

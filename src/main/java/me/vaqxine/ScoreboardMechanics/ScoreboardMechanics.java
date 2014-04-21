@@ -131,20 +131,6 @@ public class ScoreboardMechanics implements Listener {
 		cloneScoreboard(e.getPlayer());
 	}
 	
-	public static void removePlayerFromTeam(String team, OfflinePlayer player) {
-		for(Player p : Bukkit.getOnlinePlayers()) {
-			ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), team).removePlayer(player);
-		}
-		main.getTeam(team).removePlayer(player);
-	}
-	
-	public static void addPlayerToTeam(String team, OfflinePlayer player) {
-		for(Player p : Bukkit.getOnlinePlayers()) {
-			ScoreboardMechanics.getTeam(ScoreboardMechanics.getBoard(p), team).addPlayer(player);
-		}
-		main.getTeam(team).addPlayer(player);
-	}
-	
 	public static void setOverheadHP(Player pl, int hp) {
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.BELOW_NAME).getScore(pl).setScore(hp);
@@ -152,11 +138,28 @@ public class ScoreboardMechanics implements Listener {
 		main.getObjective(DisplaySlot.BELOW_NAME).getScore(pl).setScore(hp);
 	}
 	
-	public static void setStockCount(Player shop_tag, int stock) {
+	@SuppressWarnings("deprecation")
+	private static Team getTeam(Scoreboard sb, OfflinePlayer target){
+		if(sb.getTeam("team-" + target.getName()) == null) return sb.registerNewTeam("team-" + target.getName());
+		return sb.getTeam("team-" + target.getName());
+	}
+	
+	public static void setPlayerColor(ChatColor color, OfflinePlayer pl){
 		for(Player p : Bukkit.getOnlinePlayers()) {
-			ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.BELOW_NAME).getScore(shop_tag).setScore(stock);
+			Team t = new TeamBuild(getTeam(ScoreboardMechanics.getBoard(p), pl)).setColor(color).getTeam();
+			if(!t.hasPlayer(pl)) t.addPlayer(pl);
 		}
-		main.getObjective(DisplaySlot.BELOW_NAME).getScore(shop_tag).setScore(stock);
+		Team t = new TeamBuild(getTeam(main, pl)).setColor(color).getTeam();
+		if(!t.hasPlayer(pl)) t.addPlayer(pl);
+	}
+	
+	public static void setPlayerLevel(int level, OfflinePlayer pl){
+		for(Player p : Bukkit.getOnlinePlayers()) {
+			Team t = new TeamBuild(getTeam(ScoreboardMechanics.getBoard(p), pl)).setLevel(level).getTeam();
+			if(!t.hasPlayer(pl)) t.addPlayer(pl);
+		}
+		Team t = new TeamBuild(getTeam(main, pl)).setLevel(level).getTeam();
+		if(!t.hasPlayer(pl)) t.addPlayer(pl);
 	}
 	
 }

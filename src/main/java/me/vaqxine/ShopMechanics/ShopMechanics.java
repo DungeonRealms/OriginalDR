@@ -33,7 +33,6 @@ import me.vaqxine.PetMechanics.PetMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
-import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.TutorialMechanics.TutorialMechanics;
 import me.vaqxine.database.ConnectionPool;
@@ -257,7 +256,7 @@ public class ShopMechanics implements Listener {
 		log.info("[ShopMechanics] has been disabled.");
 	}
 	public void setStockCount(Player shop_tag, int stock) {
-		ScoreboardMechanics.setStockCount(shop_tag, stock);
+		//ScoreboardMechanics.setStockCount(shop_tag, stock);
 	}
 	
 	public void incrementViewCount(Hologram shop_tag) {
