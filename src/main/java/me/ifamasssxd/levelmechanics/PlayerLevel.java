@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.vaqxine.Main;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.Hive.Hive;
+import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
 import me.vaqxine.database.ConnectionPool;
 import me.vaqxine.managers.PlayerManager;
 
@@ -136,6 +137,7 @@ public class PlayerLevel {
             p.playSound(p.getLocation(), Sound.LEVEL_UP, 0.5F, 1F);
         }
         setLevel(getLevel() + 1);
+        ScoreboardMechanics.setPlayerLevel(getLevel(), p);
     }
 
     @SuppressWarnings("deprecation")
