@@ -26,6 +26,7 @@ import me.vaqxine.RestrictionMechanics.commands.CommandZone;
 import me.vaqxine.SpawnMechanics.SpawnMechanics;
 import me.vaqxine.TradeMechanics.TradeMechanics;
 import me.vaqxine.enums.Armor;
+import me.vaqxine.enums.CC;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -1114,6 +1115,38 @@ public class RestrictionMechanics implements Listener {
                 }
             }
 
+        }
+    }
+
+    public void checkBookStacks(Player p) {
+        boolean had_illegal_books = false;
+        for (ItemStack is : p.getInventory()) {
+            if (is == null || is.getType() == Material.AIR) {
+                continue;
+            }
+            if (is.getType() == Material.BOOK) {
+                if (is.getAmount() > 1) {
+                    had_illegal_books = true;
+                    while (is.getAmount() > 1) {
+                        is.setAmount(is.getAmount() - 1);
+                        ItemStack to_give = is.clone();
+                        to_give.setAmount(1);
+                        addItem(p, to_give);
+                    }
+                }
+            }
+        }
+        if (had_illegal_books) {
+            p.sendMessage(ChatColor.RED + "You were found with illegally stacked books.\nAccount Flagged!");
+            Main.d(CC.WHITE + p.getName() + " was found with illegal books.");
+        }
+    }
+
+    public void addItem(Player p, ItemStack is) {
+        if (p.getInventory().firstEmpty() == -1) {
+            p.getWorld().dropItem(p.getLocation(), is);
+        } else {
+            p.getInventory().addItem(is);
         }
     }
 

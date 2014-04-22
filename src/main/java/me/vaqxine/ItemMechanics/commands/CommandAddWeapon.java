@@ -13,6 +13,7 @@ import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PetMechanics.MountSpider;
 import me.vaqxine.RealmMechanics.RealmMechanics;
+import net.minecraft.server.v1_7_R2.EntitySpider;
 import net.minecraft.server.v1_7_R2.GenericAttributes;
 import net.minecraft.server.v1_7_R2.WorldServer;
 
@@ -23,7 +24,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftSpider;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Spider;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -143,7 +146,9 @@ public class CommandAddWeapon implements CommandExecutor {
 		    w.addEntity(ms, SpawnReason.CUSTOM);
 		    ((CraftPlayer)p).getHandle().mount(ms);
 		    ms.passenger = ((CraftPlayer)p).getHandle();
-		    ms.getAttributeInstance(GenericAttributes.d).setValue(.7D);
+		    Spider s = (Spider)ms.getBukkitEntity();
+		    EntitySpider es = ((EntitySpider)((CraftSpider)s).getHandle());
+		    es.getAttributeInstance(GenericAttributes.d).setValue(1D);
 		    MountMechanics.mount_map.put(p.getName(), ms.getBukkitEntity());
 		    MonsterMechanics.ignore_target_event.add(ms.getBukkitEntity());
 		    MonsterMechanics.mob_health.put(ms.getBukkitEntity(), 10);

@@ -43,7 +43,6 @@ import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RecordMechanics.RecordMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
-import me.vaqxine.RestrictionMechanics.RestrictionMechanics;
 import me.vaqxine.TeleportationMechanics.TeleportationMechanics;
 import me.vaqxine.enums.CC;
 import me.vaqxine.enums.Delay;
@@ -70,7 +69,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftSkeleton;
 import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
@@ -132,7 +130,6 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -1211,8 +1208,7 @@ public class MonsterMechanics implements Listener {
                     // They havent hit the recently and can be seen from players
                     if (ent.getLocation().distance(pl.getLocation()) <= 8) {
                         // They can see them and have been hit
-                        if (mob_last_hurt.containsKey(ent)
-                                && (System.currentTimeMillis() - mob_last_hurt.get(ent)) < 3 * 1000) {
+                        if (mob_last_hurt.containsKey(ent) && (System.currentTimeMillis() - mob_last_hurt.get(ent)) < 3 * 1000) {
                             ent.teleport(pl.getLocation().add(0, .25, 0));
                             Main.d("The mob was being safe spotted by " + target);
                             ent.setFallDistance(0);
@@ -1223,17 +1219,6 @@ public class MonsterMechanics implements Listener {
         }
     }
 
-    public boolean canSee(Player p, Location to, int range) {
-        if (p.getLineOfSight(null, range) == null)
-            return false;
-        for (Block b : p.getLineOfSight(null, range)) {
-            // So blocks are the same
-            if (HearthstoneMechanics.isLocationsEqual(b.getLocation(), to)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public void unloadChunks() {
         List<Location> to_remove = new ArrayList<Location>();
@@ -1302,7 +1287,7 @@ public class MonsterMechanics implements Listener {
                 if (!(le.hasMetadata("mobname"))) {
                     continue;
                 }
-                le.setCustomName(le.getMetadata("mobname").get(0).asString());
+                le.setCustomName(le.getMetadata("mobname").get(0).asString() + ChatColor.LIGHT_PURPLE + " [" + getMobLevel(le) + "]");
                 le.setCustomNameVisible(true);
             }
         }
@@ -1966,7 +1951,7 @@ public class MonsterMechanics implements Listener {
             LivingEntity le = (LivingEntity) ent;
             if (le.hasMetadata("mobname")) {
                 le.setCustomNameVisible(true);
-                le.setCustomName(le.getMetadata("mobname").get(0).asString());
+                le.setCustomName(le.getMetadata("mobname").get(0).asString() + ChatColor.LIGHT_PURPLE + " [" + getMobLevel(le) + "]");
             }
 
             int max_hp = HealthMechanics.generateMaxHP(ent);
@@ -3599,7 +3584,7 @@ public class MonsterMechanics implements Listener {
             if (mob_damage.containsKey(le)) {
                 // Custom mob, witch throwing potion, do damage.
                 List<Integer> dmg_range = mob_damage.get(le);
-                int dmg = new Random().nextInt(dmg_range.get(1) - dmg_range.get(0)) + dmg_range.get(0);
+                int dmg = new Random().nextInt((dmg_range.get(1) - dmg_range.get(0)) < 1 ? 1 : dmg_range.get(1) - dmg_range.get(0)) + dmg_range.get(0);
                 dmg = dmg * 2;
                 for (Entity ent : e.getAffectedEntities()) {
                     if (ent instanceof Player) {
@@ -6030,7 +6015,6 @@ public class MonsterMechanics implements Listener {
         } else if (mob_t == 5) {
             mob_l = 100;
         }
-        custom_name += ChatColor.LIGHT_PURPLE + " [" + mob_l + "]";
         if ((meta_data.equalsIgnoreCase("wither") && e instanceof CraftSkeleton)) {
             // Make it a wither skeleton.
             ((CraftSkeleton) e).getHandle().setSkeletonType(1);
@@ -7662,7 +7646,7 @@ public class MonsterMechanics implements Listener {
         if (le.getType() == EntityType.ENDERMAN) {
             enderman_list.add((Enderman) le);
         }
-        le.setMetadata("mobname", new FixedMetadataValue(Main.plugin, tier_color + mob_name + ChatColor.LIGHT_PURPLE + " [" + getMobLevel(le) + "]"));
+        le.setMetadata("mobname", new FixedMetadataValue(Main.plugin, tier_color + mob_name));
 
         int mount_chance = new Random().nextInt(100);
         if (mount_chance <= 10) {

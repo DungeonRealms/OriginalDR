@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -23,6 +24,7 @@ public class PlayerLevel {
     String p_name;
     int level;
     int xp;
+    Entity last_mob_gained_from;
 
     public PlayerLevel(String p_name, boolean aSync) {
         this.p_name = p_name;
@@ -41,6 +43,14 @@ public class PlayerLevel {
 
     public void setPlayer(Player p) {
         this.p = p;
+    }
+
+    public Entity getLastEntityKilled() {
+        return last_mob_gained_from;
+    }
+
+    public void setLastEntityKilled(Entity e) {
+        this.last_mob_gained_from = e;
     }
 
     public void addXP(int xp) {
@@ -76,21 +86,19 @@ public class PlayerLevel {
         if (p.getInventory().contains(Material.WRITTEN_BOOK)) {
             slot = p.getInventory().first(Material.WRITTEN_BOOK);
         }
+        if (slot == -1) {
+            p.getInventory().addItem(CommunityMechanics.generateCommBook(p));
+            return;
+        }
         p.getInventory().setItem(slot, CommunityMechanics.generateCommBook(p));
     }
 
     public int getEXPNeeded(int level) {
-        if (level >= 0) {
-            if (level == 1) {
-                return 300; // formula doesn't work on level 1.
-            }
-            if (level == 100) {
-                return 0;
-            }
-            int previous_level = level - 1;
-            return (int) (Math.pow((previous_level), 2) + ((previous_level) * 20) + 200 + ((previous_level) * 4) + getEXPNeeded(previous_level));
-        }
-        return 0;
+        /*
+         * if (level >= 0) { if (level == 1) { return 300; // formula doesn't work on level 1. } if (level == 100) { return 0; } int previous_level = level - 1;
+         * return (int) (Math.pow((previous_level), 2) + ((previous_level) * 20) + 200 + ((previous_level) * 4) + getEXPNeeded(previous_level)); } return 0;
+         */
+        return (int) (2000 * Math.pow(level, 1.3));
     }
 
     public void saveData(boolean useHive, boolean remove) {

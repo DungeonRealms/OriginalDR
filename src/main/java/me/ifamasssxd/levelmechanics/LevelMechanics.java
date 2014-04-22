@@ -50,17 +50,24 @@ public class LevelMechanics implements Listener {
             } else {
                 killer = (Player) e.getDamager();
             }
+            PlayerLevel pl = getPlayerData(killer);
+            if (pl.getLastEntityKilled() != null && pl.getLastEntityKilled().equals(e.getEntity())) {
+                return;
+            }
+            pl.setLastEntityKilled(e.getEntity());
             int level = getPlayerLevel(killer);
             int xp = mob_level * 15 + new Random().nextInt(50) + 5;
             if ((level + 8) <= (mob_level)) {
                 // No XP
-                killer.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "greater" + ChatColor.RED + " then 8 levels of this mob. No EXP granted.");
+                killer.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "greater" + ChatColor.RED
+                        + " then 8 levels of this mob. No EXP granted.");
                 xp = 0;
             }
             if (level >= mob_level + 8) {
                 // mob_level = 10 p_level = 15
                 // .1 * (15-10 -> 5)
-                killer.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "less" + ChatColor.RED + " then 8 levels of this mob. 60% EXP granted.");
+                killer.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "less" + ChatColor.RED
+                        + " then 8 levels of this mob. 60% EXP granted.");
                 xp *= .6;
             }
             if (mob_level < 10 && level < 15) {
