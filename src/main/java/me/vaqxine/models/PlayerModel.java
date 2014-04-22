@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import me.ifamasssxd.levelmechanics.PlayerLevel;
 import me.vaqxine.HearthstoneMechanics.Hearthstone;
 import me.vaqxine.ItemMechanics.PlayerArrowReplace;
+import me.vaqxine.LevelMechanics.PlayerLevel;
 import me.vaqxine.PartyMechanics.Party;
 import me.vaqxine.holograms.Hologram;
 

@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 import javax.swing.text.Utilities;
 
 import me.vaqxine.Main;
-import me.ifamasssxd.levelmechanics.LevelMechanics;
 import me.vaqxine.AchievmentMechanics.AchievmentMechanics;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
@@ -24,6 +23,7 @@ import me.vaqxine.HealthMechanics.HealthMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.ItemMechanics.commands.CommandAddWeapon;
+import me.vaqxine.LevelMechanics.LevelMechanics;
 import me.vaqxine.MerchantMechanics.MerchantMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MonsterMechanics.Hologram;

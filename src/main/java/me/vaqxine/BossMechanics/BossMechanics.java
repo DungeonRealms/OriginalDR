@@ -10,7 +10,6 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-import me.ifamasssxd.levelmechanics.LevelMechanics;
 import me.vaqxine.Main;
 import me.vaqxine.BossMechanics.commands.CommandSpawnBoss;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
@@ -19,6 +18,7 @@ import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemGenerators;
 import me.vaqxine.ItemMechanics.ItemMechanics;
+import me.vaqxine.LevelMechanics.LevelMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.enums.CC;

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import me.vaqxine.Main;
-import me.ifamasssxd.levelmechanics.*;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EcashMechanics.EcashMechanics;
@@ -16,6 +15,7 @@ import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.Halloween;
 import me.vaqxine.ItemMechanics.ItemGenerators;
 import me.vaqxine.ItemMechanics.ItemMechanics;
+import me.vaqxine.LevelMechanics.*;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;

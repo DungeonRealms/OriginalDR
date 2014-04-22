@@ -3,13 +3,13 @@ package me.vaqxine.AchievmentMechanics;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import me.ifamasssxd.levelmechanics.LevelMechanics;
 import me.vaqxine.Main;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.ItemMechanics.ItemMechanics;
+import me.vaqxine.LevelMechanics.LevelMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.PermissionMechanics.PermissionMechanics;
 import me.vaqxine.PetMechanics.PetMechanics;

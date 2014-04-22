@@ -1,4 +1,4 @@
-package me.ifamasssxd.levelmechanics;
+package me.vaqxine.LevelMechanics;
 
 import java.util.Random;
 
