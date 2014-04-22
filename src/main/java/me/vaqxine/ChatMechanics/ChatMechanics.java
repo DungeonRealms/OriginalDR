@@ -338,7 +338,7 @@ public class ChatMechanics implements Listener {
                 return_string += ChatColor.AQUA.toString() + ChatColor.BOLD + "GM" + ChatColor.WHITE + ChatColor.BOLD + "/" + ChatColor.DARK_AQUA
                         + ChatColor.BOLD + "DEV " + ChatColor.GRAY;
             } else if (p.getName().equalsIgnoreCase("Bradez1571")) {
-                return_string += ChatColor.RED.toString() + ChatColor.BOLD + "CM" + ChatColor.RED;
+                return_string += ChatColor.RED.toString() + ChatColor.BOLD + "CM " + ChatColor.RED;
             } else {
                 return_string += "" + ChatColor.AQUA + ChatColor.BOLD.toString() + "GM" + " " + ChatColor.AQUA;
             }
@@ -951,12 +951,12 @@ public class ChatMechanics implements Listener {
                 after = split[1];
 
             normal = new JSONMessage(prefix + ChatColor.WHITE + aprefix, ChatColor.WHITE);
-            normal.addText(before + " ");
+            normal.addText(before + "");
             normal.addItem(e.getPlayer().getItemInHand(), ChatColor.BOLD + "SHOW", ChatColor.UNDERLINE);
             normal.addText(after);
 
             filter = new JSONMessage(prefix + ChatColor.WHITE + aprefix, ChatColor.WHITE);
-            filter.addText(censorMessage(before) + " ");
+            filter.addText(censorMessage(before) + "");
             filter.addItem(e.getPlayer().getItemInHand(), ChatColor.BOLD + "SHOW", ChatColor.UNDERLINE);
             filter.addText(censorMessage(after));
         }
