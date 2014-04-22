@@ -497,7 +497,7 @@ public class HearthstoneMechanics implements Listener {
         hearthstone_timer.remove(p_name);
     }
 
-    public boolean isLocationsEqual(Location first, Location second) {
+    public static boolean isLocationsEqual(Location first, Location second) {
         if ((first.getBlockX() == second.getBlockX()) && (first.getBlockY() == second.getBlockY()) && (first.getBlockZ() == second.getBlockZ())
                 && first.getWorld().getName().equalsIgnoreCase(second.getWorld().getName())) {
             return true;

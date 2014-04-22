@@ -1452,7 +1452,7 @@ public class RestrictionMechanics implements Listener {
         if (e.getCurrentItem() != null) {
             ItemStack is = e.getCurrentItem();
             Player p = (Player) e.getWhoClicked();
-            if (p.getWorld().getName().toLowerCase().equalsIgnoreCase(main_world_name.toLowerCase())) {
+            if (!p.getWorld().getName().toLowerCase().equalsIgnoreCase(main_world_name.toLowerCase())) {
                 // They are in realms
                 if (p.getOpenInventory().getTopInventory().getName() != "container.crafting" && !TradeMechanics.trade_map.containsKey(p.getName())) {
                     if (is.getType() == Material.MAGMA_CREAM) {

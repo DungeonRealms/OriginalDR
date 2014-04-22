@@ -96,7 +96,7 @@ public class CommandBossTP implements CommandExecutor {
 		
 		if(cb.getBlock().getWorld().getName().contains("DODungeon")) {
 			Location loc = new Location(cb.getBlock().getWorld(), -364, 60, -1.2);
-			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "Burick The Fanatic");
+			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "Burick The Fanatic", 3);
 			BossMechanics.boss_map.put(boss, "unholy_priest");
 			for(Player pl : boss.getWorld().getPlayers()) {
 				pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Burick The Fanatic: " + ChatColor.WHITE + "Ahahaha! You dare try to kill ME?! I am Burick, disciple of Goragath! None of you will leave this place alive!");
@@ -106,7 +106,7 @@ public class CommandBossTP implements CommandExecutor {
 		
 		if(cb.getBlock().getWorld().getName().contains("T1Dungeon")) {
 			Location loc = new Location(cb.getBlock().getWorld(), 529, 55, -313);
-			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "bandit", "Mayel The Cruel");
+			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "bandit", "Mayel The Cruel", 1);
 			BossMechanics.boss_map.put(boss, "bandit_leader");
 			for(Player pl : boss.getWorld().getPlayers()) {
 				pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Mayel The Cruel: " + ChatColor.WHITE + "How dare you challenge ME, the leader of the Cyrene Bandits! To me, my brethern, let us crush these incolents!");
@@ -116,7 +116,7 @@ public class CommandBossTP implements CommandExecutor {
 		
 		if(cb.getBlock().getWorld().getName().contains("fireydungeon")) {
 			Location loc = new Location(cb.getBlock().getWorld(), -54, 158, 646);
-			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "The Infernal Abyss");
+			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "The Infernal Abyss", 4);
 			BossMechanics.boss_map.put(boss, "fire_demon");
 			for(Player pl : boss.getWorld().getPlayers()) {
 				pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "The Infernal Abyss: " + ChatColor.WHITE + "... I have nothing to say to you foolish mortals, except for this: Burn.");
@@ -127,7 +127,7 @@ public class CommandBossTP implements CommandExecutor {
 		if(cb.getBlock().getWorld().getName().contains("OneWolfeDungeon")) {
 		    //TODO: SET THE LOCATION
 			Location loc = new Location(cb.getBlock().getWorld(), -71, 176, 18); // TODO: onewolf - spawn his wolf pet as well
-			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.ZOMBIE, "goblin", "Aceron The Wicked");
+			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.ZOMBIE, "goblin", "Aceron The Wicked", 4);
 			BossMechanics.boss_map.put(boss, "aceron");
 			for(Player pl : boss.getWorld().getPlayers()) {
 				pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Aceron The Wicked: " + ChatColor.WHITE + "I hope you find what you are looking for, because you wont be leaving here with it!");

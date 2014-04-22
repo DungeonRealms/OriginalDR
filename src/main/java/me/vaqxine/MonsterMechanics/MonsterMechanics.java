@@ -26,6 +26,7 @@ import me.vaqxine.BossMechanics.BossMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
+import me.vaqxine.HearthstoneMechanics.HearthstoneMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
@@ -42,6 +43,7 @@ import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
 import me.vaqxine.RealmMechanics.RealmMechanics;
 import me.vaqxine.RecordMechanics.RecordMechanics;
 import me.vaqxine.RepairMechanics.RepairMechanics;
+import me.vaqxine.RestrictionMechanics.RestrictionMechanics;
 import me.vaqxine.TeleportationMechanics.TeleportationMechanics;
 import me.vaqxine.enums.CC;
 import me.vaqxine.enums.Delay;
@@ -68,6 +70,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftSkeleton;
 import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
@@ -1198,10 +1201,38 @@ public class MonsterMechanics implements Listener {
                         }
                     }
                 }
+            } else if ((System.currentTimeMillis() - mob_last_hit.get(ent)) > 5 * 1000) {
+                String target = mob_target.get(ent);
+                if (Bukkit.getPlayer(target) != null) {
+                    Player pl = Bukkit.getPlayer(target);
+                    if (!pl.getWorld().getName().equalsIgnoreCase(ent.getWorld().getName())) {
+                        continue;
+                    }
+                    // They havent hit the recently and can be seen from players
+                    if (ent.getLocation().distance(pl.getLocation()) <= 8) {
+                        // They can see them and have been hit
+                        if (mob_last_hurt.containsKey(ent)
+                                && (System.currentTimeMillis() - mob_last_hurt.get(ent)) < 3 * 1000) {
+                            ent.teleport(pl.getLocation().add(0, .25, 0));
+                            Main.d("The mob was being safe spotted by " + target);
+                            ent.setFallDistance(0);
+                        }
+                    }
+                }
             }
-
         }
+    }
 
+    public boolean canSee(Player p, Location to, int range) {
+        if (p.getLineOfSight(null, range) == null)
+            return false;
+        for (Block b : p.getLineOfSight(null, range)) {
+            // So blocks are the same
+            if (HearthstoneMechanics.isLocationsEqual(b.getLocation(), to)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void unloadChunks() {
@@ -5969,8 +6000,7 @@ public class MonsterMechanics implements Listener {
         return ItemGenerators.SwordGenorator(Material.WOOD_SWORD, false, null);
     }
 
-    public static Entity spawnBossMob(Location l, EntityType et, String meta_data, String custom_name) {
-        int mob_t = 0;
+    public static Entity spawnBossMob(Location l, EntityType et, String meta_data, String custom_name, int mob_t) {
         Entity e = null;
         if (et == EntityType.WOLF) {
             // Main.d("SPAWNED A CUSTOM WOLF!");
@@ -5989,19 +6019,18 @@ public class MonsterMechanics implements Listener {
         custom_name = custom_name.replaceAll("_", "");
 
         int mob_l = 1;
-        int tier = mob_t;
-        if (tier == 1) {
+        if (mob_t == 1) {
             mob_l = 19;
-        } else if (tier == 2) {
+        } else if (mob_t == 2) {
             mob_l = 39;
-        } else if (tier == 3) {
+        } else if (mob_t == 3) {
             mob_l = 59;
-        } else if (tier == 4) {
+        } else if (mob_t == 4) {
             mob_l = 79;
-        } else if (tier == 5) {
+        } else if (mob_t == 5) {
             mob_l = 100;
         }
-        custom_name += ChatColor.LIGHT_PURPLE + "[" + mob_l + "]";
+        custom_name += ChatColor.LIGHT_PURPLE + " [" + mob_l + "]";
         if ((meta_data.equalsIgnoreCase("wither") && e instanceof CraftSkeleton)) {
             // Make it a wither skeleton.
             ((CraftSkeleton) e).getHandle().setSkeletonType(1);
@@ -6022,7 +6051,7 @@ public class MonsterMechanics implements Listener {
             }
             ent.setEquipment(4, CraftItemStack.asNMSCopy(getHead(skin_name)));
 
-            if (custom_name.equalsIgnoreCase("Mayel The Cruel") && e instanceof CraftSkeleton) {
+            if (custom_name.contains("Mayel The Cruel") && e instanceof CraftSkeleton) {
                 ((CraftSkeleton) e).getHandle().setSkeletonType(1);
             }
         }
@@ -6030,11 +6059,10 @@ public class MonsterMechanics implements Listener {
         ItemStack weapon = null, boots = null, legs = null, chest = null, helmet = null;
         List<ItemStack> gear_list = new ArrayList<ItemStack>();
 
-        if (custom_name.equalsIgnoreCase("The Infernal Abyss")) {
+        if (custom_name.contains("The Infernal Abyss")) {
             // TODO: Custom armor set.
             hp_mult = 4D;
             dmg_mult = 1.3D;
-            mob_t = 4;
             chest = ItemGenerators.customGenerator("infernalchest");
             legs = ItemGenerators.customGenerator("infernallegging");
             helmet = ItemGenerators.customGenerator("infernalhelmet");
@@ -6076,10 +6104,9 @@ public class MonsterMechanics implements Listener {
             le.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, "fire_demon"));
         }
 
-        if (custom_name.equalsIgnoreCase("Mayel The Cruel")) {
+        if (custom_name.contains("Mayel The Cruel")) {
             hp_mult = 6D;
             dmg_mult = 1.3D;
-            mob_t = 1;
             chest = ItemGenerators.customGenerator("mayelchest");
             legs = ItemGenerators.customGenerator("mayelpants");
             // helmet = ItemGenerators.customGenerator("mayelhelmet"); Needs skin head
@@ -6123,9 +6150,8 @@ public class MonsterMechanics implements Listener {
             le.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, "bandit_leader"));
         }
 
-        if (custom_name.equalsIgnoreCase("Mad Bandit Pyromancer")) {
+        if (custom_name.contains("Mad Bandit Pyromancer")) {
             // TODO: Custom armor set.
-            mob_t = 1;
             dmg_mult = 2.5D;
             hp_mult = 6;
             boots = ItemGenerators.BootGenerator(2, false, null);
@@ -6164,8 +6190,7 @@ public class MonsterMechanics implements Listener {
             le.setMetadata("mobname", new FixedMetadataValue(Main.plugin, ChatColor.GOLD.toString() + ChatColor.UNDERLINE.toString() + custom_name));
             le.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, "tnt_bandit"));
         }
-        if (custom_name.equalsIgnoreCase("Diner of Bones")) {
-            mob_t = 1;
+        if (custom_name.contains("Diner of Bones")) {
             dmg_mult = 2.5D;
             hp_mult = 6;
             boots = ItemGenerators.BootGenerator(4, false, null);
@@ -6191,12 +6216,11 @@ public class MonsterMechanics implements Listener {
             le.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, "wolf"));
             BossMechanics.boss_map.put(le, "aceron_wolf");
         }
-        if (custom_name.equalsIgnoreCase("Wicked Gatekeeper")) {
+        if (custom_name.contains("Wicked Gatekeeper")) {
             // TODO: WORK
         }
-        if (custom_name.equalsIgnoreCase("Aceron the Wicked")) {
+        if (custom_name.contains("Aceron the Wicked")) {
             hp_mult = 6D;
-            mob_t = 4;
             dmg_mult = 2.5D;
             boots = ItemGenerators.customGenerator("aceronboots");
             legs = ItemGenerators.customGenerator("aceronlegs");
@@ -6238,12 +6262,11 @@ public class MonsterMechanics implements Listener {
             le.setMetadata("mobname", new FixedMetadataValue(Main.plugin, ChatColor.GOLD.toString() + ChatColor.UNDERLINE.toString() + custom_name));
             le.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, "aceron"));
             // Atleast a 8 second cooldown on the first jump
-            BossMechanics.last_jump.put(le, System.currentTimeMillis() + (10 * 8));
+            BossMechanics.last_jump.put(le, System.currentTimeMillis() + (1000 * 8));
         }
-        if (custom_name.equalsIgnoreCase("Burick The Fanatic")) {
+        if (custom_name.contains("Burick The Fanatic")) {
             hp_mult = 6D;
             dmg_mult = 2.5D;
-            mob_t = 3;
             boots = ItemGenerators.customGenerator("up_boots");
             legs = ItemGenerators.customGenerator("up_legs");
             chest = ItemGenerators.customGenerator("up_chest");
@@ -6380,10 +6403,10 @@ public class MonsterMechanics implements Listener {
         Entity e = null;
 
         if (custom_name != null && custom_name.equalsIgnoreCase("Mad_Bandit_Pyromancer")) {
-            return spawnBossMob(l, et, "bandit", "Mad Bandit Pyromancer");
+            return spawnBossMob(l, et, "bandit", "Mad Bandit Pyromancer", 1);
         }
         if (custom_name != null && custom_name.equalsIgnoreCase("Wicked_Gatekeeper")) {
-            return spawnBossMob(l, et, "goblin", "Wicked Gatekeeper");
+            return spawnBossMob(l, et, "goblin", "Wicked Gatekeeper", 4);
         }
         if (et == EntityType.PIG_ZOMBIE) {
             et = EntityType.SKELETON;
@@ -7693,7 +7716,7 @@ public class MonsterMechanics implements Listener {
         return mob_level.get(e);
     }
 
-    public boolean isHostile(EntityType e) {
+    public static boolean isHostile(EntityType e) {
         if (e == EntityType.SKELETON || e == EntityType.ZOMBIE || e == EntityType.SPIDER || e == EntityType.CAVE_SPIDER || e == EntityType.BLAZE
                 || e == EntityType.WITCH || e == EntityType.WOLF || e == EntityType.ENDERMAN || e == EntityType.IRON_GOLEM || e == EntityType.SILVERFISH
                 || e == EntityType.MAGMA_CUBE) {

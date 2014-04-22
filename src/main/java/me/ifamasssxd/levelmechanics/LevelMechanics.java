@@ -6,6 +6,7 @@ import me.vaqxine.Main;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.managers.PlayerManager;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -32,6 +33,9 @@ public class LevelMechanics implements Listener {
         if (e.getDamage() <= 0) {
             return;
         }
+        if (!MonsterMechanics.isHostile(e.getEntity().getType())) {
+            return;
+        }
         if ((MonsterMechanics.getMHealth(e.getEntity()) - e.getDamage()) <= 0) {
             int mob_level = MonsterMechanics.getMobLevel(e.getEntity());
             Main.d(mob_level);
@@ -48,22 +52,20 @@ public class LevelMechanics implements Listener {
             }
             int level = getPlayerLevel(killer);
             int xp = mob_level * 15 + new Random().nextInt(50) + 5;
-            if ((level) < (mob_level + 5)) {
+            if ((level + 8) <= (mob_level)) {
                 // No XP
+                killer.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "greater" + ChatColor.RED + " then 8 levels of this mob. No EXP granted.");
                 xp = 0;
             }
-            if (level > mob_level + 5) {
+            if (level >= mob_level + 8) {
                 // mob_level = 10 p_level = 15
                 // .1 * (15-10 -> 5)
+                killer.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "less" + ChatColor.RED + " then 8 levels of this mob. 60% EXP granted.");
                 xp *= .6;
             }
-            double multiplier = 1D;
-            if (level > mob_level) {
-                // Higher level so 70% XP
-
-                multiplier *= .7D;
+            if (mob_level < 10 && level < 15) {
+                xp *= .7;
             }
-            xp *= multiplier;
             addXP(killer, xp);
         }
 

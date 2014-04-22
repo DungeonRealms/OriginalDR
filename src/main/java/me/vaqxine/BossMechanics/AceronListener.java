@@ -261,7 +261,7 @@ public class AceronListener implements Listener {
                 if (percent_hp <= 30 && !BossMechanics.is_jumping.contains(boss) && !BossMechanics.invincible_mob.contains(boss)
                         && !spawned_wolf.contains(boss)) {
                     // They did 30% HP on aceron
-                    Wolf wolf = (Wolf) MonsterMechanics.spawnBossMob(boss.getLocation(), EntityType.WOLF, "", "Diner of Bones");
+                    Wolf wolf = (Wolf) MonsterMechanics.spawnBossMob(boss.getLocation(), EntityType.WOLF, "", "Diner of Bones", 4);
                     aceron_wolf.put(boss, wolf);
                     spawned_wolf.add(boss);
                     wolf.setAngry(true);

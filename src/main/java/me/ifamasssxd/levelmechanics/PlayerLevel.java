@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -67,7 +68,15 @@ public class PlayerLevel {
                     + ChatColor.GRAY + " [" + getXP() + ChatColor.BOLD + "/" + ChatColor.GRAY + (int) getEXPNeeded(getLevel()) + " EXP]");
 
         }
-        CommunityMechanics.generateCommBook(p);
+        updateBook(p);
+    }
+
+    public void updateBook(Player p) {
+        int slot = -1;
+        if (p.getInventory().contains(Material.WRITTEN_BOOK)) {
+            slot = p.getInventory().first(Material.WRITTEN_BOOK);
+        }
+        p.getInventory().setItem(slot, CommunityMechanics.generateCommBook(p));
     }
 
     public int getEXPNeeded(int level) {

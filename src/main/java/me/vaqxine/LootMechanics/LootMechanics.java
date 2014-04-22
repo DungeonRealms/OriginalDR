@@ -1081,7 +1081,7 @@ public class LootMechanics implements Listener {
 				Player p = e.getPlayer();
 				if(chest.getType() != Material.CHEST) { return; // Not a chest.
 				}
-				if(isMonsterNearPlayer(p, 10)) {
+				if(isMonsterNearPlayer(p, 6)) {
 					p.sendMessage(ChatColor.RED + "It is " + ChatColor.BOLD + "NOT" + ChatColor.RED + " safe to open that right now.");
 					p.sendMessage(ChatColor.GRAY + "Eliminate the monsters in the area first.");
 					e.setCancelled(true);
@@ -1131,7 +1131,7 @@ public class LootMechanics implements Listener {
 				Player p = e.getPlayer();
 				if(chest.getType() != Material.CHEST) { return; // Not a chest.
 				}
-				if(isMonsterNearPlayer(p, 10)) {
+				if(isMonsterNearPlayer(p, 6)) {
 					p.sendMessage(ChatColor.RED + "It is " + ChatColor.BOLD + "NOT" + ChatColor.RED + " safe to open that right now.");
 					p.sendMessage(ChatColor.GRAY + "Eliminate the monsters in the area first.");
 					e.setCancelled(true);
@@ -1193,7 +1193,7 @@ public class LootMechanics implements Listener {
 				return;
 			}
 			if(!isLootChest(e.getClickedBlock()) && !(isInstanceLootChest(e.getClickedBlock()))) { return; }
-			if(isMonsterNearPlayer(p, 10)) {
+			if(isMonsterNearPlayer(p, 6)) {
 				p.sendMessage(ChatColor.RED + "It is " + ChatColor.BOLD + "NOT" + ChatColor.RED + " safe to open that right now.");
 				p.sendMessage(ChatColor.GRAY + "Eliminate the monsters in the area first.");
 				e.setCancelled(true);

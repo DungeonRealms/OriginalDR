@@ -3058,9 +3058,12 @@ public class ItemMechanics implements Listener {
             return;
         }
 
-        if (isOrbOfAlteration(cursor) && (isArmor(in_slot) || !getDamageData(in_slot).equalsIgnoreCase("no"))
-                && LevelMechanics.getPlayerLevel(p.getName()) >= 60) {
-
+        if (isOrbOfAlteration(cursor) && (isArmor(in_slot) || !getDamageData(in_slot).equalsIgnoreCase("no"))) {
+            if (LevelMechanics.getPlayerLevel(p.getName()) < 60) {
+                p.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level 60 to use Orbs of Alteration.");
+                e.setCancelled(true);
+                return;
+            }
             if (last_orb_use.containsKey(p.getName())) {
                 if ((System.currentTimeMillis() - last_orb_use.get(p.getName())) < (1 * 500)) {
                     e.setCancelled(true);

@@ -40,7 +40,7 @@ public class CommandSpawnBoss implements CommandExecutor {
 		
 		String boss_name = args[0];
 		if(boss_name.equalsIgnoreCase("unholy_priest")) {
-			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "Burick The Fanatic");
+			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "Burick The Fanatic", 3);
 			BossMechanics.boss_map.put(boss, "unholy_priest");
 			for(Player pl : boss.getWorld().getPlayers()) {
 				pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Burick The Fanatic: " + ChatColor.WHITE + "Ahahaha! You dare try to kill ME?! I am Burick, disciple of Goragath! None of you will leave this place alive!");
@@ -49,7 +49,7 @@ public class CommandSpawnBoss implements CommandExecutor {
 		}
 		
 		if(boss_name.equalsIgnoreCase("tnt_bandit")) {
-			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "bandit", "Mad Bandit Pyromancer");
+			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "bandit", "Mad Bandit Pyromancer", 1);
 			BossMechanics.boss_map.put(boss, "tnt_bandit");
 			for(Player pl : boss.getWorld().getPlayers()) {
 				pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Mad Bandit Pyromancer: " + ChatColor.WHITE + "WAHAHAHA! EXPLOSIONS! BOOM, BOOM, BOOM! I'm gonna blow you all up!");
@@ -58,7 +58,7 @@ public class CommandSpawnBoss implements CommandExecutor {
 		}
 		
 		if(boss_name.equalsIgnoreCase("bandit_leader")) {
-			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "bandit", "Mayel The Cruel");
+			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "bandit", "Mayel The Cruel", 1);
 			BossMechanics.boss_map.put(boss, "bandit_leader");
 			for(Player pl : boss.getWorld().getPlayers()) {
 				pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Mayel The Cruel: " + ChatColor.WHITE + "How dare you challenge ME, the leader of the Cyrene Bandits! To me, my brethern, let us crush these incolents!");
@@ -67,7 +67,7 @@ public class CommandSpawnBoss implements CommandExecutor {
 		}
 		
 		if(boss_name.equalsIgnoreCase("fire_demon")) {
-			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "The Infernal Abyss");
+			Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "The Infernal Abyss", 4);
 			BossMechanics.boss_map.put(boss, "fire_demon");
 			for(Player pl : boss.getWorld().getPlayers()) {
 				pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "The Infernal Abyss: " + ChatColor.WHITE + "... I have nothing to say to you foolish mortals, except for this: Burn.");
@@ -75,7 +75,7 @@ public class CommandSpawnBoss implements CommandExecutor {
 			boss.getWorld().playSound(boss.getLocation(), Sound.AMBIENCE_THUNDER, 1F, 1F);
 		}
 		if(boss_name.equalsIgnoreCase("aceron")){
-		    Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "Aceron the Wicked");
+		    Entity boss = MonsterMechanics.spawnBossMob(loc, EntityType.SKELETON, "wither", "Aceron the Wicked", 4);
             BossMechanics.boss_map.put(boss, "aceron");
             for(Player pl : boss.getWorld().getPlayers()) {
                 pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Aceron the Wicked: " + ChatColor.WHITE + "Aceron is here! Welcome to my cave of treasures!");
