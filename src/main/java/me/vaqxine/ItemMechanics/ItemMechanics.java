@@ -26,6 +26,7 @@ import me.vaqxine.ItemMechanics.commands.CommandAddWeapon;
 import me.vaqxine.LevelMechanics.LevelMechanics;
 import me.vaqxine.MerchantMechanics.MerchantMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
+import me.vaqxine.MonsterMechanics.DamageTracker;
 import me.vaqxine.MonsterMechanics.Hologram;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
@@ -3822,7 +3823,13 @@ public class ItemMechanics implements Listener {
 
         final double dmg = e.getDamage();
         final boolean f_is_player = is_player;
-
+        if (!is_player) {
+            if (MonsterMechanics.getEntityDamageTracker(le) == null) {
+                MonsterMechanics.createDamageTracker(le, p_attacker, dmg);
+            } else {
+                MonsterMechanics.getEntityDamageTracker(le).setPlayersDamage(p_attacker, dmg);
+            }
+        }
         Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
             public void run() {
                 Hologram hg = new Hologram(Main.plugin, ChatColor.RED.toString() + (int) dmg + ChatColor.RED + ChatColor.BOLD + " DMG");
@@ -3947,6 +3954,13 @@ public class ItemMechanics implements Listener {
             }
         }
         final double dmg_d = dmg;
+        if (!is_player) {
+            if (MonsterMechanics.getEntityDamageTracker(le) == null) {
+                MonsterMechanics.createDamageTracker(le, p, dmg);
+            } else {
+                MonsterMechanics.getEntityDamageTracker(le).setPlayersDamage(p, dmg);
+            }
+        }
         if (PlayerManager.getPlayerModel(p).getToggleList().contains("debug")) {
             final boolean f_is_player = is_player;
             Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
@@ -4150,6 +4164,9 @@ public class ItemMechanics implements Listener {
     @EventHandler
     public void onPlayerOpen(PlayerQuitEvent e) {
         Player p = e.getPlayer();
+        for (DamageTracker dt : MonsterMechanics.damage_tracker.values()) {
+            dt.removePlayer(p);
+        }
         if (arrow_replace.containsKey(p.getName())) {
             PlayerArrowReplace par = arrow_replace.get(p.getName());
             p.getInventory().setItem(par.getItemSlot(), par.getItem());

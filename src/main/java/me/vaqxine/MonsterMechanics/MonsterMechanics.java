@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
@@ -26,7 +27,6 @@ import me.vaqxine.BossMechanics.BossMechanics;
 import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EnchantMechanics.EnchantMechanics;
 import me.vaqxine.HealthMechanics.HealthMechanics;
-import me.vaqxine.HearthstoneMechanics.HearthstoneMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
@@ -160,7 +160,7 @@ public class MonsterMechanics implements Listener {
     static ConcurrentHashMap<Entity, Integer> whirlwind = new ConcurrentHashMap<Entity, Integer>();
     static ConcurrentHashMap<Entity, Float> mob_yaw = new ConcurrentHashMap<Entity, Float>();
     // Special mob attacks END.
-
+    public static ConcurrentHashMap<UUID, DamageTracker> damage_tracker = new ConcurrentHashMap<UUID, DamageTracker>();
     public static ConcurrentHashMap<Entity, String> mob_target = new ConcurrentHashMap<Entity, String>();
     // Player name of mob target.
 
@@ -782,6 +782,19 @@ public class MonsterMechanics implements Listener {
         return false;
     }
 
+    public static DamageTracker getEntityDamageTracker(Entity e) {
+        if (!damage_tracker.containsKey(e.getUniqueId())) {
+            return null;
+        }
+        return damage_tracker.get(e.getUniqueId());
+    }
+
+    public static void createDamageTracker(Entity e, Player damager, double dmg) {
+        DamageTracker dt = new DamageTracker(e.getUniqueId());
+        dt.setPlayersDamage(damager, dmg);
+        damage_tracker.put(e.getUniqueId(), dt);
+    }
+
     @SuppressWarnings("deprecation")
     public static List<ItemStack> getCustomDrops(Entity ent, String custom_name) {
         if (ent != null) {
@@ -1218,7 +1231,6 @@ public class MonsterMechanics implements Listener {
             }
         }
     }
-
 
     public void unloadChunks() {
         List<Location> to_remove = new ArrayList<Location>();
@@ -3782,6 +3794,26 @@ public class MonsterMechanics implements Listener {
         if (e instanceof EntityDamageByEntityEvent) {
             ItemMechanics.MeleeDebugListener((EntityDamageByEntityEvent) e);
             ItemMechanics.ArrowDebugListener((EntityDamageByEntityEvent) e);
+            if (((EntityDamageByEntityEvent) e).getDamager() instanceof Arrow) {
+                int tier = ((EntityDamageByEntityEvent) e).getDamager().getMetadata("tier").get(0).asInt();
+                switch (tier) {
+                case 1:
+                    dmg = dmg * 1.05;
+                    break;
+                case 2:
+                    dmg = dmg * 1.10;
+                    break;
+                case 3:
+                    dmg = dmg * 1.20;
+                    break;
+                case 4:
+                    dmg = dmg * 1.4;
+                    break;
+                case 5:
+                    dmg = dmg * 1.8;
+                    break;
+                }
+            }
         }
 
         if (ent.hasMetadata("boss_type")) {
@@ -4771,7 +4803,6 @@ public class MonsterMechanics implements Listener {
                 }
             }
         }
-
         mob_last_hurt.put(ent, System.currentTimeMillis());
     }
 

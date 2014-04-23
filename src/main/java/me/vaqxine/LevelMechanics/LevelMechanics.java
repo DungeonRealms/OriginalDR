@@ -50,6 +50,15 @@ public class LevelMechanics implements Listener {
             } else {
                 killer = (Player) e.getDamager();
             }
+            if (MonsterMechanics.getEntityDamageTracker(e.getEntity()) != null) {
+                if (MonsterMechanics.getEntityDamageTracker(e.getEntity()).getMostDamageDone() != null) {
+                    Player actual_killer = MonsterMechanics.getEntityDamageTracker(e.getEntity()).getMostDamageDone();
+                    if (actual_killer != null && actual_killer.isOnline() && actual_killer != killer) {
+                        killer.sendMessage(ChatColor.RED + actual_killer.getName() + " has dealt more damage to this mob then you. Thus they received the XP.");
+                        killer = actual_killer;
+                    }
+                }
+            }
             PlayerLevel pl = getPlayerData(killer);
             if (pl.getLastEntityKilled() != null && pl.getLastEntityKilled().equals(e.getEntity())) {
                 return;
@@ -69,9 +78,6 @@ public class LevelMechanics implements Listener {
                 killer.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "less" + ChatColor.RED
                         + " then 8 levels of this mob. 60% EXP granted.");
                 xp *= .6;
-            }
-            if (mob_level < 10 && level < 15) {
-                xp *= .7;
             }
             addXP(killer, xp);
         }
