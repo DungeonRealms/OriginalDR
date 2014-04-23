@@ -7,6 +7,10 @@ import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -16,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class LevelMechanics implements Listener {
 
@@ -78,6 +83,16 @@ public class LevelMechanics implements Listener {
                 killer.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "less" + ChatColor.RED
                         + " then 8 levels of this mob. 60% EXP granted.");
                 xp *= .6;
+            }
+            boolean is_elite = false;
+            ItemStack weapon = ((LivingEntity) e.getEntity()).getEquipment().getItemInHand();
+            if (weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK)) {
+                // log.info("ELITE!");
+                is_elite = true;
+            }
+            if (is_elite) {
+                // 2.3x XP for elites
+                xp *= 2.3;
             }
             addXP(killer, xp);
         }
