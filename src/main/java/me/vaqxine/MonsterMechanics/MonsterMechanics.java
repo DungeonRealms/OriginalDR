@@ -1957,7 +1957,7 @@ public class MonsterMechanics implements Listener {
             } else {
                 local_loc.subtract(0, 1, 0);
             }
-
+            damage_tracker.remove(ent.getUniqueId());
             ent.teleport(local_loc); // Teleport the mob back to spawner. What if the chunk is unloaded? LAWL.
 
             LivingEntity le = (LivingEntity) ent;
