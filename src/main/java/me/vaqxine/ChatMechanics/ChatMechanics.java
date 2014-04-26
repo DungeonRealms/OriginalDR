@@ -19,6 +19,7 @@ import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;
 import me.vaqxine.Hive.Hive;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
+import me.vaqxine.LevelMechanics.LevelMechanics;
 import me.vaqxine.ModerationMechanics.ModerationMechanics;
 import me.vaqxine.MonsterMechanics.Hologram;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
@@ -669,8 +670,10 @@ public class ChatMechanics implements Listener {
                                         + ko_weapon.getType().name().substring(1, ko_weapon.getType().name().length()).toLowerCase();
                             }
                         }
-                        death_reason = " was killed by " + p_color + prefix + killer.getName() + ChatColor.WHITE.toString() + " with a(n)            "
-                                + ko_weapon_name;
+                        if (dead.getInventory().getArmorContents().length > 0) {
+                            LevelMechanics.addXP(killer, (int) (LevelMechanics.getPlayerLevel(dead) * 3.5));
+                        }
+                        death_reason = " was killed by " + p_color + prefix + killer.getName() + ChatColor.WHITE.toString() + " with a(n) " + ko_weapon_name;
                     } else {
                         LivingEntity le_shooter = (LivingEntity) shooter;
                         String mob_name = shooter.getType().getName();
@@ -688,6 +691,9 @@ public class ChatMechanics implements Listener {
                     Player killer = (Player) event.getDamager();
                     ChatColor p_color = getPlayerColor(killer, killer);
                     String prefix = getPlayerPrefix(killer);
+                    if (dead.getInventory().getArmorContents().length > 0) {
+                        LevelMechanics.addXP(killer, (int) (LevelMechanics.getPlayerLevel(dead) * 3.5));
+                    }
                     ItemStack ko_weapon = null;
                     String ko_weapon_name = null;
                     if (killer.isOnline()) {
@@ -699,8 +705,7 @@ public class ChatMechanics implements Listener {
                                     + ko_weapon.getType().name().substring(1, ko_weapon.getType().name().length()).toLowerCase();
                         }
                     }
-                    death_reason = " was killed by " + p_color + prefix + killer.getName() + ChatColor.WHITE.toString() + " with a(n)            "
-                            + ko_weapon_name;
+                    death_reason = " was killed by " + p_color + prefix + killer.getName() + ChatColor.WHITE.toString() + " with a(n) " + ko_weapon_name;
                     // dead.sendMessage(p_color + "" + prefix + ChatColor.BOLD +
                     // dead.getName() + ChatColor.RED + " was killed by " +
                     // killer.getName());

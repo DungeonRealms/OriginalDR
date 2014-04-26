@@ -2844,7 +2844,14 @@ public class Hive implements Listener {
         int server_num = Integer.parseInt(Bukkit.getMotd().substring(Bukkit.getMotd().indexOf("-") + 1, Bukkit.getMotd().indexOf(" ")));
         if (server_num == 9 || server_num == 10) {
             // VIP server
-            if (!(VIP) && !PermissionMechanics.isGM(p_name)) {
+            boolean op = false;
+            for (OfflinePlayer pl : Bukkit.getOperators()) {
+                if (pl.getName().equalsIgnoreCase(p_name)) {
+                    op = true;
+                    break;
+                }
+            }
+            if (!(VIP) && !PermissionMechanics.isGM(p_name) && !op) {
                 e.setKickMessage(ChatColor.RED + "You are " + ChatColor.UNDERLINE + "not" + ChatColor.RED
                         + " authorized to connect to subscriber only servers." + "\n\n" + ChatColor.GRAY
                         + "Subscribe at http://dungeonrealms.net/shop to gain instant access!");
@@ -4259,7 +4266,14 @@ public class Hive implements Listener {
 
                     if (vipServer(cur_item)) {
                         String rank = PermissionMechanics.getRank(pl.getName());
-                        if (rank.equalsIgnoreCase("default") && !(pl.isOp()) && !Main.isDev(pl.getName())) {
+                        boolean op = false;
+                        for (OfflinePlayer p : Bukkit.getOperators()) {
+                            if (p.getName().equalsIgnoreCase(pl.getName())) {
+                                op = true;
+                                break;
+                            }
+                        }
+                        if (rank.equalsIgnoreCase("default") && !(pl.isOp()) && !Main.isDev(pl.getName()) && !op) {
                             // Don't let them in.
                             pl.sendMessage(ChatColor.RED + "You are " + ChatColor.UNDERLINE + "not" + ChatColor.RED
                                     + " authorized to connect to subscriber only servers.");

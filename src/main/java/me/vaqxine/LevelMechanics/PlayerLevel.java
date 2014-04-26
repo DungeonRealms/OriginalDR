@@ -89,7 +89,7 @@ public class PlayerLevel {
         if (level == 1) {
             return 1000;
         }
-        if (level == 101) {
+        if (level >= 101) {
             return 0;
         }
         return (int) (300 * Math.pow(level, 1.6));

@@ -248,7 +248,7 @@ public class PermissionMechanics implements Listener {
 	
 	public static boolean isGM(String p_name) {
 		String rank = getRank(p_name);
-		return rank.equalsIgnoreCase("GM") ? true : false;
+		return rank.equalsIgnoreCase("GM");
 	}
 	
 }
