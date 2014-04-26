@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -87,6 +86,12 @@ public class PlayerLevel {
          * if (level >= 0) { if (level == 1) { return 300; // formula doesn't work on level 1. } if (level == 100) { return 0; } int previous_level = level - 1;
          * return (int) (Math.pow((previous_level), 2) + ((previous_level) * 20) + 200 + ((previous_level) * 4) + getEXPNeeded(previous_level)); } return 0;
          */
+        if (level == 1) {
+            return 1000;
+        }
+        if (level == 101) {
+            return 0;
+        }
         return (int) (300 * Math.pow(level, 1.6));
     }
 
