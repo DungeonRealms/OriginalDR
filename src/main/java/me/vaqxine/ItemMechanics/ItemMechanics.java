@@ -5965,7 +5965,7 @@ public class ItemMechanics implements Listener {
                     // They are taking arrows out.
                     ItemStack quiver = e.getCurrentItem();
                     if (getQuiverAmount(quiver) != 0) {
-                        for (int i = 0; i < 5; i++) {
+                        for (int i = 0; i < 6; i++) {
                             if (hasTierArrowsInQuiver(quiver, i)) {
                                 int totalArrows = getTierArrowsInQuiver(quiver, i);
                                 int new_total_arrows = totalArrows;
@@ -6265,7 +6265,6 @@ public class ItemMechanics implements Listener {
             log.info("[ItemMechanics] NULL itemStack on setToHealingPotion()");
             return CraftItemStack.asBukkitCopy(i);
         }
-
         try {
             net.minecraft.server.v1_7_R2.NBTTagList cpe = new net.minecraft.server.v1_7_R2.NBTTagList();
             NBTTagCompound tag = new NBTTagCompound();

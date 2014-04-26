@@ -13,7 +13,7 @@ public class MountSpider extends EntitySpider {
 
     public MountSpider(World world) {
         super(world);
-
+        getAttributeInstance(GenericAttributes.d).setValue(1.5D);
     }
 
     public void e(float sideMot, float forMot) {
@@ -22,7 +22,7 @@ public class MountSpider extends EntitySpider {
             this.W = 0.5F; // Make sure the entity can walk over half slabs, instead of jumping
             return;
         }
-
+        // this.getAttributeInstance(GenericAttributes.d).setValue(1D);
         this.lastYaw = this.yaw = this.passenger.yaw;
         this.pitch = this.passenger.pitch * 0.5F;
 
@@ -33,12 +33,11 @@ public class MountSpider extends EntitySpider {
         this.W = 1.0F; // The custom entity will now automatically climb up 1 high blocks
 
         sideMot = ((EntityLiving) this.passenger).bd * 0.5F;
-        forMot = ((EntityLiving) this.passenger).be;
-
+        Main.d("be = " + ((EntityLiving) this.passenger).be);
+        forMot = ((EntityLiving) this.passenger).be * 1.3F;
+        Main.d("forMot after = " + forMot);
         if (forMot <= 0.0F) {
             forMot *= 0.25F; // Make backwards slower
-        }else{
-            forMot *= 1.5F;
         }
         sideMot *= 0.75F; // Also make sideways slower
 
@@ -61,10 +60,13 @@ public class MountSpider extends EntitySpider {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-
         }
-
         super.e(sideMot, forMot); // Apply the motion to the entity
-
     }
+    
+    @Override
+    public boolean bJ() {
+        return true;
+    }
+
 }

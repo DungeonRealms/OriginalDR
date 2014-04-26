@@ -504,7 +504,13 @@ public class ChatMechanics implements Listener {
         String rank = PermissionMechanics.getRank(p.getName());
         // sending_message.add(p.getName());
         p.closeInventory();
-
+        if (e.getChatMessage().startsWith("/?") || e.getChatMessage().startsWith("/help") || e.getChatMessage().startsWith("/server")
+                || e.getChatMessage().startsWith("?") || e.getChatMessage().startsWith("help") || e.getChatMessage().startsWith("server")) {
+            for (int i = 0; i < 200; i++) {
+                p.sendMessage("");
+            }
+            return;
+        }
         if (TutorialMechanics.onTutorialIsland(p) && !(p.isOp())) {
             p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " chat while on tutorial island.");
             p.sendMessage(ChatColor.GRAY + "Either finish the tutorial or type /skip to enable chat.");
@@ -566,11 +572,11 @@ public class ChatMechanics implements Listener {
                           // no need for them to be able to see each other's
                           // messages.
             }
-            if (!trade && PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("global")) {
+            if (!trade && PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("global")) {
                 continue; // They have global off, and only want to hear from
                           // their buds.
             }
-            if (trade && PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("tchat")) {
+            if (trade && PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("tchat")) {
                 continue; // They have trade chat off, and only want to hear
                           // from their buds.
             }

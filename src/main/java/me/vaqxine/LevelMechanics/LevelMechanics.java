@@ -3,12 +3,11 @@ package me.vaqxine.LevelMechanics;
 import java.util.Random;
 
 import me.vaqxine.Main;
+import me.vaqxine.MonsterMechanics.Hologram;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.managers.PlayerManager;
 
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -56,8 +55,8 @@ public class LevelMechanics implements Listener {
                 killer = (Player) e.getDamager();
             }
             if (MonsterMechanics.getEntityDamageTracker(e.getEntity()) != null) {
-                if (MonsterMechanics.getEntityDamageTracker(e.getEntity()).getMostDamageDone() != null) {
-                    Player actual_killer = MonsterMechanics.getEntityDamageTracker(e.getEntity()).getMostDamageDone();
+                Player actual_killer = MonsterMechanics.getEntityDamageTracker(e.getEntity()).getMostDamageDone();
+                if (actual_killer != null) {
                     if (actual_killer != null && actual_killer.isOnline() && actual_killer != killer) {
                         killer.sendMessage(ChatColor.RED + actual_killer.getName() + " has dealt more damage to this mob then you. Thus they received the XP.");
                         killer = actual_killer;
@@ -77,7 +76,7 @@ public class LevelMechanics implements Listener {
                         + " then 8 levels of this mob. No EXP granted.");
                 xp = 0;
             }
-            if (level >= mob_level + 8) {
+            if (level >= (mob_level + 8)) {
                 // mob_level = 10 p_level = 15
                 // .1 * (15-10 -> 5)
                 killer.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "less" + ChatColor.RED
@@ -93,6 +92,10 @@ public class LevelMechanics implements Listener {
             if (is_elite) {
                 // 2.3x XP for elites
                 xp *= 2.3;
+            }
+            if (PlayerManager.getPlayerModel(killer).getToggleList() != null && PlayerManager.getPlayerModel(killer).getToggleList().contains("indicator")) {
+                Hologram xp_hologram = new Hologram(Main.plugin, ChatColor.GREEN.toString() + "+" + ChatColor.BOLD + xp + " XP");
+                xp_hologram.show(e.getEntity().getLocation().add(0, 1, 0), 3, killer);
             }
             addXP(killer, xp);
         }

@@ -308,6 +308,9 @@ commands:
   mnote:
     description: Root command.
     usage: /<command>
+  allowjoin:
+    description: Allows ops to allow players to join again.
+    usage: /<command>
   setlevel:
     description: Sets the player givens level.
     usage: /<command>

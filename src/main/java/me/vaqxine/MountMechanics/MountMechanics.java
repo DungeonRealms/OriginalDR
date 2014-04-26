@@ -19,6 +19,7 @@ import me.vaqxine.Hive.Hive;
 import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
+import me.vaqxine.LevelMechanics.LevelMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MountMechanics.commands.CommandMount;
 import me.vaqxine.PetMechanics.PetMechanics;
@@ -1025,7 +1026,24 @@ public class MountMechanics implements Listener {
                     pl.sendMessage(ChatColor.RED + "No space available in inventory. Type 'cancel' or clear some room.");
                     return;
                 }
-
+                ItemStack horse = TradeWindow.getItem(slot);
+                int horse_tier = ItemMechanics.getItemTier(horse);
+                if (horse_tier == 3 && LevelMechanics.getPlayerLevel(pl) < 30) {
+                    pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "30" + ChatColor.RED
+                            + " to purchase a Tier 3 horse!");
+                    mount_being_bought.remove(pl.getName());
+                    return;
+                } else if (horse_tier == 4 && LevelMechanics.getPlayerLevel(pl) < 60) {
+                    pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "60" + ChatColor.RED
+                            + " to purchase a Tier 4 horse!");
+                    mount_being_bought.remove(pl.getName());
+                    return;
+                } else if (horse_tier == 5 && LevelMechanics.getPlayerLevel(pl) < 90) {
+                    pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "90" + ChatColor.RED
+                            + " to purchase a Tier 5 horse!");
+                    mount_being_bought.remove(pl.getName());
+                    return;
+                }
                 RealmMechanics.subtractMoney(pl, price);
                 ItemStack product = TradeWindow.getItem(slot);
                 pl.getInventory().setItem(pl.getInventory().firstEmpty(), ShopMechanics.removePrice(CraftItemStack.asCraftCopy(product)));
@@ -1147,7 +1165,17 @@ public class MountMechanics implements Listener {
 
             int price = ShopMechanics.getPrice(e.getCurrentItem());
             String i_name = e.getCurrentItem().getItemMeta().getDisplayName();
-
+            int horse_tier = ItemMechanics.getItemTier(e.getCurrentItem());
+            if (horse_tier == 3 && LevelMechanics.getPlayerLevel(pl) < 30) {
+                pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "30" + ChatColor.RED + " to purchase a Tier 3 horse!");
+                return;
+            } else if (horse_tier == 4 && LevelMechanics.getPlayerLevel(pl) < 60) {
+                pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "60" + ChatColor.RED + " to purchase a Tier 4 horse!");
+                return;
+            } else if (horse_tier == 5 && LevelMechanics.getPlayerLevel(pl) < 90) {
+                pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "90" + ChatColor.RED + " to purchase a Tier 5 horse!");
+                return;
+            }
             if (!RealmMechanics.doTheyHaveEnoughMoney(pl, price)) {
                 pl.sendMessage(ChatColor.RED + "You do not have enough gems to purchase this mount.");
                 pl.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "COST: " + ChatColor.RED + price + ChatColor.BOLD + "G");

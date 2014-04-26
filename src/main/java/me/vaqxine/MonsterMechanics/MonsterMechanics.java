@@ -6527,7 +6527,7 @@ public class MonsterMechanics implements Listener {
         while (gear_check > 0) {
             larmor_type = armor_type.nextInt(4) + 1; // 1, 2, 3, 4
             if (larmor_type == 1 && boots == null) {
-                boots = ItemGenerators.BootGenerator(tier, false, null);
+                boots = ItemGenerators.MobBootGenerator(tier, false, null, level);
                 if (elite == true) {
                     boots.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
                 }
@@ -6535,7 +6535,7 @@ public class MonsterMechanics implements Listener {
                 gear_check = gear_check - 1;
             }
             if (larmor_type == 2 && legs == null) {
-                legs = ItemGenerators.LeggingsGenerator(tier, false, null);
+                legs = ItemGenerators.MobLeggingsGenerator(tier, false, null, level);
                 if (elite == true) {
                     legs.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
                 }
@@ -6543,7 +6543,7 @@ public class MonsterMechanics implements Listener {
                 gear_check = gear_check - 1;
             }
             if (larmor_type == 3 && chest == null) {
-                chest = ItemGenerators.ChestPlateGenerator(tier, false, null);
+                chest = ItemGenerators.MobChestPlateGenerator(tier, false, null, level);
                 if (elite == true) {
                     chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
                 }
@@ -6551,7 +6551,7 @@ public class MonsterMechanics implements Listener {
                 gear_check = gear_check - 1;
             }
             if (larmor_type == 4 && helmet == null) {
-                helmet = ItemGenerators.HelmetGenerator(tier, false, null);
+                helmet = ItemGenerators.MobHelmetGenerator(tier, false, null, level);
                 if (elite == true) {
                     helmet.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
                 }
@@ -6650,7 +6650,7 @@ public class MonsterMechanics implements Listener {
             if (meta_data.equalsIgnoreCase("bandit") || meta_data.equalsIgnoreCase("monk")) {
 
                 if (chest == null) { // They don't normally have the torso.
-                    chest = ItemGenerators.ChestPlateGenerator(tier, false, null);
+                    chest = ItemGenerators.MobChestPlateGenerator(tier, false, null, level);
                     if (elite == true) {
                         chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
                     }
@@ -6789,10 +6789,33 @@ public class MonsterMechanics implements Listener {
             min_dmg = ((double) min_dmg * 1.50D);
             max_dmg = ((double) max_dmg * 1.50D);
         }
-
+        int mob_l = 1;
+        if (tier == 1) {
+            mob_l = 1;
+        } else if (tier == 2) {
+            mob_l = 20;
+        } else if (tier == 3) {
+            mob_l = 40;
+        } else if (tier == 4) {
+            mob_l = 60;
+        } else if (tier == 5) {
+            mob_l = 80;
+        }
+        if (level == 1) {
+            mob_l += new Random().nextInt(4);
+        } else if (level == 2) {
+            // 40 -> 6 + random = 10 -> 50
+            mob_l += new Random().nextInt(4) + 6;
+        } else if (level == 3) {
+            mob_l += new Random().nextInt(4) + 11;
+        } else if (level == 4) {
+            mob_l += new Random().nextInt(4) + 15;
+        }
         List<Integer> dmg_range = new ArrayList<Integer>();
         min_dmg += ((double) min_dmg * (double) total_armor_dmg);
         max_dmg += ((double) max_dmg * (double) total_armor_dmg);
+        min_dmg += (int) ((mob_l * .01) * mob_l);
+        max_dmg += (int) ((mob_l * .01) * mob_l);
         dmg_range.add((int) Math.round(min_dmg));
         dmg_range.add((int) Math.round(max_dmg));
         // Spawns the custom zombie if they have a bow
@@ -6985,29 +7008,8 @@ public class MonsterMechanics implements Listener {
             dmg_range.set(1, (int) ((double) (dmg_range.get(1) * 1.5D)));
             total_armor = (int) (((double) total_armor * 1.5D));
         }
-        int mob_l = 1;
-        if (tier == 1) {
-            mob_l = 1;
-        } else if (tier == 2) {
-            mob_l = 20;
-        } else if (tier == 3) {
-            mob_l = 40;
-        } else if (tier == 4) {
-            mob_l = 60;
-        } else if (tier == 5) {
-            mob_l = 80;
-        }
-        if (level == 1) {
-            mob_l += new Random().nextInt(4);
-        } else if (level == 2) {
-            // 40 -> 6 + random = 10 -> 50
-            mob_l += new Random().nextInt(4) + 6;
-        } else if (level == 3) {
-            mob_l += new Random().nextInt(4) + 11;
-        } else if (level == 4) {
-            mob_l += new Random().nextInt(4) + 15;
-        }
-        total_hp += total_hp * ((mob_l * .001)) + new Random().nextInt(mob_l);
+
+        total_hp += (int) ((mob_l * .1) * mob_l) + new Random().nextInt(mob_l) + mob_l;
         mob_tier.put(e, tier);
         mob_level.put(e, mob_l);
         max_mob_health.put(e, (int) total_hp);

@@ -79,19 +79,7 @@ public class PlayerLevel {
                     + ChatColor.GRAY + " [" + getXP() + ChatColor.BOLD + "/" + ChatColor.GRAY + (int) getEXPNeeded(getLevel()) + " EXP]");
 
         }
-        updateBook(p);
-    }
-
-    public void updateBook(Player p) {
-        int slot = -1;
-        if (p.getInventory().contains(Material.WRITTEN_BOOK)) {
-            slot = p.getInventory().first(Material.WRITTEN_BOOK);
-        }
-        if (slot == -1) {
-            p.getInventory().addItem(CommunityMechanics.generateCommBook(p));
-            return;
-        }
-        p.getInventory().setItem(slot, CommunityMechanics.generateCommBook(p));
+        CommunityMechanics.updateCombatPage(p);
     }
 
     public int getEXPNeeded(int level) {
@@ -99,7 +87,7 @@ public class PlayerLevel {
          * if (level >= 0) { if (level == 1) { return 300; // formula doesn't work on level 1. } if (level == 100) { return 0; } int previous_level = level - 1;
          * return (int) (Math.pow((previous_level), 2) + ((previous_level) * 20) + 200 + ((previous_level) * 4) + getEXPNeeded(previous_level)); } return 0;
          */
-        return (int) (1000 * Math.pow(level, 1.3));
+        return (int) (300 * Math.pow(level, 1.6));
     }
 
     public void saveData(boolean useHive, boolean remove) {
@@ -132,6 +120,7 @@ public class PlayerLevel {
             if (p == null) {
                 checkPlayer();
             }
+            p.getWorld().playSound(p.getLocation(), Sound.LEVEL_UP, 1, .4F);
             p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "         " + " LEVEL UP! " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel())
                     + ChatColor.BOLD + " -> " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel() + 1));
             p.playSound(p.getLocation(), Sound.LEVEL_UP, 0.5F, 1F);

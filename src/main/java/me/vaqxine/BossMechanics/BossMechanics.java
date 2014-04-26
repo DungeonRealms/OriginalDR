@@ -427,7 +427,7 @@ public class BossMechanics implements Listener {
                     possible_drops.add(weapon);
 
                     ItemStack reward = ItemMechanics.makeSoulBound(possible_drops.get(new Random().nextInt(possible_drops.size())));
-
+                    InstanceMechanics.world_item_dropped.put(reward, e.getEntity().getWorld());
                     Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
                     item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
                     announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
@@ -503,6 +503,7 @@ public class BossMechanics implements Listener {
 
                     Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
                     item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
+                    InstanceMechanics.world_item_dropped.put(reward, e.getEntity().getWorld());
                     announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
                 }
                 int gem_drop = new Random().nextInt(2000) + 10000;
@@ -611,6 +612,7 @@ public class BossMechanics implements Listener {
 
                             ItemStack reward = ItemMechanics.makeSoulBound(possible_drops.get(new Random().nextInt(possible_drops.size())));
                             Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
+                            InstanceMechanics.world_item_dropped.put(reward, ent.getWorld());
                             item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
                             announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
                         }
@@ -711,6 +713,7 @@ public class BossMechanics implements Listener {
                     ItemStack reward = ItemMechanics.makeSoulBound(possible_drops.get(new Random().nextInt(possible_drops.size())));
                     Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
                     item.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, ""));
+                    InstanceMechanics.world_item_dropped.put(reward, e.getEntity().getWorld());
                     announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
                 }
 

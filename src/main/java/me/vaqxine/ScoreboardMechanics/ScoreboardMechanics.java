@@ -140,8 +140,8 @@ public class ScoreboardMechanics implements Listener {
 	
 	@SuppressWarnings("deprecation")
 	private static Team getTeam(Scoreboard sb, OfflinePlayer target){
-		if(sb.getTeam("team-" + target.getName()) == null) return sb.registerNewTeam("team-" + target.getName());
-		return sb.getTeam("team-" + target.getName());
+		if(sb.getTeam(target.getName()) == null) return sb.registerNewTeam(target.getName());
+		return sb.getTeam(target.getName());
 	}
 	
 	public static void setPlayerColor(ChatColor color, OfflinePlayer pl){
