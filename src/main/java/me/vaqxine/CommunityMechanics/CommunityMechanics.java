@@ -586,7 +586,7 @@ public class CommunityMechanics implements Listener {
                 new_pages.add(page6_string);
                 for (String s : pages) {
                     if (!s.contains("Your Character") && !s.startsWith(ChatColor.BLACK.toString() + ChatColor.BOLD.toString() + "+ ")
-                            && !(s.contains("Monsters that deal")) && !(s.contains("Portal Key Shards"))) {
+                            && !(s.contains("Monsters that deal")) && !(s.contains("Portal Key Shards")) && !s.contains("LEVEL/EXP")) {
                         new_pages.add(s);
                     }
                 }

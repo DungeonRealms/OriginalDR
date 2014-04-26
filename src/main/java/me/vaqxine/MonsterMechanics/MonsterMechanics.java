@@ -32,6 +32,7 @@ import me.vaqxine.Hive.ParticleEffect;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemGenerators;
 import me.vaqxine.ItemMechanics.ItemMechanics;
+import me.vaqxine.LevelMechanics.LevelMechanics;
 import me.vaqxine.MoneyMechanics.MoneyMechanics;
 import me.vaqxine.MonsterMechanics.commands.CommandHideMS;
 import me.vaqxine.MonsterMechanics.commands.CommandMon;
@@ -5199,7 +5200,8 @@ public class MonsterMechanics implements Listener {
 
         if (p_name != null && Bukkit.getPlayer(p_name) != null && !(hasCustomDrops(ent)) && !DuelMechanics.isDamageDisabled(ent.getLocation())
                 && mob_health.containsKey(ent) && mob_loot.containsKey(ent) && mob_target.containsKey(ent) && !BossMechanics.boss_map.containsKey(ent)
-                && !(InstanceMechanics.isInstance(ent.getWorld().getName())) && ent.getWorld().getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName())) {
+                && !(InstanceMechanics.isInstance(ent.getWorld().getName())) && Bukkit.getPlayer(mob_target.get(ent)) != null
+                && ent.getWorld().getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName())) {
             Player pl = Bukkit.getPlayer(p_name);
             ItemStack in_hand = pl.getItemInHand();
             int tier = ItemMechanics.getItemTier(in_hand);
@@ -5616,9 +5618,11 @@ public class MonsterMechanics implements Listener {
                         }
 
                         i_gear.setItemMeta(im);
-
-                        if (i_gear.getType() != Material.AIR) {
-                            ent.getWorld().dropItemNaturally(ent.getLocation(), i_gear);
+                        Player target = Bukkit.getPlayer(mob_target.get(ent));
+                        if (LevelMechanics.getPlayerTier(target) + 1 < getMobTier(ent)) {
+                            if (i_gear.getType() != Material.AIR) {
+                                ent.getWorld().dropItemNaturally(ent.getLocation(), i_gear);
+                            }
                         }
                     }
 
