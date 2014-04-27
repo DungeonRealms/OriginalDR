@@ -125,7 +125,7 @@ public class LevelMechanics implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        PlayerManager.getPlayerModel(e.getPlayer().getName()).getPlayerLevel().setPlayer(e.getPlayer());
+        PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().setPlayer(e.getPlayer());
         PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().updateScoreboardLevel();
         // Main.d("SETTING THE PLAYERS PLAYER DATA!", CC.RED);
     }

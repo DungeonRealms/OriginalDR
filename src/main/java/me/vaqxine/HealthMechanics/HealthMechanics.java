@@ -18,6 +18,8 @@ import me.vaqxine.Hive.Hive;
 import me.vaqxine.InstanceMechanics.InstanceMechanics;
 import me.vaqxine.ItemMechanics.ItemMechanics;
 import me.vaqxine.KarmaMechanics.KarmaMechanics;
+import me.vaqxine.LevelMechanics.LevelMechanics;
+import me.vaqxine.LevelMechanics.PlayerLevel;
 import me.vaqxine.MonsterMechanics.MonsterMechanics;
 import me.vaqxine.MountMechanics.MountMechanics;
 import me.vaqxine.ProfessionMechanics.ProfessionMechanics;
@@ -321,7 +323,13 @@ public class HealthMechanics implements Listener {
 		if(!pl.hasMetadata("NPC") && !pl.getPlayerListName().equalsIgnoreCase("")) {
 			double max_hp = HealthMechanics.getMaxHealthValue(pl.getName());
 			double health_percent = (hp / max_hp);
-			BarAPI.setMessage(pl, ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "HP " + ChatColor.LIGHT_PURPLE + getPlayerHP(pl.getName()) + ChatColor.BOLD.toString() + " / " + ChatColor.LIGHT_PURPLE.toString() + getMaxHealthValue(pl.getName()), (float) (health_percent * 100F));
+			PlayerLevel lvl = LevelMechanics.getPlayerData(pl);
+			if(lvl != null){
+				String levelData = ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "XP " + ChatColor.GREEN.toString() + lvl.getXP() + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + " / " + ChatColor.GREEN.toString() + lvl.getEXPNeeded(lvl.getLevel());
+				BarAPI.setMessage(pl, ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "HP " + ChatColor.LIGHT_PURPLE + getPlayerHP(pl.getName()) + ChatColor.BOLD.toString() + " / " + ChatColor.LIGHT_PURPLE.toString() + getMaxHealthValue(pl.getName()) + " - " + levelData, (float) (health_percent * 100F));
+			}else{
+				BarAPI.setMessage(pl, ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "HP " + ChatColor.LIGHT_PURPLE + getPlayerHP(pl.getName()) + ChatColor.BOLD.toString() + " / " + ChatColor.LIGHT_PURPLE.toString() + getMaxHealthValue(pl.getName()), (float) (health_percent * 100F));
+			}
 			//FakeDragon.setStatus(pl, ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "HP " + ChatColor.LIGHT_PURPLE + getPlayerHP(pl.getName()) + ChatColor.BOLD.toString() + " / " + ChatColor.LIGHT_PURPLE.toString() + getMaxHealthValue(pl.getName()), (int)(health_percent * 100));
 			//PacketUtils.displayTextBar(ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "HP " + ChatColor.LIGHT_PURPLE + getPlayerHP(pl.getName()) + ChatColor.BOLD.toString() + " / " + ChatColor.LIGHT_PURPLE.toString() + getMaxHealthValue(pl.getName()), pl);
 		}
@@ -1391,7 +1399,6 @@ public class HealthMechanics implements Listener {
 						Player p_updated = Bukkit.getPlayer(p.getName());
 						if(p_updated.getHealth() > 0) {
 							p_updated.setHealth(0); // Kill that bitch.
-							p_updated.setLevel(0);
 							p_updated.setExp(0.0F);
 						}
 					}

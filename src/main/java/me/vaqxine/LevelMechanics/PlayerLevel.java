@@ -4,19 +4,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import me.vaqxine.Main;
+import me.vaqxine.CommunityMechanics.CommunityMechanics;
+import me.vaqxine.HealthMechanics.HealthMechanics;
+import me.vaqxine.Hive.Hive;
+import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
+import me.vaqxine.database.ConnectionPool;
+import me.vaqxine.managers.PlayerManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import me.vaqxine.Main;
-import me.vaqxine.CommunityMechanics.CommunityMechanics;
-import me.vaqxine.Hive.Hive;
-import me.vaqxine.ScoreboardMechanics.ScoreboardMechanics;
-import me.vaqxine.database.ConnectionPool;
-import me.vaqxine.managers.PlayerManager;
 
 public class PlayerLevel {
 
@@ -31,7 +32,6 @@ public class PlayerLevel {
         if (aSync) {
             new BukkitRunnable() {
                 public void run() {
-                    // TODO Auto-generated method stub
                     loadData();
                 }
             }.runTaskAsynchronously(Main.plugin);
@@ -131,6 +131,8 @@ public class PlayerLevel {
     }
 
     public void updateScoreboardLevel() {
+        p.setLevel(level);
+    	Main.d("Setting " + p + " level to " + level);
         ScoreboardMechanics.setPlayerLevel(getLevel(), p);
     }
 
@@ -175,10 +177,15 @@ public class PlayerLevel {
 
     public void setLevel(int level) {
         this.level = level;
+        if(p != null){
+        	Main.d("Setting " + p + " level to " + level);
+        	p.setLevel(level);
+        }
     }
 
     public void setXP(int xp) {
         this.xp = xp;
+        if(p != null) HealthMechanics.setOverheadHP(p, HealthMechanics.getPlayerHP(p.getName()));
     }
 
     public int getLevel() {

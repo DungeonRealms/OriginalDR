@@ -3102,7 +3102,6 @@ public class Hive implements Listener {
             // p.setLevel(level);
 
             p.setFoodLevel(food_level);
-            p.setLevel(100);
             p.setExp(1.0F);
 
             if (hp < 0) {
