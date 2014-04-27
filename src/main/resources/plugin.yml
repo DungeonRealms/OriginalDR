@@ -1,5 +1,5 @@
 name: DungeonRealms
-main: me.vaqxine.Main
+main: minecade.dungeonrealms.Main
 softdepend: [Citizens]
 version: 1.0
 commands:
