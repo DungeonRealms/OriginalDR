@@ -328,7 +328,7 @@ public class RestrictionMechanics implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
     public void onInventoryCloseEvent(InventoryCloseEvent e) {
         final Player pl = (Player) e.getPlayer();
-        checkBookStacks(pl);
+        //checkBookStacks(pl);
         Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
             public void run() {
                 in_inventory.remove(pl.getName());
@@ -1118,7 +1118,7 @@ public class RestrictionMechanics implements Listener {
         }
     }
 
-    public void checkBookStacks(Player p) {
+    /*public void checkBookStacks(Player p) {
         boolean had_illegal_books = false;
         for (ItemStack is : p.getInventory()) {
             if (is == null || is.getType() == Material.AIR) {
@@ -1140,7 +1140,7 @@ public class RestrictionMechanics implements Listener {
             p.sendMessage(ChatColor.RED + "You were found with illegally stacked books.\nAccount Flagged!");
             Main.d(CC.WHITE + p.getName() + " was found with illegal books.");
         }
-    }
+    }*/
 
     public void addItem(Player p, ItemStack is) {
         if (p.getInventory().firstEmpty() == -1) {
