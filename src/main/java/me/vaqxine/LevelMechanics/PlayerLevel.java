@@ -178,6 +178,7 @@ public class PlayerLevel {
         this.level = level;
         if(p != null){
         	p.setLevel(level);
+            ScoreboardMechanics.setPlayerLevel(getLevel(), p);
         }
     }
 
