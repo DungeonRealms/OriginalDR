@@ -593,6 +593,7 @@ public class TutorialMechanics implements Listener {
 	public void leaveTutorial(Player pl) {
 		quest_map.remove(pl.getName());
 		completion_delay.remove(pl.getName());
+		onIsland.remove(pl.getName());
 		leave_confirm.remove(pl.getName());
 		skip_confirm.remove(pl.getName());
 		//ScoreboardMechanics.removePlayerFromTeam("TI", pl);

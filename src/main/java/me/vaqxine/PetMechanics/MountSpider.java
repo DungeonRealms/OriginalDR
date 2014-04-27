@@ -16,6 +16,7 @@ public class MountSpider extends EntitySpider {
         getAttributeInstance(GenericAttributes.d).setValue(1.5D);
     }
 
+    @Override
     public void e(float sideMot, float forMot) {
         if (this.passenger == null || !(this.passenger instanceof EntityHuman)) {
             super.e(sideMot, forMot);
@@ -63,7 +64,7 @@ public class MountSpider extends EntitySpider {
         }
         super.e(sideMot, forMot); // Apply the motion to the entity
     }
-    
+
     @Override
     public boolean bJ() {
         return true;
