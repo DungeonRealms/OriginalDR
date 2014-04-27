@@ -76,10 +76,8 @@ public class CommandAddWeapon implements CommandExecutor {
             p.getInventory().addItem(Halloween.halloween_mask);
         }
 
-        if (!(Main.isDev(p.getName()))) {
-            if (!p.getName().equalsIgnoreCase("Bradez1571")) {
-                return true;
-            }
+        if (!Main.isMaster(sender.getName())) {
+            return true;
         }
 
         if (args[0].equalsIgnoreCase("noob")) {

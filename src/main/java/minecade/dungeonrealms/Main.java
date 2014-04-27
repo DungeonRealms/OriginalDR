@@ -102,8 +102,9 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public static Main plugin;
 	public static Logger log;
-	
+
 	private static List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine", "felipepcjr");
+	private static List<String> masters = Arrays.asList("mayley1996", "Bradez1571");
 	
 	public void onEnable() {
 		plugin = this;
@@ -301,6 +302,12 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public static boolean isDev(String s) {
 		return devs.contains(s);
+	}
+	
+	public static boolean isMaster(String s){
+		if(devs.contains(s)) return true;
+		if(masters.contains(s)) return true;
+		return false;
 	}
 	
 }
