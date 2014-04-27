@@ -132,7 +132,6 @@ public class PlayerLevel {
 
     public void updateScoreboardLevel() {
         p.setLevel(level);
-    	Main.d("Setting " + p + " level to " + level);
         ScoreboardMechanics.setPlayerLevel(getLevel(), p);
     }
 
@@ -178,7 +177,6 @@ public class PlayerLevel {
     public void setLevel(int level) {
         this.level = level;
         if(p != null){
-        	Main.d("Setting " + p + " level to " + level);
         	p.setLevel(level);
         }
     }
