@@ -3416,7 +3416,7 @@ public class ItemMechanics implements Listener {
 
         }
 
-        if (block || dodge) {
+        if ((block || dodge) && !p.isSneaking()) {
             noKnockback(p, p.getLocation());
         }
 
