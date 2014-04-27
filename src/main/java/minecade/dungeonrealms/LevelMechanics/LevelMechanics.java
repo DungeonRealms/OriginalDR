@@ -1,13 +1,17 @@
 package minecade.dungeonrealms.LevelMechanics;
 
+import java.util.List;
 import java.util.Random;
 
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.MonsterMechanics.Hologram;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
+import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
 import minecade.dungeonrealms.managers.PlayerManager;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -68,38 +72,62 @@ public class LevelMechanics implements Listener {
                 return;
             }
             pl.setLastEntityKilled(e.getEntity());
-            int level = getPlayerLevel(killer);
-            int xp = mob_level * 15 + new Random().nextInt(50) + 5;
-            if ((level + 8) <= (mob_level)) {
-                // No XP
-                killer.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "greater" + ChatColor.RED
-                        + " then 8 levels of this mob. No EXP granted.");
-                xp = 0;
-            }
-            if (level >= (mob_level + 8)) {
-                // mob_level = 10 p_level = 15
-                // .1 * (15-10 -> 5)
-                killer.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "less" + ChatColor.RED
-                        + " then 8 levels of this mob. 60% EXP granted.");
-                xp *= .6;
-            }
-            boolean is_elite = false;
-            ItemStack weapon = ((LivingEntity) e.getEntity()).getEquipment().getItemInHand();
-            if (weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK)) {
-                // log.info("ELITE!");
-                is_elite = true;
-            }
-            if (is_elite) {
-                // 2.3x XP for elites
-                xp *= 2.3;
-            }
-            if (PlayerManager.getPlayerModel(killer).getToggleList() != null && PlayerManager.getPlayerModel(killer).getToggleList().contains("indicator")) {
-                Hologram xp_hologram = new Hologram(Main.plugin, ChatColor.GREEN.toString() + "+" + ChatColor.BOLD + xp + " XP");
-                xp_hologram.show(e.getEntity().getLocation().add(0, 1, 0), 3, killer);
-            }
-            addXP(killer, xp);
+            
+            addKillXP(killer, (LivingEntity) e.getEntity(), mob_level, true);
         }
 
+    }
+    
+    public static void addKillXP(Player player, LivingEntity kill, int mob_level, boolean first){
+        int level = getPlayerLevel(player);
+
+        if(first){
+	    	if(PartyMechanics.party_map.containsKey(player.getName())){
+	    		List<String> members = PartyMechanics.party_map.get(player.getName()).getPartyMembers();
+	    		Location v = player.getLocation();
+	    		for(String s : members){
+	    			if(s == player.getName()) continue;
+	    			Player p = Bukkit.getPlayerExact(s);
+	    			if(p == null) continue;
+	    			Location l = p.getLocation();
+	    			if(l.getX() >= v.getX() - 20 && l.getX() <= v.getX() + 20){
+	        			if(l.getZ() >= v.getZ() - 20 && l.getZ() <= v.getZ() + 20){
+	        				addKillXP(p, kill, mob_level, false);
+	        			}
+	    			}
+	    		}
+	    	}
+        }
+        
+        if(level - 8 > mob_level){
+            if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("debug")) {
+	        	player.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "greater" + ChatColor.RED
+	                    + " then 8 levels of this mob. No EXP granted.");
+        	}
+        	return;
+        	
+        }
+        
+        int xp = calculateXP(player, kill, mob_level);
+        
+        if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("indicator")) {
+            Hologram xp_hologram = new Hologram(Main.plugin, ChatColor.GREEN.toString() + "+" + ChatColor.BOLD + xp + " XP");
+            xp_hologram.show(kill.getLocation().add(0, 1, 0), 3, player);
+        }
+        
+        addXP(player, xp);
+    }
+    
+    public static int calculateXP(Player player, LivingEntity kill, int mob_level){
+    	int xp = mob_level * 15 + new Random().nextInt(50) + 5;
+        int level = getPlayerLevel(player);
+        ItemStack weapon = kill.getEquipment().getItemInHand();
+        
+        if(level - 8 > mob_level) return 0;
+        if (level >= (mob_level + 8)) xp *= .6;
+        if (weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK)) xp *= 2.3;
+    	
+    	return xp;
     }
 
     public static int getLevelToUse(int tier) {
@@ -131,6 +159,12 @@ public class LevelMechanics implements Listener {
     }
 
     public static void addXP(Player p, int xp) {
+    	
+    	if(PartyMechanics.party_map.containsKey(p.getName())){
+    		int newXP = (int) Math.round((xp * (1 - (0.1D * PartyMechanics.party_map.get(p.getName()).getPartyMembers().size()))));
+    		xp = newXP;
+    	}
+    	
         getPlayerData(p).addXP(xp);
     }
 
