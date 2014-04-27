@@ -325,8 +325,14 @@ public class HealthMechanics implements Listener {
 			double health_percent = (hp / max_hp);
 			PlayerLevel lvl = LevelMechanics.getPlayerData(pl);
 			if(lvl != null){
-				String levelData = ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "XP " + ChatColor.GREEN.toString() + lvl.getXP() + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + " / " + ChatColor.GREEN.toString() + lvl.getEXPNeeded(lvl.getLevel());
-				BarAPI.setMessage(pl, ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "HP " + ChatColor.LIGHT_PURPLE + getPlayerHP(pl.getName()) + ChatColor.BOLD.toString() + " / " + ChatColor.LIGHT_PURPLE.toString() + getMaxHealthValue(pl.getName()) + " - " + levelData, (float) (health_percent * 100F));
+				String levelData = ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "LVL " + ChatColor.AQUA.toString() + lvl.getLevel();
+				
+				//String xpData = ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "XP " + ChatColor.GREEN.toString() + lvl.getXP() + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + " / " + ChatColor.GREEN.toString() + lvl.getEXPNeeded(lvl.getLevel());
+				int xplevel = (int) Math.round( ((lvl.getXP() * 1D) / (lvl.getEXPNeeded(lvl.getLevel()) * 1D )) * 100 );
+				String xpData = ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "XP " + ChatColor.GREEN.toString() + xplevel + "%";
+				
+				String dash = ChatColor.BLACK.toString() + ChatColor.BOLD + " - ";
+				BarAPI.setMessage(pl, levelData + dash + ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "HP " + ChatColor.LIGHT_PURPLE + getPlayerHP(pl.getName()) + ChatColor.BOLD.toString() + " / " + ChatColor.LIGHT_PURPLE.toString() + getMaxHealthValue(pl.getName()) + dash + xpData, (float) (health_percent * 100F));
 			}else{
 				BarAPI.setMessage(pl, ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "HP " + ChatColor.LIGHT_PURPLE + getPlayerHP(pl.getName()) + ChatColor.BOLD.toString() + " / " + ChatColor.LIGHT_PURPLE.toString() + getMaxHealthValue(pl.getName()), (float) (health_percent * 100F));
 			}

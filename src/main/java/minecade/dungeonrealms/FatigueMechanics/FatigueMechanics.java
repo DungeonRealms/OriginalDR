@@ -182,7 +182,7 @@ public class FatigueMechanics implements Listener {
 				p.removePotionEffect(PotionEffectType.SLOW_DIGGING);
 				fatigue_effect.remove(p);
 				p.setExp(0.10F);
-				//updatePlayerLevel(p);
+				updatePlayerLevel(p);
 				continue;
 			}
 			
@@ -191,7 +191,6 @@ public class FatigueMechanics implements Listener {
 		}
 	}
 	
-	/*
 	public static void updatePlayerLevel(Player p) {
 		float exp = p.getExp();
 		double percent = exp * 100.0D;
@@ -203,7 +202,6 @@ public class FatigueMechanics implements Listener {
 		}
 		p.setLevel((int) percent);
 	}
-	*/
 	
 	public static float getEnergyPercent(Player p) {
 		return p.getExp();
@@ -213,7 +211,7 @@ public class FatigueMechanics implements Listener {
 		float current_xp = getEnergyPercent(p);
 		if(current_xp == 1) { return; }
 		p.setExp(getEnergyPercent(p) + add);
-		//updatePlayerLevel(p);
+		updatePlayerLevel(p);
 	}
 	
 	public static void removeEnergy(Player p, float remove) {
@@ -230,14 +228,14 @@ public class FatigueMechanics implements Listener {
 		if((getEnergyPercent(p) - remove) <= 0) {
 			fatigue_effect.put(p, 0);
 			p.setExp(0.0F);
-			//updatePlayerLevel(p);
+			updatePlayerLevel(p);
 			//sendPotionPacket(p, new PotionEffect(PotionEffectType.SLOW_DIGGING, 50, 4));
 			p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 50, 4));
 			// Add slow swing
 			return;
 		}
 		p.setExp(getEnergyPercent(p) - remove);
-		//updatePlayerLevel(p);
+		updatePlayerLevel(p);
 	}
 	
 	public void replenishEnergy() {
@@ -254,7 +252,7 @@ public class FatigueMechanics implements Listener {
 			}
 			if(getEnergyPercent(p) > 1.0F) {
 				p.setExp(1.0F);
-				//updatePlayerLevel(p);
+				updatePlayerLevel(p);
 				continue;
 			}
 			
