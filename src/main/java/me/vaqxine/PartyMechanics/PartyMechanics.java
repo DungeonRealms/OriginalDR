@@ -371,7 +371,7 @@ public class PartyMechanics implements Listener {
 		/*
 		 * if (!p_owner.getName().equals("Notch")) { p_owner.sendMessage(ChatColor.RED + "Parties are temporarily disabled due to a 1.7.2 conflict."); return; }
 		 */
-		if(!party_map.containsKey(p_owner)) party_map.put(p_owner.getName(), new Party(p_owner));
+		if(!party_map.containsKey(p_owner.getName())) party_map.put(p_owner.getName(), new Party(p_owner));
 		if(!(isPartyLeader(p_owner.getName()))) {
 			if(isInParty(p_owner.getName())) { // In another party.
 				p_owner.sendMessage(ChatColor.RED.toString() + "You are NOT the leader of your party.");
