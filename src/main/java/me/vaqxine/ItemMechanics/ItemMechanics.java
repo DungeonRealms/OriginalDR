@@ -3749,7 +3749,7 @@ public class ItemMechanics implements Listener {
         }
         final Arrow a = (Arrow) e.getEntity();
 
-        if (a.getShooter() == null || (((CraftLivingEntity) a.getShooter()).getType() != EntityType.PLAYER)) {
+        if (a.getShooter() == null || !(a.getShooter() instanceof Player)) {
             return;
         }
 
@@ -6129,7 +6129,7 @@ public class ItemMechanics implements Listener {
     }
 
     @SuppressWarnings("deprecation")
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerThrowItem(PlayerDropItemEvent e) {
         if (e.getItemDrop().getItemStack().getType() == Material.ARROW) {
             ItemStack is = e.getItemDrop().getItemStack();

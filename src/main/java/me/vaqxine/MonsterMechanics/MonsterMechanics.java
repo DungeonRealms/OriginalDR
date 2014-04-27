@@ -3597,7 +3597,7 @@ public class MonsterMechanics implements Listener {
             if (mob_damage.containsKey(le)) {
                 // Custom mob, witch throwing potion, do damage.
                 List<Integer> dmg_range = mob_damage.get(le);
-                int dmg = new Random().nextInt((dmg_range.get(1) - dmg_range.get(0)) < 1 ? 1 : dmg_range.get(1) - dmg_range.get(0)) + dmg_range.get(0);
+                int dmg = new Random().nextInt((dmg_range.get(1) - dmg_range.get(0)) < 1 ? 0 : dmg_range.get(1) - dmg_range.get(0)) + dmg_range.get(0);
                 dmg = dmg * 2;
                 for (Entity ent : e.getAffectedEntities()) {
                     if (ent instanceof Player) {
@@ -5619,7 +5619,7 @@ public class MonsterMechanics implements Listener {
 
                         i_gear.setItemMeta(im);
                         Player target = Bukkit.getPlayer(mob_target.get(ent));
-                        if (LevelMechanics.getPlayerTier(target) + 1 < getMobTier(ent)) {
+                        if (LevelMechanics.getPlayerTier(target) + 1 >= getMobTier(ent)) {
                             if (i_gear.getType() != Material.AIR) {
                                 ent.getWorld().dropItemNaturally(ent.getLocation(), i_gear);
                             }

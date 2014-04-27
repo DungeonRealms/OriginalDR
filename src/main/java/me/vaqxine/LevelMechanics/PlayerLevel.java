@@ -82,17 +82,13 @@ public class PlayerLevel {
     }
 
     public int getEXPNeeded(int level) {
-        /*
-         * if (level >= 0) { if (level == 1) { return 300; // formula doesn't work on level 1. } if (level == 100) { return 0; } int previous_level = level - 1;
-         * return (int) (Math.pow((previous_level), 2) + ((previous_level) * 20) + 200 + ((previous_level) * 4) + getEXPNeeded(previous_level)); } return 0;
-         */
         if (level == 1) {
             return 1000;
         }
         if (level >= 101) {
             return 0;
         }
-        return (int) (300 * Math.pow(level, 1.6));
+        return (int) (400 * Math.pow(level, 1.6));
     }
 
     public void saveData(boolean useHive, boolean remove) {
@@ -131,6 +127,10 @@ public class PlayerLevel {
             p.playSound(p.getLocation(), Sound.LEVEL_UP, 0.5F, 1F);
         }
         setLevel(getLevel() + 1);
+        updateScoreboardLevel();
+    }
+
+    public void updateScoreboardLevel() {
         ScoreboardMechanics.setPlayerLevel(getLevel(), p);
     }
 

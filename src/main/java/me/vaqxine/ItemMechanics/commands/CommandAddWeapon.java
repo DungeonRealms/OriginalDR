@@ -76,8 +76,10 @@ public class CommandAddWeapon implements CommandExecutor {
             p.getInventory().addItem(Halloween.halloween_mask);
         }
 
-        if (!(Main.isDev(p.getName()) && !p.getName().equalsIgnoreCase("Bradez1571"))) {
-            return true;
+        if (!(Main.isDev(p.getName()))) {
+            if (!p.getName().equalsIgnoreCase("Bradez1571")) {
+                return true;
+            }
         }
 
         if (args[0].equalsIgnoreCase("noob")) {
@@ -176,5 +178,4 @@ public class CommandAddWeapon implements CommandExecutor {
         // addCustomItem(p, Material.STONE_SWORD, white.toString() + "Flaming Sword", red.toString() + "DMG: 1~5" + "," + red.toString() + "FIRE DMG: +1");
         return true;
     }
-
 }

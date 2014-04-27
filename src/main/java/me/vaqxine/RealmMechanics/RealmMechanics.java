@@ -467,7 +467,7 @@ public class RealmMechanics implements Listener {
                                 // loc.getWorld().spawnParticle(loc.add(0.5, 2, 0.5), Particle.ENCHANTMENT_TABLE, 0.25F, 75);
                             }
                             if (!(uploading_realms.contains(pl.getName())) && safe_realms.containsKey(pl.getName())) {
-                                
+
                                 try {
                                     ParticleEffect.sendToLocation(ParticleEffect.HAPPY_VILLAGER, loc.add(0.5D, 1.5D, 0.5D), 0, 0, 0, 0.02F, 20);
 
@@ -478,13 +478,13 @@ public class RealmMechanics implements Listener {
                                 // loc.getWorld().spawnParticle(loc.add(0.5, 1.5, 0.5), Particle.HAPPY_VILLAGER, 0.02F, 20);
                             }
                             if (!(uploading_realms.contains(pl.getName())) && flying_realms.containsKey(pl.getName())) {
-                             
+
                                 try {
                                     ParticleEffect.sendToLocation(ParticleEffect.CLOUD, loc.add(0.5D, 1.5D, 0.5D), 0, 0, 0, 0.02F, 20);
                                 } catch (Exception err) {
                                     err.printStackTrace();
                                 }
-                                // loc.getWorld().spawnParticle(loc.add(0.5, 1.5, 0.5), Particle.CLOUD, 0.02F, 20); 
+                                // loc.getWorld().spawnParticle(loc.add(0.5, 1.5, 0.5), Particle.CLOUD, 0.02F, 20);
                                 loc.subtract(.5D, 1.5D, .5D);
                             }
                         }
@@ -920,6 +920,26 @@ public class RealmMechanics implements Listener {
         mat_shop_3.setItem(8, new ItemStack(Material.getMaterial(99), 15, (short) 0));
         mat_shop_3.setItem(9, new ItemStack(Material.getMaterial(99), 15, (short) 15));
         mat_shop_3.setItem(10, new ItemStack(Material.getMaterial(99), 15, (short) 14));
+        mat_shop_3.setItem(11, new ItemStack(Material.getMaterial(162), 8, (short) 0));
+        mat_shop_3.setItem(12, new ItemStack(Material.SAND, 4, (short) 1));
+        mat_shop_3.setItem(13, new ItemStack(Material.STAINED_GLASS, 6, (short) 0));
+        mat_shop_3.setItem(14, new ItemStack(Material.STAINED_GLASS, 6, (short) 1));
+        mat_shop_3.setItem(15, new ItemStack(Material.STAINED_GLASS, 6, (short) 2));
+        mat_shop_3.setItem(16, new ItemStack(Material.STAINED_GLASS, 6, (short) 3));
+        mat_shop_3.setItem(17, new ItemStack(Material.STAINED_GLASS, 6, (short) 4));
+        mat_shop_3.setItem(18, new ItemStack(Material.STAINED_GLASS, 6, (short) 5));
+        mat_shop_3.setItem(19, new ItemStack(Material.STAINED_GLASS, 6, (short) 6));
+        mat_shop_3.setItem(20, new ItemStack(Material.STAINED_GLASS, 6, (short) 7));
+        mat_shop_3.setItem(21, new ItemStack(Material.STAINED_GLASS, 6, (short) 8));
+        mat_shop_3.setItem(22, new ItemStack(Material.STAINED_GLASS, 6, (short) 9));
+        mat_shop_3.setItem(23, new ItemStack(Material.STAINED_GLASS, 6, (short) 10));
+        mat_shop_3.setItem(24, new ItemStack(Material.STAINED_GLASS, 6, (short) 11));
+        mat_shop_3.setItem(25, new ItemStack(Material.STAINED_GLASS, 6, (short) 12));
+        mat_shop_3.setItem(26, new ItemStack(Material.STAINED_GLASS, 6, (short) 13));
+        mat_shop_3.setItem(27, new ItemStack(Material.STAINED_GLASS, 6, (short) 14));
+        mat_shop_3.setItem(28, new ItemStack(Material.STAINED_GLASS, 6, (short) 15));
+        mat_shop_3.setItem(29, new ItemStack(Material.PACKED_ICE, 4, (short) 0));
+        mat_shop_3.setItem(30, new ItemStack(Material.getMaterial(3), 8, (short) 2));
         // mat_shop_3.setItem(8, new ItemStack(Material.COAL_ORE, 10, (short)0));
         // mat_shop_3.setItem(9, new ItemStack(Material.IRON_ORE, 15, (short)0));
         // mat_shop_3.setItem(10, new ItemStack(Material.EMERALD_ORE, 20, (short)0));
@@ -944,13 +964,13 @@ public class RealmMechanics implements Listener {
                 price_each = is.getDurability();
             }
             if (is.getType() == Material.HOPPER) {
-                price_each = 150;
+                price_each = 1500;
             }
             if (is.getType() == Material.DROPPER) {
-                price_each = 120;
+                price_each = 1500;
             }
             if (is.getType() == Material.DISPENSER) {
-                price_each = 100;
+                price_each = 1500;
             }
             if (is.getType() == Material.JUKEBOX) {
                 price_each = 1200;
@@ -994,13 +1014,13 @@ public class RealmMechanics implements Listener {
                 price_each = is.getDurability();
             }
             if (is.getType() == Material.HOPPER) {
-                price_each = 150;
+                price_each = 1500;
             }
             if (is.getType() == Material.DROPPER) {
-                price_each = 120;
+                price_each = 1500;
             }
             if (is.getType() == Material.DISPENSER) {
-                price_each = 100;
+                price_each = 1500;
             }
             if (is.getType() == Material.JUKEBOX) {
                 price_each = 1200;
@@ -1939,7 +1959,16 @@ public class RealmMechanics implements Listener {
         if (b.getType() == Material.SKULL) {
             loot.setType(Material.SKULL_ITEM);
         }
-
+        if (b.getType() == Material.DOUBLE_PLANT) {
+            if (b.getData() == (byte) 0) {
+                loot.setType(Material.DOUBLE_PLANT);
+            } else {
+                e.setCancelled(true);
+                e.setUseInteractedBlock(Result.DENY);
+                b.setType(Material.DOUBLE_PLANT);
+                loot.setType(Material.AIR);
+            }
+        }
         if (b.getType() == Material.REDSTONE_TORCH_ON) {
             loot.setType(Material.REDSTONE_TORCH_OFF);
         }
@@ -2057,6 +2086,14 @@ public class RealmMechanics implements Listener {
         }
 
         p.updateInventory();
+    }
+
+    @SuppressWarnings("deprecation")
+    @EventHandler
+    public void onBlockBreakEvent(BlockBreakEvent e) {
+        if (e.getBlock().getTypeId() == 175) {
+            e.setCancelled(true);
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -3488,7 +3525,6 @@ public class RealmMechanics implements Listener {
         if (!(e.getInventory().getName().contains("Realm Material Store"))) {
             return;
         }
-
         if (e.getCurrentItem() != null && MoneyMechanics.isDivider(e.getCurrentItem())) {
             e.setCancelled(true); // Divider.
             p.updateInventory();
@@ -3553,7 +3589,7 @@ public class RealmMechanics implements Listener {
 
             }
         }
-        if (e.getCurrentItem().getType() == Material.AIR)
+        if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR)
             return;
 
         if (e.getCurrentItem().getItemMeta().getLore().get(0).contains("1/3")) {

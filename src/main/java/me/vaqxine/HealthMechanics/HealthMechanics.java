@@ -818,6 +818,9 @@ public class HealthMechanics implements Listener {
 				if(current_hp + 1 > max_hp) {
 					continue;
 				} // They have max HP.
+				if(current_hp <= 0 || p.isDead() || !p.isOnline()){
+				    continue;
+				}
 				//amount_to_heal += getHealthRegenAmount(p);
 				
 				if(PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("debug")){

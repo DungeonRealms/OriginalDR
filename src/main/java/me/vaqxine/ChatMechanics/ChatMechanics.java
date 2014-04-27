@@ -15,6 +15,7 @@ import me.vaqxine.Main;
 import me.vaqxine.ChatMechanics.commands.CommandGL;
 import me.vaqxine.ChatMechanics.commands.CommandL;
 import me.vaqxine.CommunityMechanics.CommunityMechanics;
+import me.vaqxine.DuelMechanics.DuelMechanics;
 import me.vaqxine.EcashMechanics.EcashMechanics;
 import me.vaqxine.GuildMechanics.GuildMechanics;
 import me.vaqxine.Hive.Hive;
@@ -670,7 +671,7 @@ public class ChatMechanics implements Listener {
                                         + ko_weapon.getType().name().substring(1, ko_weapon.getType().name().length()).toLowerCase();
                             }
                         }
-                        if (dead.getInventory().getArmorContents().length > 0) {
+                        if (dead.getInventory().getArmorContents().length > 0 && !DuelMechanics.isDamageDisabled(dead.getLocation())) {
                             LevelMechanics.addXP(killer, (int) (LevelMechanics.getPlayerLevel(dead) * 3.5));
                         }
                         death_reason = " was killed by " + p_color + prefix + killer.getName() + ChatColor.WHITE.toString() + " with a(n) " + ko_weapon_name;

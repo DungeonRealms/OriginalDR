@@ -11,7 +11,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-
 @SuppressWarnings("deprecation")
 public class CommandSetLevel implements CommandExecutor {
 
@@ -46,6 +45,7 @@ public class CommandSetLevel implements CommandExecutor {
                 + " to " + level);
         p.playSound(p.getLocation(), Sound.SHEEP_SHEAR, 1, 1.3F);
         PlayerManager.getPlayerModel(to_set).getPlayerLevel().setLevel(level);
+        PlayerManager.getPlayerModel(to_set).getPlayerLevel().updateScoreboardLevel();
         return true;
     }
 

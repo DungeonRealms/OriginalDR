@@ -50,7 +50,7 @@ public class Hearthstone {
             tp_loc = HearthstoneMechanics.spawn_map.get(rst.getString("location_name"));
             setTimer(rst.getInt("timer"));
             // TODO: Download the data from tables and set their spawns
-            // System.out.print("Loaded Hearthstone data for " + p_name);
+            System.out.print("[HearthstoneMechanics] Set " + p_name + " location to " + tp_name);
             pst.close();
         } catch (SQLException sqlE) {
             sqlE.printStackTrace();
@@ -66,10 +66,10 @@ public class Hearthstone {
      */
     public void sendInsertQuery() {
         try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
-                "INSERT IGNORE INTO hearthstone (p_name, location_name, timer) VALUES (?, ?, 0) ON DUPLICATE KEY UPDATE p_name = ?;")) {
+                "INSERT IGNORE INTO hearthstone (p_name, location_name, timer) VALUES (?, ?, 0) ON DUPLICATE KEY UPDATE location_name = ?")) {
             pst.setString(1, tp_name);
             pst.setString(2, "Cyrennica");
-            pst.setString(3, p_name);
+            pst.setString(3, tp_name);
             pst.executeUpdate();
             System.out.print("[HeartstoneMechanics] Saved " + p_name + "s Hearthstone data for the first time.");
             pst.close();
