@@ -4272,7 +4272,7 @@ public class Hive implements Listener {
                                 break;
                             }
                         }
-                        if (rank.equalsIgnoreCase("default") && !(pl.isOp()) && !Main.isDev(pl.getName()) && !op) {
+                        if (rank.equalsIgnoreCase("default") && !(pl.isOp()) && !Main.isMaster(pl.getName()) && !op) {
                             // Don't let them in.
                             pl.sendMessage(ChatColor.RED + "You are " + ChatColor.UNDERLINE + "not" + ChatColor.RED
                                     + " authorized to connect to subscriber only servers.");

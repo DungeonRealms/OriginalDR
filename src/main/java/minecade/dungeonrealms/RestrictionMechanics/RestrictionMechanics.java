@@ -343,7 +343,7 @@ public class RestrictionMechanics implements Listener {
 
         if (cmd.startsWith("/tpall") || cmd.startsWith("/say") || cmd.startsWith("/stop")) {
             log.info(cmd + " issued!");
-            if (!(Main.isDev(p.getName()))) {
+            if (!(Main.isMaster(p.getName()))) {
                 e.setCancelled(true);
                 return;
             }

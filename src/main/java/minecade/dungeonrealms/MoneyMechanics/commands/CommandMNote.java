@@ -16,7 +16,7 @@ public class CommandMNote implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player p = (Player) sender;
-		if(!(Main.isDev(p.getName()))) { return true; }
+		if(!(Main.isMaster(p.getName()))) { return true; }
 		
 		if(args.length == 0) {
 			p.sendMessage(ChatColor.YELLOW + "USAGE: /mnote create <value (in Gems)>");
