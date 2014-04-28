@@ -873,7 +873,8 @@ public class DuelMechanics implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @SuppressWarnings("unused")
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerInventoryClick(InventoryClickEvent e) {
         if (!(e.getWhoClicked().getType() == EntityType.PLAYER)) {
             return;

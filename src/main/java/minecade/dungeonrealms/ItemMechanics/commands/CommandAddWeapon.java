@@ -13,8 +13,6 @@ import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
 import minecade.dungeonrealms.MountMechanics.MountMechanics;
 import minecade.dungeonrealms.PetMechanics.MountSpider;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
-import net.minecraft.server.v1_7_R2.EntitySpider;
-import net.minecraft.server.v1_7_R2.GenericAttributes;
 import net.minecraft.server.v1_7_R2.WorldServer;
 
 import org.bukkit.ChatColor;
@@ -24,13 +22,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftSpider;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Spider;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffectType;
 
 public class CommandAddWeapon implements CommandExecutor {
 

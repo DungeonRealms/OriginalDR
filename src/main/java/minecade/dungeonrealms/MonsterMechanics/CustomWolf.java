@@ -2,8 +2,6 @@ package minecade.dungeonrealms.MonsterMechanics;
 
 import java.lang.reflect.Field;
 
-import org.bukkit.craftbukkit.v1_7_R2.util.UnsafeList;
-
 import net.minecraft.server.v1_7_R2.EntityHuman;
 import net.minecraft.server.v1_7_R2.EntityWolf;
 import net.minecraft.server.v1_7_R2.PathfinderGoalFloat;
@@ -11,6 +9,8 @@ import net.minecraft.server.v1_7_R2.PathfinderGoalLeapAtTarget;
 import net.minecraft.server.v1_7_R2.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_7_R2.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R2.World;
+
+import org.bukkit.craftbukkit.v1_7_R2.util.UnsafeList;
 
 public class CustomWolf extends EntityWolf {
 

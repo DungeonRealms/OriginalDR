@@ -15,7 +15,7 @@ import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
 import minecade.dungeonrealms.ItemMechanics.Halloween;
 import minecade.dungeonrealms.ItemMechanics.ItemGenerators;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
-import minecade.dungeonrealms.LevelMechanics.*;
+import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
 import minecade.dungeonrealms.MountMechanics.MountMechanics;
 import minecade.dungeonrealms.PetMechanics.PetMechanics;
@@ -26,7 +26,6 @@ import minecade.dungeonrealms.RestrictionMechanics.commands.CommandZone;
 import minecade.dungeonrealms.SpawnMechanics.SpawnMechanics;
 import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
 import minecade.dungeonrealms.enums.Armor;
-import minecade.dungeonrealms.enums.CC;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

@@ -7,7 +7,6 @@ import java.util.Map;
 import minecade.dungeonrealms.PetMechanics.MountSpider;
 import net.minecraft.server.v1_7_R2.BiomeBase;
 import net.minecraft.server.v1_7_R2.BiomeMeta;
-import net.minecraft.server.v1_7_R2.EntityChicken;
 import net.minecraft.server.v1_7_R2.EntityInsentient;
 import net.minecraft.server.v1_7_R2.EntityIronGolem;
 import net.minecraft.server.v1_7_R2.EntitySpider;

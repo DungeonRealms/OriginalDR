@@ -2,7 +2,6 @@ package minecade.dungeonrealms.PetMechanics;
 
 import java.lang.reflect.Field;
 
-import minecade.dungeonrealms.Main;
 import net.minecraft.server.v1_7_R2.EntityHuman;
 import net.minecraft.server.v1_7_R2.EntityLiving;
 import net.minecraft.server.v1_7_R2.EntitySpider;

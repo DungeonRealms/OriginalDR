@@ -7,9 +7,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
-import minecade.dungeonrealms.enums.CC;
 import minecade.dungeonrealms.managers.PlayerManager;
 
 import org.bukkit.ChatColor;
