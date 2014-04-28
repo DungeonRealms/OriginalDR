@@ -4019,8 +4019,8 @@ public class MonsterMechanics implements Listener {
                     }
 
                     if (minion_type == 2) {
-                        minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "bandit", "Mayel's Pirate Captain", true, 3));
-                        minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 2, -1, loc, false, "bandit", "Mayel's Pirate Captain", true, 3));
+                        minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate Captain", true, 3));
+                        minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate Captain", true, 3));
                         minion_map.add(spawnTierMob(loc, EntityType.SKELETON, 1, -1, loc, false, "bandit", "Mayel's Pirate", true, 3));
                     }
 
