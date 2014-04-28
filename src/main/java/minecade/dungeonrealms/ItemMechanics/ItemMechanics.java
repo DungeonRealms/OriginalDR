@@ -23,6 +23,7 @@ import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
 import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.Hive.ParticleEffect;
 import minecade.dungeonrealms.ItemMechanics.commands.CommandAddWeapon;
+import minecade.dungeonrealms.ItemMechanics.commands.CommandAddWeaponNew;
 import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.MerchantMechanics.MerchantMechanics;
 import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
@@ -61,7 +62,6 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Horse;
@@ -218,6 +218,7 @@ public class ItemMechanics implements Listener {
         instance = this;
 
         Main.plugin.getCommand("addweapon").setExecutor(new CommandAddWeapon());
+        Main.plugin.getCommand("addweaponnew").setExecutor(new CommandAddWeaponNew());
 
         File home_dir = new File("plugins/ItemMechanics");
 
