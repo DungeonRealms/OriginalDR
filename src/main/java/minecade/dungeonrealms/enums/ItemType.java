@@ -162,9 +162,9 @@ public enum ItemType {
 			//energy_cost = 12;
 			
 			life_steal_chance = 2;
-			if(type == BOW){
+			if(type == BOW) {
 				slow_chance = 3;
-			}else{
+			} else {
 				knockback_chance = 3;
 			}
 			crit_hit_chance = 2;
@@ -187,16 +187,16 @@ public enum ItemType {
 			}
 			
 			life_steal_max = 30;
-			if(type == BOW){
+			if(type == BOW) {
 				slow_max = 3;
-			}else{
+			} else {
 				knockback_max = 3;
 			}
 			crit_hit_max = 2;
 			blind_max = 5;
-			if(type == BOW){
+			if(type == BOW) {
 				edmg_max = 8;
-			}else{
+			} else {
 				edmg_max = 4;
 			}
 		}
@@ -206,9 +206,9 @@ public enum ItemType {
 			//energy_cost = 14;
 			
 			life_steal_chance = 4;
-			if(type == BOW){
+			if(type == BOW) {
 				slow_chance = 10;
-			}else{
+			} else {
 				knockback_chance = 10;
 			}
 			crit_hit_chance = 5;
@@ -217,7 +217,7 @@ public enum ItemType {
 			
 			vs_modifier_chance = 9;
 			vs_modifier_max = 12;
-
+			
 			if(type != AXE && type != BOW) {
 				accuracy_chance = 12;
 				accuracy_max = 12;
@@ -231,16 +231,16 @@ public enum ItemType {
 			}
 			
 			life_steal_max = 15;
-			if(type == BOW){
+			if(type == BOW) {
 				slow_max = 4;
-			}else{
+			} else {
 				knockback_max = 6;
 			}
 			crit_hit_max = 4;
 			blind_max = 7;
-			if(type == BOW){
+			if(type == BOW) {
 				edmg_max = 15;
-			}else{
+			} else {
 				edmg_max = 9;
 			}
 		}
@@ -250,9 +250,9 @@ public enum ItemType {
 			//energy_cost = 16;
 			
 			life_steal_chance = 5;
-			if(type == BOW){
+			if(type == BOW) {
 				slow_chance = 13;
-			}else{
+			} else {
 				knockback_chance = 13;
 			}
 			crit_hit_chance = 8;
@@ -261,7 +261,7 @@ public enum ItemType {
 			
 			vs_modifier_chance = 10;
 			vs_modifier_max = 15;
-
+			
 			if(type != AXE && type != BOW) {
 				accuracy_chance = 15;
 				accuracy_max = 25;
@@ -275,16 +275,16 @@ public enum ItemType {
 			}
 			
 			life_steal_max = 12;
-			if(type == BOW){
+			if(type == BOW) {
 				slow_max = 5;
-			}else{
+			} else {
 				knockback_max = 12;
 			}
 			crit_hit_max = 5;
 			blind_max = 9;
-			if(type == BOW){
+			if(type == BOW) {
 				edmg_max = 25;
-			}else{
+			} else {
 				edmg_max = 15;
 			}
 		}
@@ -294,9 +294,9 @@ public enum ItemType {
 			//energy_cost = 20;
 			
 			life_steal_chance = 10;
-			if(type == BOW){
+			if(type == BOW) {
 				slow_chance = 16;
-			}else{
+			} else {
 				knockback_chance = 16;
 			}
 			crit_hit_chance = 9;
@@ -305,7 +305,7 @@ public enum ItemType {
 			
 			vs_modifier_chance = 12;
 			vs_modifier_max = 20;
-
+			
 			if(type != AXE && type != BOW) {
 				accuracy_chance = 20;
 				accuracy_max = 28;
@@ -319,16 +319,16 @@ public enum ItemType {
 			}
 			
 			life_steal_max = 7;
-			if(type == BOW){
+			if(type == BOW) {
 				slow_max = 7;
-			}else{
+			} else {
 				knockback_max = 15;
 			}
 			crit_hit_max = 6;
 			blind_max = 9;
-			if(type == BOW){
+			if(type == BOW) {
 				edmg_max = 45;
-			}else{
+			} else {
 				edmg_max = 25;
 			}
 		}
@@ -339,9 +339,9 @@ public enum ItemType {
 			//energy_cost = 25;
 			
 			life_steal_chance = 8;
-			if(type == BOW){
+			if(type == BOW) {
 				slow_chance = 20;
-			}else{
+			} else {
 				knockback_chance = 20;
 			}
 			crit_hit_chance = 7;
@@ -350,7 +350,7 @@ public enum ItemType {
 			
 			vs_modifier_chance = 15;
 			vs_modifier_max = 15;
-
+			
 			if(type != AXE && type != BOW) {
 				accuracy_chance = 15;
 				accuracy_max = 35;
@@ -364,16 +364,16 @@ public enum ItemType {
 			}
 			
 			life_steal_max = 8;
-			if(type == BOW){
+			if(type == BOW) {
 				slow_max = 10;
-			}else{
+			} else {
 				knockback_max = 20;
 			}
 			crit_hit_max = 10;
 			blind_max = 11;
-			if(type == BOW){
+			if(type == BOW) {
 				edmg_max = 75;
-			}else{
+			} else {
 				edmg_max = 55;
 			}
 		}
@@ -1022,14 +1022,14 @@ public enum ItemType {
 			}
 		}
 		
-		if(type == BOW){
+		if(type == BOW) {
 			if(slow == true) {
-	            weapon_data += "slow=" + slow_percent + ":";
-	            wep_name = "Snaring " + wep_name;
-	            wep_description += ChatColor.RED.toString() + "SLOW: " + slow_percent + "%,";
-	            // Take from first index of slow= to next index of : from that point.
-	        }
-		}else{
+				weapon_data += "slow=" + slow_percent + ":";
+				wep_name = "Snaring " + wep_name;
+				wep_description += ChatColor.RED.toString() + "SLOW: " + slow_percent + "%,";
+				// Take from first index of slow= to next index of : from that point.
+			}
+		} else {
 			if(pure_dmg == true) {
 				weapon_data += "pure_dmg=" + pure_dmg_val + ":";
 				wep_name = "Pure " + wep_name;
@@ -1059,9 +1059,9 @@ public enum ItemType {
 		
 		if(life_steal == true) {
 			weapon_data += "ls=" + life_steal_percent + ":";
-			if(type == BOW){
+			if(type == BOW) {
 				wep_name = "Lifestealing " + wep_name;
-			}else{
+			} else {
 				wep_name = "Vampyric " + wep_name;
 			}
 			wep_description += ChatColor.RED.toString() + "LIFE STEAL: " + life_steal_percent + "%,";
@@ -1074,7 +1074,7 @@ public enum ItemType {
 			wep_description += ChatColor.RED.toString() + "CRITICAL HIT: " + crit_hit_percent + "%,";
 		}
 		
-		if(type != BOW){
+		if(type != BOW) {
 			if(armor_pen == true) {
 				weapon_data += "armor_pen=" + armor_pen_val + ":";
 				wep_name = "Penetrating " + wep_name;
@@ -1117,8 +1117,7 @@ public enum ItemType {
 			
 			if(blind == true || wep_name.contains("of")) {
 				wep_name = wep_name + " " + element_dmg_type.substring(0, 1).toUpperCase() + element_dmg_type.substring(1, element_dmg_type.length());
-			}
-			if(blind == false) {
+			} else {
 				wep_name = wep_name + " of " + element_dmg_type.substring(0, 1).toUpperCase() + element_dmg_type.substring(1, element_dmg_type.length());
 			}
 			
@@ -1136,9 +1135,7 @@ public enum ItemType {
 		}
 		//log.info(wep_name + " = " + weapon_data);
 		
-		if(type == BOW){
-			return ItemMechanics.signCustomItem(Material.BOW, (short) 0, wep_name, wep_description);
-		}
+		if(type == BOW) { return ItemMechanics.signCustomItem(Material.BOW, (short) 0, wep_name, wep_description); }
 		
 		Attributes attributes = new Attributes(ItemMechanics.signCustomItem(m, (short) 0, wep_name, wep_description));
 		attributes.clear();
