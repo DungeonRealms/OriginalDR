@@ -643,7 +643,6 @@ public class ShopMechanics implements Listener {
 		// cause the occasional issue...
 		
 		// Send socket -> THEN update the SQL.
-		Main.d(CC.RED + "UPLOADING DATA FOR : " + p_name);
 		if(!(collection_bin.containsKey(p_name))) { return; // No one cares.
 		}
 		

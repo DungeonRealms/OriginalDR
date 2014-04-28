@@ -145,7 +145,6 @@ public class PlayerLevel {
                 "SELECT player_level, player_xp FROM player_database WHERE p_name = '" + p_name + "'")) {
             ResultSet rs = pst.executeQuery();
             if (!rs.first()) {
-                Main.d(p_name + " was loaded for the first time.");
                 sendInsertUpdate();
                 // Newcomer in these parts.
                 setLevel(1);

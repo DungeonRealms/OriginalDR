@@ -34,9 +34,7 @@ public class MountSpider extends EntitySpider {
         this.W = 1.0F; // The custom entity will now automatically climb up 1 high blocks
 
         sideMot = ((EntityLiving) this.passenger).bd * 0.5F;
-        Main.d("be = " + ((EntityLiving) this.passenger).be);
         forMot = ((EntityLiving) this.passenger).be * 1.3F;
-        Main.d("forMot after = " + forMot);
         if (forMot <= 0.0F) {
             forMot *= 0.25F; // Make backwards slower
         }

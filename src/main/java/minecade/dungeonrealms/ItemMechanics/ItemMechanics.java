@@ -2982,13 +2982,11 @@ public class ItemMechanics implements Listener {
             }
             if (is.getType() == Material.ARROW) {
                 // They have an arrow so they have arrows.
-                Main.d("THEY HAVE ARROWS");
                 return true;
             }
             if (is.getType() == Material.FLOWER_POT_ITEM) {
                 int amount = getQuiverAmount(is);
                 if (amount > 0) {
-                    Main.d("THEY HAVE ARROWS YO");
                     return true;
                 }
             }
@@ -3703,9 +3701,9 @@ public class ItemMechanics implements Listener {
 
         int tier = subtractArrow(p);
         if (tier == 0) {
-            Main.d("DUDE THE TIER WAS 0");
+            //Main.d("DUDE THE TIER WAS 0");
         } else {
-            Main.d(tier);
+            //Main.d(tier);
         }
         int bow_tier = getItemTier(p.getItemInHand());
 
@@ -6062,9 +6060,6 @@ public class ItemMechanics implements Listener {
                     is.setAmount(is.getAmount() - 1);
                 }
                 int tier = getItemTier(is);
-                Main.d("TIER OF ARROW : " + getItemTier(is));
-                Main.d("DATA: " + is.getItemMeta());
-                Main.d(is.getAmount());
                 if (tier <= 0) {
                     continue;
                 }
@@ -6072,7 +6067,6 @@ public class ItemMechanics implements Listener {
             }
             if (is.getType() == Material.FLOWER_POT_ITEM) {
                 if (getQuiverAmount(is) <= 0) {
-                    Main.d("RETURNING 0 ON LINE 5870");
                     return 0;
                 }
                 int highest_tier = 0;
@@ -6089,13 +6083,10 @@ public class ItemMechanics implements Listener {
 
                 int max_amount = getQuiverAmount(is);
                 replaceQuiverLore(is, highest_tier, amount_of_arrows - 1, max_amount - 1, getMaxQuiverHold(is));
-                Main.d("RETURNING HIGHEST TIER ON LINE 5870");
-                Main.d("TIER: " + highest_tier);
                 return highest_tier;
             }
 
         }
-        Main.d("RETURNING 0 ON LINE 5895");
         return 0;
     }
 

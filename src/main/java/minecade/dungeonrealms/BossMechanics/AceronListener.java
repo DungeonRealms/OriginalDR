@@ -192,8 +192,6 @@ public class AceronListener implements Listener {
             }
             int amount_to_heal =  (int)(e.getDamage() * .2D);
             // Heal the boss
-            Main.d("Healed the boss " + boss + " by " + CC.GREEN + amount_to_heal + " OLD HP: " + MonsterMechanics.getMHealth(boss) + " NEW HP: "
-                    + (MonsterMechanics.getMHealth(boss) + amount_to_heal));
             MonsterMechanics.mob_health.put(boss, (MonsterMechanics.getMHealth(boss) + amount_to_heal));
 
             // p.sendMessage(ChatColor.GOLD.toString() + ChatColor.UNDERLINE + "Aceron the Wicked:" + ChatColor.WHITE +
