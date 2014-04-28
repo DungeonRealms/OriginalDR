@@ -46,7 +46,6 @@ public class LevelMechanics implements Listener {
         }
         if ((MonsterMechanics.getMHealth(e.getEntity()) - e.getDamage()) <= 0) {
             int mob_level = MonsterMechanics.getMobLevel(e.getEntity());
-            Main.d(mob_level);
             if (!(e.getDamager() instanceof Player) && !(e.getDamager() instanceof Projectile))
                 return;
             Player killer = null;
@@ -99,13 +98,16 @@ public class LevelMechanics implements Listener {
 	    	}
         }
         
-        if(level - 8 > mob_level){
+        if(mob_level > (level + 8)){
             if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("debug")) {
-	        	player.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "greater" + ChatColor.RED
-	                    + " then 8 levels of this mob. No EXP granted.");
+	        	player.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "lower" + ChatColor.RED + " than 8 levels of this mob. No EXP granted.");
         	}
         	return;
-        	
+        }else if(mob_level < (level - 8)){
+        	if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("debug")) {
+	        	player.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "greater" + ChatColor.RED + " than 8 levels of this mob. No EXP granted.");
+        	}
+        	return;
         }
         
         int xp = calculateXP(player, kill, mob_level);
