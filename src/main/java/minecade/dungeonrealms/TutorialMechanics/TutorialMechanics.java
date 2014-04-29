@@ -51,6 +51,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class TutorialMechanics implements Listener {
 	Logger log = Logger.getLogger("Minecraft");
@@ -72,9 +73,12 @@ public class TutorialMechanics implements Listener {
 	
 	List<String> leave_confirm = new ArrayList<String>();
 	// Confirm leaving tutorial island.
-	
+
 	List<String> got_enchant_scroll = new ArrayList<String>();
 	// Already got an enchant scroll.
+
+	List<String> got_exp = new ArrayList<String>();
+	// Already got exp.
 	
 	public static List<String> onIsland = new ArrayList<String>();
 	
@@ -491,30 +495,47 @@ public class TutorialMechanics implements Listener {
 		//ChatColor.LIGHT_PURPLE + "[100]" + ChatColor.GRAY + " Lee"
 		
 		if(npc.getName().equalsIgnoreCase(ChatColor.LIGHT_PURPLE + "[100]" + ChatColor.GRAY + " Lee") && !(quest_map.get(pl.getName()).contains(ChatColor.LIGHT_PURPLE + "[100]" + ChatColor.GRAY + " Lee")) && !(completion_delay.get(pl.getName()).contains(npc.getName()))) {
-			pl.sendMessage("Hello there, I'm the leveling master and I'll be teaching you about leveling.");
-			pl.sendMessage("The first thing you'l notice your HP bar, at the top, now displays your level.");
-			pl.sendMessage("Your level is also displayed in your book and on your character's name tag for others to see.");
-			pl.sendMessage("You can receive experience by killing mobs, completing dungeons and also by killing players.");
-			pl.sendMessage("You will only receive experience from mobs that are within an +/- 8 level range.");
-			pl.sendMessage("This means if you're level 16 and you kill a mob level 12, you will receive experience.");
-			pl.sendMessage("However, if you're level 16 and you kill a mob level 25, you won't receive any experience.");
-			pl.sendMessage("You can also gain experience as part of a party!");
-			pl.sendMessage("You will, however, receive less experience if you are part of a party.");
-			pl.sendMessage("Dungeons also provide additional experience for completing them.");
-			pl.sendMessage("To use/wear certain tiers you will require a certain level.");
-			pl.sendMessage("Tier 1 requires a level of 1 (default level).");
-			pl.sendMessage("Tier 2 requires a level of 20.");
-			pl.sendMessage("Tier 3 requires a level of 40.");
-			pl.sendMessage("Tier 4 requires a level of 60.");
-			pl.sendMessage("And finally, Tier 5 requires a level of 80.");
-			pl.sendMessage("Likewise with weapons and armour, the individual horse tiers require a certain level too.");
-			pl.sendMessage("A tier 1 horse requires level 1 (default level)");
-			pl.sendMessage("A tier 2 horse requires level 30.");
-			pl.sendMessage("A tier 3 horse requires level 60.");
-			pl.sendMessage("And finally, a tier 4 horse requires level 90.");
-			pl.sendMessage("Good luck adventure, those who become a master of leveling will receive something special!");
-			pl.sendMessage("Good luck on your quest to level 100!");
-			LevelMechanics.addXP(pl, 50);
+			if(got_exp.contains(pl.getName())) return;
+			got_exp.add(pl.getName());
+			final List<String> messages = Arrays.asList(
+				"Hello there, I'm the leveling master and I'll be teaching you about leveling.",
+				"The first thing you'l notice your HP bar, at the top, now displays your level.",
+				"Your level is also displayed in your book and on your character's name tag for others to see.",
+				"You can receive experience by killing mobs, completing dungeons and also by killing players.",
+				"You will only receive experience from mobs that are within an +/- 8 level range.",
+				"This means if you're level 16 and you kill a mob level 12, you will receive experience.",
+				"However, if you're level 16 and you kill a mob level 25, you won't receive any experience.",
+				"You can also gain experience as part of a party!",
+				"You will, however, receive less experience if you are part of a party.",
+				"Dungeons also provide additional experience for completing them.",
+				"To use/wear certain tiers you will require a certain level.",
+				"Tier 1 requires a level of 1 (default level).",
+				"Tier 2 requires a level of 20.",
+				"Tier 3 requires a level of 40.",
+				"Tier 4 requires a level of 60.",
+				"And finally, Tier 5 requires a level of 80.",
+				"Likewise with weapons and armour, the individual horse tiers require a certain level too.",
+				"A tier 1 horse requires level 1 (default level)",
+				"A tier 2 horse requires level 30.",
+				"A tier 3 horse requires level 60.",
+				"And finally, a tier 4 horse requires level 90.",
+				"Good luck adventure, those who become a master of leveling will receive something special!",
+				"Good luck on your quest to level 100!"
+			);
+			
+			new BukkitRunnable() {
+				private int pos = 0;
+				@Override
+				public void run() {
+					if(messages.size() - 1 >= pos){
+						pl.sendMessage(ChatColor.LIGHT_PURPLE + "[100]" + ChatColor.GRAY + " Lee" + ": " + ChatColor.WHITE + "\"" + messages.get(pos) + "\"");
+						pos++;
+					}else{
+						LevelMechanics.addXP(pl, 50);
+						cancel();
+					}
+				}
+			}.runTaskTimer(Main.plugin, 0L, 20L * 3L);
 		}
 		
 		if(quest_map.containsKey(pl.getName())) {
