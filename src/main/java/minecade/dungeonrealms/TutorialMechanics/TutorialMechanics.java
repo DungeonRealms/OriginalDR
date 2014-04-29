@@ -491,7 +491,7 @@ public class TutorialMechanics implements Listener {
 		//ChatColor.LIGHT_PURPLE + "[100]" + ChatColor.GRAY + " Lee"
 		
 		if(npc.getName().equalsIgnoreCase(ChatColor.LIGHT_PURPLE + "[100]" + ChatColor.GRAY + " Lee") && !(quest_map.get(pl.getName()).contains(ChatColor.LIGHT_PURPLE + "[100]" + ChatColor.GRAY + " Lee")) && !(completion_delay.get(pl.getName()).contains(npc.getName()))) {
-			pl.sendMessage("Hello there, I'm the levelling master and I'll be teaching you about levelling.");
+			pl.sendMessage("Hello there, I'm the leveling master and I'll be teaching you about leveling.");
 			pl.sendMessage("The first thing you'l notice your HP bar, at the top, now displays your level.");
 			pl.sendMessage("Your level is also displayed in your book and on your character's name tag for others to see.");
 			pl.sendMessage("You can receive experience by killing mobs, completing dungeons and also by killing players.");
@@ -512,7 +512,7 @@ public class TutorialMechanics implements Listener {
 			pl.sendMessage("A tier 2 horse requires level 30.");
 			pl.sendMessage("A tier 3 horse requires level 60.");
 			pl.sendMessage("And finally, a tier 4 horse requires level 90.");
-			pl.sendMessage("Good luck adventure, those who become a master of levelling will receive something special!");
+			pl.sendMessage("Good luck adventure, those who become a master of leveling will receive something special!");
 			pl.sendMessage("Good luck on your quest to level 100!");
 			LevelMechanics.addXP(pl, 50);
 		}
