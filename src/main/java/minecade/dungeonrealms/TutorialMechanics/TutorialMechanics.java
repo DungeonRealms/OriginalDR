@@ -491,13 +491,13 @@ public class TutorialMechanics implements Listener {
 		//ChatColor.LIGHT_PURPLE + "[100]" + ChatColor.GRAY + " Lee"
 		
 		if(npc.getName().equalsIgnoreCase(ChatColor.LIGHT_PURPLE + "[100]" + ChatColor.GRAY + " Lee") && !(quest_map.get(pl.getName()).contains(ChatColor.LIGHT_PURPLE + "[100]" + ChatColor.GRAY + " Lee")) && !(completion_delay.get(pl.getName()).contains(npc.getName()))) {
-			pl.sendMessage("Hello there, I''m the levelling master and I'll be teaching you about levelling.");
-			pl.sendMessage("The first thing you''ll notice your HP bar, at the top, now displays your level.");
+			pl.sendMessage("Hello there, I'm the levelling master and I'll be teaching you about levelling.");
+			pl.sendMessage("The first thing you'l notice your HP bar, at the top, now displays your level.");
 			pl.sendMessage("Your level is also displayed in your book and on your character's name tag for others to see.");
 			pl.sendMessage("You can receive experience by killing mobs, completing dungeons and also by killing players.");
 			pl.sendMessage("You will only receive experience from mobs that are within an +/- 8 level range.");
 			pl.sendMessage("This means if you're level 16 and you kill a mob level 12, you will receive experience.");
-			pl.sendMessage("However, if you''re level 16 and you kill a mob level 25, you won't receive any experience.");
+			pl.sendMessage("However, if you're level 16 and you kill a mob level 25, you won't receive any experience.");
 			pl.sendMessage("You can also gain experience as part of a party!");
 			pl.sendMessage("You will, however, receive less experience if you are part of a party.");
 			pl.sendMessage("Dungeons also provide additional experience for completing them.");
