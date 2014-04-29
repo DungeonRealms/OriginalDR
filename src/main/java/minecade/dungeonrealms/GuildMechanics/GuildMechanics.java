@@ -753,8 +753,6 @@ public class GuildMechanics implements Listener {
 					String guild_handle = guild_data.get(1);
 					String color = guild_data.get(2);
 					
-					//Color c = Color.fromBGR(Integer.parseInt(color)); // TODO - UNUSED
-					
 					pl.sendMessage(ChatColor.GRAY + "              *** " + ChatColor.DARK_AQUA + ChatColor.BOLD + "Guild Creation Confirmation" + ChatColor.GRAY + " ***");
 					pl.sendMessage(ChatColor.GRAY + "Guild Name: " + ChatColor.WHITE + guild_name);
 					pl.sendMessage(ChatColor.GRAY + "Guild Handle: " + ChatColor.DARK_AQUA + "[" + ChatColor.GRAY + guild_handle + ChatColor.DARK_AQUA + "]");

@@ -724,7 +724,6 @@ public class Hive implements Listener {
                             }
 
                             n.despawn(DespawnReason.CUSTOM);
-                            // ShopMechanics.updateEntity(n.getBukkitEntity(), lpl);; // TODO - Need to update to latest DR Api!
 
                             Thread t = new Thread(new Runnable() {
                                 public void run() {
@@ -834,8 +833,6 @@ public class Hive implements Listener {
          * Bukkit.getOnlinePlayers().length); log.info("[HIVE (SLAVE Edition)] PENDING UPLOAD: " + pending_upload.size()); try { Thread.sleep(100); // Let all
          * pending multi-thread uploads finish. } catch (InterruptedException e) { e.printStackTrace(); } }
          */
-
-        // CommunityMechanics.sendPacketCrossServer("[crash]" + MOTD.substring(0, MOTD.indexOf(" ")), -1, true); // TODO Wtf? A crash packet on shutdown?
 
         log.info(Ansi.ansi().fg(Ansi.Color.RED).boldOff().toString() + "**************************");
         log.info(Ansi.ansi().fg(Ansi.Color.RED).boldOff().toString() + "[HIVE (SLAVE Edition)] has been disabled.");
@@ -2501,7 +2498,6 @@ public class Hive implements Listener {
                 server_num = Integer.parseInt(prefix.substring(prefix.indexOf("-") + 1, prefix.length()));
             }
             if (prefix.contains("US")) {
-                // server_num = server_num; // TODO Wtf?
             } else if (prefix.contains("EU")) {
                 server_num += 1000;
             } else if (prefix.contains("BR")) {
@@ -2629,8 +2625,6 @@ public class Hive implements Listener {
         Bukkit.getScheduler().runTask(Main.plugin, new Runnable() {
 
             public void run() {
-                // TODO Auto-generated method stub
-
                 Player pl = e.getPlayer();
                 if (player_bio.containsKey(pl.getName())) {
                     // They're writing their guild bio!
@@ -3937,7 +3931,6 @@ public class Hive implements Listener {
 
         server_num = Integer.parseInt(server_prefix.substring(server_prefix.indexOf("-") + 1, server_prefix.length()));
         if (server_prefix.contains("US")) {
-            // server_num = server_num; // TODO Wtf?
         }
         if (server_prefix.contains("EU")) {
             server_num = server_num + 1000;
@@ -4451,11 +4444,11 @@ public class Hive implements Listener {
          * if(ChatColor.stripColor(ply.getName()).equalsIgnoreCase(pl_name)){ List<Player> lpl = new ArrayList<Player>(); for(Entity ent :
          * npc.getBukkitEntity().getNearbyEntities(32, 32, 32)){ if(ent instanceof Player){ lpl.add((Player)ent); } }
          * 
-         * npc.getBukkitEntity().remove(); //ShopMechanics.updateEntity(npc.getBukkitEntity(), lpl); // TODO - Need to update to latest DR Api!
-         * //EcashMechanics.personal_clones.remove(pl.getName()); // TODO - Need to update to latest DR Api!
+         * npc.getBukkitEntity().remove(); //ShopMechanics.updateEntity(npc.getBukkitEntity(), lpl); 
+         * //EcashMechanics.personal_clones.remove(pl.getName()); 
          * EcashMechanics.personal_clones_msg.remove(pl.getName()); try { ParticleEffect.sendToLocation(ParticleEffect.CRIT,
          * npc.getBukkitEntity().getLocation().add(0, 1, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 1, 10); } catch
-         * (Exception e1) { e1.printStackTrace(); } return; } } // TODO - Need to update to latest DR Api!
+         * (Exception e1) { e1.printStackTrace(); } return; } } 
          */
 
         if (ply != null && Hive.player_to_npc.containsKey(ply.getName())) {
@@ -4586,7 +4579,6 @@ public class Hive implements Listener {
                 }
 
                 n.despawn(DespawnReason.CUSTOM);
-                // ShopMechanics.updateEntity(n.getBukkitEntity(), lpl); // TODO - Need to update to latest DR Api!
             }
 
         }

@@ -4068,7 +4068,7 @@ public class MonsterMechanics implements Listener {
                             pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Mayel The Cruel: " + ChatColor.WHITE
                                     + "Do not slow your assault, we must kill them all!");
                             pl.sendMessage(ChatColor.GRAY + "Mayel has healed his bandits!");
-                            pl.playSound(pl.getLocation(), Sound.BURP, 1F, 0.5F); // TODO Sound.BREATH is no longer there
+                            pl.playSound(pl.getLocation(), Sound.BURP, 1F, 0.5F);
                         }
                     }
                 }
@@ -4102,7 +4102,7 @@ public class MonsterMechanics implements Listener {
                         pl.sendMessage(ChatColor.GOLD + "" + ChatColor.UNDERLINE + "Mayel The Cruel: " + ChatColor.WHITE
                                 + "I lend you my strength my brothers, crush these insolent fools!!");
                         pl.sendMessage(ChatColor.GRAY + "Mayel has buffed his bandits, +10% DPS/ +2% ARM!");
-                        pl.playSound(pl.getLocation(), Sound.BURP, 1F, 0.5F); // TODO Sound.BREATH is no longer there
+                        pl.playSound(pl.getLocation(), Sound.BURP, 1F, 0.5F);
                     }
                 }
             }

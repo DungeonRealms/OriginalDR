@@ -241,8 +241,6 @@ public class ChatMechanics implements Listener {
                     continue;
                 }
                 a = a.charAt(0) + a.substring(1).toLowerCase();
-            } else {
-                // a = a; TODO Wtf?
             }
 
             new_msg += a + " ";
@@ -800,7 +798,6 @@ public class ChatMechanics implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    // We need to ignore all those "enter XXX" situations.
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e) {
         e.setCancelled(true);
         String msg = e.getMessage();

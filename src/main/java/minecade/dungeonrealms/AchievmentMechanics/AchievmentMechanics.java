@@ -57,13 +57,7 @@ public class AchievmentMechanics implements Listener {
                         addAchievment(pl.getName(), "Explorer: Darkoak");
                         continue;
                     }
-                    if (region.equalsIgnoreCase("infrontoftavern")) { // TODO:
-                                                                      // This
-                                                                      // is
-                                                                      // just
-                                                                      // an
-                                                                      // entrance
-                                                                      // region.
+                    if (region.equalsIgnoreCase("infrontoftavern")) { // TODO: This  is just an entrance region.
                         addAchievment(pl.getName(), "Explorer: Jagged Rocks");
                         continue;
                     }

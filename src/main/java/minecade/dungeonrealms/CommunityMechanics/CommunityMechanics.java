@@ -296,7 +296,6 @@ public class CommunityMechanics implements Listener {
                     continue;
                 }
 
-                // int o_sent_to_server = sent_to_server_data; // TODO - UNUSED!
                 String prefix = "US-";
 
                 if (sent_to_server_data > 1000 && sent_to_server_data < 2000) {
@@ -757,12 +756,7 @@ public class CommunityMechanics implements Listener {
                 OfflinePlayer op = Bukkit.getServer().getOfflinePlayer(s);
 
                 if (server_num == -1 || op.isOp()) {
-                    Long last_login = getLastLogin(s, false); // TODO: Make this
-                                                              // time save
-                                                              // locally or
-                                                              // have it DL
-                                                              // database at
-                                                              // start
+                    Long last_login = getLastLogin(s, false); // TODO: Make this time save locally or have it DL database at start
                     String release_s = "";
 
                     if (last_login == -1L || op.isOp()) {
@@ -1785,9 +1779,6 @@ public class CommunityMechanics implements Listener {
         Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
             public void run() {
                 // ChatColor c = ChatColor.WHITE;
-
-                // CraftPlayer test = null; TODO - UNUSED
-                // EntityPlayer e_test = null; TODO - UNUSED
 
                 // test = (CraftPlayer)e_test.getBukkitEntity();
 

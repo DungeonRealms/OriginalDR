@@ -248,7 +248,6 @@ public class ShopMechanics implements Listener {
             try {
                 ServerShutdownThread.sleep(10000);
             } catch (InterruptedException ex) {
-                // TODO Auto-generated catch block
                 ex.printStackTrace();
                 }*/
 		//Make the main thread sleep for 10 seconds so things can be uploaded.
@@ -2945,7 +2944,6 @@ public class ShopMechanics implements Listener {
 		if(name.length() > 16) {
 			name = "[S] " + p_name.substring(0, 12);
 		}
-		// TODO See if we can say "fuck you" to the 16 char limit.
 		
 		Block chest1 = chest_loc1.getBlock();
 		Block chest2 = chest_loc2.getBlock();

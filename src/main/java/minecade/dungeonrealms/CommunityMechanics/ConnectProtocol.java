@@ -346,7 +346,6 @@ public class ConnectProtocol implements Runnable {
 				}
 				
 				if(inputLine.startsWith("[toggleshard]")) {
-					// [globalmessage]player_string@from_server:msg TODO Wtf?
 					Hive.no_shard = !Hive.no_shard;
 				}
 				

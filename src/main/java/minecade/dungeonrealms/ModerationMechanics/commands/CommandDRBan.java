@@ -88,8 +88,6 @@ public class CommandDRBan implements CommandExecutor {
 			return true;
 		}
 		
-		//ShopMechanics.removeShop(p); TODO: This causes exceptions.
-		
 		Thread ban_player = new Thread(new Runnable() {
 			public void run() {
 				try {

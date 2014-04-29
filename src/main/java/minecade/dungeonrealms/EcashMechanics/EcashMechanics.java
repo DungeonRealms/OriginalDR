@@ -1449,7 +1449,6 @@ public class EcashMechanics implements Listener {
 			e.setCancelled(true);
 			Player pl = e.getPlayer();
 			Block b = e.getBlock();
-			//ItemStack mb = e.getItemInHand(); // TODO - UNUSED
 			
 			if(!DuelMechanics.isDamageDisabled(b.getLocation())) {
 				pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " place the Mobile Jukebox outside of safe zones.");
@@ -1811,7 +1810,6 @@ public class EcashMechanics implements Listener {
 				
 				Firework fw = (Firework) pl.getWorld().spawnEntity(pl.getTargetBlock(null, 2).getLocation(), EntityType.FIREWORK);
 				FireworkMeta fwm = fw.getFireworkMeta();
-				//Random r = new Random();   // TODO - UNUSED
 				FireworkEffect effect = FireworkEffect.builder().flicker(true).withColor(c1).withFade(c2).with(t).trail(true).build();
 				fwm.addEffect(effect);
 				fwm.setPower(0);

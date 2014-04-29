@@ -3131,7 +3131,6 @@ public class ItemMechanics implements Listener {
                 // p.getWorld().spawnParticle(p.getLocation().add(0, 8, 0), Particle.FIREWORKS_SPARK, 0.75F, 100);
                 Firework fw = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
                 FireworkMeta fwm = fw.getFireworkMeta();
-                // Random r = new Random(); // TODO - UNUSED
                 FireworkEffect effect = FireworkEffect.builder().flicker(false).withColor(Color.YELLOW).withFade(Color.YELLOW).with(Type.BURST).trail(true)
                         .build();
                 fwm.addEffect(effect);
@@ -4306,7 +4305,6 @@ public class ItemMechanics implements Listener {
                 }
             }
             if (elemental_type.equalsIgnoreCase("poison")) {
-                // TODO: Green squigglies.
                 le.getWorld().playEffect(le.getLocation().add(0, 1.3, 0), Effect.POTION_BREAK, 4);
                 if (tier == 1) {
                     le.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 40, 0));
@@ -4984,7 +4982,6 @@ public class ItemMechanics implements Listener {
                     }
                 }
                 if (elemental_type.equalsIgnoreCase("poison")) {
-                    // TODO: Green squigglies.
                     le.getWorld().playEffect(le.getLocation().add(0, 1.3, 0), Effect.POTION_BREAK, 4);
                     if (tier == 1) {
                         le.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 40, 0));
@@ -5218,7 +5215,6 @@ public class ItemMechanics implements Listener {
                     }
                 }
                 if (elemental_type.equalsIgnoreCase("poison")) {
-                    // TODO: Green squigglies.
                     le.getWorld().playEffect(le.getLocation().add(0, 1.3, 0), Effect.POTION_BREAK, 4);
                     if (tier == 1) {
                         le.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 40, 0));
@@ -5496,7 +5492,6 @@ public class ItemMechanics implements Listener {
                     }
                 }
                 if (elemental_type.equalsIgnoreCase("poison")) {
-                    // TODO: Green squigglies.
                     le.getWorld().playEffect(le.getLocation().add(0, 1.3, 0), Effect.POTION_BREAK, 4);
                     if (tier == 1) {
                         le.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 40, 0));

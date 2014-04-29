@@ -20,7 +20,6 @@ public class CommandHideLoot implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player p = (Player) sender;
 		if(!p.isOp()) return true;
-		// TODO: /hideloot <radius>
 		if(args.length != 1) {
 			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax. " + ChatColor.RED + "/hideloot <radius>");
 			return true;

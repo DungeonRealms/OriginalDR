@@ -76,7 +76,7 @@ public class PartyMechanics implements Listener {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		manager = Bukkit.getScoreboardManager();
 		
-		Main.plugin.getCommand("p").setExecutor(new CommandP()); // TODO - Check Command
+		Main.plugin.getCommand("p").setExecutor(new CommandP());
 		Main.plugin.getCommand("paccept").setExecutor(new CommandPAccept());
 		Main.plugin.getCommand("party").setExecutor(new CommandParty());
 		Main.plugin.getCommand("pdecline").setExecutor(new CommandPDecline());

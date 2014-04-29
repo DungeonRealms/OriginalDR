@@ -1272,7 +1272,6 @@ public class DuelMechanics implements Listener {
             return;
         }
         Location l = e.getTo();
-        // Location safe_loc = e.getFrom(); TODO - UNUSED
         Location duel_start_area = duel_start_location.get(p.getName());
 
         /*
@@ -1716,7 +1715,6 @@ public class DuelMechanics implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                // int dimensions = RealmMechanics.getRealmSizeDimensions(RealmMechanics.getRealmTier(w.getName())); // TODO - UNUSED
                 if (wg.getGlobalRegionManager().get(w).hasRegion(w.getName() + "-" + "realm")) {
                     return;
                 }

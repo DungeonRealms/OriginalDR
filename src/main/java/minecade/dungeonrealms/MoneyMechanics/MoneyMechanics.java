@@ -850,11 +850,6 @@ public class MoneyMechanics implements Listener {
 		}
 	}
 	
-	/*
-	 * private String insertCommas(String str) { if(str.length() < 4){ return str; } return insertCommas(str.substring(0, str.length() - 3)) + "," +
-	 * str.substring(str.length() - 3, str.length()); } TODO - UNUSED
-	 */
-	
 	public String getUpgradeAuthenticationCode(Player p) {
 		if(bank_upgrade_codes.containsKey(p)) {
 			return bank_upgrade_codes.get(p);

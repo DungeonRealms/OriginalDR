@@ -799,11 +799,6 @@ public class MountMechanics implements Listener {
         return mule_tier; // 0 = no mule.
     }
 
-    /*
-     * private boolean walkTo(LivingEntity livingEntity, double x, double y, double z, float speed) { return ((EntityInsentient)
-     * ((CraftLivingEntity)livingEntity).getHandle()).getNavigation().a(x, y, z, 1.95F); } TODO - UNUSED
-     */
-
     @SuppressWarnings("deprecation")
     public void changeStickToSaddle(Player pl) {
         for (ItemStack is : pl.getInventory().getContents()) {

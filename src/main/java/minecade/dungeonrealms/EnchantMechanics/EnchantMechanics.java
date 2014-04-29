@@ -442,7 +442,6 @@ public class EnchantMechanics implements Listener {
 			
 			Firework fw = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
 			FireworkMeta fwm = fw.getFireworkMeta();
-			// Random r = new Random(); TODO - UNUSED
 			FireworkEffect effect = FireworkEffect.builder().flicker(false).withColor(Color.GREEN).withFade(Color.GREEN).with(Type.STAR).trail(true).build();
 			fwm.addEffect(effect);
 			fwm.setPower(0);
@@ -529,7 +528,6 @@ public class EnchantMechanics implements Listener {
 				// p.getWorld().spawnParticle(p.getLocation().add(0, 8, 0), Particle.FIREWORKS_SPARK, 0.75F, 50);
 				Firework fw = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
 				FireworkMeta fwm = fw.getFireworkMeta();
-				// Random r = new Random(); TODO - UNUSED
 				FireworkEffect effect = FireworkEffect.builder().flicker(false).withColor(Color.YELLOW).withFade(Color.YELLOW).with(Type.BURST).trail(true).build();
 				fwm.addEffect(effect);
 				fwm.setPower(0);

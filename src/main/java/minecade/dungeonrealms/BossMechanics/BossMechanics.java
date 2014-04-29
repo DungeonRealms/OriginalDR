@@ -168,7 +168,7 @@ public class BossMechanics implements Listener {
                                                 new Random().nextFloat(), new Random().nextFloat(), 0.2F, 50);
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                    } // TODO Auto-generated method stub
+                                    }
 
                                 }
                             }.runTask(Main.plugin);
@@ -196,7 +196,6 @@ public class BossMechanics implements Listener {
                             new BukkitRunnable() {
 
                                 public void run() {
-                                    // TODO Auto-generated method stub
                                     Item i = boss
                                             .getLocation()
                                             .getWorld()
@@ -370,7 +369,6 @@ public class BossMechanics implements Listener {
                 final_boss = true;
             }
 
-            // TODO: Rewards! (tokens, custom drops, etc?)
             if (boss_map.get(ent).equalsIgnoreCase("unholy_priest")) {
                 for (Block b : getNearbyBlocks(ent.getLocation(), 10)) {
                     if (b.getType() == Material.FIRE) {

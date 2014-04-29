@@ -118,7 +118,6 @@ public class HearthstoneMechanics implements Listener {
 
         new BukkitRunnable() {
             public void run() {
-                // TODO Auto-generated method stub
                 for (Entry<String, Hearthstone> h_entries : hearthstone_map.entrySet()) {
                     Hearthstone hs = h_entries.getValue();
                     String p_name = h_entries.getKey();
@@ -214,7 +213,6 @@ public class HearthstoneMechanics implements Listener {
         hearthstone_map.get(p.getName()).setPlayer(p);
         new BukkitRunnable() {
             public void run() {
-                // TODO Auto-generated method stub
                 checkInventoryAndReset(p);
             }
         }.runTaskLater(Main.plugin, 15L);

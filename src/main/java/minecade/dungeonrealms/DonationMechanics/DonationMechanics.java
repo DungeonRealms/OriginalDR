@@ -129,7 +129,6 @@ public class DonationMechanics implements Listener {
 			if(!rs.next()) { return "default"; }
 			
 			final String rank = rs.getString("rank");
-			//final String fp_name = p_name; // TODO Unused
 			
 			if(rank == null || rank.equalsIgnoreCase("null")) { return "default"; }
 			
@@ -447,8 +446,6 @@ public class DonationMechanics implements Listener {
 	}
 	
 	public static void sendPacketCrossServer(String packet_data, int server_num, boolean all_servers) {
-		//String local_ip = Bukkit.getIp(); // TODO - UNUSED
-		
 		Socket kkSocket = null;
 		PrintWriter out = null;
 		

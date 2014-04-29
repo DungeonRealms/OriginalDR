@@ -1006,10 +1006,6 @@ public class PetMechanics implements Listener {
 		return false;
 	}
 	
-	/*public ItemStack makePermUntradeable(ItemStack is){
-		TODO
-	}*/
-	
 	public String getRandomStatement(String petType) {
 		List<String> responses = phrase_list.get(petType);
 		int pick_phrase = new Random().nextInt(responses.size());

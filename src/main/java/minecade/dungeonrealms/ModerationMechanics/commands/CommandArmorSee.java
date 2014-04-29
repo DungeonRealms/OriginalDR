@@ -33,7 +33,6 @@ public class CommandArmorSee implements CommandExecutor {
 		
 		String p_name = args[0];
 		Inventory inv = Bukkit.createInventory(null, 9, "ARMOR OF " + p_name);
-		//Inventory inv_clone = null; TODO What is this for (Unused)
 		if(Bukkit.getPlayer(p_name) != null) {
 			Player victim = Bukkit.getPlayer(p_name);
 			for(ItemStack is : victim.getInventory().getArmorContents()) {

@@ -36,8 +36,6 @@ public class ZombieArcher extends EntityZombie implements IRangedEntity {
 		if(world != null && !world.isStatic) {
 			this.bZ();
 		}
-		// TODO Auto-generated constructor stub
-		
 	}
 	
 	@SuppressWarnings("rawtypes")

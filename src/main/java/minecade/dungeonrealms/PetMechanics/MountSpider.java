@@ -64,7 +64,6 @@ public class MountSpider extends EntitySpider {
 
     @Override
     public boolean bj() {
-        // TODO Auto-generated method stub
         return true;
     }
 }

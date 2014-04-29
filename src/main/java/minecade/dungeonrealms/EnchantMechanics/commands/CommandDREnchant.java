@@ -30,7 +30,6 @@ public class CommandDREnchant implements CommandExecutor {
 		p.getInventory().addItem(EnchantMechanics.t3_white_scroll);
 		p.getInventory().addItem(EnchantMechanics.t4_white_scroll);
 		p.getInventory().addItem(EnchantMechanics.t5_white_scroll);
-		// TODO: Debug command.
 		return true;
 	}
 	

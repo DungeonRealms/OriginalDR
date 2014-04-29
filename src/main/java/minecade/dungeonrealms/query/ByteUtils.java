@@ -66,9 +66,6 @@ public class ByteUtils {
 	 * @return a new array of byte arrays
 	 */
 	public static byte[][] split(byte[] input) {
-		//ByteBuffer buf; //TODO
-		//ByteBuffer buf2;//TODO
-		
 		ArrayList<byte[]> temp = new ArrayList<byte[]>();
 		
 		byte[][] output; //TODO be more efficient here

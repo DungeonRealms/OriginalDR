@@ -1105,7 +1105,6 @@ public class InstanceMechanics implements Listener {
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
         Player p = e.getPlayer();
-        // boolean tick_set = false; // TODO - UNUSED
 
         if (!(p.getWorld().getName().contains("fireydungeon"))) {
             return;
@@ -1307,11 +1306,6 @@ public class InstanceMechanics implements Listener {
         wc.generateStructures(false);
         Main.plugin.getServer().createWorld(wc);
         // Load the world.
-
-        /*
-         * CraftWorld cw = (CraftWorld)w; cw.viewDistance = 4;
-         */
-        // TODO
 
         if (!(instance_loot.containsKey(instance))) {
             LootMechanics.loadInstancelootSpawnerData(instance);
