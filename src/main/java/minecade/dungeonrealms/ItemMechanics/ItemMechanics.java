@@ -2955,7 +2955,6 @@ public class ItemMechanics implements Listener {
             if (p.getItemInHand().getType() == Material.BOW) {
                 int bow_tier = getItemTier(p.getItemInHand());
                 // if(!doesPlayerHaveArrows(p, bow_tier)) {
-                Main.d(doesPlayerHaveAnyArrows(p));
                 if (!doesPlayerHaveAnyArrows(p)) {
                     p.playSound(p.getLocation(), Sound.IRONGOLEM_HIT, 0.3F, 2.0F);
                     e.setCancelled(true);
