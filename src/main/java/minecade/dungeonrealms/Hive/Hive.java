@@ -3026,6 +3026,23 @@ public class Hive implements Listener {
 
         }
     }
+    
+    public static String getRandomString(int length){
+    	char[] chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+    	StringBuilder sb = new StringBuilder();
+    	Random random = new Random();
+    	for (int i = 0; i < length; i++) {
+    	    char c = chars[random.nextInt(chars.length)];
+    	    sb.append(c);
+    	}
+    	return sb.toString();
+    }
+    
+    public static String generateProfileCode(String player){
+    	String code = Hive.getRandomString(10);
+    	sql_query.add("UPDATE player_database SET playercode='" + code + "' WHERE p_name='" + player + "' LIMIT 1");
+    	return code;
+    }
 
     public boolean canTheyLogin(String name) {
         try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement("SELECT can_join FROM player_database WHERE p_name = ?")) {
