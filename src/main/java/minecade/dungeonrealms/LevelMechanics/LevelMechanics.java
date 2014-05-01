@@ -24,6 +24,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class LevelMechanics implements Listener {
 
@@ -71,66 +72,73 @@ public class LevelMechanics implements Listener {
                 return;
             }
             pl.setLastEntityKilled(e.getEntity());
-            
+
             addKillXP(killer, (LivingEntity) e.getEntity(), mob_level, true);
         }
 
     }
-    
+
     @SuppressWarnings("deprecation")
-	public static void addKillXP(Player player, LivingEntity kill, int mob_level, boolean first){
+    public static void addKillXP(Player player, LivingEntity kill, int mob_level, boolean first) {
         int level = getPlayerLevel(player);
 
-        if(first){
-	    	if(PartyMechanics.party_map.containsKey(player.getName())){
-	    		List<String> members = PartyMechanics.party_map.get(player.getName()).getPartyMembers();
-	    		Location v = player.getLocation();
-	    		for(String s : members){
-	    			if(s == player.getName()) continue;
-	    			Player p = Bukkit.getPlayerExact(s);
-	    			if(p == null) continue;
-	    			Location l = p.getLocation();
-	    			if(l.getX() >= v.getX() - 20 && l.getX() <= v.getX() + 20){
-	        			if(l.getZ() >= v.getZ() - 20 && l.getZ() <= v.getZ() + 20){
-	        				addKillXP(p, kill, mob_level, false);
-	        			}
-	    			}
-	    		}
-	    	}
+        if (first) {
+            if (PartyMechanics.party_map.containsKey(player.getName())) {
+                List<String> members = PartyMechanics.party_map.get(player.getName()).getPartyMembers();
+                Location v = player.getLocation();
+                for (String s : members) {
+                    if (s == player.getName())
+                        continue;
+                    Player p = Bukkit.getPlayerExact(s);
+                    if (p == null)
+                        continue;
+                    Location l = p.getLocation();
+                    if (l.getX() >= v.getX() - 20 && l.getX() <= v.getX() + 20) {
+                        if (l.getZ() >= v.getZ() - 20 && l.getZ() <= v.getZ() + 20) {
+                            addKillXP(p, kill, mob_level, false);
+                        }
+                    }
+                }
+            }
         }
-        
-        if(mob_level > (level + 8)){
+
+        if (mob_level > (level + 8)) {
             if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("debug")) {
-	        	player.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "lower" + ChatColor.RED + " than 8 levels of this mob. No EXP granted.");
-        	}
-        	return;
-        }else if(mob_level < (level - 8)){
-        	if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("debug")) {
-	        	player.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "greater" + ChatColor.RED + " than 8 levels of this mob. No EXP granted.");
-        	}
-        	return;
+                player.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "lower" + ChatColor.RED
+                        + " than 8 levels of this mob. No EXP granted.");
+            }
+            return;
+        } else if (mob_level < (level - 8)) {
+            if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("debug")) {
+                player.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "greater" + ChatColor.RED
+                        + " than 8 levels of this mob. No EXP granted.");
+            }
+            return;
         }
-        
+
         int xp = calculateXP(player, kill, mob_level);
-        
+
         if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("indicator")) {
             Hologram xp_hologram = new Hologram(Main.plugin, ChatColor.GREEN.toString() + "+" + ChatColor.BOLD + xp + " XP");
             xp_hologram.show(kill.getLocation().add(0, 1, 0), 3, player);
         }
-        
+
         addXP(player, xp);
     }
-    
-    public static int calculateXP(Player player, LivingEntity kill, int mob_level){
-    	int xp = mob_level * 15 + new Random().nextInt(50) + 5;
+
+    public static int calculateXP(Player player, LivingEntity kill, int mob_level) {
+        int xp = mob_level * 15 + new Random().nextInt(50) + 5;
         int level = getPlayerLevel(player);
         ItemStack weapon = kill.getEquipment().getItemInHand();
-        
-        if(level - 8 > mob_level) return 0;
-        if (level >= (mob_level + 8)) xp *= .6;
-        if (weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK)) xp *= 2.3;
-    	
-    	return xp;
+
+        if (level - 8 > mob_level)
+            return 0;
+        if (level >= (mob_level + 8))
+            xp *= .6;
+        if (weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK))
+            xp *= 2.3;
+
+        return xp;
     }
 
     public static int getLevelToUse(int tier) {
@@ -155,19 +163,23 @@ public class LevelMechanics implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e) {
+    public void onPlayerJoin(final PlayerJoinEvent e) {
         PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().setPlayer(e.getPlayer());
-        PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().updateScoreboardLevel();
-        // Main.d("SETTING THE PLAYERS PLAYER DATA!", CC.RED);
+        new BukkitRunnable(){
+            public void run(){
+               PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().updateScoreboardLevel(); 
+            }
+        }.runTaskLater(Main.plugin, 20 * 1);
+        
     }
 
     public static void addXP(Player p, int xp) {
-    	
-    	if(PartyMechanics.party_map.containsKey(p.getName())){
-    		int newXP = (int) Math.round((xp * (1 - (0.1D * PartyMechanics.party_map.get(p.getName()).getPartyMembers().size()))));
-    		xp = newXP;
-    	}
-    	
+
+        if (PartyMechanics.party_map.containsKey(p.getName())) {
+            int newXP = (int) Math.round((xp * (1 - (0.1D * PartyMechanics.party_map.get(p.getName()).getPartyMembers().size()))));
+            xp = newXP;
+        }
+
         getPlayerData(p).addXP(xp);
     }
 
