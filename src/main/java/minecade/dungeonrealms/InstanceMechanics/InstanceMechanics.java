@@ -35,6 +35,7 @@ import minecade.dungeonrealms.InstanceMechanics.commands.CommandDebuffCrystal;
 import minecade.dungeonrealms.InstanceMechanics.commands.CommandISay;
 import minecade.dungeonrealms.InstanceMechanics.commands.CommandInstance;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
+import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.LootMechanics.LootMechanics;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
 import minecade.dungeonrealms.MountMechanics.MountMechanics;
@@ -497,6 +498,9 @@ public class InstanceMechanics implements Listener {
                         }
                         if (instance_name.equalsIgnoreCase("onewolfedungeon")) {
                             instance_name = "OneWolfeDungeon";
+                        }
+                        if (LevelMechanics.getPlayerLevel(pl) < 9) {
+                            pl.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level 9 to enter a dungeon.");
                         }
                         boolean party_in_instance = false;
                         String party_instance = "";
@@ -1213,7 +1217,7 @@ public class InstanceMechanics implements Listener {
 
     }
 
-   // @EventHandler(priority = EventPriority.HIGHEST)
+    // @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDropSoulbound(PlayerDropItemEvent e) {
         ItemStack is = e.getItemDrop().getItemStack();
         Player p = e.getPlayer();
@@ -1240,7 +1244,7 @@ public class InstanceMechanics implements Listener {
         }
     }
 
-    //@EventHandler
+    // @EventHandler
     public void onPlayerPickupSoulbound(PlayerPickupItemEvent e) {
         if (!isInstance(e.getPlayer().getWorld().getName())) {
             return;
