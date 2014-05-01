@@ -91,23 +91,21 @@ public class PlayerLevel {
         return (int) (400 * Math.pow(level, 1.6));
     }
 
-    public void saveData(boolean useHive, boolean remove) {
-        final String pst = "UPDATE player_database SET player_level = " + getLevel() + ", player_xp = " + getXP() + " WHERE p_name = '" + p_name + "';";
-        if (useHive) {
-            Hive.sql_query.add(pst);
-        } else {
-            new BukkitRunnable() {
-                public void run() {
-                    try (PreparedStatement prest = ConnectionPool.getConnection().prepareStatement(pst)) {
-                        prest.executeUpdate();
-                        prest.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+    public void saveData(boolean remove) {
+        new BukkitRunnable() {
+            public void run() {
+                try (PreparedStatement prest = ConnectionPool.getConnection().prepareStatement(
+                        "UPDATE player_database SET player_level = ?, player_xp = ? WHERE p_name = ?")) {
+                    prest.setInt(1, getLevel());
+                    prest.setInt(2, getXP());
+                    prest.setString(3, p_name);
+                    prest.executeUpdate();
+                    prest.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }.runTaskAsynchronously(Main.plugin);
-
-        }
+            }
+        }.runTaskAsynchronously(Main.plugin);
         if (remove) {
             PlayerManager.getPlayerModel(p_name).setPlayerLevel(null);
             return;
@@ -174,14 +172,15 @@ public class PlayerLevel {
 
     public void setLevel(int level) {
         this.level = level;
-        if(p != null){
+        if (p != null) {
             ScoreboardMechanics.setPlayerLevel(getLevel(), p);
         }
     }
 
     public void setXP(int xp) {
         this.xp = xp;
-        if(p != null) HealthMechanics.setOverheadHP(p, HealthMechanics.getPlayerHP(p.getName()));
+        if (p != null)
+            HealthMechanics.setOverheadHP(p, HealthMechanics.getPlayerHP(p.getName()));
     }
 
     public int getLevel() {

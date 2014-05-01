@@ -1470,7 +1470,6 @@ public class MountMechanics implements Listener {
 
                 if (e.getEntity() instanceof Horse) {
                     Horse h = (Horse) e.getEntity();
-
                     if (h.getPassenger() != null && h.getPassenger() instanceof Player) {
                         Player p_rider = (Player) h.getPassenger();
                         if (!(e.isCancelled()) && e.getDamage() > 0 && e.getCause() != DamageCause.FALL) {
@@ -1513,6 +1512,9 @@ public class MountMechanics implements Listener {
                             ((Player) attacker).playSound(attacker.getLocation(), Sound.WOOD_CLICK, 1F, 0.5F);
                             inv_mule_map.remove(e.getEntity());
                             mule_map.remove(((Player) attacker).getName());
+                        }else{
+                            e.setCancelled(true);
+                            e.setDamage(0);
                         }
                     }
                 }

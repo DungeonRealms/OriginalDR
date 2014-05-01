@@ -12,6 +12,7 @@ import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
 import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
+import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
 import minecade.dungeonrealms.MountMechanics.MountMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
@@ -55,7 +56,7 @@ public class UploadPlayerData extends Thread {
 				final int n_lmob_kills = RecordMechanics.mob_kills.get(p_name);
 				final int n_duel_lose = RecordMechanics.duel_statistics.get(p_name).get(0);
 				final int n_duel_win = RecordMechanics.duel_statistics.get(p_name).get(1);
-				
+				LevelMechanics.getPlayerData(p_name).saveData(true);
 				RecordMechanics.updateStatisticData(p_name, n_money, n_pdeaths, n_unlawful_kills, n_lawful_kills, n_lmob_kills, n_duel_win, n_duel_lose);
 				
 				Hive.player_inventory.remove(p_name);
@@ -77,7 +78,6 @@ public class UploadPlayerData extends Thread {
 				
 				MoneyMechanics.uploadBankDatabaseData(p_name, true);
 				ShopMechanics.uploadShopDatabaseData(p_name, true);
-				
 				if(RealmMechanics.isWorldLoaded(p_name)) {
 					RealmMechanics.uploadWorld(p_name, p_name);
 				}

@@ -429,6 +429,7 @@ public class BossMechanics implements Listener {
                     Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
                     item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
                     announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
+                    InstanceMechanics.world_item.put(reward, item.getWorld());
                 }
 
                 int gem_drop = new Random().nextInt(2500 - 1000) + 1000;
@@ -503,6 +504,7 @@ public class BossMechanics implements Listener {
                     item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
                     InstanceMechanics.world_item_dropped.put(reward, e.getEntity().getWorld());
                     announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
+                    InstanceMechanics.world_item.put(reward, item.getWorld());
                 }
                 int gem_drop = new Random().nextInt(2000) + 10000;
                 while (gem_drop > 0) {
@@ -611,6 +613,7 @@ public class BossMechanics implements Listener {
                             ItemStack reward = ItemMechanics.makeSoulBound(possible_drops.get(new Random().nextInt(possible_drops.size())));
                             Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
                             InstanceMechanics.world_item_dropped.put(reward, ent.getWorld());
+                            InstanceMechanics.world_item.put(reward, item.getWorld());
                             item.setMetadata("boss_drop", new FixedMetadataValue(Main.plugin, ""));
                             announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
                         }
@@ -712,6 +715,7 @@ public class BossMechanics implements Listener {
                     Item item = ent.getWorld().dropItemNaturally(ent.getLocation(), reward);
                     item.setMetadata("boss_type", new FixedMetadataValue(Main.plugin, ""));
                     InstanceMechanics.world_item_dropped.put(reward, e.getEntity().getWorld());
+                    InstanceMechanics.world_item.put(reward, item.getWorld());
                     announceBossDrop(reward, ent.getLocation().getWorld().getPlayers());
                 }
 
@@ -721,7 +725,7 @@ public class BossMechanics implements Listener {
                     ent.getWorld().dropItemNaturally(ent.getLocation(), MoneyMechanics.makeGems(5));
                 }
                 for (Player p : ent.getWorld().getPlayers()) {
-                    LevelMechanics.addXP(p, 5000);
+                    LevelMechanics.addXP(p, 1000);
                 }
             }
 

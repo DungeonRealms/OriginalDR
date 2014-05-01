@@ -327,7 +327,7 @@ public class RestrictionMechanics implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
     public void onInventoryCloseEvent(InventoryCloseEvent e) {
         final Player pl = (Player) e.getPlayer();
-        //checkBookStacks(pl);
+        // checkBookStacks(pl);
         Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
             public void run() {
                 in_inventory.remove(pl.getName());
@@ -917,14 +917,19 @@ public class RestrictionMechanics implements Listener {
             // TODO: Find out why.
         }
 
-        if (i.getType() == Material.NETHER_STAR || i.getType() == Material.QUARTZ || ItemMechanics.isSoulbound(i) || CommunityMechanics.isSocialBook(i)
+        if (i.getType() == Material.NETHER_STAR || i.getType() == Material.QUARTZ || CommunityMechanics.isSocialBook(i)
+                || (ItemMechanics.isSoulbound(i) && !InstanceMechanics.canTradeSoulbound(i, e.getPlayer().getWorld()))
                 || (!(RealmMechanics.isItemTradeable(i)) && !(i.getType() == Material.PAPER))) {
             // e.setCancelled(true);// - Currently broken as of 11/9/12, causes meta data to delete.
             e.getItemDrop().remove();
-            if (i.getType() == Material.NETHER_STAR || PetMechanics.isPermUntradeable(i) || ItemMechanics.isSoulbound(i) || i.getType() == Material.QUARTZ
-                    || CommunityMechanics.isSocialBook(i)) {
+            if (i.getType() == Material.NETHER_STAR || PetMechanics.isPermUntradeable(i) || i.getType() == Material.QUARTZ
+                    || CommunityMechanics.isSocialBook(i) || ItemMechanics.isSoulbound(i)) {
                 if (PetMechanics.isPermUntradeable(i) || ItemMechanics.isSoulbound(i)) {
-                    p.getInventory().setItem(p.getInventory().firstEmpty(), i);
+                    if (p.getInventory().firstEmpty() == -1) {
+                        p.getInventory().setItem(35, i);
+                    } else {
+                        p.getInventory().setItem(p.getInventory().firstEmpty(), i);
+                    }
                     Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                         public void run() {
                             p.updateInventory();
@@ -1117,29 +1122,13 @@ public class RestrictionMechanics implements Listener {
         }
     }
 
-    /*public void checkBookStacks(Player p) {
-        boolean had_illegal_books = false;
-        for (ItemStack is : p.getInventory()) {
-            if (is == null || is.getType() == Material.AIR) {
-                continue;
-            }
-            if (is.getType() == Material.BOOK) {
-                if (is.getAmount() > 1) {
-                    had_illegal_books = true;
-                    while (is.getAmount() > 1) {
-                        is.setAmount(is.getAmount() - 1);
-                        ItemStack to_give = is.clone();
-                        to_give.setAmount(1);
-                        addItem(p, to_give);
-                    }
-                }
-            }
-        }
-        if (had_illegal_books) {
-            p.sendMessage(ChatColor.RED + "You were found with illegally stacked books.\nAccount Flagged!");
-            Main.d(CC.WHITE + p.getName() + " was found with illegal books.");
-        }
-    }*/
+    /*
+     * public void checkBookStacks(Player p) { boolean had_illegal_books = false; for (ItemStack is : p.getInventory()) { if (is == null || is.getType() ==
+     * Material.AIR) { continue; } if (is.getType() == Material.BOOK) { if (is.getAmount() > 1) { had_illegal_books = true; while (is.getAmount() > 1) {
+     * is.setAmount(is.getAmount() - 1); ItemStack to_give = is.clone(); to_give.setAmount(1); addItem(p, to_give); } } } } if (had_illegal_books) {
+     * p.sendMessage(ChatColor.RED + "You were found with illegally stacked books.\nAccount Flagged!"); Main.d(CC.WHITE + p.getName() +
+     * " was found with illegal books."); } }
+     */
 
     public void addItem(Player p, ItemStack is) {
         if (p.getInventory().firstEmpty() == -1) {

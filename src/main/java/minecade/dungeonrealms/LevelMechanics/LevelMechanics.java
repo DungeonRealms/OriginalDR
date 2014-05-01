@@ -159,18 +159,18 @@ public class LevelMechanics implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         // No delay on the sql query
-        getPlayerData(e.getPlayer()).saveData(false, true);
+        getPlayerData(e.getPlayer()).saveData(true);
     }
 
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent e) {
         PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().setPlayer(e.getPlayer());
-        new BukkitRunnable(){
-            public void run(){
-               PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().updateScoreboardLevel(); 
+        new BukkitRunnable() {
+            public void run() {
+                PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().updateScoreboardLevel();
             }
         }.runTaskLater(Main.plugin, 20 * 1);
-        
+
     }
 
     public static void addXP(Player p, int xp) {

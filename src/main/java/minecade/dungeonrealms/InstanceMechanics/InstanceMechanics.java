@@ -161,6 +161,7 @@ public class InstanceMechanics implements Listener {
      * ChatColor.GRAY + "Exchange at the Dungeoneer for epic equipment." + "," + ChatColor.GRAY.toString() + "" + ChatColor.ITALIC.toString() +
      * "A sharded fragment from the great portal of Maltai.");
      */
+    public static ConcurrentHashMap<ItemStack, World> world_item = new ConcurrentHashMap<ItemStack, World>();
 
     // The Anihilator
     // The Devastator
@@ -350,10 +351,17 @@ public class InstanceMechanics implements Listener {
 
                     if (seconds_left <= 0) {
                         // Teleport them all out -- the unload takes place inside of removeFromInstanceParty();
+                        if (world_item.containsValue(Bukkit.getWorld(i_name))) {
+                            for (ItemStack is : world_item.keySet()) {
+                                if (world_item.get(is).equals(Bukkit.getWorld(i_name))) {
+                                    world_item.remove(is);
+                                    break;
+                                }
+                            }
+                        }
                         for (Player pl : Bukkit.getWorld(i_name).getPlayers()) {
                             if (isInstance(pl.getWorld().getName()) && saved_location_instance.containsKey(pl.getName())) {
                                 // TODO: Give them tokens!
-
                                 try {
                                     pl.teleport(saved_location_instance.get(pl.getName()));
                                     saved_location_instance.remove(pl.getName());
@@ -1218,30 +1226,41 @@ public class InstanceMechanics implements Listener {
 
     }
 
-    // @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDropSoulbound(PlayerDropItemEvent e) {
         ItemStack is = e.getItemDrop().getItemStack();
-        Player p = e.getPlayer();
         if (!ItemMechanics.isSoulbound(is)) {
             return;
         }
         if (!isInstance(e.getPlayer().getWorld().getName())) {
             return;
         }
-        if (!world_item_dropped.containsKey(is)) {
+        if (!world_item.containsKey(is)) {
             e.setCancelled(true);
             return;
         }
-        if (world_item_dropped.get(is) != e.getItemDrop().getWorld()) {
+        if (world_item.get(is) != e.getItemDrop().getWorld()) {
+            e.getItemDrop().remove();
             e.setCancelled(true);
             return;
         }
-        if (allow_soulbound_drop.containsKey(p.getName()) && allow_soulbound_drop.get(p.getName()).equals(is) && world_item_dropped.containsKey(is)
-                && world_item_dropped.get(is).equals(e.getItemDrop().getWorld())) {
-            e.setCancelled(false);
-            allow_soulbound_drop.remove(p.getName());
+        e.setCancelled(false);
+    }
+
+    public static boolean canTradeSoulbound(ItemStack is, World w) {
+        if (!ItemMechanics.isSoulbound(is)) {
+            return false;
+        }
+        if (!isInstance(w.getName())) {
+            return false;
+        }
+        if (!world_item.containsKey(is)) {
+            return false;
+        }
+        if (world_item.get(is) != w) {
+            return false;
         } else {
-            e.setCancelled(true);
+            return true;
         }
     }
 
