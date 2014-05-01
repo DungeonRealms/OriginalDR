@@ -1461,58 +1461,69 @@ public class MountMechanics implements Listener {
                 }
                 return;
             }
-        }
-
-        if (inv_mule_map.containsKey(e.getEntity())) {
-            e.setCancelled(true);
-            e.setDamage(0.0D);
-
-            if (e instanceof EntityDamageByEntityEvent) {
-                Entity damager = ((EntityDamageByEntityEvent) e).getDamager();
-                if (damager instanceof Player) {
-                    if (inv_mule_map.get(e.getEntity()).equalsIgnoreCase(((Player) damager).getName())) {
-                        // It's the owner of the mule!
-                        try {
-                            ParticleEffect.sendToLocation(ParticleEffect.CRIT, e.getEntity().getLocation().add(0, 1, 0), new Random().nextFloat(),
-                                    new Random().nextFloat(), new Random().nextFloat(), 2.0F, 40);
-                        } catch (Exception e1) {
-                            e1.printStackTrace();
-                        }
-                        // e.getEntity().getWorld().spawnParticle(e.getEntity().getLocation().add(0, 1, 0), Particle.CRIT, 2.0F, 40);
-
-                        e.getEntity().remove();
-                        ((Player) damager).playSound(damager.getLocation(), Sound.WOOD_CLICK, 1F, 0.5F);
-                        inv_mule_map.remove(e.getEntity());
-                        mule_map.remove(((Player) damager).getName());
-                    }
-                }
-            }
-        }
-
-        if (inv_mount_map.containsKey(e.getEntity())) {
-            if (DuelMechanics.isDamageDisabled(e.getEntity().getLocation())) {
-                e.setCancelled(true);
-                e.setDamage(0);
-                return;
-            }
-
-            if (e.getEntity() instanceof Horse) {
-                Horse h = (Horse) e.getEntity();
-
-                if (h.getPassenger() != null && h.getPassenger() instanceof Player) {
-                    Player p_rider = (Player) h.getPassenger();
-                    if (!(e.isCancelled()) && e.getDamage() > 0 && e.getCause() != DamageCause.FALL) {
-                        HealthMechanics.in_combat.put(p_rider.getName(), System.currentTimeMillis());
-                    }
-
+            if (inv_mount_map.containsKey(e.getEntity())) {
+                if (DuelMechanics.isDamageDisabled(e.getEntity().getLocation())) {
                     e.setCancelled(true);
-                    e.setDamage(0.0D);
+                    e.setDamage(0);
+                    return;
+                }
+
+                if (e.getEntity() instanceof Horse) {
+                    Horse h = (Horse) e.getEntity();
+
+                    if (h.getPassenger() != null && h.getPassenger() instanceof Player) {
+                        Player p_rider = (Player) h.getPassenger();
+                        if (!(e.isCancelled()) && e.getDamage() > 0 && e.getCause() != DamageCause.FALL) {
+                            HealthMechanics.in_combat.put(p_rider.getName(), System.currentTimeMillis());
+                        }
+
+                        e.setCancelled(true);
+                        e.setDamage(0.0D);
+                    }
+                }
+
+                /*
+                 * if(e.getCause() != DamageCause.ENTITY_ATTACK){ e.setCancelled(true); e.setDamage(0); return; }
+                 */
+            }
+        }
+
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerDamageMule(EntityDamageByEntityEvent e) {
+        if (e.getDamager() instanceof Player) {
+            if (e.getEntity() instanceof Horse) {
+                Player attacker = (Player) e.getDamager();
+                if (((Horse) e.getEntity()).getVariant().equals(Variant.DONKEY)) {
+                    // Its a mule
+                    if (inv_mule_map.containsKey(e.getEntity())) {
+                        String p_name = inv_mule_map.get(e.getEntity());
+                        if (p_name.equalsIgnoreCase(attacker.getName())) {
+                            Main.d("IT WAS THE PLAYERS MULE!");
+                            e.setDamage(0);
+                            e.setCancelled(true);
+                            try {
+                                ParticleEffect.sendToLocation(ParticleEffect.CRIT, e.getEntity().getLocation().add(0, 1, 0), new Random().nextFloat(),
+                                        new Random().nextFloat(), new Random().nextFloat(), 2.0F, 40);
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
+                            e.getEntity().remove();
+                            ((Player) attacker).playSound(attacker.getLocation(), Sound.WOOD_CLICK, 1F, 0.5F);
+                            inv_mule_map.remove(e.getEntity());
+                            mule_map.remove(((Player) attacker).getName());
+                        }
+                    }
                 }
             }
+        }
+    }
 
-            /*
-             * if(e.getCause() != DamageCause.ENTITY_ATTACK){ e.setCancelled(true); e.setDamage(0); return; }
-             */
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onEntityDeathMule(EntityDeathEvent e) {
+        if (inv_mule_map.containsKey(e.getEntity())) {
+            Main.d("DONKEY DEATH: " + inv_mule_map.get(e.getEntity()) + " :(");
         }
     }
 

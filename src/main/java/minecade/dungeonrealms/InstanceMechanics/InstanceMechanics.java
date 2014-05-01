@@ -501,6 +501,7 @@ public class InstanceMechanics implements Listener {
                         }
                         if (LevelMechanics.getPlayerLevel(pl) < 9) {
                             pl.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level 9 to enter a dungeon.");
+                            continue;
                         }
                         boolean party_in_instance = false;
                         String party_instance = "";
