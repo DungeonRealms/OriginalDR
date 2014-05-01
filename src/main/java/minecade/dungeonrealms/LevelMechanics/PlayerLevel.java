@@ -123,8 +123,8 @@ public class PlayerLevel {
             }
             if(p == null) return;
             p.getWorld().playSound(p.getLocation(), Sound.LEVEL_UP, 1, .4F);
-            p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "         " + " LEVEL UP! " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel())
-                    + ChatColor.BOLD + " -> " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel() + 1));
+            p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "         " + " LEVEL UP! " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel() - 1)
+                    + ChatColor.BOLD + " -> " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel()));
             p.playSound(p.getLocation(), Sound.LEVEL_UP, 0.5F, 1F);
         }
     }
