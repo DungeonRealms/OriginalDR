@@ -104,13 +104,14 @@ public class Main extends JavaPlugin implements Listener {
 	public static Logger log;
 
 	private static List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine");
-	private static List<String> masters = Arrays.asList("mayley1996", "Bradez1571", "felipepcjr");
+	private static List<String> masters = Arrays.asList("Bradez1571", "felipepcjr");
 	
 	public void onEnable() {
 		plugin = this;
 		log = this.getLogger();
 		
 		if(getServer().getMotd().contains("US-99")){
+		    masters.add("mayley1996");
 			Config.sql_url = "jdbc:mysql://" + Config.Hive_IP + ":" + Config.SQL_port + "/dungeonrealms_test";
 		}
 		
