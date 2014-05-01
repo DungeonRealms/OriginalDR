@@ -3050,7 +3050,7 @@ public class Hive implements Listener {
             ResultSet rst = pst.executeQuery();
             if (!rst.first()) {
                 try (PreparedStatement prest = ConnectionPool.getConnection().prepareStatement(
-                        "INSERT INGORE INTO player_database (p_name, can_join) VALUES (?, 0) ON DUPLICATE KEY UPDATE can_join = 0;")) {
+                        "INSERT IGNORE INTO player_database (p_name, can_join) VALUES (?, 0) ON DUPLICATE KEY UPDATE can_join = 0;")) {
                     prest.setString(1, name);
                     prest.executeUpdate();
                     prest.close();

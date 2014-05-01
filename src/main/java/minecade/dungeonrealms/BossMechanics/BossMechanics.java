@@ -721,7 +721,7 @@ public class BossMechanics implements Listener {
                     ent.getWorld().dropItemNaturally(ent.getLocation(), MoneyMechanics.makeGems(5));
                 }
                 for (Player p : ent.getWorld().getPlayers()) {
-                    LevelMechanics.addXP(p, 500);
+                    LevelMechanics.addXP(p, 5000);
                 }
             }
 
