@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
-import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.ScoreboardMechanics.ScoreboardMechanics;
 import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.managers.PlayerManager;
@@ -74,6 +73,7 @@ public class PlayerLevel {
             if (p == null) {
                 checkPlayer();
             }
+            if(p == null) return;
             p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "          +" + ChatColor.YELLOW + (int) xp + ChatColor.BOLD + " EXP" + ChatColor.YELLOW
                     + ChatColor.GRAY + " [" + getXP() + ChatColor.BOLD + "/" + ChatColor.GRAY + (int) getEXPNeeded(getLevel()) + " EXP]");
 
