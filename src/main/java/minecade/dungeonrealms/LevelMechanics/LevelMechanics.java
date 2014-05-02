@@ -155,13 +155,6 @@ public class LevelMechanics implements Listener {
         }
         return 1;
     }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
-        // No delay on the sql query
-        getPlayerData(e.getPlayer()).saveData(true);
-    }
-
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent e) {
         PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().setPlayer(e.getPlayer());
