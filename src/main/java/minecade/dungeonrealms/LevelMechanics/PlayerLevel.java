@@ -92,13 +92,16 @@ public class PlayerLevel {
     }
 
     public void saveData(boolean remove) {
+    	final String name = p_name;
+    	final int level = getLevel();
+    	final int xp = getXP();
         new BukkitRunnable() {
             public void run() {
                 try (PreparedStatement prest = ConnectionPool.getConnection().prepareStatement(
                         "UPDATE player_database SET player_level = ?, player_xp = ? WHERE p_name = ?")) {
-                    prest.setInt(1, getLevel());
-                    prest.setInt(2, getXP());
-                    prest.setString(3, p_name);
+                    prest.setInt(1, level);
+                    prest.setInt(2, xp);
+                    prest.setString(3, name);
                     prest.executeUpdate();
                     prest.close();
                 } catch (Exception e) {

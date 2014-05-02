@@ -136,7 +136,7 @@ public class LevelMechanics implements Listener {
         if (level >= (mob_level + 8))
             xp *= .6;
         if (weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK))
-            xp *= 2.3;
+            xp *= 1.5;
 
         return xp;
     }
