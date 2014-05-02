@@ -1,6 +1,7 @@
 package minecade.dungeonrealms;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -20,6 +21,10 @@ public class Utils {
                 }
             }
         return radiusEntities.toArray(new Entity[radiusEntities.size()]);
+    }
+    
+    public static long getTime(){
+    	return Calendar.getInstance().getTimeInMillis();
     }
 	
 }

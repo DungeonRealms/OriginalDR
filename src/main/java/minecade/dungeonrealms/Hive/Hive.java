@@ -72,6 +72,7 @@ import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.config.Config;
 import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.managers.PlayerManager;
+import minecade.dungeonrealms.models.LogModel;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutEntityEquipment;
@@ -356,6 +357,9 @@ public class Hive implements Listener {
 
     public static volatile CopyOnWriteArrayList<String> sql_query = new CopyOnWriteArrayList<String>();
     // All SQL queries to run on ThreadPool.
+
+    public static volatile CopyOnWriteArrayList<LogModel> logs = new CopyOnWriteArrayList<LogModel>();
+    // All logs
 
     public static EntityManager npc_manager = null;
 
