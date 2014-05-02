@@ -3030,31 +3030,31 @@ public class Hive implements Listener {
 
         }
     }
-    
-    public static String getRandomString(int length){
-    	char[] chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-    	StringBuilder sb = new StringBuilder();
-    	Random random = new Random();
-    	for (int i = 0; i < length; i++) {
-    	    char c = chars[random.nextInt(chars.length)];
-    	    sb.append(c);
-    	}
-    	return sb.toString();
+
+    public static String getRandomString(int length) {
+        char[] chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < length; i++) {
+            char c = chars[random.nextInt(chars.length)];
+            sb.append(c);
+        }
+        return sb.toString();
     }
-    
-    public static String generateProfileCode(String player){
-    	String code = Hive.getRandomString(10);
-    	sql_query.add("UPDATE player_database SET playercode='" + code + "' WHERE p_name='" + player + "' LIMIT 1");
-    	return code;
+
+    public static String generateProfileCode(String player) {
+        String code = Hive.getRandomString(10);
+        sql_query.add("UPDATE player_database SET playercode='" + code + "' WHERE p_name='" + player + "' LIMIT 1");
+        return code;
     }
 
     public boolean canTheyLogin(String name) {
-        try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement("SELECT can_join FROM player_database WHERE p_name = ?")) {
+        try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement("SELECT can_join, login_delay FROM player_database WHERE p_name = ?")) {
             pst.setString(1, name);
             ResultSet rst = pst.executeQuery();
             if (!rst.first()) {
                 try (PreparedStatement prest = ConnectionPool.getConnection().prepareStatement(
-                        "INSERT IGNORE INTO player_database (p_name, can_join) VALUES (?, 0) ON DUPLICATE KEY UPDATE can_join = 0;")) {
+                        "INSERT IGNORE INTO player_database (p_name, can_join, login_delay) VALUES (?, 1) ON DUPLICATE KEY UPDATE can_join = 1;")) {
                     prest.setString(1, name);
                     prest.executeUpdate();
                     prest.close();
@@ -3063,7 +3063,15 @@ public class Hive implements Listener {
                     e.printStackTrace();
                 }
             } else {
-                return rst.getBoolean("can_join");
+                long delay = rst.getLong("login_delay");
+                if (delay == 0) {
+                    return true;
+                }
+                if (delay <= System.currentTimeMillis()) {
+                    return rst.getBoolean("can_join");
+                } else {
+                    return false;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -3496,14 +3504,8 @@ public class Hive implements Listener {
     }
 
     public static void setPlayerCanJoin(String p_name, boolean can_join) {
-        Hive.sql_query.add("INSERT IGNORE INTO player_database(p_name, can_join) VALUES ('" + p_name + "', " + (can_join ? 1 : 0)
-                + ") ON DUPLICATE KEY UPDATE can_join = " + (can_join ? 1 : 0));
-        if (!can_join) {
-            if (!players_unable_to_join.contains(p_name)) {
-                players_unable_to_join.add(p_name);
-                Main.plugin.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "Player " + p_name + " can no longer login for 5 minutes.");
-            }
-        }
+        Hive.sql_query.add("UPDATE player_database SET can_join = " + (can_join ? 1 : 0) + ", login_delay = "
+                + (can_join ? 0 : (System.currentTimeMillis() + 300000)) + " WHERE p_name = '" + p_name + "';");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -4465,11 +4467,10 @@ public class Hive implements Listener {
          * if(ChatColor.stripColor(ply.getName()).equalsIgnoreCase(pl_name)){ List<Player> lpl = new ArrayList<Player>(); for(Entity ent :
          * npc.getBukkitEntity().getNearbyEntities(32, 32, 32)){ if(ent instanceof Player){ lpl.add((Player)ent); } }
          * 
-         * npc.getBukkitEntity().remove(); //ShopMechanics.updateEntity(npc.getBukkitEntity(), lpl); 
-         * //EcashMechanics.personal_clones.remove(pl.getName()); 
+         * npc.getBukkitEntity().remove(); //ShopMechanics.updateEntity(npc.getBukkitEntity(), lpl); //EcashMechanics.personal_clones.remove(pl.getName());
          * EcashMechanics.personal_clones_msg.remove(pl.getName()); try { ParticleEffect.sendToLocation(ParticleEffect.CRIT,
          * npc.getBukkitEntity().getLocation().add(0, 1, 0), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), 1, 10); } catch
-         * (Exception e1) { e1.printStackTrace(); } return; } } 
+         * (Exception e1) { e1.printStackTrace(); } return; } }
          */
 
         if (ply != null && Hive.player_to_npc.containsKey(ply.getName())) {
