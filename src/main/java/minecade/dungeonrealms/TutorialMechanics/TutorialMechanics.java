@@ -557,6 +557,7 @@ public class TutorialMechanics implements Listener {
 				Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 					public void run() {
 						List<String> lcd = completion_delay.get(pl.getName());
+						if(lcd == null) return;
 						lcd.remove(npc_name);
 						completion_delay.put(pl.getName(), lcd);
 						pl.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + "       OBJECTIVE COMPLETE:" + ChatColor.GREEN.toString() + " Speak to " + ChatColor.UNDERLINE + npc_name + ChatColor.GREEN.toString() + "!");
