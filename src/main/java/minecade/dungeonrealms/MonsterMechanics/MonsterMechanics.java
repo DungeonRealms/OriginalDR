@@ -6547,7 +6547,7 @@ public class MonsterMechanics implements Listener {
                 gear_check = gear_check - 1;
             }
             if (larmor_type == 3 && chest == null) {
-                chest = ItemGenerators.MobChestPlateGenerator(tier, false, null, level);
+                chest = ItemGenerators.MobChestPlateGenerator(tier, level);
                 if (elite == true) {
                     chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
                 }
@@ -6654,7 +6654,7 @@ public class MonsterMechanics implements Listener {
             if (meta_data.equalsIgnoreCase("bandit") || meta_data.equalsIgnoreCase("monk")) {
 
                 if (chest == null) { // They don't normally have the torso.
-                    chest = ItemGenerators.MobChestPlateGenerator(tier, false, null, level);
+                    chest = ItemGenerators.MobChestPlateGenerator(tier, level);
                     if (elite == true) {
                         chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
                     }
