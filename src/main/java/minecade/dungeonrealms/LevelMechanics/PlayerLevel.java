@@ -78,6 +78,7 @@ public class PlayerLevel {
                     + ChatColor.GRAY + " [" + getXP() + ChatColor.BOLD + "/" + ChatColor.GRAY + (int) getEXPNeeded(getLevel()) + " EXP]");
 
         }
+        if(p == null) return;
         CommunityMechanics.updateCombatPage(p);
     }
 
