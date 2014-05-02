@@ -167,6 +167,7 @@ public class LevelMechanics implements Listener {
         PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().setPlayer(e.getPlayer());
         new BukkitRunnable() {
             public void run() {
+            	if(e == null || e.getPlayer() == null) return;
                 PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().updateScoreboardLevel();
             }
         }.runTaskLater(Main.plugin, 20 * 1);
