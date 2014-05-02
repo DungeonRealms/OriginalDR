@@ -129,7 +129,8 @@ public class InstanceMechanics implements Listener {
 
     public static HashMap<String, Location> saved_location_instance = new HashMap<String, Location>();
     // Player Name, Location in main world
-
+    public static HashMap<String, Integer> instances_run = new HashMap<String, Integer>();
+    // Player Name, Amount of instances run
     public static HashMap<String, Long> processing_move = new HashMap<String, Long>();
     // Player Name, Time of last movement check.
 
@@ -150,8 +151,8 @@ public class InstanceMechanics implements Listener {
 
     public static List<String> teleport_on_load = new ArrayList<String>();
     // Used for /instance load command.
-    public static ConcurrentHashMap<String, ItemStack> allow_soulbound_drop = new ConcurrentHashMap<String, ItemStack>();
-    public static ConcurrentHashMap<ItemStack, World> world_item_dropped = new ConcurrentHashMap<ItemStack, World>();
+    //public static ConcurrentHashMap<String, ItemStack> allow_soulbound_drop = new ConcurrentHashMap<String, ItemStack>();
+    //public static ConcurrentHashMap<ItemStack, World> world_item_dropped = new ConcurrentHashMap<ItemStack, World>();
     static List<String> open_instances = new ArrayList<String>();
 
     // Used to determine when to TP players / when an instance has been primed.
@@ -362,15 +363,15 @@ public class InstanceMechanics implements Listener {
                         for (Player pl : Bukkit.getWorld(i_name).getPlayers()) {
                             if (isInstance(pl.getWorld().getName()) && saved_location_instance.containsKey(pl.getName())) {
                                 // TODO: Give them tokens!
+                                if (instances_run.containsKey(pl.getName())) {
+                                    int amount = instances_run.get(pl.getName());
+                                    instances_run.put(pl.getName(), amount + 1);
+                                } else {
+                                    instances_run.put(pl.getName(), 1);
+                                }
                                 try {
                                     pl.teleport(saved_location_instance.get(pl.getName()));
                                     saved_location_instance.remove(pl.getName());
-                                    if (allow_soulbound_drop.containsKey(pl.getName())) {
-                                        ItemStack drop = allow_soulbound_drop.get(pl.getName());
-                                        world_item_dropped.remove(drop);
-                                        allow_soulbound_drop.remove(pl.getName());
-                                    }
-
                                 } catch (NullPointerException npe) {
                                     // Do nothing.
                                 }
@@ -511,6 +512,13 @@ public class InstanceMechanics implements Listener {
                             pl.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level 9 to enter a dungeon.");
                             continue;
                         }
+                        if (instances_run.containsKey(pl.getName())) {
+                            if (instances_run.get(pl.getName()) >= 3) {
+                                pl.sendMessage(ChatColor.RED + "You can only do a Dungeon 3 times per reboot.");
+                                continue;
+                            }
+                        }
+
                         boolean party_in_instance = false;
                         String party_instance = "";
 
@@ -1262,20 +1270,6 @@ public class InstanceMechanics implements Listener {
         } else {
             return true;
         }
-    }
-
-    // @EventHandler
-    public void onPlayerPickupSoulbound(PlayerPickupItemEvent e) {
-        if (!isInstance(e.getPlayer().getWorld().getName())) {
-            return;
-        }
-        Player p = e.getPlayer();
-        if (!ItemMechanics.isSoulbound(e.getItem().getItemStack())) {
-            return;
-        }
-        allow_soulbound_drop.put(p.getName(), e.getItem().getItemStack());
-        p.sendMessage(ChatColor.RED + "You can only drop this " + ChatColor.DARK_RED + ChatColor.UNDERLINE + "Soulbound" + ChatColor.RED
-                + " item until you are removed from the dungeon.");
     }
 
     public static void syncLoadNewInstance(final String instance, final boolean load_template, boolean new_template) {

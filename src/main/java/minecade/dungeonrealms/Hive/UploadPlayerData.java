@@ -11,6 +11,7 @@ import java.util.List;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
+import minecade.dungeonrealms.HearthstoneMechanics.HearthstoneMechanics;
 import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
 import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
@@ -78,6 +79,7 @@ public class UploadPlayerData extends Thread {
 				
 				MoneyMechanics.uploadBankDatabaseData(p_name, true);
 				ShopMechanics.uploadShopDatabaseData(p_name, true);
+				HearthstoneMechanics.saveData(p_name);
 				if(RealmMechanics.isWorldLoaded(p_name)) {
 					RealmMechanics.uploadWorld(p_name, p_name);
 				}

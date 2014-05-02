@@ -75,12 +75,14 @@ public class PlayerLevel {
             if (p == null) {
                 checkPlayer();
             }
-            if(p == null) return;
+            if (p == null)
+                return;
             p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "          +" + ChatColor.YELLOW + (int) xp + ChatColor.BOLD + " EXP" + ChatColor.YELLOW
                     + ChatColor.GRAY + " [" + getXP() + ChatColor.BOLD + "/" + ChatColor.GRAY + (int) getEXPNeeded(getLevel()) + " EXP]");
 
         }
-        if(p == null) return;
+        if (p == null)
+            return;
         CommunityMechanics.updateCombatPage(p);
     }
 
@@ -95,9 +97,15 @@ public class PlayerLevel {
     }
 
     public void saveData(boolean remove) {
-    	final String name = p_name;
-    	final int level = getLevel();
-    	final int xp = getXP();
+        final String name = p_name;
+        Main.d("SAVED " + p_name + "'s DATA! Level: " + getLevel() + " XP: " + getXP());
+        final int level = getLevel();
+        final int xp = getXP();
+        if (level == 0) {
+            //Its bugged so dont save? 
+            //TODO: See why its saving twice?
+            return;
+        }
         new BukkitRunnable() {
             public void run() {
                 try (PreparedStatement prest = ConnectionPool.getConnection().prepareStatement(
@@ -128,7 +136,8 @@ public class PlayerLevel {
             if (p == null) {
                 checkPlayer();
             }
-            if(p == null) return;
+            if (p == null)
+                return;
             p.getWorld().playSound(p.getLocation(), Sound.LEVEL_UP, 1, .4F);
             p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "         " + " LEVEL UP! " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel() - 1)
                     + ChatColor.BOLD + " -> " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel()));
@@ -137,7 +146,8 @@ public class PlayerLevel {
     }
 
     public void updateScoreboardLevel() {
-    	if(p == null) return;
+        if (p == null)
+            return;
         ScoreboardMechanics.setPlayerLevel(getLevel(), p);
     }
 

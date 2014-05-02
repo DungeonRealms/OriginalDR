@@ -180,13 +180,12 @@ public class HearthstoneMechanics implements Listener {
         hearthstone_map.clear();
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player p = event.getPlayer();
-        getHearthStone(p.getName()).saveData();
-        hearthstone_location.remove(p.getName());
-        hearthstone_map.remove(p.getName());
-        hearthstone_timer.remove(p.getName());
+
+    public static void saveData(String p_name) {
+        getHearthStone(p_name).saveData();
+        hearthstone_location.remove(p_name);
+        hearthstone_map.remove(p_name);
+        hearthstone_timer.remove(p_name);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -505,10 +504,10 @@ public class HearthstoneMechanics implements Listener {
 
     public static ItemStack getHearthstoneItem(Player p) {
         Hearthstone hs = getHearthStone(p.getName());
-        if(hs == null){
-            return createCustomItem(new ItemStack(Material.QUARTZ), ChatColor.YELLOW.toString() + ChatColor.BOLD + "Hearthstone",
-                    Arrays.asList(ChatColor.GRAY + "Teleports you to your home town.", ChatColor.GRAY + "Talk to an Innkeeper to change your home town.",
-                            ChatColor.GREEN + "Location: Cyrennica"));
+        if (hs == null) {
+            return createCustomItem(new ItemStack(Material.QUARTZ), ChatColor.YELLOW.toString() + ChatColor.BOLD + "Hearthstone", Arrays.asList(ChatColor.GRAY
+                    + "Teleports you to your home town.", ChatColor.GRAY + "Talk to an Innkeeper to change your home town.", ChatColor.GREEN
+                    + "Location: Cyrennica"));
         }
         ItemStack hearthstone_item = createCustomItem(new ItemStack(Material.QUARTZ), ChatColor.YELLOW.toString() + ChatColor.BOLD + "Hearthstone",
                 Arrays.asList(ChatColor.GRAY + "Teleports you to your home town.", ChatColor.GRAY + "Talk to an Innkeeper to change your home town.",

@@ -29,7 +29,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class LevelMechanics implements Listener {
 
     // Player name, PlayerLevel data
-
+    public LevelMechanics(){
+        new BukkitRunnable() {
+            public void run() {
+                for(Player p : Bukkit.getOnlinePlayers()){
+                    getPlayerData(p).updateScoreboardLevel();
+                }
+            }
+        }.runTaskTimer(Main.plugin, 100, 10 * 20);
+    }
     @EventHandler
     public void onAsyncLogin(AsyncPlayerPreLoginEvent e) {
         new PlayerLevel(e.getName(), false);

@@ -2755,10 +2755,15 @@ public class Hive implements Listener {
             }
         }
         if (!canTheyLogin(e.getName())) {
-            e.setKickMessage(ChatColor.RED + "You cannot login because you have recently logged out in wilderness.\n" + ChatColor.BOLD
-                    + "Please try again later.");
-            e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
-            return;
+            int seconds_to_login = getTimeToLogin(e.getName());
+            if (seconds_to_login == 0) {
+                e.allow();
+            } else {
+                e.setKickMessage(ChatColor.RED + "You cannot login because you have recently logged out in wilderness.\n" + ChatColor.BOLD + "You must wait "
+                        + seconds_to_login + " seconds to login again.");
+                e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+                return;
+            }
         }
         if (Bukkit.hasWhitelist()) {
             if (Bukkit.getMotd().contains("DEVELOPER") && (!(Bukkit.getWhitelistedPlayers().contains(of)))) { // !of.isOp() ||
@@ -3049,12 +3054,12 @@ public class Hive implements Listener {
     }
 
     public boolean canTheyLogin(String name) {
-        try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement("SELECT can_join, login_delay FROM player_database WHERE p_name = ?")) {
+        try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement("SELECT login_delay FROM player_database WHERE p_name = ?")) {
             pst.setString(1, name);
             ResultSet rst = pst.executeQuery();
             if (!rst.first()) {
                 try (PreparedStatement prest = ConnectionPool.getConnection().prepareStatement(
-                        "INSERT IGNORE INTO player_database (p_name, can_join, login_delay) VALUES (?, 1) ON DUPLICATE KEY UPDATE can_join = 1;")) {
+                        "INSERT IGNORE INTO player_database (p_name, login_delay) VALUES (?, 0) ON DUPLICATE KEY UPDATE login_delay = 0;")) {
                     prest.setString(1, name);
                     prest.executeUpdate();
                     prest.close();
@@ -3068,7 +3073,7 @@ public class Hive implements Listener {
                     return true;
                 }
                 if (delay <= System.currentTimeMillis()) {
-                    return rst.getBoolean("can_join");
+                    return true;
                 } else {
                     return false;
                 }
@@ -3077,6 +3082,23 @@ public class Hive implements Listener {
             e.printStackTrace();
         }
         return true;
+    }
+
+    public static int getTimeToLogin(String p_name) {
+        try (PreparedStatement pst = ConnectionPool.getConnection()
+                .prepareStatement("SELECT login_delay FROM player_database WHERE p_name = '" + p_name + "';")) {
+            ResultSet rst = pst.executeQuery();
+            if (!rst.first()) {
+                return 0;
+            } else {
+                long delay = rst.getLong("login_delay");
+                int in_seconds = (int) ((delay - System.currentTimeMillis()) / 1000);
+                return in_seconds;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -3504,8 +3526,8 @@ public class Hive implements Listener {
     }
 
     public static void setPlayerCanJoin(String p_name, boolean can_join) {
-        Hive.sql_query.add("UPDATE player_database SET can_join = " + (can_join ? 1 : 0) + ", login_delay = "
-                + (can_join ? 0 : (System.currentTimeMillis() + 300000)) + " WHERE p_name = '" + p_name + "';");
+        Hive.sql_query.add("UPDATE player_database SET login_delay = " + (can_join ? 0 : (System.currentTimeMillis() + 300000)) + " WHERE p_name = '" + p_name
+                + "';");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
