@@ -358,7 +358,9 @@ public class ItemGenerators {
         int min_armor = 0;
         int max_armor = 0;
         String rarity = "";
-        if (armor_range_check <= 80 && mob_tier_level >= 1) {
+        if (mob_tier_level == 1 || (mob_tier_level == 2 && armor_range_check <= 70) || (mob_tier_level == 3 && armor_range_check <= 20)
+                || (mob_tier_level == 4 && armor_range_check <= 10)) {
+            // if (armor_range_check <= 80 && mob_tier_level >= 1) {
             rarity = ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Common";
             if (tier == 1) {
                 // int min_num = 1 + 1;
@@ -421,8 +423,9 @@ public class ItemGenerators {
                 hp_increase_amount = r.nextInt(max_hp - min_hp) + min_hp;
             }
         }
-
-        if (armor_range_check > 80 && armor_range_check < 95 && mob_tier_level >= 2) {
+        if ((mob_tier_level == 2 && armor_range_check > 70) || (mob_tier_level == 3 && armor_range_check > 20 && armor_range_check < 90)
+                || (mob_tier_level == 4 && armor_range_check > 10 && armor_range_check < 30)) {
+            // if (armor_range_check > 80 && armor_range_check < 95 && mob_tier_level >= 2) {
             rarity = ChatColor.GREEN.toString() + ChatColor.ITALIC.toString() + "Uncommon";
             if (tier == 1) {
                 int min_num = 1 + 1;
@@ -485,8 +488,8 @@ public class ItemGenerators {
                 hp_increase_amount = r.nextInt(max_hp - min_hp) + min_hp;
             }
         }
-
-        if (armor_range_check >= 95 && armor_range_check != 99 && mob_tier_level >= 3) {
+        if ((mob_tier_level == 3 && armor_range_check > 90) || (mob_tier_level == 4 && armor_range_check > 30 && armor_range_check < 99)) {
+            // if (armor_range_check >= 95 && armor_range_check != 99 && mob_tier_level >= 3) {
             rarity = ChatColor.AQUA.toString() + ChatColor.ITALIC.toString() + "Rare";
             if (tier == 1) {
                 int min_num = 1 + 1;
@@ -549,8 +552,8 @@ public class ItemGenerators {
                 hp_increase_amount = r.nextInt(max_hp - min_hp) + min_hp;
             }
         }
-
-        if (armor_range_check == 99 && mob_tier_level >= 4) {
+        if(mob_tier_level == 4 && armor_range_check == 100){
+        //if (armor_range_check == 99 && mob_tier_level >= 4) {
             rarity = ChatColor.YELLOW.toString() + ChatColor.ITALIC.toString() + "Unique";
             if (tier == 1) {
                 int min_num = 1 + 1;
