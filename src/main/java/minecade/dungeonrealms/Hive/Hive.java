@@ -2783,7 +2783,7 @@ public class Hive implements Listener {
         }
 
         if (loading_server == true) {
-            if (getLoadPercent() < 30 && !Bukkit.getMotd().contains("Us-99")) {
+            if (getLoadPercent() < 30 && !Bukkit.getMotd().contains("US-99")) {
                 e.setKickMessage(ChatColor.AQUA.toString() + "This " + ChatColor.BOLD + "Dungeon Realms" + ChatColor.AQUA.toString()
                         + " shard is loading objects into memory for " + ChatColor.UNDERLINE + "maximum" + ChatColor.AQUA + " performance. ("
                         + getLoadPercent() + "%)" + "\n" + ChatColor.GRAY + "You may join as soon as this process is complete." + "\n\n"
