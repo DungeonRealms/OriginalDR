@@ -110,18 +110,18 @@ public class LevelMechanics implements Listener {
             }
         }
 
-        if (mob_level > (level + 8)) {
+        if (mob_level > (level + 10)) {
             if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("debug")) {
                 player.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "lower" + ChatColor.RED
-                        + " than 8 levels of this mob. No EXP granted.");
+                        + " than 10 levels of this mob. No EXP granted.");
             }
             return;
         } else if (mob_level < (level - 8)) {
-            if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("debug")) {
+            /*if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("debug")) {
                 player.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "greater" + ChatColor.RED
                         + " than 8 levels of this mob. No EXP granted.");
             }
-            return;
+            return; Disabled by Mayley's request */
         }
 
         int xp = calculateXP(player, kill, mob_level);
