@@ -3384,7 +3384,13 @@ public class Hive implements Listener {
                 p.sendMessage(ChatColor.DARK_AQUA + "This is a " + ChatColor.UNDERLINE + "Brazillian" + ChatColor.DARK_AQUA + " server.");
                 p.sendMessage(ChatColor.GRAY + "The official language of this server is " + ChatColor.UNDERLINE + "Portuguese.");
             }
-
+            
+            if(MOTD.contains("US-100") || MOTD.contains("US-101") || MOTD.contains("US-102") || MOTD.contains("US-103") || MOTD.contains("US-104") || MOTD.contains("US-105") || MOTD.contains("US-106") || MOTD.contains("US-107") || MOTD.contains("US-108") || MOTD.contains("US-109") || MOTD.contains("US-110")){
+	            p.sendMessage("");
+	            p.sendMessage(ChatColor.GOLD + "This is a " + ChatColor.UNDERLINE + "BETA" + ChatColor.GOLD+ " server. This server uses seperate data from your live server character!");
+	            p.sendMessage(ChatColor.GRAY + "You will be testing " + ChatColor.UNDERLINE + "new" + ChatColor.GRAY + " and " + ChatColor.UNDERLINE + "unfinished" + ChatColor.GRAY + " versions of Dungeon Realms.");
+	            p.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Beta server is intended to be " + ChatColor.UNDERLINE + "reset" + ChatColor.GRAY + ChatColor.ITALIC + " periodically to accommodate updates.");
+            }
         }
 
         if (player_sdays_left.containsKey(p.getName()) || PermissionMechanics.rank_map.get(p.getName()).equalsIgnoreCase("sub++")) {

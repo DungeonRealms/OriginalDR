@@ -117,7 +117,7 @@ public class Config {
 	
 	
 	
-    public static List<String> us_public_servers = new ArrayList<String>(Arrays.asList("US-1", "US-2", "US-3", "US-4", "US-11"));
+    public static List<String> us_public_servers = new ArrayList<String>(Arrays.asList("US-1", "US-2", "US-3", "US-4", "US-11", "US-100", "US-101", "US-102", "US-103", "US-104", "US-105", "US-106", "US-107", "US-108", "US-109", "US-110"));
     public static List<String> us_private_servers = new ArrayList<String>(Arrays.asList("US-9", "US-10"));
     public static List<String> br_servers = new ArrayList<String>(Arrays.asList("BR-1"));
     

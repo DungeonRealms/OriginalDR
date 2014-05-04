@@ -1095,6 +1095,12 @@ public class MerchantMechanics implements Listener {
                 return;
             }
             e.setCancelled(true);
+            
+            String m = Bukkit.getMotd();
+            if(m.contains("US-100") || m.contains("US-101") || m.contains("US-102") || m.contains("US-103") || m.contains("US-104") || m.contains("US-105") || m.contains("US-106") || m.contains("US-107") || m.contains("US-108") || m.contains("US-108") || m.contains("US-109") || m.contains("US-110")){
+            	p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " do this on the " + ChatColor.UNDERLINE + "Beta Servers" + ChatColor.RED + "!");
+            	return;
+            }
 
             p.playSound(p.getLocation(), Sound.WOOD_CLICK, 1.0F, 1.0F);
             if (in_npc_shop.contains(p.getName())) {
