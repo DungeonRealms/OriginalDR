@@ -34,6 +34,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import minecade.dungeonrealms.Main;
+import minecade.dungeonrealms.Utils;
 import minecade.dungeonrealms.ChatMechanics.ChatMechanics;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
@@ -3394,10 +3395,9 @@ public class Hive implements Listener {
         
         p.addAttachment(Main.plugin).setPermission("citizens.npc.talk", true);
 
-		int this_server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
-		if(this_server_num >= 100 && this_server_num <= 110) {
+		if(Utils.isBeta()) {
 			String currentRank = PermissionMechanics.getRank(p_name);
-			if(!currentRank.equalsIgnoreCase("default")){
+			if(currentRank.equalsIgnoreCase("default")){
 				PermissionMechanics.setRank(p_name, "sub++", true);
 			}
 		}
@@ -4063,7 +4063,7 @@ public class Hive implements Listener {
 
         if (vip_server && cc != ChatColor.RED) {
 			int this_server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
-			if(this_server_num >= 100 && this_server_num <= 110) cc = ChatColor.YELLOW;
+			if(this_server_num >= 100 && this_server_num <= 110) icon.setDurability((short) 4);
             lore.add(ChatColor.GREEN + "Subscriber Server");
         }
 

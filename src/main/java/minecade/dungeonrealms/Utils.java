@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
@@ -25,6 +26,12 @@ public class Utils {
     
     public static long getTime(){
     	return Calendar.getInstance().getTimeInMillis();
+    }
+    
+    public static boolean isBeta(){
+    	int this_server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
+		if(this_server_num >= 100 && this_server_num <= 110) return true;
+		return false;
     }
 	
 }

@@ -1378,8 +1378,9 @@ public class GuildMechanics implements Listener {
 	}
 	
 	public static void updateGuildTabList(final Player pl) {
-		if(pl == null || !(inGuild(pl.getName()))) {
-			if(pl == null) { return; }
+		if(pl == null) { return; }
+		String g_name = getGuild(pl.getName());
+		if(pl == null || !(inGuild(pl.getName())) || g_name == null) {
 			TabAPI.setTabString(Main.plugin, pl, 0, 0, ChatColor.GRAY + "*------------");
 			TabAPI.setTabString(Main.plugin, pl, 0, 1, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "    Guild UI");
 			TabAPI.setTabString(Main.plugin, pl, 0, 2, ChatColor.GRAY + "  ----------*");
@@ -1416,8 +1417,7 @@ public class GuildMechanics implements Listener {
 		}
 		
 		clearGuildTabList(pl, false);
-		
-		String g_name = getGuild(pl.getName());
+		String guild_owner = getGuildOwner(g_name);
 		
 		TabAPI.setPriority(Main.plugin, pl, 1);
 		
@@ -1430,7 +1430,6 @@ public class GuildMechanics implements Listener {
 		
 		TabAPI.setTabString(Main.plugin, pl, 5, 1, ChatColor.DARK_AQUA + "" + "Guild Owner", 0);
 		
-		String guild_owner = getGuildOwner(g_name);
 		if(guild_owner.contains(ChatColor.GREEN.toString()) || guild_owner.contains(ChatColor.YELLOW.toString())) {
 			if(guild_owner.contains(ChatColor.YELLOW.toString())) {
 				// Change to (gray) US-0 (green) Username
