@@ -41,6 +41,7 @@ import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleParty;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleProfile;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandTogglePvP;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleStarterPack;
+import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleTabChat;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleTells;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleTips;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleTradeChat;
@@ -157,6 +158,7 @@ public class CommunityMechanics implements Listener {
         Main.plugin.getCommand("toggletradechat").setExecutor(new CommandToggleTradeChat());
         Main.plugin.getCommand("toggleindicator").setExecutor(new CommandToggleIndicator());
         Main.plugin.getCommand("toggleglobalchat").setExecutor(new CommandToggleGlobalChat());
+        Main.plugin.getCommand("toggletabchat").setExecutor(new CommandToggleTabChat());
 
         Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
@@ -222,6 +224,7 @@ public class CommunityMechanics implements Listener {
         toggle_map.add("togglestarterpack");
         toggle_map.add("toggleindicator");
         toggle_map.add("toggleglobalchat");
+        toggle_map.add("toggletabchat");
 
         CrossServerPacketThread = new CrossServerPacketThread();
         CrossServerPacketThread.start();
@@ -1472,6 +1475,9 @@ public class CommunityMechanics implements Listener {
         }
         if (toggle.equalsIgnoreCase("toggleglobalchat")) {
             desc += "Toggles talking only in global chat.";
+        }
+        if (toggle.equalsIgnoreCase("toggletabchat")) {
+            desc += "Toggles tabcomplete chat.";
         }
         return desc;
     }

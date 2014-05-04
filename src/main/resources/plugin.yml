@@ -102,6 +102,9 @@ commands:
   toggleglobalchat:
     description: Toggles talking in global chat
     usage: /<command>
+  toggletabchat:
+    description: Toggles tabcomplete chat
+    usage: /<command>
   tips:
     description: Get a random tip.
     usage: /<command>

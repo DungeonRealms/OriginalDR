@@ -35,7 +35,7 @@ public class CommandToggles implements CommandExecutor {
 			return true;
 		}
 		
-		int toggle_count = 16;
+		int toggle_count = 17;
 		Inventory toggle_menu = Bukkit.createInventory(null, 18, "Toggle Menu");
 		ItemStack divider = ItemMechanics.signCustomItem(Material.THIN_GLASS, (short) 0, " ", "");
 		

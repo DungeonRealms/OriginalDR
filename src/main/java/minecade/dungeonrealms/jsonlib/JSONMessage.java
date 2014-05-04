@@ -17,7 +17,7 @@ public class JSONMessage {
 	private JsonObject json;
 	
 	public JSONMessage() {
-		new JSONMessage("");
+		new JSONMessage(null);
 	}
 	
 	public JSONMessage(String text) {
@@ -121,6 +121,19 @@ public class JSONMessage {
 		
 		JsonObject u = new JsonObject();
 		u.addProperty("action", "suggest_command");
+		u.addProperty("value", cmd);
+		
+		o.add("clickEvent", u);
+		getExtra().add(o);
+	}
+	
+	public void addRunCommand(String text, ChatColor color, String cmd){
+		JsonObject o = new JsonObject();
+		o.addProperty("text", text);
+		o.addProperty("color", color.name().toLowerCase());
+		
+		JsonObject u = new JsonObject();
+		u.addProperty("action", "run_command");
 		u.addProperty("value", cmd);
 		
 		o.add("clickEvent", u);

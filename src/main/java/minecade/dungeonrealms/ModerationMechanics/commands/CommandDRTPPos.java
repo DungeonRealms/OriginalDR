@@ -22,9 +22,9 @@ public class CommandDRTPPos implements CommandExecutor {
 			return true;
 		}
 		
-		int x = Integer.parseInt(args[0]);
-		int y = Integer.parseInt(args[1]);
-		int z = Integer.parseInt(args[2]);
+		double x = Double.parseDouble(args[0]);
+		double y = Double.parseDouble(args[1]);
+		double z = Double.parseDouble(args[2]);
 		
 		p.teleport(new Location(p.getWorld(), x, y, z));
 		

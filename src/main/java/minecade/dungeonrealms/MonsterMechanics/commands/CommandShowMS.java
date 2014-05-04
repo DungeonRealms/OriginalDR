@@ -1,6 +1,7 @@
 package minecade.dungeonrealms.MonsterMechanics.commands;
 
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
+import minecade.dungeonrealms.jsonlib.JSONMessage;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -42,6 +43,9 @@ public class CommandShowMS implements CommandExecutor {
                         if (loc.getBlock().getType() == Material.AIR) {
                             count++;
                             loc.getBlock().setType(Material.MOB_SPAWNER);
+                            JSONMessage m = new JSONMessage("", ChatColor.GRAY);
+                            m.addRunCommand(ChatColor.GRAY + "Spawner: X:" + loc.getBlockX() + " Y:" + loc.getBlockY() + " Z:" + loc.getBlockZ(), ChatColor.GRAY, "/drtppos " + (0.5D + loc.getBlockX()) + " " + (0.5D + loc.getBlockY()) + " " + (0.5D + loc.getBlockZ()) );
+                            m.sendToPlayer(p);
                         }
                     }
                 }

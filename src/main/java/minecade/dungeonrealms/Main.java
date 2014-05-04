@@ -113,7 +113,7 @@ public class Main extends JavaPlugin implements Listener {
         plugin = this;
         log = this.getLogger();
 
-        if (getServer().getMotd().contains("US-99")) {
+        if (getServer().getMotd().contains("US-99") || getServer().getMotd().contains("US-B1")) {
             Config.sql_url = "jdbc:mysql://" + Config.Hive_IP + ":" + Config.SQL_port + "/dungeonrealms_test";
         }
 
