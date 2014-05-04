@@ -56,7 +56,7 @@ public class ThreadPool extends Thread {
 					pst.setString(1, log.type.name());
 					pst.setString(2, log.player);
 					pst.setLong(3, log.time);
-					pst.setString(4, (log.data != null) ? log.data : "");
+					pst.setString(4, (log.data != null) ? log.data.toString() : "");
 					pst.executeUpdate();
 				} catch(SQLException ex) {
 					Hive.log.log(Level.SEVERE, ex.getMessage(), ex);

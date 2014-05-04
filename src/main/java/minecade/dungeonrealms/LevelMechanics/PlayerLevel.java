@@ -10,8 +10,10 @@ import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
 import minecade.dungeonrealms.ScoreboardMechanics.ScoreboardMechanics;
 import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.enums.LogType;
+import minecade.dungeonrealms.jsonlib.JsonBuilder;
 import minecade.dungeonrealms.managers.PlayerManager;
 import minecade.dungeonrealms.models.LogModel;
+import net.minecraft.util.com.google.gson.JsonObject;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -130,7 +132,7 @@ public class PlayerLevel {
         setXP(0);
         setLevel(getLevel() + 1);
         updateScoreboardLevel();
-        new LogModel(LogType.LEVEL_UP, p_name, getLevel());
+        new LogModel(LogType.LEVEL_UP, p_name, new JsonBuilder("level", getLevel()).getJson());
 
         if (alert) {
             if (p == null) {

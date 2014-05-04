@@ -17,17 +17,21 @@ public class JSONMessage {
 	private JsonObject json;
 	
 	public JSONMessage() {
-		new JSONMessage(null);
+		initiateData();
 	}
 	
 	public JSONMessage(String text) {
-		new JSONMessage(text, ChatColor.WHITE);
+		initiateData();
 	}
 	
 	public JSONMessage(String text, ChatColor color) {
-		json = new JsonObject();
+		initiateData();
 		json.addProperty("text", text);
 		json.addProperty("color", color.name().toLowerCase());
+	}
+	
+	private void initiateData(){
+		json = new JsonObject();
 		json.add("extra", new JsonArray());
 	}
 	
