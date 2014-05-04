@@ -257,11 +257,13 @@ public class ChatMechanics implements Listener {
         String rank = PermissionMechanics.getRank(p.getName());
 
         if (p.isOp() || rank.equalsIgnoreCase("GM")) {
-            if(p.getName().equalsIgnoreCase("Bradez1571")){
-            	return ChatColor.RED;
-            }else if(p.getName().equalsIgnoreCase("Vilsol")){
-            	return ChatColor.DARK_PURPLE;
-            }else if(Main.isDev(p.getName())){
+            if (p.getName().equalsIgnoreCase("Bradez1571")) {
+                return ChatColor.RED;
+            } else if (p.getName().equalsIgnoreCase("Vilsol")) {
+                return ChatColor.DARK_PURPLE;
+            } else if (p.getName().equalsIgnoreCase("iFamasssxD")) {
+                return ChatColor.DARK_GREEN;
+            } else if (Main.isDev(p.getName())) {
                 return ChatColor.DARK_AQUA;
             }
             return ChatColor.AQUA;
@@ -297,11 +299,13 @@ public class ChatMechanics implements Listener {
         String rank = PermissionMechanics.getRank(p_name);
 
         if (rank.equalsIgnoreCase("GM")) {
-        	if(p_name.equalsIgnoreCase("Bradez1571")){
-            	return ChatColor.RED;
-            }else if(p_name.equalsIgnoreCase("Vilsol")){
-            	return ChatColor.DARK_PURPLE;
-            }else if(Main.isDev(p_name)){
+            if (p_name.equalsIgnoreCase("Bradez1571")) {
+                return ChatColor.RED;
+            } else if (p_name.equalsIgnoreCase("Vilsol")) {
+                return ChatColor.DARK_PURPLE;
+            } else if (p_name.equalsIgnoreCase("iFamasssxD")) {
+                return ChatColor.DARK_GREEN;
+            } else if (Main.isDev(p_name)) {
                 return ChatColor.DARK_AQUA;
             }
             return ChatColor.AQUA;
@@ -508,11 +512,11 @@ public class ChatMechanics implements Listener {
     // TODO: Make this toggleable.
     public void onPlayerChatTabCompleteEvent(PlayerChatTabCompleteEvent e) {
         final Player p = e.getPlayer();
-        
+
         if (PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("tabchat")) {
             return;
         }
-        
+
         String msg = e.getChatMessage();
         String rank = PermissionMechanics.getRank(p.getName());
         // sending_message.add(p.getName());

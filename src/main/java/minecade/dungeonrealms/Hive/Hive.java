@@ -3245,7 +3245,6 @@ public class Hive implements Listener {
         final String p_name = p.getName();
         e.setJoinMessage("");
         removeGemIcons(p);
-
         if (first_login.contains(p.getName())) {
             // p.teleport(TutorialMechanics.tutorialSpawn, TeleportCause.PLUGIN);
             Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
