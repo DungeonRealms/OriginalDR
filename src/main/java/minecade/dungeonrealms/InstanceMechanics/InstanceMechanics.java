@@ -837,9 +837,12 @@ public class InstanceMechanics implements Listener {
         }
 
         int tier_index = tier - 1;
+        if(!Hive.player_portal_shards.containsKey(p_name)){
+            return;
+        }
         List<Integer> portal_shards = Hive.player_portal_shards.get(p_name);
-
         int current_shards = portal_shards.get(tier_index);
+        
         current_shards += tokens_to_give;
         portal_shards.set(tier_index, current_shards);
 
