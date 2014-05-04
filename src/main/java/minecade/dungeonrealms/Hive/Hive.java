@@ -4017,6 +4017,7 @@ public class Hive implements Listener {
             max_players = Bukkit.getMaxPlayers();
         } else {
             boolean server_open = true; // BungeeCord.getInstance().getServerInfo(server_prefix).canAccess((net.md_5.bungee.api.CommandSender) pl);
+            Main.d((online_players == 0 && max_players == 0) + " || " + (offline_servers.contains(server_prefix)) + " || " + (!last_ping.containsKey(server_num)));
             if ((online_players == 0 && max_players == 0) || offline_servers.contains(server_prefix) || !last_ping.containsKey(server_num)) {
                 online_players = 0;
                 max_players = 0;
@@ -4076,7 +4077,7 @@ public class Hive implements Listener {
         ItemStack divider = ItemMechanics.signCustomItem(Material.THIN_GLASS, (short) 0, " ", "");
         ItemStack minecade_lobby = ItemMechanics.signCustomItem(Material.SKULL_ITEM, (short) 3, ChatColor.WHITE + "Minecade Lobby", ChatColor.GRAY.toString()
                 + ChatColor.ITALIC.toString() + "Go back to the Minecade lobby.");
-        Inventory shard_menu = Bukkit.createInventory(null, 9, "Shard Selection");
+        Inventory shard_menu = Bukkit.createInventory(null, 18, "Shard Selection");
         int index = 0;
         for (String s : Config.us_public_servers) {
             shard_menu.setItem(index, generateShardItem(s));
@@ -4098,7 +4099,13 @@ public class Hive implements Listener {
         }
 
         shard_menu.setItem(8, minecade_lobby);
+        index = 9;
 
+        for(String s : Config.us_beta_servers){
+        	shard_menu.setItem(index, generateShardItem(s));
+        	index++;
+        }
+        
         int x = 0;
         for (ItemStack is : shard_menu.getContents()) {
             if (is == null || is.getType() == Material.AIR) {

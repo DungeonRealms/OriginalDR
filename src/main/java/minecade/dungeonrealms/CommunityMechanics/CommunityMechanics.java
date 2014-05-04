@@ -191,6 +191,7 @@ public class CommunityMechanics implements Listener {
         server_list.put(9, "72.20.33.81"); // US-9 (VIP)
         server_list.put(10, "72.20.33.82"); // US-10 (VIP)
         server_list.put(11, "72.20.42.197"); // US-11 (RP)
+        server_list.put(100, "72.8.157.66"); // US-100
 
         server_list.put(2001, "72.20.42.198"); // BR-1
 
