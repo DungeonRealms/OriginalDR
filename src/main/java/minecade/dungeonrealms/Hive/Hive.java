@@ -3388,7 +3388,7 @@ public class Hive implements Listener {
 	            p.sendMessage("");
 	            p.sendMessage(ChatColor.GOLD + "This is a " + ChatColor.UNDERLINE + "BETA" + ChatColor.GOLD+ " server. This server uses seperate data from your live server character!");
 	            p.sendMessage(ChatColor.GRAY + "You will be testing " + ChatColor.UNDERLINE + "new" + ChatColor.GRAY + " and " + ChatColor.UNDERLINE + "unfinished" + ChatColor.GRAY + " versions of Dungeon Realms.");
-	            p.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Beta server is intended to be " + ChatColor.UNDERLINE + "reset" + ChatColor.GRAY + ChatColor.ITALIC + " periodically to accommodate updates.");
+	            p.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Beta servers are intended to be " + ChatColor.UNDERLINE + "reset" + ChatColor.GRAY + ChatColor.ITALIC + " periodically to accommodate new updates.");
             }
         }
 
@@ -3978,6 +3978,7 @@ public class Hive implements Listener {
         ChatColor cc = null;
         boolean vip_server = false;
         boolean rp_server = false;
+        boolean beta_server = false;
 
         server_num = Integer.parseInt(server_prefix.substring(server_prefix.indexOf("-") + 1, server_prefix.length()));
         if (server_prefix.contains("US")) {
@@ -3996,6 +3997,10 @@ public class Hive implements Listener {
         if (server_num == 11) {
             rp_server = true;
         }
+		if (server_num >= 100 && server_num <= 110) {
+		        beta_server = true;
+		}
+
 
         // String IP = CommunityMechanics.server_list.get(server_num);
 
@@ -4016,7 +4021,6 @@ public class Hive implements Listener {
             max_players = Bukkit.getMaxPlayers();
         } else {
             boolean server_open = true; // BungeeCord.getInstance().getServerInfo(server_prefix).canAccess((net.md_5.bungee.api.CommandSender) pl);
-            Main.d((online_players == 0 && max_players == 0) + " || " + (offline_servers.contains(server_prefix)) + " || " + (!last_ping.containsKey(server_num)));
             if ((online_players == 0 && max_players == 0) || offline_servers.contains(server_prefix) || !last_ping.containsKey(server_num)) {
                 online_players = 0;
                 max_players = 0;
@@ -4058,6 +4062,11 @@ public class Hive implements Listener {
         if (server_prefix.contains("BR")) {
             lore.add(ChatColor.DARK_AQUA + "Language: Portuguese");
         }
+
+        if (beta_server && cc != ChatColor.RED) {
+            lore.add(ChatColor.YELLOW + "Beta Server");
+        }
+
 
         if (cc == ChatColor.GREEN) {
             lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "You are currently in this shard.");
