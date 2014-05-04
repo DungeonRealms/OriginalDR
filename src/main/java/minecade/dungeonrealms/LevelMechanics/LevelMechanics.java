@@ -139,8 +139,8 @@ public class LevelMechanics implements Listener {
         int level = getPlayerLevel(player);
         ItemStack weapon = kill.getEquipment().getItemInHand();
 
-        if (level - 8 > mob_level)
-            return 0;
+        //if (level - 8 > mob_level)
+            //return 0;
         if (level >= (mob_level + 8))
             xp *= .6;
         if (weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK))
