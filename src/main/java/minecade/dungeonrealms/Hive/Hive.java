@@ -3391,6 +3391,16 @@ public class Hive implements Listener {
 	            p.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Beta servers are intended to be " + ChatColor.UNDERLINE + "reset" + ChatColor.GRAY + ChatColor.ITALIC + " periodically to accommodate new updates.");
             }
         }
+        
+        p.addAttachment(Main.plugin).setPermission("citizens.npc.talk", true);
+
+		int this_server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
+		if(this_server_num >= 100 && this_server_num <= 110) {
+			String currentRank = PermissionMechanics.getRank(p_name);
+			if(!currentRank.equalsIgnoreCase("default")){
+				PermissionMechanics.setRank(p_name, "sub++", true);
+			}
+		}
 
         if (player_sdays_left.containsKey(p.getName()) || PermissionMechanics.rank_map.get(p.getName()).equalsIgnoreCase("sub++")) {
             Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
@@ -4052,6 +4062,8 @@ public class Hive implements Listener {
         List<String> lore = new ArrayList<String>();
 
         if (vip_server && cc != ChatColor.RED) {
+			int this_server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
+			if(this_server_num >= 100 && this_server_num <= 110) cc = ChatColor.YELLOW;
             lore.add(ChatColor.GREEN + "Subscriber Server");
         }
 
@@ -4234,6 +4246,16 @@ public class Hive implements Listener {
                 if (durability == 14) {
                     // Current server, do nothing.
                     pl.sendMessage(ChatColor.RED + "This shard is currently " + ChatColor.UNDERLINE + "unavailable.");
+                    Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                        public void run() {
+                            pl.closeInventory();
+                        }
+                    }, 2L);
+                }
+                
+                if(durability == 4){
+                	// Sub Server From Beta Server
+                	pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "must" + ChatColor.RED + " join this shard from a public shard, not a beta shard!");
                     Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                         public void run() {
                             pl.closeInventory();
