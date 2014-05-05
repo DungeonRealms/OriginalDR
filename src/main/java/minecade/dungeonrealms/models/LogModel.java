@@ -12,10 +12,6 @@ public class LogModel {
 	public String player;
 	public long time;
 	
-	public LogModel(LogType type, String player){
-		new LogModel(type, player, null);
-	}
-	
 	public LogModel(LogType type, String player, JsonObject data){
 		new LogModel(type, player, data, Utils.getTime());
 	}

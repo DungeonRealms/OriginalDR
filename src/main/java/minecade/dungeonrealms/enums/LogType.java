@@ -7,12 +7,11 @@ public enum LogType {
 	DEATH, // Done
 	ITEM_PICKUP, 
 	ITEM_DROP, 
-	CHAT_MESSAGE, 
-	COMMAND, 
-	LOGIN, 
-	LOGOUT, 
+	CHAT_MESSAGE, // Done
+	COMMAND, // Done
+	LOGIN, // Done
+	LOGOUT, // Done
 	LEVEL_UP, // Done
-	LOGOUT_XP, 
 	SHOP_SELL, 
 	BANK_PLACE, 
 	BANK_PICKUP;

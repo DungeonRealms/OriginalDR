@@ -33,5 +33,9 @@ public class Utils {
 		if(this_server_num >= 100 && this_server_num <= 110) return true;
 		return false;
     }
+    
+    public static String getShard(){
+    	return Bukkit.getMotd().split(" ")[0];
+    }
 	
 }

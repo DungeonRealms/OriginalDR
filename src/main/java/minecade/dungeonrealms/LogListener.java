@@ -1,5 +1,6 @@
 package minecade.dungeonrealms;
 
+import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
 import minecade.dungeonrealms.enums.LogType;
 import minecade.dungeonrealms.jsonlib.JsonBuilder;
@@ -12,6 +13,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class LogListener implements Listener {
 
@@ -34,5 +39,28 @@ public class LogListener implements Listener {
 		}
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerLogin(PlayerLoginEvent e){
+		if(e.getResult() == PlayerLoginEvent.Result.ALLOWED){
+			new LogModel(LogType.LOGIN, e.getPlayer().getName(), new JsonBuilder("shard", Utils.getShard()).getJson());
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerLogout(PlayerQuitEvent e){
+		new LogModel(LogType.LOGOUT, e.getPlayer().getName(), new JsonBuilder("shard", Utils.getShard()).setData("xp", LevelMechanics.getPlayerData(e.getPlayer()).getXP()).getJson());
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerCommandPreProcess(PlayerCommandPreprocessEvent e){
+		if(e.isCancelled()) return;
+		new LogModel(LogType.COMMAND, e.getPlayer().getName(), new JsonBuilder("command", e.getMessage()).getJson());
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerChatEvent(AsyncPlayerChatEvent e){
+		if(e.isCancelled()) return;
+		new LogModel(LogType.CHAT_MESSAGE, e.getPlayer().getName(), new JsonBuilder("message", e.getMessage()).getJson());
+	}
 	
 }
