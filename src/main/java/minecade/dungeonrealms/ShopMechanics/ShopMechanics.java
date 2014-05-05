@@ -38,7 +38,10 @@ import minecade.dungeonrealms.RepairMechanics.RepairMechanics;
 import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
 import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.database.ConnectionPool;
+import minecade.dungeonrealms.enums.LogType;
 import minecade.dungeonrealms.holograms.Hologram;
+import minecade.dungeonrealms.jsonlib.JsonBuilder;
+import minecade.dungeonrealms.models.LogModel;
 import net.citizensnpcs.api.CitizensAPI;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.EntityTracker;
@@ -1880,8 +1883,20 @@ public class ShopMechanics implements Listener {
 						CraftItemStack css = (CraftItemStack) being_bought;
 						String i_name = CraftItemStack.asNMSCopy(css).getTag().getCompound("display").getString("Name");
 						p_owner_name.sendMessage(ChatColor.GREEN + "SOLD " + being_bought.getAmount() + "x '" + i_name + ChatColor.GREEN + "' for " + ChatColor.BOLD + total_price + "g" + ChatColor.GREEN + " to " + ChatColor.WHITE + "" + ChatColor.BOLD + p.getName());
+						new LogModel(LogType.SHOP_SELL, p_owner_name.getName(), 
+								new JsonBuilder("name", being_bought.getItemMeta().getDisplayName() == null ? being_bought.getType().name() : being_bought.getItemMeta().getDisplayName())
+								.setData("lore", being_bought.getItemMeta().getLore() == null ? "" : being_bought.getItemMeta().getLore())
+								.setData("damage", being_bought.getDurability())
+								.setData("amount", being_bought.getAmount())
+								.getJson());
 					} else if(being_bought != null) {
 						p_owner_name.sendMessage(ChatColor.GREEN + "SOLD " + being_bought.getAmount() + "x '" + ChatColor.WHITE + being_bought.getType().toString().toLowerCase() + ChatColor.GREEN + "' for " + ChatColor.BOLD + total_price + "g" + ChatColor.GREEN + " to " + ChatColor.WHITE + "" + ChatColor.BOLD + p.getName());
+						new LogModel(LogType.SHOP_SELL, p_owner_name.getName(), 
+								new JsonBuilder("name", being_bought.getItemMeta().getDisplayName() == null ? being_bought.getType().name() : being_bought.getItemMeta().getDisplayName())
+								.setData("lore", being_bought.getItemMeta().getLore() == null ? "" : being_bought.getItemMeta().getLore())
+								.setData("damage", being_bought.getDurability())
+								.setData("amount", being_bought.getAmount())
+								.getJson());
 					}
 				} else if(Bukkit.getPlayer(owner_name) == null || !(Bukkit.getPlayer(owner_name).isOnline())) {
 					// They're not online locally.
@@ -2305,8 +2320,20 @@ public class ShopMechanics implements Listener {
 					CraftItemStack css = (CraftItemStack) i;
 					String i_name = CraftItemStack.asNMSCopy(css).getTag().getCompound("display").getString("Name");
 					p_shop_owner.sendMessage(ChatColor.GREEN + "SOLD " + amount_to_buy + "x '" + i_name + ChatColor.GREEN + "' for " + ChatColor.BOLD + total_price + "g" + ChatColor.GREEN + " to " + ChatColor.WHITE + "" + ChatColor.BOLD + p.getName());
+					new LogModel(LogType.SHOP_SELL, p_shop_owner.getName(), 
+							new JsonBuilder("name", i.getItemMeta().getDisplayName() == null ? i.getType().name() : i.getItemMeta().getDisplayName())
+							.setData("lore", i.getItemMeta().getLore() == null ? "" : i.getItemMeta().getLore())
+							.setData("damage", i.getDurability())
+							.setData("amount", i.getAmount())
+							.getJson());
 				} else if(i != null) {
 					p_shop_owner.sendMessage(ChatColor.GREEN + "SOLD " + amount_to_buy + "x '" + ChatColor.WHITE + i.getType().toString().toLowerCase() + ChatColor.GREEN + "' for " + ChatColor.BOLD + total_price + "g" + ChatColor.GREEN + " to " + ChatColor.WHITE + "" + ChatColor.BOLD + p.getName());
+					new LogModel(LogType.SHOP_SELL, p_shop_owner.getName(), 
+							new JsonBuilder("name", i.getItemMeta().getDisplayName() == null ? i.getType().name() : i.getItemMeta().getDisplayName())
+							.setData("lore", i.getItemMeta().getLore() == null ? "" : i.getItemMeta().getLore())
+							.setData("damage", i.getDurability())
+							.setData("amount", i.getAmount())
+							.getJson());
 				}
 			} else if(Bukkit.getPlayer(shop_owner) == null || !(Bukkit.getPlayer(shop_owner).isOnline())) {
 				// They're not online locally.

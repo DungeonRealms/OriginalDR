@@ -12,7 +12,7 @@ public enum LogType {
 	LOGIN, // Done
 	LOGOUT, // Done
 	LEVEL_UP, // Done
-	SHOP_SELL, 
+	SHOP_SELL, // Done
 	BANK_PLACE, 
 	BANK_PICKUP;
 	
