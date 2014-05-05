@@ -17,7 +17,6 @@ import minecade.dungeonrealms.GuildMechanics.GuildMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
 import minecade.dungeonrealms.HearthstoneMechanics.HearthstoneMechanics;
 import minecade.dungeonrealms.Hive.Hive;
-import minecade.dungeonrealms.Hive.ParticleEffect;
 import minecade.dungeonrealms.HiveServer.HiveServer;
 import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
@@ -52,8 +51,6 @@ import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.enums.CC;
 import minecade.dungeonrealms.holograms.Hologram;
 
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -122,8 +119,11 @@ public class Main extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ScoreboardMechanics(), this);
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new LevelMechanics(), this);
+        getServer().getPluginManager().registerEvents(new LogListener(), this);
+        
         getCommand("isunomadyet").setExecutor(new CommandIsUnoMadYet());
         getCommand("setlevel").setExecutor(new CommandSetLevel());
+        
         hearthstoneMechanics = new HearthstoneMechanics();
         achievmentMechanics = new AchievmentMechanics();
         bossMechanics = new BossMechanics();

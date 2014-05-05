@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import minecade.dungeonrealms.Main;
+import minecade.dungeonrealms.Utils;
 import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
 import minecade.dungeonrealms.ChatMechanics.ChatMechanics;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
@@ -37,7 +38,6 @@ import minecade.dungeonrealms.RepairMechanics.RepairMechanics;
 import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
 import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.database.ConnectionPool;
-import minecade.dungeonrealms.enums.CC;
 import minecade.dungeonrealms.holograms.Hologram;
 import net.citizensnpcs.api.CitizensAPI;
 import net.minecraft.server.v1_7_R2.EntityPlayer;
@@ -242,7 +242,7 @@ public class ShopMechanics implements Listener {
 		BackupStoreData.shutdown = true;
 		//store_backup.runTaskAsynchronously(Main.plugin);
 		
-		//removeAllShops(); // Needed to upload data of offline players.
+		removeAllShops(); // Needed to upload data of offline players.
 		//uploadAllCollectionBinData(); // Uploads / sends sockets to all servers for new collection bin data.
         /*Main.d(CC.RED + "Holding the main thread hostage");
             try {
@@ -294,8 +294,6 @@ public class ShopMechanics implements Listener {
 	}
 	
 	public static void removeAllShops() {
-	    new BukkitRunnable() {
-	        public void run() {
 		for(Block b1 : inverse_shop_owners.values()) {
 			
 			if(b1.getType() != Material.CHEST) {
@@ -303,61 +301,12 @@ public class ShopMechanics implements Listener {
 				continue;
 			}
 			
-			String shop_owner_n = "";
-			
-			try {
-				final Block b2 = chest_partners.get(b1);
-				b1.setType(Material.AIR);
-				b2.setType(Material.AIR);
-				
-				shop_owner_n = shop_owners.get(b1);
-				
-				if(!collection_bin.containsKey(shop_owner_n)) {
-				    Main.d(CC.RED + "REMOVING PLAYERS SHOP : " + shop_owner_n);
-					Inventory inv = shop_stock.get(shop_owner_n);
-					inv.remove(inv.getSize() - 1);
-					List<ItemStack> li = new ArrayList<ItemStack>();
-					
-					for(ItemStack is : inv.getContents()) {
-						if(is == null || is.getType() == Material.AIR || isOpenButton(is)) {
-							continue;
-						}
-						
-						li.add(is);
-					}
-					
-					if(li.size() > 0) {
-						Inventory cb = Bukkit.createInventory(null, 54, "Collection Bin");
-						for(ItemStack is : li) {
-							cb.setItem(cb.firstEmpty(), is);
-						}
-						collection_bin.put(shop_owner_n, cb);
-						
-					}
-					//else if(li.size() <= 0){
-					asyncSetShopServerSQL(shop_owner_n, -1);
-					//}
-					
-					/*if(!(need_sql_update.contains(shop_owner_n))){
-					need_sql_update.add(shop_owner_n); // Update SQL after an item is sold from the shop.
-					}*/
-					
-					shop_owners.remove(b1);
-					
-				}
-				
-			} catch(Exception err) {
-				/*if(!shop_owner_n.equalsIgnoreCase("")){
-				    asyncSetShopServerSQL(shop_owner_n, -1);
-				}*/
-				err.printStackTrace();
-				continue;
-			}
+			Block b2 = chest_partners.get(b1);
+			b1.setType(Material.AIR);
+			b2.setType(Material.AIR);
 		}
 		
 		inverse_shop_owners.clear();
-            }
-        }.runTask(Main.plugin);
 	}
 	
 	public void clearCollectionBinSQL(String p_name) {
@@ -1228,6 +1177,11 @@ public class ShopMechanics implements Listener {
 			if(isShopOwner(p, e.getClickedBlock())) {
 				//TODO: Left click an opening shop = remove it instantly.
 			}
+			return;
+		}
+		
+		if(Utils.isBeta()){
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " do this on the " + ChatColor.UNDERLINE + "Beta Servers" + ChatColor.RED + "!");
 			return;
 		}
 		
