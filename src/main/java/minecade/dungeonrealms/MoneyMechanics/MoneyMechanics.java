@@ -29,7 +29,10 @@ import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
 import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
 import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.database.ConnectionPool;
+import minecade.dungeonrealms.enums.LogType;
+import minecade.dungeonrealms.jsonlib.JsonBuilder;
 import minecade.dungeonrealms.managers.PlayerManager;
+import minecade.dungeonrealms.models.LogModel;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -50,6 +53,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -1952,6 +1956,27 @@ public class MoneyMechanics implements Listener {
 				e.setResult(Result.DENY);
 				p.updateInventory();
 				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " bank this item, as it is part of your spawn kit.");
+				return;
+			}
+			
+			if(e.getAction() == InventoryAction.PLACE_ALL || e.getAction() == InventoryAction.PLACE_ONE){
+				if(e.getRawSlot() + 1 >= e.getWhoClicked().getOpenInventory().getTopInventory().getSize()){
+					ItemStack i = e.getCurrentItem();
+					new LogModel(LogType.BANK_PICKUP, e.getWhoClicked().getName()
+							, new JsonBuilder("name", i.getItemMeta().getDisplayName() == null ? i.getType().name() : i.getItemMeta().getDisplayName())
+					.setData("lore", i.getItemMeta().getLore() == null ? "" : i.getItemMeta().getLore())
+					.setData("damage", i.getDurability())
+					.setData("amount", i.getAmount())
+					.getJson());
+				}else{
+					ItemStack i = e.getCurrentItem();
+					new LogModel(LogType.BANK_PLACE, e.getWhoClicked().getName()
+							, new JsonBuilder("name", i.getItemMeta().getDisplayName() == null ? i.getType().name() : i.getItemMeta().getDisplayName())
+					.setData("lore", i.getItemMeta().getLore() == null ? "" : i.getItemMeta().getLore())
+					.setData("damage", i.getDurability())
+					.setData("amount", i.getAmount())
+					.getJson());
+				}
 			}
 		}
 	}
