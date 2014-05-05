@@ -5,8 +5,8 @@ public enum LogType {
 	PLAYER_KILL, // Done
 	MOB_KILL, // Done
 	DEATH, // Done
-	ITEM_PICKUP, 
-	ITEM_DROP, 
+	ITEM_PICKUP, // Done
+	ITEM_DROP, // Done
 	CHAT_MESSAGE, // Done
 	COMMAND, // Done
 	LOGIN, // Done

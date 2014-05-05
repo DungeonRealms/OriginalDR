@@ -15,8 +15,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class LogListener implements Listener {
 
@@ -61,6 +64,30 @@ public class LogListener implements Listener {
 	public void onPlayerChatEvent(AsyncPlayerChatEvent e){
 		if(e.isCancelled()) return;
 		new LogModel(LogType.CHAT_MESSAGE, e.getPlayer().getName(), new JsonBuilder("message", e.getMessage()).getJson());
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerPickupItem(PlayerPickupItemEvent e){
+		if(e.isCancelled()) return;
+		ItemStack i = e.getItem().getItemStack();
+		new LogModel(LogType.ITEM_PICKUP, e.getPlayer().getName()
+				, new JsonBuilder("name", i.getItemMeta().getDisplayName() == null ? i.getType().name() : i.getItemMeta().getDisplayName())
+					.setData("lore", i.getItemMeta().getLore() == null ? "" : i.getItemMeta().getLore())
+					.setData("damage", i.getDurability())
+					.setData("amount", i.getAmount())
+					.getJson());
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerDropItem(PlayerDropItemEvent e){
+		if(e.isCancelled()) return;
+		ItemStack i = e.getItemDrop().getItemStack();
+		new LogModel(LogType.ITEM_DROP, e.getPlayer().getName()
+				, new JsonBuilder("name", i.getItemMeta().getDisplayName() == null ? i.getType().name() : i.getItemMeta().getDisplayName())
+					.setData("lore", i.getItemMeta().getLore() == null ? "" : i.getItemMeta().getLore())
+					.setData("damage", i.getDurability())
+					.setData("amount", i.getAmount())
+					.getJson());
 	}
 	
 }
