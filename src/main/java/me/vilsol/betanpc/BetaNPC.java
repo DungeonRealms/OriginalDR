@@ -67,8 +67,17 @@ import me.vilsol.betanpc.menus.ProfessionMenu;
 import me.vilsol.betanpc.menus.ScrollMenu;
 import me.vilsol.betanpc.menus.TeleportMenu;
 import me.vilsol.betanpc.menus.TierMenu;
+import me.vilsol.menuengine.engine.MenuModel;
+import minecade.dungeonrealms.Main;
 
-public class BetaNPC {
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+
+public class BetaNPC implements Listener {
 	
 	public void onEnable(){
 		// Register Items
@@ -143,6 +152,18 @@ public class BetaNPC {
 		new PotionMenu();
 		new TierMenu();
 		new ItemSpawnMenu();
+		
+		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
+	}
+	
+	@EventHandler
+	public void onPlayerClickNPC(PlayerInteractEntityEvent e){
+		if (!(e.getRightClicked() instanceof Player)) return;
+		Player trader = (Player) e.getRightClicked();
+		if (!(trader.hasMetadata("NPC"))) return;
+		if (!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Beta Vendor"))) return;
+		e.setCancelled(true);
+		MenuModel.menus.get(MainMenu.class).getMenu().showToPlayer(e.getPlayer());
 	}
 	
 }

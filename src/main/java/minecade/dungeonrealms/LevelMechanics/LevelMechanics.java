@@ -135,7 +135,8 @@ public class LevelMechanics implements Listener {
     }
 
     public static int calculateXP(Player player, LivingEntity kill, int mob_level) {
-        int xp = mob_level * 15 + new Random().nextInt(50) + 5;
+    	int xp = (int) Math.round((6.5 * Math.pow(mob_level,1.3)) + 40 + new Random().nextInt(50));
+        //int xp = mob_level * 15 + new Random().nextInt(50) + 5;
         int level = getPlayerLevel(player);
         ItemStack weapon = kill.getEquipment().getItemInHand();
 

@@ -258,7 +258,7 @@ public class ChatMechanics implements Listener {
 
         if (p.isOp() || rank.equalsIgnoreCase("GM")) {
             if (p.getName().equalsIgnoreCase("Bradez1571")) {
-                return ChatColor.RED;
+                return ChatColor.DARK_AQUA;
             } else if (p.getName().equalsIgnoreCase("Vilsol")) {
                 return ChatColor.DARK_PURPLE;
             } else if (p.getName().equalsIgnoreCase("iFamasssxD")) {
@@ -300,7 +300,7 @@ public class ChatMechanics implements Listener {
 
         if (rank.equalsIgnoreCase("GM")) {
             if (p_name.equalsIgnoreCase("Bradez1571")) {
-                return ChatColor.RED;
+                return ChatColor.DARK_AQUA;
             } else if (p_name.equalsIgnoreCase("Vilsol")) {
                 return ChatColor.DARK_PURPLE;
             } else if (p_name.equalsIgnoreCase("iFamasssxD")) {

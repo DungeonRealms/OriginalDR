@@ -1,6 +1,6 @@
 name: DungeonRealms
 main: minecade.dungeonrealms.Main
-softdepend: [Citizens]
+softdepend: [Citizens, MenuEngine]
 version: 1.0
 commands:
   duel:
