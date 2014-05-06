@@ -245,7 +245,7 @@ public class ShopMechanics implements Listener {
 		BackupStoreData.shutdown = true;
 		//store_backup.runTaskAsynchronously(Main.plugin);
 		
-		removeAllShops(); // Needed to upload data of offline players.
+		//removeAllShops(); // Needed to upload data of offline players.
 		//uploadAllCollectionBinData(); // Uploads / sends sockets to all servers for new collection bin data.
         /*Main.d(CC.RED + "Holding the main thread hostage");
             try {

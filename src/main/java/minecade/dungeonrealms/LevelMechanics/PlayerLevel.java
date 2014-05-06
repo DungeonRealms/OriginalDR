@@ -94,7 +94,7 @@ public class PlayerLevel {
         if (level >= 101) {
             return 0;
         }
-        return (int) (75 * Math.pow(level, 2.4));
+        return (int) (100 * Math.pow(level, 2.24));
     }
 
     public void saveData(boolean remove) {

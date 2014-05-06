@@ -1962,6 +1962,7 @@ public class MoneyMechanics implements Listener {
 			if(e.getAction() == InventoryAction.PLACE_ALL || e.getAction() == InventoryAction.PLACE_ONE){
 				if(e.getRawSlot() + 1 >= e.getWhoClicked().getOpenInventory().getTopInventory().getSize()){
 					ItemStack i = e.getCurrentItem();
+					if(i == null || i.getType() == Material.AIR) return;
 					new LogModel(LogType.BANK_PICKUP, e.getWhoClicked().getName()
 							, new JsonBuilder("name", i.getItemMeta().getDisplayName() == null ? i.getType().name() : i.getItemMeta().getDisplayName())
 					.setData("lore", i.getItemMeta().getLore() == null ? "" : i.getItemMeta().getLore())
@@ -1970,6 +1971,7 @@ public class MoneyMechanics implements Listener {
 					.getJson());
 				}else{
 					ItemStack i = e.getCurrentItem();
+					if(i == null || i.getType() == Material.AIR) return;
 					new LogModel(LogType.BANK_PLACE, e.getWhoClicked().getName()
 							, new JsonBuilder("name", i.getItemMeta().getDisplayName() == null ? i.getType().name() : i.getItemMeta().getDisplayName())
 					.setData("lore", i.getItemMeta().getLore() == null ? "" : i.getItemMeta().getLore())

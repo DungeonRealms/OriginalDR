@@ -312,6 +312,7 @@ public class Hive implements Listener {
 
     public static Logger log = Logger.getLogger("Minecraft");
 
+    public static boolean force_stop = false;
     public static boolean ready_to_die = false;
     // Used for delayed server 'stops'. Makes sure all data is uploaded and sorted before stopping.
 
@@ -644,7 +645,7 @@ public class Hive implements Listener {
         Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 if (ready_to_die == true) {
-                    if ((new File(rootDir + "/" + "payload.zip").exists())) {
+                    if ((new File(rootDir + "/" + "payload.zip").exists()) || force_stop) {
                         ready_to_die = false;
                         Main.plugin.getServer().shutdown();
                     }
@@ -2547,6 +2548,7 @@ public class Hive implements Listener {
                         }
                     }
                     ready_to_die = true;
+                    force_stop = true;
                 }
             });
 
@@ -2618,6 +2620,7 @@ public class Hive implements Listener {
                         }
                     }
                     ready_to_die = true;
+                    force_stop = true;
                 }
             });
 

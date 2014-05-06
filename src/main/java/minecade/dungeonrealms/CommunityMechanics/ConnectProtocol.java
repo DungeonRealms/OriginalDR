@@ -122,8 +122,8 @@ public class ConnectProtocol implements Runnable {
 				}
 				
 				if(inputLine.equals("@rollout@")) {
-					int server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
-					if(server_num >= 100 && server_num <= 110) return;
+					//int server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
+					//if(server_num >= 100 && server_num <= 110) return;
 					Hive.server_lock = true;
 					Hive.restart_inc = true;
 					Hive.seconds_to_reboot = 60;
@@ -158,7 +158,12 @@ public class ConnectProtocol implements Runnable {
 					}
 					
 					ShopMechanics.shop_shutdown = true;
-					ShopMechanics.removeAllShops();
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							ShopMechanics.removeAllShops();
+						}
+					}.runTaskLater(Main.plugin, 1L);
 					Thread.sleep(5000);
 					ShopMechanics.uploadAllCollectionBinData();
 					Thread.sleep(5000);
@@ -178,8 +183,8 @@ public class ConnectProtocol implements Runnable {
 				}
 				
 				if(inputLine.equals("@restart@")) {
-					int server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
-					if(server_num >= 100 && server_num <= 110) return;
+					//int server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
+					//if(server_num >= 100 && server_num <= 110) return;
 					Hive.server_lock = true;
 					Hive.restart_inc = true;
 					Hive.seconds_to_reboot = 60;
@@ -214,7 +219,12 @@ public class ConnectProtocol implements Runnable {
 					}
 					
 					ShopMechanics.shop_shutdown = true;
-					ShopMechanics.removeAllShops();
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							ShopMechanics.removeAllShops();
+						}
+					}.runTaskLater(Main.plugin, 1L);
 					//Sleep 1 second
 					Thread.sleep(5000);
 					ShopMechanics.uploadAllCollectionBinData();
