@@ -13,7 +13,6 @@ import minecade.dungeonrealms.enums.LogType;
 import minecade.dungeonrealms.jsonlib.JsonBuilder;
 import minecade.dungeonrealms.managers.PlayerManager;
 import minecade.dungeonrealms.models.LogModel;
-import net.minecraft.util.com.google.gson.JsonObject;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -95,7 +94,7 @@ public class PlayerLevel {
         if (level >= 101) {
             return 0;
         }
-        return (int) (400 * Math.pow(level, 1.6));
+        return (int) (75 * Math.pow(level, 2.4));
     }
 
     public void saveData(boolean remove) {

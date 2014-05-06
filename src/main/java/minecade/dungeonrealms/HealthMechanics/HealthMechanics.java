@@ -328,7 +328,7 @@ public class HealthMechanics implements Listener {
 				String levelData = ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "LVL " + ChatColor.AQUA.toString() + lvl.getLevel();
 				
 				//String xpData = ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "XP " + ChatColor.GREEN.toString() + lvl.getXP() + ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + " / " + ChatColor.GREEN.toString() + lvl.getEXPNeeded(lvl.getLevel());
-				int xplevel = (int) Math.round( ((lvl.getXP() * 1D) / (lvl.getEXPNeeded(lvl.getLevel()) * 1D )) * 100 );
+				int xplevel = (int) Math.floor( ((lvl.getXP() * 1D) / (lvl.getEXPNeeded(lvl.getLevel()) * 1D )) * 100 );
 				String xpData = ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "XP " + ChatColor.GREEN.toString() + xplevel + "%";
 				
 				String dash = ChatColor.BLACK.toString() + ChatColor.BOLD + " - ";
