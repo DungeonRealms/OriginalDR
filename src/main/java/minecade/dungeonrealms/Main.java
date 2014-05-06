@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import me.vilsol.betanpc.BetaNPC;
 import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
 import minecade.dungeonrealms.BossMechanics.BossMechanics;
 import minecade.dungeonrealms.ChatMechanics.ChatMechanics;
@@ -99,6 +100,8 @@ public class Main extends JavaPlugin implements Listener {
     private static HearthstoneMechanics hearthstoneMechanics;
     private static Hive hive;
     private static HiveServer hiveServer;
+    
+    private static BetaNPC betaNPC;
 
     public static Main plugin;
     public static Logger log;
@@ -163,7 +166,8 @@ public class Main extends JavaPlugin implements Listener {
         weatherMechanics = new WeatherMechanics();
         hive = new Hive();
         hiveServer = new HiveServer();
-
+        betaNPC = new BetaNPC();
+        
         hive.onEnable();
         hearthstoneMechanics.onEnable();
         hiveServer.onEnable();
@@ -203,6 +207,7 @@ public class Main extends JavaPlugin implements Listener {
         tradeMechanics.onEnable();
         tutorialMechanics.onEnable();
         weatherMechanics.onEnable();
+        betaNPC.onEnable();
 
         new BukkitRunnable() {
             @Override
