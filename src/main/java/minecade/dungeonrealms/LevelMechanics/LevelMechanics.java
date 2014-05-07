@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import minecade.dungeonrealms.Main;
+import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
 import minecade.dungeonrealms.MonsterMechanics.Hologram;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
 import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
@@ -142,8 +143,6 @@ public class LevelMechanics implements Listener {
 
         //if (level - 8 > mob_level)
             //return 0;
-        if (level >= (mob_level + 8))
-            xp *= .6;
         if (weapon.getEnchantments().containsKey(Enchantment.KNOCKBACK))
             xp *= 1.5;
 
@@ -177,7 +176,10 @@ public class LevelMechanics implements Listener {
     }
 
     public static void addXP(Player p, int xp) {
-
+        if(InstanceMechanics.isInstance(p.getWorld().getName())){
+            getPlayerData(p).addXP(xp);
+            return;
+        }
         if (PartyMechanics.party_map.containsKey(p.getName())) {
             int newXP = (int) Math.round((xp * (1 - (0.1D * PartyMechanics.party_map.get(p.getName()).getPartyMembers().size()))));
             xp = newXP;
