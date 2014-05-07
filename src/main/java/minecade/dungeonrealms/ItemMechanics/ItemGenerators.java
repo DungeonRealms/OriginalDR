@@ -487,7 +487,7 @@ public class ItemGenerators {
                 hp_increase_amount = r.nextInt(max_hp - min_hp) + min_hp;
             }
         }
-        if ((mob_tier_level == 3 && armor_range_check > 90) || (mob_tier_level == 4 && armor_range_check > 55 && armor_range_check < 86)) {
+        if ((mob_tier_level == 3 && armor_range_check > 90) || (mob_tier_level == 4 && armor_range_check > 55 && armor_range_check < 95)) {
             // if (armor_range_check >= 95 && armor_range_check != 99 && mob_tier_level >= 3) {
             rarity = ChatColor.AQUA.toString() + ChatColor.ITALIC.toString() + "Rare";
             if (tier == 1) {
@@ -551,7 +551,7 @@ public class ItemGenerators {
                 hp_increase_amount = r.nextInt(max_hp - min_hp) + min_hp;
             }
         }
-        if(mob_tier_level == 4 && armor_range_check > 85){
+        if(mob_tier_level == 4 && armor_range_check >= 95){
             // if (armor_range_check == 99 && mob_tier_level >= 4) {
             rarity = ChatColor.YELLOW.toString() + ChatColor.ITALIC.toString() + "Unique";
             if (tier == 1) {
@@ -1630,7 +1630,7 @@ public class ItemGenerators {
             }
         }
 
-        if ((mob_level_tier == 3 && armor_range_check > 90) || (mob_level_tier == 4 && armor_range_check > 55 && armor_range_check < 86)) {
+        if ((mob_level_tier == 3 && armor_range_check > 90) || (mob_level_tier == 4 && armor_range_check > 55 && armor_range_check < 95)) {
             // if (armor_range_check >= 95 && armor_range_check != 99 && mob_level_tier >= 3) {
 
             rarity = ChatColor.AQUA.toString() + ChatColor.ITALIC.toString() + "Rare";
@@ -1696,7 +1696,7 @@ public class ItemGenerators {
             }
         }
 
-        if(mob_level_tier == 4 && armor_range_check > 85){
+        if(mob_level_tier == 4 && armor_range_check >= 95){
             rarity = ChatColor.YELLOW.toString() + ChatColor.ITALIC.toString() + "Unique";
             if (tier == 1) {
                 int min_num = 1 + 1;
@@ -2816,7 +2816,7 @@ public class ItemGenerators {
             }
         }
 
-        if ((mob_level_tier == 3 && armor_range_check > 90) || (mob_level_tier == 4 && armor_range_check > 55 && armor_range_check < 86)) {
+        if ((mob_level_tier == 3 && armor_range_check > 90) || (mob_level_tier == 4 && armor_range_check > 55 && armor_range_check < 95)) {
             // if (armor_range_check >= 95 && armor_range_check != 99 && mob_level_tier >= 3) {
 
             rarity = ChatColor.AQUA.toString() + ChatColor.ITALIC.toString() + "Rare";
@@ -2882,7 +2882,7 @@ public class ItemGenerators {
             }
         }
 
-        if(mob_level_tier == 4 && armor_range_check > 85){
+        if(mob_level_tier == 4 && armor_range_check >= 95){
             rarity = ChatColor.YELLOW.toString() + ChatColor.ITALIC.toString() + "Unique";
             if (tier == 1) {
                 int min_num = 1 + 1;
@@ -4000,7 +4000,7 @@ public class ItemGenerators {
             }
         }
 
-        if ((mob_level_tier == 3 && armor_range_check > 90) || (mob_level_tier == 4 && armor_range_check > 55 && armor_range_check < 86)) {
+        if ((mob_level_tier == 3 && armor_range_check > 90) || (mob_level_tier == 4 && armor_range_check > 55 && armor_range_check < 95)) {
             // if (armor_range_check >= 95 && armor_range_check != 99 && mob_level_tier >= 3) {
 
             rarity = ChatColor.AQUA.toString() + ChatColor.ITALIC.toString() + "Rare";
@@ -4066,7 +4066,7 @@ public class ItemGenerators {
             }
         }
 
-        if(mob_level_tier == 4 && armor_range_check > 85){
+        if(mob_level_tier == 4 && armor_range_check >= 95){
             rarity = ChatColor.YELLOW.toString() + ChatColor.ITALIC.toString() + "Unique";
             if (tier == 1) {
                 int min_num = 1 + 1;
