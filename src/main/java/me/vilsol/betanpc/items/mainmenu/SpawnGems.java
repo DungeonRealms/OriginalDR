@@ -5,6 +5,7 @@ import java.util.Arrays;
 import me.vilsol.menuengine.engine.MenuItem;
 import me.vilsol.menuengine.enums.ClickType;
 import me.vilsol.menuengine.utils.Builder;
+import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -20,7 +21,7 @@ public class SpawnGems implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		// TODO Add 1m gem note!
+		MoneyMechanics.addMoneyCert(plr, 1000000, true);
 	}
 
 	@Override

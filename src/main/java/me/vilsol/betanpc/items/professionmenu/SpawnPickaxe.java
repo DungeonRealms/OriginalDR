@@ -14,6 +14,7 @@ import me.vilsol.menuengine.engine.MenuItem;
 import me.vilsol.menuengine.engine.MenuModel;
 import me.vilsol.menuengine.enums.ClickType;
 import me.vilsol.menuengine.utils.Builder;
+import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 
 public class SpawnPickaxe implements MenuItem, ChatCallback {
 
@@ -41,7 +42,17 @@ public class SpawnPickaxe implements MenuItem, ChatCallback {
 			if(level > 100 || level < 1){
 				e.getPlayer().sendMessage(Utils.NPC + "Pickaxe spawning cancelled because number is not between 1 - 100!");
 			}else{
-				// TODO Spawn Pickaxe
+				ItemStack base = ProfessionMechanics.t1_pickaxe.clone();
+				if(level >= 20) base = ProfessionMechanics.t2_pickaxe.clone();
+				if(level >= 40) base = ProfessionMechanics.t3_pickaxe.clone();
+				if(level >= 60) base = ProfessionMechanics.t4_pickaxe.clone();
+				if(level >= 80) base = ProfessionMechanics.t5_pickaxe.clone();
+				
+				while(ProfessionMechanics.getItemLevel(base) < level){
+					ProfessionMechanics.addEXP(e.getPlayer(), base, ProfessionMechanics.getEXPNeeded(ProfessionMechanics.getItemLevel(base), "mining"), "mining");
+				}
+				
+				e.getPlayer().getInventory().addItem(base);
 			}
 		}else{
 			e.getPlayer().sendMessage(Utils.NPC + "Pickaxe spawning cancelled because number is not between 1 - 100!");

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import minecade.dungeonrealms.Main;
+import minecade.dungeonrealms.Utils;
 import minecade.dungeonrealms.ChatMechanics.ChatMechanics;
 import minecade.dungeonrealms.EcashMechanics.EcashMechanics;
 import minecade.dungeonrealms.GuildMechanics.GuildMechanics;
@@ -122,8 +123,7 @@ public class ConnectProtocol implements Runnable {
 				}
 				
 				if(inputLine.equals("@rollout@")) {
-					int server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
-					if(server_num >= 100 && server_num <= 110) return;
+					if(Utils.isBeta()) return;
 					Hive.server_lock = true;
 					Hive.restart_inc = true;
 					Hive.seconds_to_reboot = 60;
@@ -183,8 +183,7 @@ public class ConnectProtocol implements Runnable {
 				}
 				
 				if(inputLine.equals("@restart@")) {
-					int server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
-					if(server_num >= 100 && server_num <= 110) return;
+					if(Utils.isBeta()) return;
 					Hive.server_lock = true;
 					Hive.restart_inc = true;
 					Hive.seconds_to_reboot = 60;

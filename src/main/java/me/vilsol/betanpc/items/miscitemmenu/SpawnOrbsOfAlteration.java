@@ -5,6 +5,7 @@ import java.util.Arrays;
 import me.vilsol.menuengine.engine.MenuItem;
 import me.vilsol.menuengine.enums.ClickType;
 import me.vilsol.menuengine.utils.Builder;
+import minecade.dungeonrealms.MerchantMechanics.MerchantMechanics;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -20,7 +21,9 @@ public class SpawnOrbsOfAlteration implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		// TODO Add 64x Orbs Of Alt
+        ItemStack item = MerchantMechanics.orb_of_alteration.clone();
+        item.setAmount(64);
+        plr.getInventory().addItem(item);
 	}
 
 	@Override

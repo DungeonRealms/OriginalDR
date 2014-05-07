@@ -6,6 +6,7 @@ import me.vilsol.betanpc.utils.Utils;
 import me.vilsol.menuengine.engine.MenuItem;
 import me.vilsol.menuengine.enums.ClickType;
 import me.vilsol.menuengine.utils.Builder;
+import minecade.dungeonrealms.MerchantMechanics.MerchantMechanics;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,7 +24,9 @@ public class SpawnTierThreePotion implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		// TODO Spawn Potion
+        ItemStack pot = MerchantMechanics.t3_pot.clone();
+        pot.setAmount(64);
+        plr.getInventory().addItem(pot);
 	}
 
 	@Override

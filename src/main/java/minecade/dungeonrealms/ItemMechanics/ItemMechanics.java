@@ -2634,17 +2634,18 @@ public class ItemMechanics implements Listener {
             return;
         }
         if (e.getInventory().contains(Material.ARROW)) {
-            convertVanillaArrows(e.getInventory());
+            //convertVanillaArrows(e.getInventory());
         }
         addRarityToOldItems(e.getInventory());
         checkEnchants(e.getInventory());
         fixBuggedDurability(e.getInventory());
+        /*
         if (removeMagmaCream(e.getInventory())) {
             Player pl = (Player) e.getPlayer();
             pl.sendMessage(ChatColor.RED + "You had an illegal item in your inventory (MAGMA_CREAM) -- your account has been flagged.");
             pl.sendMessage(ChatColor.GRAY + "Send an e-mail to staff@dungeonrealms.net within 24 hours to avoid your account being locked.");
             log.info("(FLAG) Player " + pl.getName() + " had MAGMA_CREAM, removed and warned.");
-        }
+        } */
         removeAttributes(e.getInventory());
     }
 

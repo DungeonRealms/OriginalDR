@@ -69,6 +69,7 @@ import me.vilsol.betanpc.menus.TeleportMenu;
 import me.vilsol.betanpc.menus.TierMenu;
 import me.vilsol.menuengine.engine.MenuModel;
 import minecade.dungeonrealms.Main;
+import minecade.dungeonrealms.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -162,8 +163,12 @@ public class BetaNPC implements Listener {
 		Player trader = (Player) e.getRightClicked();
 		if (!(trader.hasMetadata("NPC"))) return;
 		if (!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Beta Vendor"))) return;
-		e.setCancelled(true);
-		MenuModel.menus.get(MainMenu.class).getMenu().showToPlayer(e.getPlayer());
+		if(Utils.isBeta()){
+			e.setCancelled(true);
+			MenuModel.menus.get(MainMenu.class).getMenu().showToPlayer(e.getPlayer());
+		}else{
+			e.getPlayer().sendMessage(me.vilsol.betanpc.utils.Utils.NPC + "HOW DID YOU FIND ME?");
+		}
 	}
 	
 }

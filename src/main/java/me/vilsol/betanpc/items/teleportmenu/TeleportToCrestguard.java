@@ -5,6 +5,7 @@ import java.util.Arrays;
 import me.vilsol.menuengine.engine.MenuItem;
 import me.vilsol.menuengine.enums.ClickType;
 import me.vilsol.menuengine.utils.Builder;
+import minecade.dungeonrealms.TeleportationMechanics.TeleportationMechanics;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -20,7 +21,8 @@ public class TeleportToCrestguard implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		// TODO Add Teleport Book
+		ItemStack tp = TeleportationMechanics.makeUnstackable(TeleportationMechanics.Crestguard_keep_scroll).clone();
+		plr.getInventory().addItem(tp);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import me.vilsol.menuengine.engine.MenuItem;
 import me.vilsol.menuengine.enums.ClickType;
 import me.vilsol.menuengine.utils.Builder;
+import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -20,7 +21,9 @@ public class SpawnTierTwoArrow implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		// TODO Spawn Arrows
+		ItemStack arrow = ItemMechanics.t2_arrow.clone();
+		arrow.setAmount(64);
+        plr.getInventory().addItem(arrow);
 	}
 
 	@Override

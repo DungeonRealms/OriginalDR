@@ -24,6 +24,23 @@ public enum ItemTier {
 		return null;
 	}
 	
+	public minecade.dungeonrealms.enums.ItemTier getDRTier(){
+		switch(this){
+			case T1:
+				return minecade.dungeonrealms.enums.ItemTier.T1;
+			case T2:
+				return minecade.dungeonrealms.enums.ItemTier.T2;
+			case T3:
+				return minecade.dungeonrealms.enums.ItemTier.T3;
+			case T4:
+				return minecade.dungeonrealms.enums.ItemTier.T4;
+			case T5:
+				return minecade.dungeonrealms.enums.ItemTier.T5;
+		}
+		
+		return null;
+	}
+	
 	@SuppressWarnings("incomplete-switch")
 	public Material getMaterialFromType(ItemType t){
 		if(t == null) return null;

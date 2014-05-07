@@ -6,6 +6,8 @@ import me.vilsol.menuengine.engine.DynamicMenuModel;
 import me.vilsol.menuengine.engine.MenuItem;
 import me.vilsol.menuengine.enums.ClickType;
 import me.vilsol.menuengine.utils.Builder;
+import minecade.dungeonrealms.enums.ItemRarity;
+import minecade.dungeonrealms.enums.ItemType;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,7 +24,11 @@ public class Rare implements MenuItem {
 	@Override
 	public void execute(Player plr, ClickType click) {
 		ItemSpawnWorker m = (ItemSpawnWorker) DynamicMenuModel.getMenu(plr);
-		plr.sendMessage("You technically got " + m.tier + " Rare " + m.type);
+		if(ItemType.isArmor(m.type.getDRType())){
+			plr.getInventory().addItem(m.type.getDRType().generateArmor(m.tier.getDRTier(), null, -1, ItemRarity.RARE));
+		}else{
+			plr.getInventory().addItem(m.type.getDRType().generateWeapon(m.tier.getDRTier(), null, ItemRarity.RARE));
+		}
 		m.stage = SpawnStage.TYPE_CHOICE;
 		DynamicMenuModel.getMenu(plr).showToPlayer(plr);
 	}

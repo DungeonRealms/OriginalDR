@@ -1,6 +1,8 @@
 package me.vilsol.betanpc.items.miscitemmenu;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import me.vilsol.menuengine.engine.MenuItem;
 import me.vilsol.menuengine.enums.ClickType;
@@ -10,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class SpawnFood implements MenuItem {
 
@@ -20,7 +23,16 @@ public class SpawnFood implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		// TODO Add 64x T5 Fish
+		ItemStack fish = new ItemStack(Material.COOKED_FISH);
+		ItemMeta m = fish.getItemMeta();
+        m.setDisplayName(ChatColor.YELLOW.toString() + "Legendary Shark of Medicine");
+        List<String> fish_lore = new ArrayList<String>();
+        fish_lore.add(ChatColor.RED.toString() + "+10% HP " + ChatColor.GRAY.toString() + "(instant)");
+        fish_lore.add(ChatColor.RED + "-50% HUNGER " + ChatColor.GRAY.toString() + "(instant)");
+        fish_lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "A terrifying and massive predator.");
+        m.setLore(fish_lore);
+        fish.setItemMeta(m);
+        plr.getInventory().addItem(fish);
 	}
 
 	@Override

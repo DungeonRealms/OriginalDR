@@ -14,6 +14,7 @@ import me.vilsol.menuengine.engine.MenuItem;
 import me.vilsol.menuengine.engine.MenuModel;
 import me.vilsol.menuengine.enums.ClickType;
 import me.vilsol.menuengine.utils.Builder;
+import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 
 public class ChangeLevel implements MenuItem, ChatCallback {
 
@@ -41,7 +42,8 @@ public class ChangeLevel implements MenuItem, ChatCallback {
 			if(level > 100 || level < 1){
 				e.getPlayer().sendMessage(Utils.NPC + "Level change cancelled because number is not between 1 - 100!");
 			}else{
-				// TODO Set Level
+				LevelMechanics.getPlayerData(e.getPlayer()).setXP(0);
+				LevelMechanics.getPlayerData(e.getPlayer()).setLevel(level);
 			}
 		}else{
 			e.getPlayer().sendMessage(Utils.NPC + "Level change cancelled because number is not between 1 - 100!");

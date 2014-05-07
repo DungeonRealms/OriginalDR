@@ -5,6 +5,7 @@ import java.util.Arrays;
 import me.vilsol.menuengine.engine.MenuItem;
 import me.vilsol.menuengine.enums.ClickType;
 import me.vilsol.menuengine.utils.Builder;
+import minecade.dungeonrealms.EnchantMechanics.EnchantMechanics;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -20,7 +21,17 @@ public class SpawnTierThreeScrolls implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		// TODO Spawn Scroll
+        ItemStack i1 = EnchantMechanics.t3_white_scroll.clone();
+        ItemStack i2 = EnchantMechanics.t3_armor_scroll.clone();
+        ItemStack i3 = EnchantMechanics.t3_wep_scroll.clone();
+
+        i1.setAmount(64);
+        i2.setAmount(64);
+        i3.setAmount(64);
+
+        plr.getInventory().addItem(i1);
+        plr.getInventory().addItem(i2);
+        plr.getInventory().addItem(i3);
 	}
 
 	@Override
