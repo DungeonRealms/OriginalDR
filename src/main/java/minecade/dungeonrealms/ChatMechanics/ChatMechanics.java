@@ -344,11 +344,8 @@ public class ChatMechanics implements Listener {
         return_string = return_string + ChatColor.WHITE + GuildMechanics.getGuildPrefix(p.getName()) + ChatColor.RESET;
 
         if (p.isOp() || rank.equalsIgnoreCase("GM")) {
-            if (p.getName().equalsIgnoreCase("Vaquxine") || p.getName().equalsIgnoreCase("Vilsol")) {
+            if (Main.isDev(p.getName())) {
                 return_string += "" + ChatColor.DARK_AQUA + ChatColor.BOLD.toString() + "DEV" + " " + ChatColor.GRAY;
-            } else if (p.getName().equalsIgnoreCase("iFamasssxD")) {
-                return_string += ChatColor.AQUA.toString() + ChatColor.BOLD + "GM" + ChatColor.WHITE + ChatColor.BOLD + "/" + ChatColor.DARK_AQUA
-                        + ChatColor.BOLD + "DEV " + ChatColor.GRAY;
             } else if (p.getName().equalsIgnoreCase("Bradez1571")) {
                 return_string += ChatColor.RED.toString() + ChatColor.BOLD + "CM " + ChatColor.RED;
             } else {
@@ -393,10 +390,7 @@ public class ChatMechanics implements Listener {
         }
 
         if (op.isOp() || rank.equalsIgnoreCase("GM")) {
-            if (p_name.equalsIgnoreCase("iFamasssxD")) {
-                return_string += ChatColor.AQUA.toString() + ChatColor.BOLD + "GM" + ChatColor.WHITE + ChatColor.BOLD + "/" + ChatColor.DARK_AQUA
-                        + ChatColor.BOLD + "DEV " + ChatColor.GRAY;
-            } else if (Main.isDev(p_name)) {
+            if (Main.isDev(p_name)) {
                 return_string += "" + ChatColor.DARK_AQUA + ChatColor.BOLD.toString() + "DEV" + " " + ChatColor.GRAY;
             } else if (p_name.equalsIgnoreCase("Bradez1571")) {
                 return_string += ChatColor.RED.toString() + ChatColor.BOLD + "CM " + ChatColor.RED;

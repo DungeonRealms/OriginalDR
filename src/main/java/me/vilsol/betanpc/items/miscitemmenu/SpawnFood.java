@@ -32,6 +32,7 @@ public class SpawnFood implements MenuItem {
         fish_lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "A terrifying and massive predator.");
         m.setLore(fish_lore);
         fish.setItemMeta(m);
+        fish.setAmount(64);
         plr.getInventory().addItem(fish);
 	}
 
