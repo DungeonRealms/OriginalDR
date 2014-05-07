@@ -1700,15 +1700,17 @@ public enum ItemType {
 			}
 		}
 		
-		double temp_min_armor = (double) min_armor;
-		double temp_max_armor = (double) max_armor;
-		
-		double temp_hp_increase_amount = (double) hp_increase_amount;
-		
-		min_armor = (int) (temp_min_armor * 0.50); // 50% of the values of chestplate / leggings.
-		max_armor = (int) (temp_max_armor * 0.50); // 50% of the values of chestplate / leggings.
-		
-		hp_increase_amount = (int) (temp_hp_increase_amount * 0.50); // 50% of HP increase value.
+		if(this == HELMET || this == BOOTS){
+			double temp_min_armor = (double) min_armor;
+			double temp_max_armor = (double) max_armor;
+			
+			double temp_hp_increase_amount = (double) hp_increase_amount;
+			
+			min_armor = (int) (temp_min_armor * 0.50); // 50% of the values of chestplate / leggings.
+			max_armor = (int) (temp_max_armor * 0.50); // 50% of the values of chestplate / leggings.
+			
+			hp_increase_amount = (int) (temp_hp_increase_amount * 0.50); // 50% of HP increase value.
+		}
 		
 		if(min_armor == 0) {
 			min_armor = 1;
