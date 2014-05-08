@@ -107,7 +107,7 @@ public enum ParticleEffect {
 				for(String s : MonsterMechanics.player_locations.keySet()) {
 					if(Bukkit.getPlayerExact(s) != null) {
 						Player pl = Main.plugin.getServer().getPlayer(s);
-						if(pl.getWorld().getName().equalsIgnoreCase(location.getWorld().getName()) && pl.getLocation().distanceSquared(location) <= Math.pow(radius, 2)) {
+						if(pl.getWorld().getName().equalsIgnoreCase(location.getWorld().getName()) && pl.getLocation().toVector().distanceSquared(location.toVector()) <= Math.pow(radius, 2)) {
 							try {
 								sendPacket(pl, packet);
 							} catch(Exception e) {
