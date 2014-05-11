@@ -438,8 +438,11 @@ public class RestrictionMechanics implements Listener {
     public void checkPlayersArmorIsValid(Player p) {
         boolean hadIllegalArmor = false;
         for (ItemStack is : p.getInventory().getArmorContents()) {
-            if (is == null || is.getType() == Material.AIR)
+            if (is == null || is.getType() == Material.AIR || is.getType() == Material.SKULL_ITEM)
                 continue;
+            if(ItemMechanics.getItemTier(is) == 0){
+                continue;
+            }
             if (!LevelMechanics.canPlayerUseTier(p, ItemMechanics.getItemTier(is))) {
                 hadIllegalArmor = true;
                 if (p.getInventory().firstEmpty() == -1) {
