@@ -2526,7 +2526,6 @@ public class Hive implements Listener {
             server_lock = true;
             force_kick = true;
             setAllPlayersAsOffline();
-
             for (Player p : Bukkit.getServer().getOnlinePlayers()) {
                 if (!(Hive.server_frozen)) {
                     p.saveData();
@@ -2595,9 +2594,7 @@ public class Hive implements Listener {
                 }
 
             }
-
             setAllPlayersAsOffline();
-
             for (Player p : Bukkit.getServer().getOnlinePlayers()) {
                 if (!(Hive.server_frozen)) {
                     p.saveData();
@@ -2614,7 +2611,7 @@ public class Hive implements Listener {
                     while (pending_upload.size() > 0 && count <= 200) {
                         count++;
                         try {
-                            Thread.sleep(100); // Let all pending multi-thread uploads finish.
+                            Thread.sleep(1000); // Let all pending multi-thread uploads finish.
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -3387,23 +3384,28 @@ public class Hive implements Listener {
                 p.sendMessage(ChatColor.DARK_AQUA + "This is a " + ChatColor.UNDERLINE + "Brazillian" + ChatColor.DARK_AQUA + " server.");
                 p.sendMessage(ChatColor.GRAY + "The official language of this server is " + ChatColor.UNDERLINE + "Portuguese.");
             }
-            
-            if(MOTD.contains("US-100") || MOTD.contains("US-101") || MOTD.contains("US-102") || MOTD.contains("US-103") || MOTD.contains("US-104") || MOTD.contains("US-105") || MOTD.contains("US-106") || MOTD.contains("US-107") || MOTD.contains("US-108") || MOTD.contains("US-109") || MOTD.contains("US-110")){
-	            p.sendMessage("");
-	            p.sendMessage(ChatColor.GOLD + "This is a " + ChatColor.UNDERLINE + "BETA" + ChatColor.GOLD+ " server. This server uses seperate data from your live server character!");
-	            p.sendMessage(ChatColor.GRAY + "You will be testing " + ChatColor.UNDERLINE + "new" + ChatColor.GRAY + " and " + ChatColor.UNDERLINE + "unfinished" + ChatColor.GRAY + " versions of Dungeon Realms.");
-	            p.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Beta servers are intended to be " + ChatColor.UNDERLINE + "reset" + ChatColor.GRAY + ChatColor.ITALIC + " periodically to accommodate new updates.");
+
+            if (MOTD.contains("US-100") || MOTD.contains("US-101") || MOTD.contains("US-102") || MOTD.contains("US-103") || MOTD.contains("US-104")
+                    || MOTD.contains("US-105") || MOTD.contains("US-106") || MOTD.contains("US-107") || MOTD.contains("US-108") || MOTD.contains("US-109")
+                    || MOTD.contains("US-110")) {
+                p.sendMessage("");
+                p.sendMessage(ChatColor.GOLD + "This is a " + ChatColor.UNDERLINE + "BETA" + ChatColor.GOLD
+                        + " server. This server uses seperate data from your live server character!");
+                p.sendMessage(ChatColor.GRAY + "You will be testing " + ChatColor.UNDERLINE + "new" + ChatColor.GRAY + " and " + ChatColor.UNDERLINE
+                        + "unfinished" + ChatColor.GRAY + " versions of Dungeon Realms.");
+                p.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Beta servers are intended to be " + ChatColor.UNDERLINE + "reset"
+                        + ChatColor.GRAY + ChatColor.ITALIC + " periodically to accommodate new updates.");
             }
         }
-        
+
         p.addAttachment(Main.plugin).setPermission("citizens.npc.talk", true);
 
-		if(Utils.isBeta()) {
-			String currentRank = PermissionMechanics.getRank(p_name);
-			if(currentRank.equalsIgnoreCase("default")){
-				PermissionMechanics.setRank(p_name, "sub++", true);
-			}
-		}
+        if (Utils.isBeta()) {
+            String currentRank = PermissionMechanics.getRank(p_name);
+            if (currentRank.equalsIgnoreCase("default")) {
+                PermissionMechanics.setRank(p_name, "sub++", true);
+            }
+        }
 
         if (player_sdays_left.containsKey(p.getName()) || PermissionMechanics.rank_map.get(p.getName()).equalsIgnoreCase("sub++")) {
             Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
@@ -4010,10 +4012,9 @@ public class Hive implements Listener {
         if (server_num == 11) {
             rp_server = true;
         }
-		if (server_num >= 100 && server_num <= 110) {
-		        beta_server = true;
-		}
-
+        if (server_num >= 100 && server_num <= 110) {
+            beta_server = true;
+        }
 
         // String IP = CommunityMechanics.server_list.get(server_num);
 
@@ -4065,8 +4066,9 @@ public class Hive implements Listener {
         List<String> lore = new ArrayList<String>();
 
         if (vip_server && cc != ChatColor.RED) {
-			int this_server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
-			if(this_server_num >= 100 && this_server_num <= 110) icon.setDurability((short) 4);
+            int this_server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
+            if (this_server_num >= 100 && this_server_num <= 110)
+                icon.setDurability((short) 4);
             lore.add(ChatColor.GREEN + "Subscriber Server");
         }
 
@@ -4081,7 +4083,6 @@ public class Hive implements Listener {
         if (beta_server && cc != ChatColor.RED) {
             lore.add(ChatColor.YELLOW + "Beta Server");
         }
-
 
         if (cc == ChatColor.GREEN) {
             lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "You are currently in this shard.");
@@ -4124,11 +4125,11 @@ public class Hive implements Listener {
         shard_menu.setItem(8, minecade_lobby);
         index = 9;
 
-        for(String s : Config.us_beta_servers){
-        	shard_menu.setItem(index, generateShardItem(s));
-        	index++;
+        for (String s : Config.us_beta_servers) {
+            shard_menu.setItem(index, generateShardItem(s));
+            index++;
         }
-        
+
         int x = 0;
         for (ItemStack is : shard_menu.getContents()) {
             if (is == null || is.getType() == Material.AIR) {
@@ -4255,10 +4256,11 @@ public class Hive implements Listener {
                         }
                     }, 2L);
                 }
-                
-                if(durability == 4){
-                	// Sub Server From Beta Server
-                	pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "must" + ChatColor.RED + " join this shard from a public shard, not a beta shard!");
+
+                if (durability == 4) {
+                    // Sub Server From Beta Server
+                    pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "must" + ChatColor.RED
+                            + " join this shard from a public shard, not a beta shard!");
                     Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                         public void run() {
                             pl.closeInventory();

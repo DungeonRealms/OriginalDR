@@ -164,9 +164,11 @@ public class ConnectProtocol implements Runnable {
 							ShopMechanics.removeAllShops();
 						}
 					}.runTaskLater(Main.plugin, 1L);
-					Thread.sleep(5000);
+					Main.d("Pausing for 7 seconds.");
+					Thread.sleep(7000);
 					ShopMechanics.uploadAllCollectionBinData();
-					Thread.sleep(5000);
+					Main.d("Pausing for 10 seconds.");
+					Thread.sleep(10000);
 					timeout = 0;
 					while(!ShopMechanics.all_collection_bins_uploaded && timeout < 100 && Hive.sql_query.size() > 0) {
 						// Not done uploading collection bins.
