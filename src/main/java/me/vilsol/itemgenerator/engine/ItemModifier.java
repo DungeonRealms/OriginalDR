@@ -44,29 +44,31 @@ public abstract class ItemModifier {
 		Random r = new Random();
 		for(ModifierCondition condition : conditions){
 			ModifierCondition mc = condition;
+			System.out.println(1);
 			if(mc.doesConclude(tier, rarity, meta)){
 				while(mc != null){
-					int belowChance = (mc.getChance() < 0) ? chance : mc.getChance();
-					String prefix = this.prefix;
-					String suffix = this.suffix;
-					
-					if(mc.getReplacement() != null && mc.getReplacement().size() > 0){
-						ItemModifier replacement = ItemGenerator.modifiers.get(mc.getReplacement().get(r.nextInt(mc.getReplacement().size())));
-						if(replacement != null){
-							prefix = replacement.getPrefix();
-							suffix = replacement.getSuffix();
+					if(mc.doesConclude(tier, rarity, meta)){
+						int belowChance = (mc.getChance() < 0) ? chance : mc.getChance();
+						String prefix = this.prefix;
+						String suffix = this.suffix;
+						
+						if(mc.getReplacement() != null && mc.getReplacement().size() > 0){
+							ItemModifier replacement = ItemGenerator.modifiers.get(mc.getReplacement().get(r.nextInt(mc.getReplacement().size())));
+							if(replacement != null){
+								prefix = replacement.getPrefix(meta);
+								suffix = replacement.getSuffix(meta);
+							}
+						}
+	
+						if(r.nextInt(100) < belowChance  || override){
+							System.out.println("Succeeded: " + prefix + " under " + belowChance);
+							String random = mc.getRange().generateRandom();
+							random = ((prefix != null) ? prefix : "") + random + ((suffix != null) ? suffix : "");
+							List<String> lore = meta.getLore();
+							lore.add(random);
+							meta.setLore(lore);
 						}
 					}
-
-					if(r.nextInt(100) < belowChance  || override){
-						System.out.println("Succeeded: " + prefix + " under " + belowChance);
-						String random = mc.getRange().generateRandom();
-						random = ((prefix != null) ? prefix : "") + random + ((suffix != null) ? suffix : "");
-						List<String> lore = meta.getLore();
-						lore.add(random);
-						meta.setLore(lore);
-					}
-					
 					mc = mc.getBonus();
 				}
 				break;
@@ -83,11 +85,11 @@ public abstract class ItemModifier {
 		return tryModifier(meta, tier, rarity, type, -1, false);
 	}
 
-	public String getPrefix() {
+	public String getPrefix(ItemMeta meta) {
 		return prefix;
 	}
 
-	public String getSuffix() {
+	public String getSuffix(ItemMeta meta) {
 		return suffix;
 	}
 	

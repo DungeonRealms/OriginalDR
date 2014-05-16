@@ -61,8 +61,8 @@ public class ModifierCondition {
 				for(Class<? extends ItemModifier> c : cantContain){
 					ItemModifier m = ItemGenerator.modifiers.get(c);
 					for(String s : meta.getLore()){
-						if(m.getPrefix() != null && s.startsWith(m.getPrefix())) return false;
-						if(m.getSuffix() != null && s.endsWith(m.getSuffix())) return false;
+						if(m.getPrefix(meta) != null && s.startsWith(m.getPrefix(meta))) return false;
+						if(m.getSuffix(meta) != null && s.endsWith(m.getSuffix(meta))) return false;
 					}
 				}
 			}

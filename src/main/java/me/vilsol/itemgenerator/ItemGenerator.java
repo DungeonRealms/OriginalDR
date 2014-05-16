@@ -90,10 +90,7 @@ public class ItemGenerator {
 	
 	public static void loadModifiers(){
 		AllTypeModifier all = new AllTypeModifier();
-		all.new Strength();
-		all.new Dexterity();
-		all.new Vitality();
-		all.new Intelligence();
+		all.new StrDexVitInt();
 	}
 	
 }
