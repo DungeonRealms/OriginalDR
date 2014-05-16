@@ -1,20 +1,23 @@
 package me.vilsol.itemgenerator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 import me.vilsol.itemgenerator.engine.ItemModifier;
+import me.vilsol.itemgenerator.modifiers.AllTypeModifier;
 import minecade.dungeonrealms.enums.ItemRarity;
 import minecade.dungeonrealms.enums.ItemTier;
 import minecade.dungeonrealms.enums.ItemType;
 
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemGenerator {
 	
-	private static List<ItemModifier> modifiers = new ArrayList<ItemModifier>();
+	public static HashMap<Class<? extends ItemModifier>, ItemModifier> modifiers = new HashMap<Class<? extends ItemModifier>, ItemModifier>();
 	
 	private ItemType type;
 	private ItemTier tier;
@@ -59,11 +62,22 @@ public class ItemGenerator {
 		ItemMeta meta = item.getItemMeta();
 		meta.setLore(new ArrayList<String>());
 		
-		for(ItemModifier modifier : modifiers){
+		for(ItemModifier modifier : modifiers.values()){
 			if(modifier.canApply(type)){
-				modifier.tryModifier(meta, tier, rarity, type, mobTier);
+				meta = modifier.tryModifier(meta, tier, rarity, type, mobTier);
 			}
 		}
+		
+		List<String> lore = meta.getLore();
+		if(rarity == ItemRarity.COMMON) lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Common");
+		if(rarity == ItemRarity.UNCOMMON) lore.add(ChatColor.GREEN.toString() + ChatColor.ITALIC.toString() + "Uncommon");
+		if(rarity == ItemRarity.RARE) lore.add(ChatColor.AQUA.toString() + ChatColor.ITALIC.toString() + "Rare");
+		if(rarity == ItemRarity.UNIQUE) lore.add(ChatColor.YELLOW.toString() + ChatColor.ITALIC.toString() + "Unique");
+		
+		meta.setLore(lore);
+		meta.setDisplayName(tier.getTierColor() + type.getTierName(tier));
+		
+		item.setItemMeta(meta);
 		
 		this.item = item;
 		
@@ -75,7 +89,11 @@ public class ItemGenerator {
 	}
 	
 	public static void loadModifiers(){
-		
+		AllTypeModifier all = new AllTypeModifier();
+		all.new Strength();
+		all.new Dexterity();
+		all.new Vitality();
+		all.new Intelligence();
 	}
 	
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import me.vilsol.betanpc.BetaNPC;
+import me.vilsol.itemgenerator.ItemGenerator;
 import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
 import minecade.dungeonrealms.BossMechanics.BossMechanics;
 import minecade.dungeonrealms.ChatMechanics.ChatMechanics;
@@ -209,6 +210,8 @@ public class Main extends JavaPlugin implements Listener {
         weatherMechanics.onEnable();
         betaNPC.onEnable();
 
+        ItemGenerator.loadModifiers();
+        
         new BukkitRunnable() {
             @Override
             public void run() {

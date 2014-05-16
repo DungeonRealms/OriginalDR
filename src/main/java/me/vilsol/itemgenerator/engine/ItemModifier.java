@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import me.vilsol.itemgenerator.ItemGenerator;
 import minecade.dungeonrealms.enums.ItemRarity;
 import minecade.dungeonrealms.enums.ItemTier;
 import minecade.dungeonrealms.enums.ItemType;
@@ -23,6 +24,7 @@ public abstract class ItemModifier {
 		this.chance = chance;
 		this.prefix = prefix;
 		this.suffix = suffix;
+		ItemGenerator.modifiers.put(this.getClass(), this);
 	}
 	
 	public boolean canApply(ItemType type){
@@ -31,7 +33,7 @@ public abstract class ItemModifier {
 	}
 	
 	protected void addCondition(ItemTier tier, ItemRarity rarity, ModifierRange range){
-		conditions.add(new ModifierCondition(tier, rarity, range));
+		conditions.add(new ModifierCondition(tier, rarity, range, -1));
 	}
 	
 	protected void addCondition(ModifierCondition condition){
@@ -40,14 +42,34 @@ public abstract class ItemModifier {
 	
 	public ItemMeta tryModifier(ItemMeta meta, ItemTier tier, ItemRarity rarity, ItemType type, int mobTier, boolean override){
 		Random r = new Random();
-		if((r.nextInt(100) < chance) || override){
-			for(ModifierCondition condition : conditions){
-				if(condition.doesConclude(tier, rarity)){
-					String random = condition.getRange().generateRandom();
-					random = ((prefix != null) ? prefix : "") + random + ((suffix != null) ? suffix : "");
-					meta.getLore().add(random);
-					break;
+		for(ModifierCondition condition : conditions){
+			ModifierCondition mc = condition;
+			if(mc.doesConclude(tier, rarity, meta)){
+				while(mc != null){
+					int belowChance = (mc.getChance() < 0) ? chance : mc.getChance();
+					String prefix = this.prefix;
+					String suffix = this.suffix;
+					
+					if(mc.getReplacement() != null && mc.getReplacement().size() > 0){
+						ItemModifier replacement = ItemGenerator.modifiers.get(mc.getReplacement().get(r.nextInt(mc.getReplacement().size())));
+						if(replacement != null){
+							prefix = replacement.getPrefix();
+							suffix = replacement.getSuffix();
+						}
+					}
+
+					if(r.nextInt(100) < belowChance  || override){
+						System.out.println("Succeeded: " + prefix + " under " + belowChance);
+						String random = mc.getRange().generateRandom();
+						random = ((prefix != null) ? prefix : "") + random + ((suffix != null) ? suffix : "");
+						List<String> lore = meta.getLore();
+						lore.add(random);
+						meta.setLore(lore);
+					}
+					
+					mc = mc.getBonus();
 				}
+				break;
 			}
 		}
 		return meta;
@@ -59,6 +81,14 @@ public abstract class ItemModifier {
 	
 	public ItemMeta tryModifier(ItemMeta meta, ItemTier tier, ItemRarity rarity, ItemType type){
 		return tryModifier(meta, tier, rarity, type, -1, false);
+	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public String getSuffix() {
+		return suffix;
 	}
 	
 }

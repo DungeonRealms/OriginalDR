@@ -24,6 +24,7 @@ import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.Hive.ParticleEffect;
 import minecade.dungeonrealms.ItemMechanics.commands.CommandAddWeapon;
 import minecade.dungeonrealms.ItemMechanics.commands.CommandAddWeaponNew;
+import minecade.dungeonrealms.ItemMechanics.commands.CommandAddWeaponNewNew;
 import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.MerchantMechanics.MerchantMechanics;
 import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
@@ -219,6 +220,7 @@ public class ItemMechanics implements Listener {
 
         Main.plugin.getCommand("addweapon").setExecutor(new CommandAddWeapon());
         Main.plugin.getCommand("addweaponnew").setExecutor(new CommandAddWeaponNew());
+        Main.plugin.getCommand("addweaponnewnew").setExecutor(new CommandAddWeaponNewNew());
 
         File home_dir = new File("plugins/ItemMechanics");
 

@@ -79,6 +79,15 @@ public enum ItemType {
 		return null;
 	}
 	
+	public String getTierName(ItemTier tier){
+		if(tier == ItemTier.T1) return t1Name;
+		if(tier == ItemTier.T2) return t2Name;
+		if(tier == ItemTier.T3) return t3Name;
+		if(tier == ItemTier.T4) return t4Name;
+		if(tier == ItemTier.T5) return t5Name;
+		return null;
+	}
+	
 	public static ItemType getRandomType() {
 		return values()[new Random().nextInt(values().length)];
 	}

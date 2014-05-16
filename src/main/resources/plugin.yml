@@ -228,6 +228,9 @@ commands:
   addweaponnew:
     description: Adds custom weapon to inventory.
     usage: /<command>
+  addweaponnewnew:
+    description: Adds custom weapon to inventory.
+    usage: /<command>
   karma:
     description: Root command.
     usage: /<command>
