@@ -31,6 +31,8 @@ public class WeaponModifiers {
 		public SwordDamage() {
 			super(Arrays.asList(ItemType.SWORD), 100, r + "DMG: ", null);
 			
+			setOrderPriority(0);
+			
 			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.COMMON, new ModifierRange(ModifierType.TRIPLE, 1, 2, 5)));
 			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.TRIPLE, 3, 5, 8)));
 			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.RARE, new ModifierRange(ModifierType.TRIPLE, 6, 9, 23)));
@@ -64,6 +66,8 @@ public class WeaponModifiers {
 		public Damage() {
 			super(Arrays.asList(ItemType.AXE, ItemType.BOW, ItemType.POLEARM, ItemType.STAFF), 100, r + "DMG: ", null);
 			
+			setOrderPriority(0);
+			
 			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.COMMON, new ModifierRange(ModifierType.TRIPLE, 1, 1, 3)));
 			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.TRIPLE, 2, 3, 4)));
 			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.RARE, new ModifierRange(ModifierType.TRIPLE, 3, 5, 12)));
@@ -96,6 +100,7 @@ public class WeaponModifiers {
 
 		public StrDexVitInt() {
 			super(weapons, -1, null, null);
+			setOrderPriority(11);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 15), 25));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 35), 20).setBonus(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 35), 5).setReplacement(StrDexVitInt.class)));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 35), 15).setBonus(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 35), 5).setReplacement(StrDexVitInt.class).setBonus(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 35), 1).setReplacement(StrDexVitInt.class))));
@@ -115,6 +120,7 @@ public class WeaponModifiers {
 
 		public Critical() {
 			super(weapons, -1, r + "CRITICAL HIT: ", "%");
+			setOrderPriority(4);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 2), 2));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 4), 5));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 5), 8));
@@ -128,6 +134,7 @@ public class WeaponModifiers {
 
 		public LifeSteal() {
 			super(weapons, -1, r + "LIFE STEAL: ", "%");
+			setOrderPriority(2);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 30), 2));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 15), 4));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 12), 5));
@@ -141,6 +148,7 @@ public class WeaponModifiers {
 
 		public Knockback() {
 			super(Arrays.asList(ItemType.AXE, ItemType.POLEARM, ItemType.STAFF, ItemType.SWORD), -1, r + "KNOCKBACK: ", "%");
+			setOrderPriority(7);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 3), 3));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 6), 10));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 12), 13));
@@ -154,6 +162,7 @@ public class WeaponModifiers {
 
 		public Blind() {
 			super(weapons, -1, r + "BLIND: ", "%");
+			setOrderPriority(8);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 5), 3));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 7), 5));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 9), 8));
@@ -167,6 +176,7 @@ public class WeaponModifiers {
 
 		public Slow() {
 			super(Arrays.asList(ItemType.BOW), -1, r + "SLOW: ", "%");
+			setOrderPriority(6);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 3), 3));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 4), 10));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 5), 13));
@@ -180,6 +190,7 @@ public class WeaponModifiers {
 
 		public Elemental() {
 			super(Arrays.asList(ItemType.AXE, ItemType.POLEARM, ItemType.STAFF, ItemType.SWORD), -1, null, null);
+			setOrderPriority(9);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 4), 6));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 9), 9));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 15), 10));
@@ -216,6 +227,7 @@ public class WeaponModifiers {
 
 		public Versus() {
 			super(weapons, -1, null, "% DMG");
+			setOrderPriority(1);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 10), 6));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 12), 9));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 15), 10));
@@ -234,6 +246,7 @@ public class WeaponModifiers {
 
 		public Pure() {
 			super(Arrays.asList(ItemType.AXE), -1, r + "PURE DMG: +", null);
+			setOrderPriority(10);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 5), 6));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 8), 9));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 15), 5));
@@ -247,6 +260,7 @@ public class WeaponModifiers {
 
 		public Accuracy() {
 			super(Arrays.asList(ItemType.SWORD, ItemType.STAFF, ItemType.POLEARM), -1, r + "ACCURACY: ", "%");
+			setOrderPriority(3);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 10), 8));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 12), 12));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 25), 15));
@@ -260,6 +274,7 @@ public class WeaponModifiers {
 
 		public ArmorPenetration() {
 			super(Arrays.asList(ItemType.AXE), -1, r + "ARMOR PENETRATION: ", "%");
+			setOrderPriority(5);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 1), 20));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 3), 20));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 5), 25));

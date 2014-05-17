@@ -2,9 +2,10 @@ package me.vilsol.itemgenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import me.vilsol.itemgenerator.engine.ItemModifier;
@@ -65,7 +66,7 @@ public class ItemGenerator {
 		ItemMeta meta = item.getItemMeta();
 		meta.setLore(new ArrayList<String>());
 		
-		HashMap<ModifierCondition, ItemModifier> conditions = new HashMap<ModifierCondition, ItemModifier>();
+		final HashMap<ModifierCondition, ItemModifier> conditions = new HashMap<ModifierCondition, ItemModifier>();
 		
 		for(ItemModifier modifier : modifiers.values()){
 			if(modifier.canApply(type)){
@@ -94,16 +95,28 @@ public class ItemGenerator {
 			}
 		}
 
+		List<ModifierCondition> order = new ArrayList<ModifierCondition>();
+		
 		for(Object ob : Arrays.asList(conditions.keySet().toArray())){
 			ModifierCondition mc = (ModifierCondition) ob;
 			if(!mc.canApply(conditions.keySet())){
 				conditions.remove(mc);
+			}else{
+				order.add(mc);
 			}
 		}
+		
+		Collections.sort(order, new Comparator<ModifierCondition>() {
 
-		for(Entry<ModifierCondition, ItemModifier> e : conditions.entrySet()){
-			ModifierCondition mc = e.getKey();
-			ItemModifier im = e.getValue();
+			@Override
+			public int compare(ModifierCondition mc1, ModifierCondition mc2) {
+				return conditions.get(mc1).getOrderPriority() - conditions.get(mc2).getOrderPriority();
+			}
+			
+		});
+		
+		for(ModifierCondition mc : order){
+			ItemModifier im = conditions.get(mc);
 			
 			int belowChance = (mc.getChance() < 0) ? im.getChance() : mc.getChance();
 

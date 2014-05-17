@@ -11,13 +11,14 @@ import minecade.dungeonrealms.enums.ItemType;
 
 import org.bukkit.inventory.meta.ItemMeta;
 
-public abstract class ItemModifier {
+public abstract class ItemModifier implements Comparable<ItemModifier> {
 	
 	private List<ModifierCondition> conditions = new ArrayList<ModifierCondition>(); 
 	private List<ItemType> possibleApplicants;
 	private int chance = 0;
 	private String prefix;
 	private String suffix;
+	private int orderPriority = 10;
 	
 	public ItemModifier(List<ItemType> possibleApplicants, int chance, String prefix, String suffix){
 		this.possibleApplicants = possibleApplicants;
@@ -26,6 +27,19 @@ public abstract class ItemModifier {
 		this.suffix = suffix;
 		ItemGenerator.modifiers.put(this.getClass(), this);
 	}
+	
+	public void setOrderPriority(int position){
+		this.orderPriority = position;
+	}
+	
+	public int getOrderPriority(){
+		return orderPriority;
+	}
+	
+	@Override
+    public int compareTo(ItemModifier other){
+        return other.getOrderPriority() - orderPriority;
+    }
 	
 	public boolean canApply(ItemType type){
 		if(possibleApplicants == null) return false;
