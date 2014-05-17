@@ -16,13 +16,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class WeaponModifiers {
 	
-	public static List<ItemType> all = Arrays.asList(ItemType.AXE, ItemType.BOOTS, ItemType.BOW, ItemType.CHESTPLATE, ItemType.HELMET, ItemType.LEGGINGS, ItemType.POLEARM, ItemType.STAFF, ItemType.SWORD);
-
+	public static List<ItemType> weapons = Arrays.asList(ItemType.AXE, ItemType.BOW, ItemType.POLEARM, ItemType.STAFF, ItemType.SWORD);
 
 	public class StrDexVitInt extends ItemModifier {
 
 		public StrDexVitInt() {
-			super(all, -1, null, null);
+			super(weapons, -1, null, null);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 15), 25));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 35), 20).setBonus(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 35), 5).setReplacement(StrDexVitInt.class)));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 35), 15).setBonus(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 35), 5).setReplacement(StrDexVitInt.class).setBonus(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 1, 35), 1).setReplacement(StrDexVitInt.class))));
