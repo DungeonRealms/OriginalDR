@@ -14,18 +14,24 @@ public class ModifierCondition {
 	private ItemTier tier;
 	private ItemRarity rarity;
 	private ModifierRange range;
-	private int chance;
+	private int chance = -1;
 	private List<Class<? extends ItemModifier>> cantContain;
 	private ModifierCondition bonus;
 	private List<Class<? extends ItemModifier>> replacement;
 	private String chosenPrefix;
 	private String chosenSuffix;
-	
+
 	public ModifierCondition(ItemTier tier, ItemRarity rarity, ModifierRange range, int chance){
 		this.tier = tier;
 		this.rarity = rarity;
 		this.range = range;
 		this.chance = chance;
+	}
+	
+	public ModifierCondition(ItemTier tier, ItemRarity rarity, ModifierRange range){
+		this.tier = tier;
+		this.rarity = rarity;
+		this.range = range;
 	}
 	
 	public void setChosenPrefix(String prefix){

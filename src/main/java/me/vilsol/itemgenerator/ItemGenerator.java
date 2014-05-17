@@ -134,7 +134,20 @@ public class ItemGenerator {
 	
 	public static void loadModifiers(){
 		WeaponModifiers all = new WeaponModifiers();
+		all.new Accuracy();
+		all.new ArmorPenetration();
+		all.new Blind();
+		all.new Critical();
+		all.new Damage();
+		all.new Elemental();
+		all.new ElementalBow();
+		all.new Knockback();
+		all.new LifeSteal();
+		all.new Pure();
+		all.new Slow();
 		all.new StrDexVitInt();
+		all.new SwordDamage();
+		all.new Versus();
 	}
 	
 }
