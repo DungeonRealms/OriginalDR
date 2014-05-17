@@ -37,9 +37,9 @@ public abstract class ItemModifier implements Comparable<ItemModifier> {
 	}
 	
 	@Override
-    public int compareTo(ItemModifier other){
-        return other.getOrderPriority() - orderPriority;
-    }
+	public int compareTo(ItemModifier other){
+	    return other.getOrderPriority() - orderPriority;
+	}
 	
 	public boolean canApply(ItemType type){
 		if(possibleApplicants == null) return false;
