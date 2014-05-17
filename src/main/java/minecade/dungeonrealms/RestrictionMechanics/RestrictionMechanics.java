@@ -440,7 +440,7 @@ public class RestrictionMechanics implements Listener {
         for (ItemStack is : p.getInventory().getArmorContents()) {
             if (is == null || is.getType() == Material.AIR || is.getType() == Material.SKULL_ITEM)
                 continue;
-            if(ItemMechanics.getItemTier(is) == 0){
+            if (ItemMechanics.getItemTier(is) == 0) {
                 continue;
             }
             if (!LevelMechanics.canPlayerUseTier(p, ItemMechanics.getItemTier(is))) {
@@ -919,10 +919,24 @@ public class RestrictionMechanics implements Listener {
             return; // Hack-fix, for some reason saddles are marked as droppable tradeables.
             // TODO: Find out why.
         }
-
+        if (ItemMechanics.isSoulbound(i)) {
+            if (!InstanceMechanics.canTradeSoulbound(i, e.getPlayer().getWorld())) {
+                if (TradeMechanics.destroying_soulbound.containsKey(p.getName())) {
+                    p.sendMessage(ChatColor.RED + "Please finish your current item destruction, or type 'cancel' to cancel it.");
+                    e.setCancelled(true);
+                    return;
+                } else {
+                    TradeMechanics.destroying_soulbound.put(p.getName(), e.getItemDrop().getItemStack());
+                    e.getItemDrop().remove();
+                    p.sendMessage(ChatColor.RED + "Are you sure you want to " + ChatColor.UNDERLINE + "destroy" + " this soulbound item? Type "
+                            + ChatColor.GREEN + ChatColor.BOLD + "Y" + ChatColor.RED + " or " + ChatColor.DARK_RED + ChatColor.BOLD + "N");
+                    return;
+                }
+            }
+        }
         if (i.getType() == Material.NETHER_STAR || i.getType() == Material.QUARTZ || CommunityMechanics.isSocialBook(i)
-                || (ItemMechanics.isSoulbound(i) && !InstanceMechanics.canTradeSoulbound(i, e.getPlayer().getWorld()))
                 || (!(RealmMechanics.isItemTradeable(i)) && !(i.getType() == Material.PAPER))) {
+
             // e.setCancelled(true);// - Currently broken as of 11/9/12, causes meta data to delete.
             e.getItemDrop().remove();
             if (i.getType() == Material.NETHER_STAR || PetMechanics.isPermUntradeable(i) || i.getType() == Material.QUARTZ

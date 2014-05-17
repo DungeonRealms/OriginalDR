@@ -64,7 +64,7 @@ public class TradeMechanics implements Listener {
     static HashMap<Player, Player> trade_partners = new HashMap<Player, Player>();
     static HashMap<Player, Inventory> trade_secure = new HashMap<Player, Inventory>();
     static HashMap<String, Long> last_inventory_close = new HashMap<String, Long>();
-
+    public static HashMap<String, ItemStack> destroying_soulbound = new HashMap<String, ItemStack>();
     TradeMechanics tm = null;
 
     public void onEnable() {
@@ -506,11 +506,25 @@ public class TradeMechanics implements Listener {
             return;
         }
 
-        if (CommunityMechanics.isSocialBook(e.getItemDrop().getItemStack()) || (ItemMechanics.isSoulbound(e.getItemDrop().getItemStack()) && !InstanceMechanics.canTradeSoulbound(e.getItemDrop().getItemStack(), e.getPlayer().getWorld()))
-                || e.getItemDrop().getItemStack().getType() == Material.QUARTZ || e.getItemDrop().getItemStack().getType() == Material.NETHER_STAR) {
+        if (CommunityMechanics.isSocialBook(e.getItemDrop().getItemStack()) || e.getItemDrop().getItemStack().getType() == Material.QUARTZ
+                || e.getItemDrop().getItemStack().getType() == Material.NETHER_STAR) {
             return;
         }
-
+        if (ItemMechanics.isSoulbound(e.getItemDrop().getItemStack())) {
+            if (!InstanceMechanics.canTradeSoulbound(e.getItemDrop().getItemStack(), e.getPlayer().getWorld())) {
+                if (destroying_soulbound.containsKey(trader.getName())) {
+                    trader.sendMessage(ChatColor.RED + "Please finish your current item destruction, or type 'cancel' to cancel it.");
+                    e.setCancelled(true);
+                    return;
+                } else {
+                    destroying_soulbound.put(trader.getName(), e.getItemDrop().getItemStack());
+                    e.getItemDrop().remove();
+                    trader.sendMessage(ChatColor.RED + "Are you sure you want to " + ChatColor.UNDERLINE + "destroy" + " this soulbound item? Type "
+                            + ChatColor.GREEN + ChatColor.BOLD + "Y" + ChatColor.RED + " or " + ChatColor.DARK_RED + ChatColor.BOLD + "N");
+                    return;
+                }
+            }
+        }
         if (e.isCancelled()) {
             return;
         }
