@@ -40,48 +40,44 @@ public abstract class ItemModifier {
 		conditions.add(condition);
 	}
 	
-	public ItemMeta tryModifier(ItemMeta meta, ItemTier tier, ItemRarity rarity, ItemType type, int mobTier, boolean override){
-		Random r = new Random();
+	public ModifierCondition tryModifier(ItemMeta meta, ItemTier tier, ItemRarity rarity, ItemType type, int mobTier, boolean override){
 		for(ModifierCondition condition : conditions){
-			ModifierCondition mc = condition;
-			System.out.println(1);
-			if(mc.doesConclude(tier, rarity, meta)){
-				while(mc != null){
-					if(mc.doesConclude(tier, rarity, meta)){
-						int belowChance = (mc.getChance() < 0) ? chance : mc.getChance();
-						String prefix = this.prefix;
-						String suffix = this.suffix;
-						
-						if(mc.getReplacement() != null && mc.getReplacement().size() > 0){
-							ItemModifier replacement = ItemGenerator.modifiers.get(mc.getReplacement().get(r.nextInt(mc.getReplacement().size())));
-							if(replacement != null){
-								prefix = replacement.getPrefix(meta);
-								suffix = replacement.getSuffix(meta);
-							}
-						}
-	
-						if(r.nextInt(100) < belowChance  || override){
-							System.out.println("Succeeded: " + prefix + " under " + belowChance);
-							String random = mc.getRange().generateRandom();
-							random = ((prefix != null) ? prefix : "") + random + ((suffix != null) ? suffix : "");
-							List<String> lore = meta.getLore();
-							lore.add(random);
-							meta.setLore(lore);
-						}
-					}
-					mc = mc.getBonus();
+			if(condition.doesConclude(tier, rarity, meta)){
+				String prefix = getPrefix(meta);
+				String suffix = getSuffix(meta);
+				
+				if(condition.getReplacement() != null && condition.getReplacement().size() > 0){
+					ItemModifier replacement = ItemGenerator.modifiers.get(condition.getReplacement().get(new Random().nextInt(condition.getReplacement().size())));
+					prefix = replacement.getPrefix(meta);
+					suffix = replacement.getSuffix(meta);
 				}
-				break;
+				
+				condition.setChosenPrefix(prefix);
+				condition.setChosenSuffix(suffix);
+				return condition;
 			}
 		}
+		return null;
+	}
+	
+	public ItemMeta applyModifier(ModifierCondition condition, ItemMeta meta){
+		String random = condition.getRange().generateRandom();
+		random = ((condition.getChosenPrefix() != null) ? condition.getChosenPrefix() : "") + random + ((condition.getChosenSuffix() != null) ? condition.getChosenSuffix() : "");
+		
+		List<String> lore = meta.getLore();
+		lore.add(random);
+		meta.setLore(lore);
+
+		System.out.println("Succeeded: " + condition.getChosenPrefix() + " under " + ((condition.getChance() < 0) ? getChance() : condition.getChance()));
+		
 		return meta;
 	}
 	
-	public ItemMeta tryModifier(ItemMeta meta, ItemTier tier, ItemRarity rarity, ItemType type, int mobTier){
+	public ModifierCondition tryModifier(ItemMeta meta, ItemTier tier, ItemRarity rarity, ItemType type, int mobTier){
 		return tryModifier(meta, tier, rarity, type, mobTier, false);
 	}
 	
-	public ItemMeta tryModifier(ItemMeta meta, ItemTier tier, ItemRarity rarity, ItemType type){
+	public ModifierCondition tryModifier(ItemMeta meta, ItemTier tier, ItemRarity rarity, ItemType type){
 		return tryModifier(meta, tier, rarity, type, -1, false);
 	}
 
@@ -91,6 +87,10 @@ public abstract class ItemModifier {
 
 	public String getSuffix(ItemMeta meta) {
 		return suffix;
+	}
+	
+	public int getChance(){
+		return chance;
 	}
 	
 }

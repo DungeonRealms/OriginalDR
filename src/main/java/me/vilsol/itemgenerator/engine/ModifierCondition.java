@@ -2,8 +2,8 @@ package me.vilsol.itemgenerator.engine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import me.vilsol.itemgenerator.ItemGenerator;
 import minecade.dungeonrealms.enums.ItemRarity;
 import minecade.dungeonrealms.enums.ItemTier;
 
@@ -18,12 +18,30 @@ public class ModifierCondition {
 	private List<Class<? extends ItemModifier>> cantContain;
 	private ModifierCondition bonus;
 	private List<Class<? extends ItemModifier>> replacement;
+	private String chosenPrefix;
+	private String chosenSuffix;
 	
 	public ModifierCondition(ItemTier tier, ItemRarity rarity, ModifierRange range, int chance){
 		this.tier = tier;
 		this.rarity = rarity;
 		this.range = range;
 		this.chance = chance;
+	}
+	
+	public void setChosenPrefix(String prefix){
+		this.chosenPrefix = prefix;
+	}
+	
+	public void setChosenSuffix(String suffix){
+		this.chosenSuffix = suffix;
+	}
+	
+	public String getChosenPrefix(){
+		return chosenPrefix;
+	}
+	
+	public String getChosenSuffix(){
+		return chosenSuffix;
 	}
 	
 	public ModifierCondition setBonus(ModifierCondition bonus){
@@ -56,17 +74,6 @@ public class ModifierCondition {
 	public boolean doesConclude(ItemTier tier, ItemRarity rarity, ItemMeta meta){
 		if(this.tier != null && this.tier != tier) return false;
 		if(this.rarity != null && this.rarity != rarity) return false;
-		if(this.cantContain != null && this.cantContain.size() > 0){
-			if(meta.getLore() != null || meta.getLore().size() > 0){
-				for(Class<? extends ItemModifier> c : cantContain){
-					ItemModifier m = ItemGenerator.modifiers.get(c);
-					for(String s : meta.getLore()){
-						if(m.getPrefix(meta) != null && s.startsWith(m.getPrefix(meta))) return false;
-						if(m.getSuffix(meta) != null && s.endsWith(m.getSuffix(meta))) return false;
-					}
-				}
-			}
-		}
 		return true;
 	}
 	
@@ -84,6 +91,25 @@ public class ModifierCondition {
 	
 	public List<Class<? extends ItemModifier>> getReplacement(){
 		return replacement;
+	}
+
+	public boolean canApply(Set<ModifierCondition> conditions) {
+		for(ModifierCondition mc : conditions){
+			if(mc.equals(this)) continue;
+			
+			if(mc.getChosenPrefix() != null){
+				if(mc.getChosenPrefix().equals(getChosenPrefix())){
+					return false;
+				}
+			}
+			
+			if(mc.getChosenSuffix() != null){
+				if(mc.getChosenSuffix().equals(getChosenSuffix())){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 }
