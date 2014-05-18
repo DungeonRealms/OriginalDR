@@ -4262,7 +4262,8 @@ public class ItemMechanics implements Listener {
 
         if (dmg_data.contains("edmg=")) {
             String elemental_type = dmg_data.split("edmg=")[1].split(":")[0].replaceAll(red.toString(), "");
-            int tier = getItemTier(p.getItemInHand());
+            //int tier = getItemTier(p.getItemInHand());
+            int tier = 0;
             if (elemental_type.equalsIgnoreCase("fire")) {
                 if (tier == 1) {
                     ent.setFireTicks(15);
