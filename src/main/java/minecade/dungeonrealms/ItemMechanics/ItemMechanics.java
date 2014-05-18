@@ -2636,18 +2636,17 @@ public class ItemMechanics implements Listener {
             return;
         }
         if (e.getInventory().contains(Material.ARROW)) {
-            //convertVanillaArrows(e.getInventory());
+            // convertVanillaArrows(e.getInventory());
         }
         addRarityToOldItems(e.getInventory());
         checkEnchants(e.getInventory());
         fixBuggedDurability(e.getInventory());
         /*
-        if (removeMagmaCream(e.getInventory())) {
-            Player pl = (Player) e.getPlayer();
-            pl.sendMessage(ChatColor.RED + "You had an illegal item in your inventory (MAGMA_CREAM) -- your account has been flagged.");
-            pl.sendMessage(ChatColor.GRAY + "Send an e-mail to staff@dungeonrealms.net within 24 hours to avoid your account being locked.");
-            log.info("(FLAG) Player " + pl.getName() + " had MAGMA_CREAM, removed and warned.");
-        } */
+         * if (removeMagmaCream(e.getInventory())) { Player pl = (Player) e.getPlayer(); pl.sendMessage(ChatColor.RED +
+         * "You had an illegal item in your inventory (MAGMA_CREAM) -- your account has been flagged."); pl.sendMessage(ChatColor.GRAY +
+         * "Send an e-mail to staff@dungeonrealms.net within 24 hours to avoid your account being locked."); log.info("(FLAG) Player " + pl.getName() +
+         * " had MAGMA_CREAM, removed and warned."); }
+         */
         removeAttributes(e.getInventory());
     }
 
@@ -3036,6 +3035,13 @@ public class ItemMechanics implements Listener {
         }, 1L);
     }
 
+    public boolean isRenamed(ItemStack is) {
+        if (is != null && is.hasItemMeta() && is.getItemMeta().hasDisplayName() && is.getItemMeta().getDisplayName().contains(ChatColor.ITALIC.toString())) {
+            return true;
+        }
+        return false;
+    }
+
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onOrbUse(InventoryClickEvent e) {
@@ -3063,6 +3069,16 @@ public class ItemMechanics implements Listener {
         if (isOrbOfAlteration(cursor) && (isArmor(in_slot) || !getDamageData(in_slot).equalsIgnoreCase("no"))) {
             if (LevelMechanics.getPlayerLevel(p.getName()) < 60) {
                 p.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level 60 to use Orbs of Alteration.");
+                e.setCancelled(true);
+                return;
+            }
+            if (isSoulbound(in_slot)) {
+                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " Orb a Soulbound item.");
+                e.setCancelled(true);
+                return;
+            }
+            if (isRenamed(in_slot)) {
+                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " Orb a renamed item.");
                 e.setCancelled(true);
                 return;
             }
@@ -3703,9 +3719,9 @@ public class ItemMechanics implements Listener {
 
         int tier = subtractArrow(p);
         if (tier == 0) {
-            //Main.d("DUDE THE TIER WAS 0");
+            // Main.d("DUDE THE TIER WAS 0");
         } else {
-            //Main.d(tier);
+            // Main.d(tier);
         }
         int bow_tier = getItemTier(p.getItemInHand());
 
@@ -4262,7 +4278,7 @@ public class ItemMechanics implements Listener {
 
         if (dmg_data.contains("edmg=")) {
             String elemental_type = dmg_data.split("edmg=")[1].split(":")[0].replaceAll(red.toString(), "");
-            //int tier = getItemTier(p.getItemInHand());
+            // int tier = getItemTier(p.getItemInHand());
             int tier = 0;
             if (elemental_type.equalsIgnoreCase("fire")) {
                 if (tier == 1) {
