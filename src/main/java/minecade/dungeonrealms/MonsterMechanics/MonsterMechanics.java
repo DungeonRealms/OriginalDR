@@ -2269,7 +2269,9 @@ public class MonsterMechanics implements Listener {
         if (l.getBlock().getType() == Material.FIRE || l.getBlock().getType() == Material.LAVA || l.clone().add(0, 1, 0).getBlock().getType() == Material.FIRE
                 || l.clone().add(0, 1, 0).getBlock().getType() == Material.LAVA || l.clone().add(0, -1, 0).getBlock().getType() == Material.FIRE
                 || l.clone().add(0, -1, 0).getBlock().getType() == Material.LAVA || l.clone().add(0, -2, 0).getBlock().getType() == Material.FIRE
-                || l.clone().add(0, -2, 0).getBlock().getType() == Material.LAVA) {
+                || l.clone().add(0, -2, 0).getBlock().getType() == Material.LAVA || l.clone().add(0, -3, 0).getBlock().getType() == Material.FIRE
+                || l.clone().add(0, -3, 0).getBlock().getType() == Material.LAVA || l.clone().add(0, -4, 0).getBlock().getType() == Material.FIRE
+                || l.clone().add(0, -4, 0).getBlock().getType() == Material.LAVA)) {
             return true;
         }
         return false;
