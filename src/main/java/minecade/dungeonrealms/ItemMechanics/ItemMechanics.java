@@ -3719,7 +3719,7 @@ public class ItemMechanics implements Listener {
 
         int tier = subtractArrow(p);
         if (tier == 0) {
-            // Main.d("DUDE THE TIER WAS 0");
+            Main.d("DUDE THE TIER WAS 0");
         } else {
             // Main.d(tier);
         }
@@ -6069,12 +6069,12 @@ public class ItemMechanics implements Listener {
                 continue;
             }
             if (is.getType() == Material.ARROW) {
+                int tier = getItemTier(is);
                 if (is.getAmount() == 1) {
                     is.setType(Material.AIR);
                 } else {
                     is.setAmount(is.getAmount() - 1);
                 }
-                int tier = getItemTier(is);
                 if (tier <= 0) {
                     continue;
                 }
