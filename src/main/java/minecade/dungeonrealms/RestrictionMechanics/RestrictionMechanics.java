@@ -76,6 +76,8 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -922,13 +924,15 @@ public class RestrictionMechanics implements Listener {
         if (ItemMechanics.isSoulbound(i)) {
             if (!InstanceMechanics.canTradeSoulbound(i, e.getPlayer().getWorld())) {
                 if (TradeMechanics.destroying_soulbound.containsKey(p.getName())) {
+                    Main.d("They are already destroying!");
                     p.sendMessage(ChatColor.RED + "Please finish your current item destruction, or type 'cancel' to cancel it.");
                     e.setCancelled(true);
                     return;
                 } else {
+                    Main.d("They are destroying now!!");
                     TradeMechanics.destroying_soulbound.put(p.getName(), e.getItemDrop().getItemStack());
                     e.getItemDrop().remove();
-                    p.sendMessage(ChatColor.RED + "Are you sure you want to " + ChatColor.UNDERLINE + "destroy" + " this soulbound item? Type "
+                    p.sendMessage(ChatColor.RED + "Are you sure you want to " + ChatColor.UNDERLINE + "destroy" + ChatColor.RED + " this soulbound item? Type "
                             + ChatColor.GREEN + ChatColor.BOLD + "Y" + ChatColor.RED + " or " + ChatColor.DARK_RED + ChatColor.BOLD + "N");
                     return;
                 }
@@ -992,6 +996,31 @@ public class RestrictionMechanics implements Listener {
                     p.closeInventory();
                 }
             }, 2L);
+        }
+    }
+
+    @EventHandler
+    public void onAsyncChat(AsyncPlayerChatEvent e) {
+        Player p = e.getPlayer();
+        if (TradeMechanics.destroying_soulbound.containsKey(p.getName())) {
+            e.setCancelled(true);
+            if (e.getMessage().equalsIgnoreCase("y")) {
+                ItemStack is = TradeMechanics.destroying_soulbound.get(p.getName());
+                p.sendMessage(ChatColor.RED + "Item " + is.getItemMeta().getDisplayName() + ChatColor.RED + " has been " + ChatColor.UNDERLINE + "destroyed.");
+                TradeMechanics.destroying_soulbound.remove(p.getName());
+            } else if (e.getMessage().equalsIgnoreCase("n") || e.getMessage().equalsIgnoreCase("cancel")) {
+                ItemStack is = TradeMechanics.destroying_soulbound.get(p.getName());
+                if (p.getInventory().firstEmpty() == -1) {
+                    p.sendMessage(ChatColor.RED + "You do not have enough space for this item.");
+                    return;
+                } else {
+                    p.sendMessage(ChatColor.RED + "Item destroying " + ChatColor.UNDERLINE + "cancelled.");
+                    addItem(p, is);
+                    TradeMechanics.destroying_soulbound.remove(p.getName());
+                }
+            } else {
+                p.sendMessage(ChatColor.RED + "Unknown response. Please type Y or N");
+            }
         }
     }
 
@@ -1158,6 +1187,10 @@ public class RestrictionMechanics implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         zone_type.remove(e.getPlayer().getName());
+        if (TradeMechanics.destroying_soulbound.containsKey(e.getPlayer().getName())) {
+            e.getPlayer().getInventory().addItem(TradeMechanics.destroying_soulbound.get(e.getPlayer().getName()));
+            TradeMechanics.destroying_soulbound.remove(e.getPlayer().getName());
+        }
     }
 
     /*

@@ -512,6 +512,7 @@ public class TradeMechanics implements Listener {
         }
         if (ItemMechanics.isSoulbound(e.getItemDrop().getItemStack())) {
             if (!InstanceMechanics.canTradeSoulbound(e.getItemDrop().getItemStack(), e.getPlayer().getWorld())) {
+                Main.d("They cant trade it!");
                 if (destroying_soulbound.containsKey(trader.getName())) {
                     trader.sendMessage(ChatColor.RED + "Please finish your current item destruction, or type 'cancel' to cancel it.");
                     e.setCancelled(true);
