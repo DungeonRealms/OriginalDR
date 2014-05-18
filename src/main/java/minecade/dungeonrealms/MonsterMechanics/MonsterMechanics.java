@@ -2239,16 +2239,18 @@ public class MonsterMechanics implements Listener {
         if (event.getCause() == DamageCause.LAVA || event.getCause() == DamageCause.FIRE) {
             event.setCancelled(true);
             event.setDamage(0);
+            return;
         }
         if (event.getCause() == DamageCause.FIRE_TICK) {
             if (event.getEntity().getFireTicks() > 30) {
                 event.getEntity().setFireTicks(30);
             }
         }
-        if (isLavaNearby(event.getEntity().getLocation(), 3)) {
+        if (isLavaNearby(event.getEntity().getLocation())) {
             event.setCancelled(true);
             event.setDamage(0);
             event.getEntity().setFireTicks(0);
+            return;
         }
         if (event.getCause() == DamageCause.WITHER) {
             if (InstanceMechanics.isInstance(event.getEntity().getWorld().getName()))
@@ -2261,27 +2263,6 @@ public class MonsterMechanics implements Listener {
                 }
             }
         }
-    }
-
-    public boolean isLavaNearby(Location l, int to_check) {
-        int add_y = l.getBlockY() + to_check / 2;
-        int add_X = l.getBlockX() + to_check;
-        int add_Z = l.getBlockZ() + to_check;
-        // The numbers seem to act strange and not dissapear
-        int minus_X = l.getBlockX() - to_check;
-        int minus_Z = l.getBlockZ() - to_check;
-        int minus_Y = l.getBlockY() - to_check / 2;
-        for (int x = minus_X; x < add_X; x++) {
-            for (int z = minus_Z; z < add_Z; z++) {
-                for (int y = minus_Y; y < add_y; y++) {
-                    final Block b = l.getWorld().getBlockAt(x, y, z);
-                    if (b.getType() == Material.LAVA) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     public boolean isLavaNearby(Location l) {
