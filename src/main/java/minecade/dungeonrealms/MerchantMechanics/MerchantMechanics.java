@@ -1165,7 +1165,6 @@ public class MerchantMechanics implements Listener {
                 price_per = 1500;
                 shard_tier = 5;
             }
-
             try {
                 amount_to_buy = Integer.parseInt(e.getMessage());
             } catch (NumberFormatException ex) {
@@ -1199,6 +1198,7 @@ public class MerchantMechanics implements Listener {
 
             int shard_count = InstanceMechanics.getPortalShardCount(pl.getName(), shard_tier);
             if (total_price > 0 && (shard_count < total_price)) {
+                Main.d("Amount of shards for tier " + shard_tier + ": " + shard_count + " Total Price: " + total_price);
                 pl.sendMessage(ChatColor.RED + "You do not have enough Portal Key Shards to complete this purchase.");
                 pl.sendMessage(ChatColor.GRAY + "" + amount_to_buy + " X " + price_per + " PKS/ea = " + total_price + " PKS.");
                 pl.sendMessage(ChatColor.GRAY + "Defeat " + ChatColor.UNDERLINE + "Instanced Dungeons" + ChatColor.GRAY + " to obtain Portal Key Shards.");
@@ -1589,7 +1589,7 @@ public class MerchantMechanics implements Listener {
             int tier = (int) MountMechanics.getShardPriceTier(e.getCurrentItem());
             int shard_count = InstanceMechanics.getPortalShardCount(pl.getName(), tier);
             ChatColor cc = ProfessionMechanics.getTierColor(tier);
-
+            Main.d("Shards: " + shard_count + " Cost: "  + price + " Tier: " + tier); 
             if (shard_count < price) {
                 pl.sendMessage(ChatColor.RED + "You do " + ChatColor.UNDERLINE + "NOT" + ChatColor.RED + " have enough " + cc + "Portal Key Shards"
                         + ChatColor.RED + " to buy a " + ChatColor.UNDERLINE.toString() + e.getCurrentItem().getItemMeta().getDisplayName() + ".");

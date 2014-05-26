@@ -3721,7 +3721,7 @@ public class ItemMechanics implements Listener {
         if (tier == 0) {
             Main.d("DUDE THE TIER WAS 0");
         } else {
-            // Main.d(tier);
+            Main.d(tier);
         }
         int bow_tier = getItemTier(p.getItemInHand());
 
@@ -6071,14 +6071,17 @@ public class ItemMechanics implements Listener {
             if (is.getType() == Material.ARROW) {
                 int tier = getItemTier(is);
                 if (is.getAmount() == 1) {
+                    Main.d("SET ARROW TO AIR");
                     is.setType(Material.AIR);
+                    pl.updateInventory();
                 } else {
                     is.setAmount(is.getAmount() - 1);
                 }
                 if (tier <= 0) {
+                    Main.d("TIER WAS 0");
                     continue;
                 }
-                return getItemTier(is);
+                return tier;
             }
             if (is.getType() == Material.FLOWER_POT_ITEM) {
                 if (getQuiverAmount(is) <= 0) {

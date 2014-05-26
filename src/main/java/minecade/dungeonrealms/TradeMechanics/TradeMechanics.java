@@ -520,6 +520,8 @@ public class TradeMechanics implements Listener {
                 } else {
                     destroying_soulbound.put(trader.getName(), e.getItemDrop().getItemStack());
                     e.getItemDrop().remove();
+                    trader.getInventory().remove(e.getItemDrop().getItemStack());
+                    e.setCancelled(true);
                     trader.sendMessage(ChatColor.RED + "Are you sure you want to " + ChatColor.UNDERLINE + "destroy" + " this soulbound item? Type "
                             + ChatColor.GREEN + ChatColor.BOLD + "Y" + ChatColor.RED + " or " + ChatColor.DARK_RED + ChatColor.BOLD + "N");
                     return;
