@@ -108,12 +108,6 @@ public class ModifierCondition {
 					return false;
 				}
 			}
-			
-			if(mc.getChosenSuffix() != null){
-				if(mc.getChosenSuffix().equals(getChosenSuffix())){
-					return false;
-				}
-			}
 		}
 		return true;
 	}

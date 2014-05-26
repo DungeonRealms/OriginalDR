@@ -10,6 +10,7 @@ import java.util.Random;
 
 import me.vilsol.itemgenerator.engine.ItemModifier;
 import me.vilsol.itemgenerator.engine.ModifierCondition;
+import me.vilsol.itemgenerator.modifiers.ArmorModifiers;
 import me.vilsol.itemgenerator.modifiers.WeaponModifiers;
 import minecade.dungeonrealms.enums.ItemRarity;
 import minecade.dungeonrealms.enums.ItemTier;
@@ -22,6 +23,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class ItemGenerator {
 	
 	public static HashMap<Class<? extends ItemModifier>, ItemModifier> modifiers = new HashMap<Class<? extends ItemModifier>, ItemModifier>();
+	public static List<ItemModifier> modifierObjects = new ArrayList<ItemModifier>();
 	
 	private ItemType type;
 	private ItemTier tier;
@@ -68,7 +70,9 @@ public class ItemGenerator {
 		
 		final HashMap<ModifierCondition, ItemModifier> conditions = new HashMap<ModifierCondition, ItemModifier>();
 		
-		for(ItemModifier modifier : modifiers.values()){
+		Collections.shuffle(modifierObjects);
+		
+		for(ItemModifier modifier : modifierObjects){
 			if(modifier.canApply(type)){
 				ModifierCondition mc = modifier.tryModifier(meta, tier, rarity, type, mobTier);
 				if(mc != null){
@@ -146,21 +150,36 @@ public class ItemGenerator {
 	}
 	
 	public static void loadModifiers(){
-		WeaponModifiers all = new WeaponModifiers();
-		all.new Accuracy();
-		all.new ArmorPenetration();
-		all.new Blind();
-		all.new Critical();
-		all.new Damage();
-		all.new Elemental();
-		all.new ElementalBow();
-		all.new Knockback();
-		all.new LifeSteal();
-		all.new Pure();
-		all.new Slow();
-		all.new StrDexVitInt();
-		all.new SwordDamage();
-		all.new Versus();
+		WeaponModifiers wm = new WeaponModifiers();
+		wm.new Accuracy();
+		wm.new ArmorPenetration();
+		wm.new Blind();
+		wm.new Critical();
+		wm.new Damage();
+		wm.new Elemental();
+		wm.new ElementalBow();
+		wm.new Knockback();
+		wm.new LifeSteal();
+		wm.new Pure();
+		wm.new Slow();
+		wm.new StrDexVitInt();
+		wm.new SwordDamage();
+		wm.new Versus();
+		
+		ArmorModifiers am = new ArmorModifiers();
+		am.new Block();
+		am.new Dodge();
+		am.new EnergyRegen();
+		am.new GemFind();
+		am.new HP();
+		am.new HPRegen();
+		am.new ItemFind();
+		am.new MainArmor();
+		am.new OtherArmor();
+		am.new Reflection();
+		am.new Resistances();
+		am.new StrDexVitInt();
+		am.new Thorns();
 	}
 	
 }

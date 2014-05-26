@@ -26,6 +26,7 @@ public abstract class ItemModifier implements Comparable<ItemModifier> {
 		this.prefix = prefix;
 		this.suffix = suffix;
 		ItemGenerator.modifiers.put(this.getClass(), this);
+		ItemGenerator.modifierObjects.add(this);
 	}
 	
 	public void setOrderPriority(int position){
@@ -81,8 +82,6 @@ public abstract class ItemModifier implements Comparable<ItemModifier> {
 		List<String> lore = meta.getLore();
 		lore.add(random);
 		meta.setLore(lore);
-
-		System.out.println("Succeeded: " + condition.getChosenPrefix() + " under " + ((condition.getChance() < 0) ? getChance() : condition.getChance()));
 		
 		return meta;
 	}

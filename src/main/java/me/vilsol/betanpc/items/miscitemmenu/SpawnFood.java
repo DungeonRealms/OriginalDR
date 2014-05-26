@@ -25,9 +25,8 @@ public class SpawnFood implements MenuItem {
 	public void execute(Player plr, ClickType click) {
 		ItemStack fish = new ItemStack(Material.COOKED_FISH);
 		ItemMeta m = fish.getItemMeta();
-        m.setDisplayName(ChatColor.YELLOW.toString() + "Legendary Shark of Medicine");
+        m.setDisplayName(ChatColor.YELLOW.toString() + "Gigantic Shark");
         List<String> fish_lore = new ArrayList<String>();
-        fish_lore.add(ChatColor.RED.toString() + "+10% HP " + ChatColor.GRAY.toString() + "(instant)");
         fish_lore.add(ChatColor.RED + "-50% HUNGER " + ChatColor.GRAY.toString() + "(instant)");
         fish_lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "A terrifying and massive predator.");
         m.setLore(fish_lore);

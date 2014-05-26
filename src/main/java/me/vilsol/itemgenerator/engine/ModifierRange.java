@@ -41,7 +41,11 @@ public class ModifierRange {
 			
 		}else if(type == ModifierType.TRIPLE){
 		
-			first = r.nextInt(lowHigh - low) + low;
+			if(lowHigh - low > 0){
+				first = r.nextInt(lowHigh - low) + low;
+			}else{
+				first = low;
+			}
 			
 			if(high - first > 0){
 				second = r.nextInt(high - first) + first;
