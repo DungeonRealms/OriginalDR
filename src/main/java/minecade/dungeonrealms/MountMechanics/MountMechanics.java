@@ -631,16 +631,16 @@ public class MountMechanics implements Listener {
     public static double getShardPriceTier(ItemStack is) {
 
         if (is != null && is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
-            String rest = is.getItemMeta().getDisplayName().split(": ")[1];
-            if (rest.startsWith(ChatColor.YELLOW.toString())) {
+            String rest = is.getItemMeta().getDisplayName().split(":")[1];
+            if (rest.contains(ChatColor.YELLOW.toString())) {
                 return 5;
-            } else if (rest.startsWith(ChatColor.LIGHT_PURPLE.toString())) {
+            } else if (rest.contains(ChatColor.LIGHT_PURPLE.toString())) {
                 return 4;
-            } else if (rest.startsWith(ChatColor.AQUA.toString())) {
+            } else if (rest.contains(ChatColor.AQUA.toString())) {
                 return 3;
-            } else if (rest.startsWith(ChatColor.GREEN.toString())) {
+            } else if (rest.contains(ChatColor.GREEN.toString())) {
                 return 2;
-            } else if (rest.startsWith(ChatColor.WHITE.toString())) {
+            } else if (rest.contains(ChatColor.WHITE.toString())) {
                 return 1;
             }
         }
