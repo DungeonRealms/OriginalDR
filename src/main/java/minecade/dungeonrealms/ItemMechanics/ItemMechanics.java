@@ -3077,11 +3077,11 @@ public class ItemMechanics implements Listener {
                 e.setCancelled(true);
                 return;
             }
-            if (isRenamed(in_slot)) {
+            /*if (isRenamed(in_slot)) {
                 p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " Orb a renamed item.");
                 e.setCancelled(true);
                 return;
-            }
+            }*/
             if (last_orb_use.containsKey(p.getName())) {
                 if ((System.currentTimeMillis() - last_orb_use.get(p.getName())) < (1 * 500)) {
                     e.setCancelled(true);

@@ -901,10 +901,9 @@ public class InstanceMechanics implements Listener {
     }
 
     public static int getPortalShardCount(String p_name, int tier) {
-        if (!(Hive.player_portal_shards.containsKey(p_name))) {
-            return 0;
-        }
+        if (!(Hive.player_portal_shards.containsKey(p_name))) return 0;
         int tier_index = tier - 1;
+        if(!Hive.player_portal_shards.get(p_name).contains(tier_index)) return 0;
         return Hive.player_portal_shards.get(p_name).get(tier_index);
     }
 
