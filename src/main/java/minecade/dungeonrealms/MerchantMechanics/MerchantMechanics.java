@@ -1589,7 +1589,6 @@ public class MerchantMechanics implements Listener {
             int tier = (int) MountMechanics.getShardPriceTier(e.getCurrentItem());
             int shard_count = InstanceMechanics.getPortalShardCount(pl.getName(), tier);
             ChatColor cc = ProfessionMechanics.getTierColor(tier);
-            Main.d("Shards: " + shard_count + " Cost: "  + price + " Tier: " + tier); 
             if (shard_count < price) {
                 pl.sendMessage(ChatColor.RED + "You do " + ChatColor.UNDERLINE + "NOT" + ChatColor.RED + " have enough " + cc + "Portal Key Shards"
                         + ChatColor.RED + " to buy a " + ChatColor.UNDERLINE.toString() + e.getCurrentItem().getItemMeta().getDisplayName() + ".");

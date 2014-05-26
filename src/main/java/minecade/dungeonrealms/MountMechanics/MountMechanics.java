@@ -633,22 +633,21 @@ public class MountMechanics implements Listener {
         if (is != null && is.hasItemMeta() && is.getItemMeta().hasLore()) {
             List<String> lore = is.getItemMeta().getLore();
             for (String s : lore) {
-                if (s.contains(ChatColor.YELLOW.toString())) {
+                if (s.contains(ChatColor.YELLOW.toString() + "Portal Key")) {
                     return 5;
                 }
-                if (s.contains(ChatColor.LIGHT_PURPLE.toString())) {
+                if (s.contains(ChatColor.LIGHT_PURPLE.toString() + "Portal Key")) {
                     return 4;
                 }
-                if (s.contains(ChatColor.AQUA.toString())) {
+                if (s.contains(ChatColor.AQUA.toString() + "Portal Key")) {
                     return 3;
                 }
-                if (s.contains(ChatColor.GREEN.toString())) {
+                if (s.contains(ChatColor.GREEN.toString() + "Portal Key")) {
                     return 2;
                 }
-                if (s.contains(ChatColor.WHITE.toString())) {
+                if (s.contains(ChatColor.WHITE.toString() + "Portal Key")) {
                     return 1;
                 }
-
                 return 1;
             }
         }
@@ -1512,7 +1511,7 @@ public class MountMechanics implements Listener {
                             ((Player) attacker).playSound(attacker.getLocation(), Sound.WOOD_CLICK, 1F, 0.5F);
                             inv_mule_map.remove(e.getEntity());
                             mule_map.remove(((Player) attacker).getName());
-                        }else{
+                        } else {
                             e.setCancelled(true);
                             e.setDamage(0);
                         }
