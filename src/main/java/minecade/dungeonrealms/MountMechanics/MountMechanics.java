@@ -630,25 +630,17 @@ public class MountMechanics implements Listener {
 
     public static double getShardPriceTier(ItemStack is) {
 
-        if (is != null && is.hasItemMeta() && is.getItemMeta().hasLore()) {
-            List<String> lore = is.getItemMeta().getLore();
-            for (String s : lore) {
-                if (s.contains(ChatColor.YELLOW.toString())) {
-                    return 5;
-                }
-                if (s.contains(ChatColor.LIGHT_PURPLE.toString())) {
-                    return 4;
-                }
-                if (s.contains(ChatColor.AQUA.toString())) {
-                    return 3;
-                }
-                if (s.contains(ChatColor.GREEN.toString())) {
-                    return 2;
-                }
-                if (s.contains(ChatColor.WHITE.toString())) {
-                    return 1;
-                }
-
+        if (is != null && is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
+            String rest = is.getItemMeta().getDisplayName().split(": ")[1];
+            if (rest.startsWith(ChatColor.YELLOW.toString())) {
+                return 5;
+            } else if (rest.startsWith(ChatColor.LIGHT_PURPLE.toString())) {
+                return 4;
+            } else if (rest.startsWith(ChatColor.AQUA.toString())) {
+                return 3;
+            } else if (rest.startsWith(ChatColor.GREEN.toString())) {
+                return 2;
+            } else if (rest.startsWith(ChatColor.WHITE.toString())) {
                 return 1;
             }
         }
@@ -1512,7 +1504,7 @@ public class MountMechanics implements Listener {
                             ((Player) attacker).playSound(attacker.getLocation(), Sound.WOOD_CLICK, 1F, 0.5F);
                             inv_mule_map.remove(e.getEntity());
                             mule_map.remove(((Player) attacker).getName());
-                        }else{
+                        } else {
                             e.setCancelled(true);
                             e.setDamage(0);
                         }
