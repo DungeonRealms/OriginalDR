@@ -5468,6 +5468,7 @@ public class MonsterMechanics implements Listener {
                     }
 
                     // EASTER EGG DROP CODE
+                    /*
                     int do_i_drop_easter = new Random().nextInt(2000);
                     if (mob_tier <= 3) {
                         if (do_i_drop_easter == 1) { // 0.05% chance
@@ -5481,7 +5482,7 @@ public class MonsterMechanics implements Listener {
                             loc.getWorld().dropItemNaturally(loc, CraftItemStack.asCraftCopy(ItemMechanics.easter_egg));
                         }
                     }
-
+					*/
                     // HALLOWEEN DROP CODE
                     /*
                      * int do_i_drop_candy = new Random().nextInt(1000); int do_i_drop_mask = new Random().nextInt(10000); ItemStack candy =
