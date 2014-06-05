@@ -1151,7 +1151,10 @@ public class EcashMechanics implements Listener {
                 pl.sendMessage(ChatColor.RED + "Your message is " + msg.length() + "/40 characters. Please shorten it.");
                 return;
             }
-
+            if(containsSymbols(msg)){
+                pl.sendMessage(ChatColor.RED + "Your message " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " contain symbols.");
+                return;
+            }
             ItemStack is = item_lore_being_added.get(pl.getName());
             ItemMeta im = null;
             try {

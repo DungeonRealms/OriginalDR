@@ -80,7 +80,11 @@ public class CommandGL implements CommandExecutor {
 		
 		String prefix = ChatMechanics.getPlayerPrefix(p);
 		String message = ChatMechanics.fixCapsLock(msg);
-		
+	      if (PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("global")) {
+	            p.sendMessage(ChatColor.RED + "You currently have global messaging " + ChatColor.BOLD + "DISABLED." + ChatColor.RED
+	                    + " Type '/toggleglobal' to re-enable.");
+	            return true;
+	        }
 		JSONMessage filter = null;
 		JSONMessage normal = null;
 		String aprefix = p.getName() + ": " + ChatColor.WHITE;
@@ -112,7 +116,7 @@ public class CommandGL implements CommandExecutor {
 				continue; // They have global off, and only want to hear from
 							// their buds.
 			}
-			if(trade == true && PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("tchat")) {
+			if(trade == true && PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("tchat")) {
 				continue; // They have global off, and only want to hear from
 							// their buds.
 			}

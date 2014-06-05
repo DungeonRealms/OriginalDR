@@ -452,7 +452,7 @@ public class TradeMechanics implements Listener {
         return return_string;
     }
 
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
     public void onPlayerDropItem(PlayerDropItemEvent e) {
         final Player trader = e.getPlayer();
         final Player tradie = getTarget(trader);
@@ -646,8 +646,8 @@ public class TradeMechanics implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void playerDropingSoulbound(PlayerDropItemEvent e) {
-        Player trader = e.getPlayer();
+    public void playerDropingSoulbound(final PlayerDropItemEvent e) {
+        final Player trader = e.getPlayer();
         if (ItemMechanics.isSoulbound(e.getItemDrop().getItemStack())) {
             if (!InstanceMechanics.canTradeSoulbound(e.getItemDrop().getItemStack(), e.getPlayer().getWorld())) {
                 if (destroying_soulbound.containsKey(trader.getName())) {
@@ -658,7 +658,11 @@ public class TradeMechanics implements Listener {
                     e.setCancelled(true);
                     destroying_soulbound.put(trader.getName(), e.getItemDrop().getItemStack());
                     e.getItemDrop().remove();
-                    trader.getInventory().remove(e.getItemDrop().getItemStack());
+                    new BukkitRunnable() {
+                        public void run() {
+                            trader.getInventory().remove(e.getItemDrop().getItemStack());
+                        }
+                    }.runTaskLater(Main.plugin, 1);
                     trader.sendMessage(ChatColor.RED + "Are you sure you want to " + ChatColor.UNDERLINE + "destroy" + " this soulbound item? Type "
                             + ChatColor.GREEN + ChatColor.BOLD + "Y" + ChatColor.RED + " or " + ChatColor.DARK_RED + ChatColor.BOLD + "N");
                     return;
