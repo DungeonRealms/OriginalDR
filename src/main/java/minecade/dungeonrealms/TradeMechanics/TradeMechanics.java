@@ -510,24 +510,6 @@ public class TradeMechanics implements Listener {
                 || e.getItemDrop().getItemStack().getType() == Material.NETHER_STAR) {
             return;
         }
-        if (ItemMechanics.isSoulbound(e.getItemDrop().getItemStack())) {
-            if (!InstanceMechanics.canTradeSoulbound(e.getItemDrop().getItemStack(), e.getPlayer().getWorld())) {
-                Main.d("They cant trade it!");
-                if (destroying_soulbound.containsKey(trader.getName())) {
-                    trader.sendMessage(ChatColor.RED + "Please finish your current item destruction, or type 'cancel' to cancel it.");
-                    e.setCancelled(true);
-                    return;
-                } else {
-                    destroying_soulbound.put(trader.getName(), e.getItemDrop().getItemStack());
-                    e.getItemDrop().remove();
-                    trader.getInventory().remove(e.getItemDrop().getItemStack());
-                    e.setCancelled(true);
-                    trader.sendMessage(ChatColor.RED + "Are you sure you want to " + ChatColor.UNDERLINE + "destroy" + " this soulbound item? Type "
-                            + ChatColor.GREEN + ChatColor.BOLD + "Y" + ChatColor.RED + " or " + ChatColor.DARK_RED + ChatColor.BOLD + "N");
-                    return;
-                }
-            }
-        }
         if (e.isCancelled()) {
             return;
         }
@@ -660,6 +642,28 @@ public class TradeMechanics implements Listener {
                     tradie.removeMetadata("no_trade", Main.plugin);
                 }
             }.runTaskLater(Main.plugin, 2L * 20L);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void playerDropingSoulbound(PlayerDropItemEvent e) {
+        Player trader = e.getPlayer();
+        if (ItemMechanics.isSoulbound(e.getItemDrop().getItemStack())) {
+            if (!InstanceMechanics.canTradeSoulbound(e.getItemDrop().getItemStack(), e.getPlayer().getWorld())) {
+                if (destroying_soulbound.containsKey(trader.getName())) {
+                    trader.sendMessage(ChatColor.RED + "Please finish your current item destruction, or type 'cancel' to cancel it.");
+                    e.setCancelled(true);
+                    return;
+                } else {
+                    e.setCancelled(true);
+                    destroying_soulbound.put(trader.getName(), e.getItemDrop().getItemStack());
+                    e.getItemDrop().remove();
+                    trader.getInventory().remove(e.getItemDrop().getItemStack());
+                    trader.sendMessage(ChatColor.RED + "Are you sure you want to " + ChatColor.UNDERLINE + "destroy" + " this soulbound item? Type "
+                            + ChatColor.GREEN + ChatColor.BOLD + "Y" + ChatColor.RED + " or " + ChatColor.DARK_RED + ChatColor.BOLD + "N");
+                    return;
+                }
+            }
         }
     }
 
