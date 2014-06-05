@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import minecade.dungeonrealms.Main;
+import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.BossMechanics.AceronListener;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
 import minecade.dungeonrealms.ScoreboardMechanics.ScoreboardMechanics;
@@ -129,8 +131,15 @@ public class PlayerLevel {
 
     public void levelUp(boolean alert) {
         setXP(0);
+        if(getLevel() + 1 > 100){
+            return;
+        }
         setLevel(getLevel() + 1);
         updateScoreboardLevel();
+        if(getLevel() == 100){
+            CommunityMechanics.sendPacketCrossServer("@level100@" + p_name + ":", -1, true);
+            AchievmentMechanics.addAchievment(p_name, "Over Acheiver");
+        }
         new LogModel(LogType.LEVEL_UP, p_name, new JsonBuilder("level", getLevel()).getJson());
 
         if (alert) {

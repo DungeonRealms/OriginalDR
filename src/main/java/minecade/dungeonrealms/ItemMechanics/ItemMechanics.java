@@ -3077,11 +3077,10 @@ public class ItemMechanics implements Listener {
                 e.setCancelled(true);
                 return;
             }
-            /*if (isRenamed(in_slot)) {
-                p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " Orb a renamed item.");
-                e.setCancelled(true);
-                return;
-            }*/
+            /*
+             * if (isRenamed(in_slot)) { p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " Orb a renamed item.");
+             * e.setCancelled(true); return; }
+             */
             if (last_orb_use.containsKey(p.getName())) {
                 if ((System.currentTimeMillis() - last_orb_use.get(p.getName())) < (1 * 500)) {
                     e.setCancelled(true);
@@ -3893,7 +3892,7 @@ public class ItemMechanics implements Listener {
     public static boolean isSoulbound(ItemStack is) {
         if (is.hasItemMeta() && is.getItemMeta().hasLore()) {
             for (String s : is.getItemMeta().getLore()) {
-                if (ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("soulbound")) {
+                if (s.equalsIgnoreCase(ChatColor.DARK_RED.toString() + ChatColor.ITALIC.toString() + "Soulbound")) {
                     return true;
                 }
             }
