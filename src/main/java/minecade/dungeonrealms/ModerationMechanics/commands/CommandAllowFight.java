@@ -24,7 +24,7 @@ public class CommandAllowFight implements CommandExecutor {
 		}
 
 		if (p != null) {
-			if (!p.isOP()) return true;
+			if (!p.isOp()) return true;
 		}
 
 		if (args.length > 0) {
