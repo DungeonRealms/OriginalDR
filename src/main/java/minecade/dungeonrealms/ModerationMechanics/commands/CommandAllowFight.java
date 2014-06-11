@@ -18,7 +18,7 @@ public class CommandAllowFight implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player p = null;
-		
+
 		if (sender instanceof Player) {
 			p = (Player) sender;
 		}
@@ -34,20 +34,20 @@ public class CommandAllowFight implements CommandExecutor {
 		return true;
 		}
 
-        if (p != null) {
-            boolean isGod;
-    		if (!ModerationMechanics.allowsFight.contains(p.getName())) {
-                isGod = RealmMechanics.player_god_mode.containsKey(p.getName()) ? true : false;
-                ModerationMechanics.allowsFight.add(p.getName());
-                HealthMechanics.setPlayerHP(p.getName(), 50);
-                if (isGod) RealmMechanics.player_god_mode.remove(p.getName());
-                sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You toggled on fight mode.");
-            } else {
-                ModerationMechanics.allowsFight.remove(p.getName());
-                HealthMechanics.setPlayerHP(p.getName(), HealthMechanics.health_data.get(p.getName()));
-                sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You toggled off fight mode");
-            }
-        }
+		if (p != null) {
+			boolean isGod;
+			if (!ModerationMechanics.allowsFight.contains(p.getName())) {
+				isGod = RealmMechanics.player_god_mode.containsKey(p.getName());
+				ModerationMechanics.allowsFight.add(p.getName());
+				HealthMechanics.setPlayerHP(p.getName(), 50);
+				if (isGod) RealmMechanics.player_god_mode.remove(p.getName());
+				sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You toggled on fight mode.");
+			} else {
+				ModerationMechanics.allowsFight.remove(p.getName());
+				HealthMechanics.setPlayerHP(p.getName(), HealthMechanics.health_data.get(p.getName()));
+				sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You toggled off fight mode");
+			}
+		}
 		return true;
 	}
 }
