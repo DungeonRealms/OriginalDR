@@ -108,6 +108,9 @@ commands:
   toggletabchat:
     description: Toggles tabcomplete chat
     usage: /<command>
+  tooglefight:
+    description: Toggles fight mode
+    usage: /<command>
   tips:
     description: Get a random tip.
     usage: /<command>

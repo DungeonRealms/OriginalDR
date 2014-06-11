@@ -21,27 +21,7 @@ import java.util.logging.Logger;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.Hive.Hive;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandArmorSee;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandBankSee;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandCheck;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandDRBan;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandDRKick;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandDRTPPos;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandDRVanish;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandIPBan;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandLock;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandMute;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandPlayerClone;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandRealmClone;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandReport;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandSayAll;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandSendPacket;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandSetAlignment;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandStuck;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandUnBankSee;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandUnban;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandUnlock;
-import minecade.dungeonrealms.ModerationMechanics.commands.CommandUnmute;
+import minecade.dungeonrealms.ModerationMechanics.commands.*;
 import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.config.Config;
 import minecade.dungeonrealms.database.ConnectionPool;
@@ -78,7 +58,8 @@ public class ModerationMechanics implements Listener {
 	public static HashMap<String, Integer> mute_count = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> kick_count = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> ban_count = new HashMap<String, Integer>();
-	
+
+    public static List<String> allowsFight = new ArrayList<>();
 	public static List<String> used_stuck = new ArrayList<String>();
 	public static CopyOnWriteArrayList<String> vanish_list = new CopyOnWriteArrayList<String>();
 	
@@ -135,6 +116,7 @@ public class ModerationMechanics implements Listener {
 		Main.plugin.getCommand("unbanksee").setExecutor(new CommandUnBankSee());
 		Main.plugin.getCommand("sendpacket").setExecutor(new CommandSendPacket());
 		Main.plugin.getCommand("setalignment").setExecutor(new CommandSetAlignment());
+        Main.plugin.getCommand("allowfight").setExecutor(new CommandAllowFight());
 	}
 	
 	public void onDisable() {
