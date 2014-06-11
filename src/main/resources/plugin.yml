@@ -23,6 +23,9 @@ commands:
   spawnboss:
     description: Spawns a boss mob.
     usage: /<command>
+  addxp:
+    description: Adds the XP to the player.
+    usage: /<command>
   gl:
     description: Send a message globally.
     usage: /<command>

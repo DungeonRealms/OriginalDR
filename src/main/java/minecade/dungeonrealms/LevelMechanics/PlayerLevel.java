@@ -139,6 +139,7 @@ public class PlayerLevel {
         if(getLevel() == 100){
             CommunityMechanics.sendPacketCrossServer("@level100@" + p_name + ":", -1, true);
             AchievmentMechanics.addAchievment(p_name, "Over Acheiver");
+            Bukkit.broadcastMessage(ChatColor.AQUA.toString() + ChatColor.BOLD + p_name + ChatColor.WHITE + " has reached level 100!");
         }
         new LogModel(LogType.LEVEL_UP, p_name, new JsonBuilder("level", getLevel()).getJson());
 

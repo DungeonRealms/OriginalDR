@@ -101,9 +101,8 @@ public class ConnectProtocol implements Runnable {
                     return;
                 }
                 if (inputLine.startsWith("@level100@")) {
-                    String p_name = inputLine.split("@")[1].split(":")[0];
+                    String p_name = inputLine.split("100@")[1].split(":")[0];
                     Bukkit.broadcastMessage(ChatColor.AQUA.toString() + ChatColor.BOLD + p_name + ChatColor.WHITE + " has reached level 100!");
-
                     return;
                 }
                 if (inputLine.startsWith("@population@")) {

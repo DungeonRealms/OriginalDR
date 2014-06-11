@@ -3713,16 +3713,12 @@ public class MonsterMechanics implements Listener {
             }
             return;
         }
-
-        if (e.getCause() == DamageCause.FIRE_TICK) {
-            double cur_hp = mob_health.get(ent);
-            dmg = (cur_hp * 0.03D);
-        }
-
-        if (e.getCause() == DamageCause.POISON) {
-            double cur_hp = mob_health.get(ent);
-            dmg = (cur_hp * 0.02D);
-        }
+        // FIRE DAMAGE CODE
+        /*
+         * if (e.getCause() == DamageCause.FIRE_TICK && canTakeFireDamage(ent)) { double cur_hp = mob_health.get(ent); dmg = (cur_hp * 0.03D); }
+         * 
+         * if (e.getCause() == DamageCause.POISON) { double cur_hp = mob_health.get(ent); dmg = (cur_hp * 0.02D); }
+         */
 
         if (BossMechanics.enraged_boss.contains(ent)) {
             dmg = (int) ((double) dmg / 10.0D);
@@ -4234,6 +4230,13 @@ public class MonsterMechanics implements Listener {
 
         e.setDamage(0);
 
+    }
+
+    public boolean canTakeFireDamage(Entity e) {
+        if (isLavaNearby(e.getLocation())) {
+            return false;
+        }
+        return true;
     }
 
     @EventHandler
@@ -5469,20 +5472,11 @@ public class MonsterMechanics implements Listener {
 
                     // EASTER EGG DROP CODE
                     /*
-                    int do_i_drop_easter = new Random().nextInt(2000);
-                    if (mob_tier <= 3) {
-                        if (do_i_drop_easter == 1) { // 0.05% chance
-                            Location loc = ent.getLocation();
-                            loc.getWorld().dropItemNaturally(loc, CraftItemStack.asCraftCopy(ItemMechanics.easter_egg));
-                        }
-                    }
-                    if (mob_tier > 3) { // 4, 5
-                        if (do_i_drop_easter <= 10) { // 0.5% chance
-                            Location loc = ent.getLocation();
-                            loc.getWorld().dropItemNaturally(loc, CraftItemStack.asCraftCopy(ItemMechanics.easter_egg));
-                        }
-                    }
-					*/
+                     * int do_i_drop_easter = new Random().nextInt(2000); if (mob_tier <= 3) { if (do_i_drop_easter == 1) { // 0.05% chance Location loc =
+                     * ent.getLocation(); loc.getWorld().dropItemNaturally(loc, CraftItemStack.asCraftCopy(ItemMechanics.easter_egg)); } } if (mob_tier > 3) {
+                     * // 4, 5 if (do_i_drop_easter <= 10) { // 0.5% chance Location loc = ent.getLocation(); loc.getWorld().dropItemNaturally(loc,
+                     * CraftItemStack.asCraftCopy(ItemMechanics.easter_egg)); } }
+                     */
                     // HALLOWEEN DROP CODE
                     /*
                      * int do_i_drop_candy = new Random().nextInt(1000); int do_i_drop_mask = new Random().nextInt(10000); ItemStack candy =

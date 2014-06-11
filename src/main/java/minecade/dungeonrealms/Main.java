@@ -99,6 +99,7 @@ public class Main extends JavaPlugin implements Listener {
     private static TutorialMechanics tutorialMechanics;
     private static WeatherMechanics weatherMechanics;
     private static HearthstoneMechanics hearthstoneMechanics;
+    private static LevelMechanics levelMechanics;
     private static Hive hive;
     private static HiveServer hiveServer;
     
@@ -127,7 +128,7 @@ public class Main extends JavaPlugin implements Listener {
         
         getCommand("isunomadyet").setExecutor(new CommandIsUnoMadYet());
         getCommand("setlevel").setExecutor(new CommandSetLevel());
-        
+        levelMechanics = new LevelMechanics();
         hearthstoneMechanics = new HearthstoneMechanics();
         achievmentMechanics = new AchievmentMechanics();
         bossMechanics = new BossMechanics();
@@ -209,7 +210,7 @@ public class Main extends JavaPlugin implements Listener {
         tutorialMechanics.onEnable();
         weatherMechanics.onEnable();
         betaNPC.onEnable();
-
+        levelMechanics.onEnable();
         ItemGenerator.loadModifiers();
         
         new BukkitRunnable() {

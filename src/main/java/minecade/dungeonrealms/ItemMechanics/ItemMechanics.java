@@ -3744,7 +3744,7 @@ public class ItemMechanics implements Listener {
         if (dmg_data.contains("edmg=")) {
             String elemental_type = dmg_data.split("edmg=")[1].split(":")[0].replaceAll(red.toString(), "");
             if (elemental_type.equalsIgnoreCase("fire")) {
-                a.setFireTicks(80);
+                //a.setFireTicks(80);
             }
             if (elemental_type.equalsIgnoreCase("ice")) {
 
@@ -4274,7 +4274,6 @@ public class ItemMechanics implements Listener {
                 dmg = dmg + (int) ((dmg * (vs_mod / 100.0D)));
             }
         }
-
         if (dmg_data.contains("edmg=")) {
             String elemental_type = dmg_data.split("edmg=")[1].split(":")[0].replaceAll(red.toString(), "");
             // int tier = getItemTier(p.getItemInHand());
@@ -4719,7 +4718,7 @@ public class ItemMechanics implements Listener {
 
             if (dmg_data.contains("edmg=")) {
                 String elemental_type = dmg_data.split("edmg=")[1].split(":")[0].replaceAll(red.toString(), "");
-                int tier = getItemTier(weapon);
+                int tier = 0;
                 if (elemental_type.equalsIgnoreCase("fire")) {
                     if (tier == 1) {
                         ent.setFireTicks(15);
@@ -4956,7 +4955,8 @@ public class ItemMechanics implements Listener {
 
             if (dmg_data.contains("edmg=")) {
                 String elemental_type = dmg_data.split("edmg=")[1].split(":")[0].replaceAll(red.toString(), "");
-                int tier = getItemTier(weapon);
+                int tier = 0;
+                //int tier = getItemTier(weapon);
                 if (elemental_type.equalsIgnoreCase("fire")) {
                     if (tier == 1) {
                         ent.setFireTicks(15);
@@ -5189,7 +5189,7 @@ public class ItemMechanics implements Listener {
 
             if (dmg_data.contains("edmg=")) {
                 String elemental_type = dmg_data.split("edmg=")[1].split(":")[0].replaceAll(red.toString(), "");
-                int tier = getItemTier(weapon);
+                int tier = 0;
                 if (elemental_type.equalsIgnoreCase("fire")) {
                     if (tier == 1) {
                         ent.setFireTicks(15);
@@ -5466,7 +5466,7 @@ public class ItemMechanics implements Listener {
 
             if (dmg_data.contains("edmg=")) {
                 String elemental_type = dmg_data.split("edmg=")[1].split(":")[0].replaceAll(red.toString(), "");
-                int tier = getItemTier(weapon);
+                int tier = 0;
                 if (elemental_type.equalsIgnoreCase("fire")) {
                     if (tier == 1) {
                         ent.setFireTicks(15);

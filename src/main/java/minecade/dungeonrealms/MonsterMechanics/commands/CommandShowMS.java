@@ -40,13 +40,13 @@ public class CommandShowMS implements CommandExecutor {
                 for (k = -radius; k <= radius; k++) {
                     loc = w.getBlockAt(x + i, y + j, z + k).getLocation();
                     if (MonsterMechanics.mob_spawns.containsKey(loc)) {
-                        if (loc.getBlock().getType() == Material.AIR) {
+                        //if (loc.getBlock().getType() == Material.AIR) {
                             count++;
                             loc.getBlock().setType(Material.MOB_SPAWNER);
                             JSONMessage m = new JSONMessage("", ChatColor.GRAY);
                             m.addRunCommand(ChatColor.GRAY + "Spawner: X:" + loc.getBlockX() + " Y:" + loc.getBlockY() + " Z:" + loc.getBlockZ(), ChatColor.GRAY, "/drtppos " + (0.5D + loc.getBlockX()) + " " + (0.5D + loc.getBlockY()) + " " + (0.5D + loc.getBlockZ()) );
                             m.sendToPlayer(p);
-                        }
+                        //}
                     }
                 }
             }

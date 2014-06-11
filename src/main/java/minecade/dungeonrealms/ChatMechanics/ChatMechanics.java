@@ -588,11 +588,8 @@ public class ChatMechanics implements Listener {
                           // their buds.
             }
             if (trade && PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("tchat")) {
-                Main.d("The message was a trade message! And " + pl.getName() + " tchat was toggled Msg: " + msg);
                 continue; // They have trade chat off, and only want to hear
                           // from their buds.
-            }else{
-                Main.d("The message was a trade message! And " + pl.getName() + " tchat was NOT toggled Msg: " + msg);
             }
             if (TutorialMechanics.onTutorialIsland(pl)) {
                 continue; // Don't send global chat to players on tutorial
@@ -622,9 +619,9 @@ public class ChatMechanics implements Listener {
                         + ChatColor.WHITE + personal_msg);
             }
         }
-        
+
         String prefix = getPlayerPrefix(p);
-        
+
         log.info(ChatColor.stripColor("" + "<" + "G" + ">" + " " + prefix + p.getName() + ": " + msg));
 
     }

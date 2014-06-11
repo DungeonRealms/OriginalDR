@@ -5,6 +5,7 @@ import java.util.Random;
 
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
+import minecade.dungeonrealms.LevelMechanics.commands.CommandAddXP;
 import minecade.dungeonrealms.MonsterMechanics.Hologram;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
 import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
@@ -38,6 +39,10 @@ public class LevelMechanics implements Listener {
                 }
             }
         }.runTaskTimer(Main.plugin, 100, 10 * 20);
+    }
+    
+    public void onEnable(){
+        Main.plugin.getCommand("addxp").setExecutor(new CommandAddXP());
     }
     @EventHandler
     public void onAsyncLogin(AsyncPlayerPreLoginEvent e) {
