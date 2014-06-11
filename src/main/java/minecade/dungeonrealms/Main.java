@@ -107,7 +107,7 @@ public class Main extends JavaPlugin implements Listener {
     public static Main plugin;
     public static Logger log;
 
-    private static List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine");
+    private static List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine", "Azubuso");
     private static List<String> masters = Arrays.asList("Bradez1571", "felipepcjr", "mayley1996", "UnoWild", "Vapeorz");
 
     public void onEnable() {
