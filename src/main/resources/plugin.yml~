@@ -1,0 +1,537 @@
+name: DungeonRealms
+main: minecade.dungeonrealms.Main
+softdepend: [Citizens, MenuEngine]
+version: 1.0
+commands:
+	duel:
+	description: Root command... for now.
+	usage: /<command>
+	toggleduel:
+	description: Toggle accepting duel requests.
+	usage: /<command>
+	aliases: [toggleduels, duel]
+	toggleindicator:
+	description: Toggle indicators.
+	usage: /<command>
+	aliases: [toggleindicators]
+	achievment:
+	description: Root command.
+	usage: /<command>
+	boss:
+	description: Root cmd.
+	usage: /<command>
+	spawnboss:
+	description: Spawns a boss mob.
+	usage: /<command>
+	addxp:
+	description: Adds the XP to the player.
+	usage: /<command>
+	gl:
+	description: Send a message globally.
+	usage: /<command>
+	aliases: [global, all]
+	l:
+	description: Send a message locally
+	usage: /<command>
+	aliases: [local]
+	add:
+	description: Adds PLAYER to buddy list.
+	usage: /<command>
+	aliases: [addbuddy, addfriend, friend]
+	delete:
+	description: Delete PLAYER from ALL lists.
+	usage: /<command>
+	aliases: [del, delbuddy, remove]
+	ignore:
+	description: Adds PLAYER to ignore list.
+	usage: /<command>
+	crypt:
+	description: Encrypt/Decrypt String information.
+	usage: /<command>
+	toggles:
+	description: Opens toggle menu.
+	usage: /<command>
+	aliases: [togglemenu, viewtoggles, toggle]
+	toggletells:
+	description: Toggles recieving PMs.
+	usage: /<command>
+	aliases: [toggletell]
+	toggleparty:
+	description: Toggles recieving party invites.
+	usage: /<command>
+	toggleff:
+	description: Toggles PvP against buddies.
+	usage: /<command>
+	aliases: [togglepvp, ff]
+	debug:
+	description: Toggles displaying debug messages.
+	usage: /<command>
+	aliases: [info, toggledebug]
+	toggleglobal:
+	description: Toggles displaying global chat.
+	usage: /<command>
+	aliases: [tgl]
+	toggletradechat:
+	description: Toggles displaying trade chat.
+	usage: /<command>
+	aliases: [ttc, toggletc, toggletchat]
+	togglefilter:
+	description: Toggles adult language filter.
+	usage: /<command>
+	aliases: [tfilter, filter]
+	toggleguild:
+	description: Toggles recieving guild invites.
+	usage: /<command>
+	aliases: [tguild, toggleguildinvites]
+	togglepvp:
+	description: Toggles any hits that result in you turning chaotic.
+	usage: /<command>
+	aliases: [tpvp]
+	togglechaos:
+	description: Toggles any hits that result in you turning chaotic.
+	usage: /<command>
+	aliases: [togglechaotic]
+	toggletips:
+	description: Toggles recieving tips.
+	usage: /<command>
+	aliases: [toggletip, disabletips, stoptips, enabletips]
+	toggleprofile:
+	description: Toggles displaying inventory and stats on website statistics.
+	usage: /<command>
+	aliases: [togglestats]
+	togglestarterpack:
+	description: Toggles getting starter items.
+	usage: /<command>
+	toggleglobalchat:
+	description: Toggles talking in global chat
+	usage: /<command>
+	toggletabchat:
+	description: Toggles tabcomplete chat
+	usage: /<command>
+	allowfight:
+	description: Toggles fight mode
+	usage: /<command>
+	tips:
+	description: Get a random tip.
+	usage: /<command>
+	aliases: [tip, protip]
+	roll:
+	description: Generates a random number.
+	usage: /<command>
+	aliases: [random, dice, ran]
+	tickdays:
+	description: Ticks days of sdays_left forward 1 day.
+	usage: /<command>
+	givebeta:
+	description: Give beta to the user.
+	usage: /<command>
+	givesub:
+	description: Give sub to the user.
+	usage: /<command>
+	givesubplus:
+	description: Give sub+ to the user.
+	usage: /<command>
+	addec:
+	description: Add specified amount of ECASH to player.
+	usage: /<command>
+	removesubplus:
+	description: Removes any sub/sub+ status.
+	usage: /<command>
+	removesub:
+	description: Removes any sub/sub+ status.
+	usage: /<command>
+	accept:
+	description: Accept given user into beta (nonpaying)
+	usage: /<command>
+	acceptall:
+	description: Accept all users in accept.txt
+	usage: /<command>
+	addpet:
+	description: Console command to add pet to player.
+	usage: /<command>
+	givesublife:
+	description: Console command to give lifetime sub to a player.
+	usage: /<command>
+	rewardsublife:
+	description: Gives 999 to all sub++
+	usage: /<command>
+	ecash:
+	description: Open ecash shop.
+	usage: /<command>
+	checkecash:
+	description: Check a player ecash level.
+	usage: /<command>
+	firewand:
+	description: Adds firewand.
+	usage: /<command>
+	drenchant:
+	description: Root command.
+	usage: /<command>
+	fat:
+	description: Root command.
+	usage: /<command>
+	guild:
+	description: Root command.
+	usage: /<command>
+	ginvite:
+	description: Invite player to guild.
+	usage: /<command>
+	gkick:
+	description: Kick player from guild.
+	usage: /<command>
+	gquit:
+	description: Quit guild.
+	usage: /<command>
+	gpromote:
+	description: Promote to officer.
+	usage: /<command>
+	gdemote:
+	description: Demote officer back to member.
+	usage: /<command>
+	gaccept:
+	description: Accept guild invite.
+	usage: /<command>
+	gdecline:
+	description: Decline guild invite.
+	usage: /<command>
+	g:
+	description: Speak in guild chat.
+	usage: /<command>
+	aliases: [gchat]
+	gmotd:
+	description: Guild message of the day.
+	usage: /<command>
+	aliases: [motd]
+	gbio:
+	description: Sets and displays the guild biography.
+	usage: /<command>
+	aliases: [gbiography, guildbio, guildbiography, setguildbio, setguildbiography]
+	gbanner:
+	description: Uploads guild banner to website for highscores.
+	usage: /<command>
+	aliases: [guildbanner, setguildbanner, uploadbanner, uploadguildbanner, uploadgbanner]
+	instance:
+	description: Root command.
+	usage: /<command>
+	isay:
+	description: Instance tell message.
+	usage: /<command>
+	debuffcrystal:
+	description: Spawn debuff crystal at coordinates.
+	usage: /<command>
+	drlightning:
+	description: Spawns a lightning bolt.
+	usage: /<command>
+	drreplacenear:
+	description: Replaces nearby blocks.
+	usage: /<command>
+	bosstp:
+	description: Teleport to boss room if mobs are dead.
+	usage: /<command>
+	addweapon:
+	description: Adds custom weapon to inventory.
+	usage: /<command>
+	addweaponnew:
+	description: Adds custom weapon to inventory.
+	usage: /<command>
+	addweaponnewnew:
+	description: Adds custom weapon to inventory.
+	usage: /<command>
+	karma:
+	description: Root command.
+	usage: /<command>
+	check:
+	description: Displays status of current zone.
+	usage: /<command>
+	loot:
+	description: Root plugin command.
+	usage: /<command>
+	showloot:
+	description: Show loot.
+	usage: /<command>
+	hideloot:
+	description: Hide loot.
+	usage: /<command>
+	loadloot:
+	description: Loads new loot template files.
+	usage: /<command>
+	merchant:
+	description: Root command for merchant mechanics.
+	usage: /<command>
+	mute:
+	description: Mutes player.
+	usage: /<command>
+	unmute:
+	description: Unmutes player.
+	usage: /<command>
+	drkick:
+	description: Kicks player.
+	usage: /<command>
+	ipban:
+	description: IP Ban.
+	usage: /<command>
+	drban:
+	description: Bans player.
+	usage: /<command>
+	unban:
+	description: Unbans player.
+	usage: /<command>
+	report:
+	description: Report a player.
+	usage: /<command>
+	check:
+	description: Check active reports.
+	usage: /<command>
+	stuck:
+	description: Unstucks your character.
+	usage: /<command>
+	aliases: [unstuck]
+	sayall:
+	description: Sends a command to all players on server.
+	usage: /<command>
+	lock:
+	description: Lock login to all servers.
+	usage: /<command>
+	unlock:
+	description: Unlock login to all servers.
+	usage: /<command>
+	banksee:
+	description: Views player's bank.
+	usage: /<command>
+	unbanksee:
+	description: Removes the players bank from memory.
+	usage: /<command>
+	sendpacket:
+	description: Sends packets across the servers.
+	usage: /<command>
+	drtppos:
+	description: Teleport to position.
+	usage: /<command>
+	armorsee:
+	description: Views player's armor.
+	usage: /<command>
+	realmclone:
+	description: Copy a player's realm.
+	usage: /<command>
+	playerclone:
+	description: Copy a player's data.
+	usage: /<command>
+	drvanish:
+	description: A better vanish.
+	usage: /<command>
+	aliases: [vanish, unvanish]
+	mnote:
+	description: Root command.
+	usage: /<command>
+	allowjoin:
+	description: Allows ops to allow players to join again.
+	usage: /<command>
+	setlevel:
+	description: Sets the player givens level.
+	usage: /<command>
+	addhearthstone:
+	description: Adds a hearthstone spawn point.
+	usage: /<command>
+	listhearthstone:
+	description: List the hearthstones locations.
+	usage: /<command>
+	showms:
+	description: Show mob spawners visually.
+	usage: /<command>
+	hidems:
+	description: Hide visual mob spawners
+	usage: /<command>
+	mon:
+	description: Root command.
+	usage: /<command>
+	monspawn:
+	description: Spawn custom mob.
+	usage: /<command>
+	mount:
+	description: Root command.
+	usage: /<command>
+	addmount:
+	description: Console command to add Mount to player.
+	usage: /<command>
+	setrank:
+	description: Sets a users rank.
+	usage: /<command>
+	pmhelp:
+	description: Player mod help.
+	usage: /<command>
+	gmhelp:
+	description: Game mod help.
+	usage: /<command>
+	pet:
+	description: Root command.
+	usage: /<command>
+	addpet:
+	description: Console command to add pet to player.
+	usage: /<command>
+	powerup:
+	description: Root command.
+	usage: /<command>
+	prof:
+	description: Root CMD.
+	usage: /<command>
+	setore:
+	description: Ore placement command.
+	usage: /<command>
+	setfish:
+	description: Fishing spot placement command.
+	usage: /<command>
+	showfish:
+	description: Show fishing spots in area.
+	usage: /<command>
+	hidefish:
+	description: Hide fishing spots in area.
+	usage: /<command>
+	realm:
+	description: Sets TITLE of realm.
+	usage: /<command>
+	aliases: [title]
+	resetrealm:
+	description: Resets your player owned realm.
+	usage: /<command>
+	setrealmtier:
+	description: Set realm tier of a player.
+	usage: /<command>
+	repair:
+	description: Root command.
+	usage: /<command>
+	restrict:
+	description: Root command.
+	usage: /<command>
+	zone:
+	description: Refresh zone of player.
+	usage: /<command>
+	list:
+	description: List all online players.
+	usage: /<command> [group]
+	aliases: [elist,online,eonline,playerlist,eplayerlist,plist,eplist,who,ewho]
+	shop:
+	description: Root command.
+	usage: /<command>
+	addspawn:
+	description: Registers a new spawn point.
+	usage: /<command>
+	spawn:
+	description: Go to designated spawn point.
+	usage: /<command>
+	setvspawn:
+	description: Go to designated spawn point.
+	usage: /<command>
+	tppos:
+	description: Teleport to position.
+	usage: /<command>
+	drtp:
+	description: Root teleport command.
+	usage: /<command>
+	toggletrade:
+	description: Toggles trading.
+	usage: /<command>
+	tutorial:
+	description: Root command.
+	usage: /<command>
+	skip:
+	description: Skips the tutorial island.
+	usage: /<command>
+	drweather:
+	description: Root command.
+	usage: /<command>
+	classicrollout:
+	description: Classic rollout
+	usage: /<command>
+	rollout:
+	description: Rollout world and plugins.
+	usage: /<command>
+	rolloutall:
+	description: Rollout world and plugins to all servers.
+	usage: /<command>
+	cycleall:
+	description: Reboot all servers.
+	usage: /<command>
+	cycle:
+	description: Reboot a specific server.
+	usage: /<command>
+	hquery:
+	description: Query debug command.
+	usage: /<command>
+	benchmark:
+	description: Run a benchmark.
+	usage: /<command>
+	drsave:
+	description: Save DR stuff.
+	usage: /<command>
+	drload:
+	description: Load DR stuff.
+	usage: /<command>
+	whois:
+	description: Get a bunch of data about currently logged in player.
+	usage: /<command>
+	logout:
+	description: Logs out safely.
+	usage: /<command>
+	aliases: [camp, quit, safe]
+	sync:
+	description: Resyncs character.
+	usage: /<command>
+	aliases: [fix, desync]
+	bio:
+	description: Write character biography.
+	usage: /<command>
+	aliases: [biography, setbio, pbio]
+	wipe:
+	description: Wipes characters.
+	usage: /<command>
+	suicide:
+	description: Kills player.
+	usage: /<command>
+	aliases: [killself]
+	setalignment:
+	description: Sets the players alignment.
+	usage: /<command>
+	aliases: [alignmentset]
+	profile:
+	description: Spits out link to player profile on website.
+	usage: /<command>
+	aliases: [profilelink]
+	reboot:
+	description: Next scheduled reboot time.
+	usage: /<command>
+	aliases: [restart, nextreboot]
+	shard:
+	description: Opens shard selection menu.
+	usage: /<command>
+	aliases: [servers, server, serverlist]
+	party:
+	description: Root command.
+	usage: /<command>
+	pinvite:
+	description: Invite player to party.
+	usage: /<command>
+	pquit:
+	description: Quit party.
+	usage: /<command>
+	pkick:
+	description: Kick player from party.
+	usage: /<command>
+	p:
+	description: Party chat.
+	usage: /<command>
+	aliases: [pchat, pc]
+	paccept:
+	description: Quit party.
+	usage: /<command>
+	pdecline:
+	description: Quit party.
+	usage: /<command>
+	ppromote:
+	description: Promote player to party leader.
+	usage: /<command>
+	ploot:
+	description: Change loot distribution type.
+	usage: /<command>
+	isunomadyet:
+	description: Shhh don't tell anyone about this.
+	usage: /<command>
