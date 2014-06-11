@@ -116,7 +116,7 @@ public class ModerationMechanics implements Listener {
 		Main.plugin.getCommand("unbanksee").setExecutor(new CommandUnBankSee());
 		Main.plugin.getCommand("sendpacket").setExecutor(new CommandSendPacket());
 		Main.plugin.getCommand("setalignment").setExecutor(new CommandSetAlignment());
-		//Main.plugin.getCommand("allowfight").setExecutor(new CommandAllowFight());
+		Main.plugin.getCommand("allowfight").setExecutor(new CommandAllowFight());
 	}
 
 	public void onDisable() {
