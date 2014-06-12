@@ -2777,7 +2777,7 @@ public class ShopMechanics implements Listener {
 			p.sendMessage(ChatColor.RED + "You cannot access shops with a pending duel request.");
 			return;
 		}
-		if (isShopOwner(p, b) && shop_upgrade_codes.containsKey(p.getName()) {
+		if (isShopOwner(p, b) && shop_upgrade_codes.containsKey(p.getName())) {
 			p.sendMessage(ChatColor.RED + "Please finish your upgrade first! Your code was: " + ChatColor.BOLD + getUpgradeAuthenticationCode(p));
 			if (isShopOpen(b)) {
 				p.closeInventory();
