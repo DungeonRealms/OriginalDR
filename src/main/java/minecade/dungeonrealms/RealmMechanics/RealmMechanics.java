@@ -573,7 +573,7 @@ public class RealmMechanics implements Listener {
 
             public void run() {
                 for (OfflinePlayer opl : Bukkit.getOperators()) {
-                    if (!ModerationMechanics.allowsFight.contains(opl.getName()) {
+                    if (!ModerationMechanics.allowsFight.contains(opl.getName())) {
                         if (!(player_god_mode.containsKey(opl.getName()))) {
                             player_god_mode.put(opl.getName(), System.currentTimeMillis() + 999999999);
                             Player pl = (Player) opl.getPlayer();
