@@ -18,8 +18,6 @@ import org.bukkit.entity.Player;
 
 public class CommandAllowFight implements CommandExecutor {
 
-	private Map<String, Integer> user_health = new HashMap<>();
-	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player p = null;
@@ -45,14 +43,11 @@ public class CommandAllowFight implements CommandExecutor {
 				isGod = RealmMechanics.player_god_mode.containsKey(p.getName());
 				ModerationMechanics.allowsFight.add(p.getName());
 				user_health.put(p.getName(), HealthMechanics.health_data.get(p.getName()));
-				HealthMechanics.health_data.put(p.getName(), 50);
-				HealthMechanics.setPlayerHP(p.getName(), 50);
+				HealthMechanics.setPlayerHP(p.getName(), HealthMechanics.health_data.get(p.getName()));
 				if (isGod) RealmMechanics.player_god_mode.remove(p.getName());
 				sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You toggled on fight mode.");
 			} else {
 				ModerationMechanics.allowsFight.remove(p.getName());
-				HealthMechanics.health_data.put(p.getName(), user_health.get(p.getName()));
-				user_health.remove(p.getName());
 				HealthMechanics.setPlayerHP(p.getName(), HealthMechanics.health_data.get(p.getName()));
 				sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You toggled off fight mode");
 			}
