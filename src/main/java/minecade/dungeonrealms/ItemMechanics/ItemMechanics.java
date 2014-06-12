@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.text.Utilities;
 
 import minecade.dungeonrealms.Main;
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.EnchantMechanics.EnchantMechanics;
@@ -340,7 +340,7 @@ public class ItemMechanics implements Listener {
                         continue;
                     }
                     Player p = Bukkit.getPlayer(p_name);
-                    AchievmentMechanics.processArmorAchievments(p_name, p.getInventory().getArmorContents());
+                    AchievementMechanics.processArmorAchievements(p_name, p.getInventory().getArmorContents());
 
                     // List<Integer> net_armor_vals = new ArrayList<Integer>(armor_data.get(p.getName()));
                     if (!(armor_data.containsKey(p.getName()))) {
@@ -3537,11 +3537,11 @@ public class ItemMechanics implements Listener {
                     if (attacker instanceof Player) {
                         Player p_attacker = (Player) attacker;
                         if (block_count >= 30) {
-                            AchievmentMechanics.addAchievment(p_attacker.getName(), "The Hawkeye");
+                            AchievementMechanics.addAchievement(p_attacker.getName(), "The Hawkeye");
                             if (block_count >= 40) {
-                                AchievmentMechanics.addAchievment(p_attacker.getName(), "The Deadeye");
+                                AchievementMechanics.addAchievement(p_attacker.getName(), "The Deadeye");
                                 if (block_count >= 60) {
-                                    AchievmentMechanics.addAchievment(p_attacker.getName(), "The Sniper");
+                                    AchievementMechanics.addAchievement(p_attacker.getName(), "The Sniper");
                                 }
                             }
                         }
@@ -3598,7 +3598,7 @@ public class ItemMechanics implements Listener {
                 e.setDamage(dmg);
 
                 if (dmg >= 450 && attacker instanceof Player) {
-                    AchievmentMechanics.addAchievment(((Player) attacker).getName(), "Serious Strength");
+                    AchievementMechanics.addAchievement(((Player) attacker).getName(), "Serious Strength");
                 }
             }
 

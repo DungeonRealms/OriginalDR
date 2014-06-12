@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import minecade.dungeonrealms.Main;
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.ChatMechanics.ChatMechanics;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
@@ -1247,7 +1247,7 @@ public class EcashMechanics implements Listener {
             pl.getInventory().addItem(is);
             pl.playSound(pl.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F);
             pl.updateInventory();
-            AchievmentMechanics.addAchievment(pl.getName(), "Its Personal");
+            AchievementMechanics.addAchievement(pl.getName(), "Its Personal");
 
             item_name_change.remove(pl.getName());
         }

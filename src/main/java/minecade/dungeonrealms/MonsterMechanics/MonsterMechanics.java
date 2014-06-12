@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import minecade.dungeonrealms.Main;
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.BossMechanics.BossMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.EnchantMechanics.EnchantMechanics;
@@ -3753,7 +3753,7 @@ public class MonsterMechanics implements Listener {
         double mhealth = mob_health.get(ent);
 
         if (attacker instanceof Player && mhealth == max_health && dmg >= max_health) {
-            AchievmentMechanics.addAchievment(((Player) attacker).getName(), "One K.O");
+            AchievementMechanics.addAchievement(((Player) attacker).getName(), "One K.O");
         }
 
         // Rag'doll them maybe?
@@ -3768,7 +3768,7 @@ public class MonsterMechanics implements Listener {
         subtractMHealth(ent, (int) dmg);
 
         if (attacker instanceof Player && dmg >= 450) {
-            AchievmentMechanics.addAchievment(((Player) attacker).getName(), "Serious Strength");
+            AchievementMechanics.addAchievement(((Player) attacker).getName(), "Serious Strength");
         }
 
         if (e instanceof EntityDamageByEntityEvent) {
@@ -5093,17 +5093,17 @@ public class MonsterMechanics implements Listener {
             int lmob_kills = RecordMechanics.mob_kills.get(p_name);
             lmob_kills = lmob_kills + 1;
             if (lmob_kills >= 100) {
-                AchievmentMechanics.addAchievment(p_name, "Monster Hunter I");
+                AchievementMechanics.addAchievement(p_name, "Monster Hunter I");
                 if (lmob_kills >= 300) {
-                    AchievmentMechanics.addAchievment(p_name, "Monster Hunter II");
+                    AchievementMechanics.addAchievement(p_name, "Monster Hunter II");
                     if (lmob_kills >= 500) {
-                        AchievmentMechanics.addAchievment(p_name, "Monster Hunter III");
+                        AchievementMechanics.addAchievement(p_name, "Monster Hunter III");
                         if (lmob_kills >= 1000) {
-                            AchievmentMechanics.addAchievment(p_name, "Monster Hunter IV");
+                            AchievementMechanics.addAchievement(p_name, "Monster Hunter IV");
                             if (lmob_kills >= 1500) {
-                                AchievmentMechanics.addAchievment(p_name, "Monster Hunter V");
+                                AchievementMechanics.addAchievement(p_name, "Monster Hunter V");
                                 if (lmob_kills >= 2000) {
-                                    AchievmentMechanics.addAchievment(p_name, "Monster Hunter VI");
+                                    AchievementMechanics.addAchievement(p_name, "Monster Hunter VI");
                                 }
                             }
                         }
@@ -5145,7 +5145,7 @@ public class MonsterMechanics implements Listener {
                 }
                 Player pl = Bukkit.getPlayer(p_name);
                 if (pl.getItemInHand().getType() == Material.BOW && ent.getLastDamageCause().getCause() == DamageCause.PROJECTILE) {
-                    AchievmentMechanics.addAchievment(p_name, "Crack Shot");
+                    AchievementMechanics.addAchievement(p_name, "Crack Shot");
                 }
             }
             if (ent.getType() == EntityType.COW) {
@@ -5165,7 +5165,7 @@ public class MonsterMechanics implements Listener {
             }
 
             if (kill_list.split(",").length >= 5) {
-                AchievmentMechanics.addAchievment(p_name, "Passive Hunter");
+                AchievementMechanics.addAchievement(p_name, "Passive Hunter");
             }
 
             passive_hunter_achiev.put(p_name, kill_list);

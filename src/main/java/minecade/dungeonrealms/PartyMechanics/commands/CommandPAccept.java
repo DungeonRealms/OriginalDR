@@ -1,6 +1,6 @@
 package minecade.dungeonrealms.PartyMechanics.commands;
 
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
 
 import org.bukkit.Bukkit;
@@ -55,7 +55,7 @@ public class CommandPAccept implements CommandExecutor {
 		p.sendMessage("");
 		p.sendMessage(ChatColor.LIGHT_PURPLE + "You have joined " + ChatColor.BOLD + party_name + "'s" + ChatColor.LIGHT_PURPLE + " party.");
 		p.sendMessage(ChatColor.GRAY + "To chat with your party, use " + ChatColor.BOLD + "/p" + ChatColor.GRAY + " OR " + ChatColor.BOLD + " /p <message>");
-		AchievmentMechanics.addAchievment(p.getName(), "Party up!");
+		AchievementMechanics.addAchievement(p.getName(), "Party up!");
 		PartyMechanics.party_invite.remove(p.getName());
 		PartyMechanics.party_invite_time.remove(p.getName());
 		return true;
