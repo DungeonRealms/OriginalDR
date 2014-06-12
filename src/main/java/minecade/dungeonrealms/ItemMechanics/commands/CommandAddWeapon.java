@@ -32,11 +32,10 @@ public class CommandAddWeapon implements CommandExecutor {
     @SuppressWarnings("deprecation")
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!(sender instanceof Player)) return true;
         Player p = (Player) sender;
 
-        if (!(p.isOp())) {
-            return true;
-        }
+        if (!p.isOp()) return true;
         // getDamage(p.getItemInHand());
 
         if (args.length == 0) {
