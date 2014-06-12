@@ -1390,7 +1390,7 @@ public class MerchantMechanics implements Listener {
             }
             pl.updateInventory();
 
-            AchievementMechanics.addAchieement(pl.getName(), "Supporter");
+            AchievementMechanics.addAchievement(pl.getName(), "Supporter");
 
             if (product.getType() == Material.JUKEBOX) {
                 AchievementMechanics.addAchievement(p_name, "The Bard");
