@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import minecade.dungeonrealms.Main;
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
@@ -45,46 +45,46 @@ import org.bukkit.inventory.ItemStack;
 @SuppressWarnings("deprecation")
 public class KarmaMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
-	
+
 	public static HashMap<String, String> align_map = new HashMap<String, String>();
 	// Player_name, simple version of alignment: (good, neutral, evil)
-	
+
 	public static ConcurrentHashMap<String, Integer> align_time = new ConcurrentHashMap<String, Integer>();
 	// Seconds until alignment expires.
-	
+
 	public static HashMap<String, String> plast_hit = new HashMap<String, String>();
 	// PLAYER_NAME, LAST DAMAGER_NAME
-	
+
 	public static HashMap<String, Long> last_hit_time = new HashMap<String, Long>();
 	// Last time a player was hit in LONG format.
-	
+
 	public static HashMap<String, Long> last_attack_time = new HashMap<String, Long>();
 	// Last time a player attacked another player.
-	
+
 	public static HashMap<String, List<ItemStack>> saved_gear = new HashMap<String, List<ItemStack>>();
-	// Used on player death event to ensure gear is safe on respawn. 
-	// TODO: Make this cross-server 
-	
+	// Used on player death event to ensure gear is safe on respawn.
+	// TODO: Make this cross-server
+
 	public static HashMap<String, String> lost_gear = new HashMap<String, String>();
 	// Used to prevent dupe from neutral deaths not coordinating correct lost items.
 	// ',' delim list of slot #'s of armor/weapon that was dropped.
-	
+
 	public static HashMap<String, Location> saved_location = new HashMap<String, Location>();
 	// Location to TP players back to on asyncmove event.
-	
+
 	public static List<Location> evil_spawns = new ArrayList<Location>();
-	
+
 	static KarmaMechanics instance = null;
-	
+
 	public void onEnable() {
 		instance = this;
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
-		
+
 		evil_spawns.add(new Location(Bukkit.getWorlds().get(0), -382, 68, 867));
 		evil_spawns.add(new Location(Bukkit.getWorlds().get(0), -350, 67, 883));
 		evil_spawns.add(new Location(Bukkit.getWorlds().get(0), -330, 65, 898));
 		evil_spawns.add(new Location(Bukkit.getWorlds().get(0), -419, 61, 830));
-		
+
 		// Handles Async movement.
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
@@ -92,16 +92,16 @@ public class KarmaMechanics implements Listener {
 					if(p == null || p.getPlayerListName().equalsIgnoreCase("")) {
 						continue; // NPC.
 					}
-					
+
 					if(!(saved_location.containsKey(p.getName()))) {
 						saved_location.put(p.getName(), p.getLocation());
 					}
-					
+
 					Location from = saved_location.get(p.getName());
 					try {
 						String p_align = getRawAlignment(p.getName());
 						boolean pvp_off_from = DuelMechanics.isPvPDisabled(from);
-						
+
 						if(p_align.equalsIgnoreCase("evil") && pvp_off_from) {
 							p.sendMessage(ChatColor.RED + "The guards have kicked you out of the " + ChatColor.UNDERLINE + "protected area" + ChatColor.RED + " due to your chaotic alignment.");
 							int spawn = new Random().nextInt(evil_spawns.size());
@@ -111,9 +111,9 @@ public class KarmaMechanics implements Listener {
 							// TODO: Randomize this respawn ^
 							continue;
 						}
-						
+
 						boolean pvp_off_to = DuelMechanics.isPvPDisabled(p.getLocation());
-						
+
 						if(p_align.equalsIgnoreCase("evil") && pvp_off_to) {
 							if(from.getWorld().getName().equalsIgnoreCase(p.getLocation().getWorld().getName())) {
 								// Don't teleport them if they're changing realms, the above check will kick them out of city.
@@ -131,46 +131,46 @@ public class KarmaMechanics implements Listener {
 							// The player is chaotic and going into a PVP-off zone, nty.
 							continue;
 						}
-						
+
 						if((getSecondsSinceLastAttack(p.getName()) <= 10) && pvp_off_to && !(pvp_off_from)) {
 							// Crossing over from chaotic -> neutral while in combat, stop them.
 							if(from.getWorld().getName().equalsIgnoreCase(p.getLocation().getWorld().getName())) {
 								// Don't teleport them if they're changing realms, the above check will kick them out of city.
 								p.teleport(from);
 							}
-							
+
 							long last_att = last_attack_time.get(p.getName());
 							double seconds_left = ((System.currentTimeMillis() - last_att) / 1000.0D);
 							int return_val = (int) ((10 - Math.round(seconds_left)));
-							
+
 							p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " leave a chaotic zone while in combat.");
 							p.sendMessage(ChatColor.GRAY + "Out of combat in: " + ChatColor.BOLD + return_val + "s");
 							continue;
 						}
-						
+
 						saved_location.put(p.getName(), p.getLocation()); // If it reaches this point, store new location as a safe place.
-						
+
 					} catch(NullPointerException npe) {
 						continue;
 					}
 				}
 			}
 		}, 5 * 20L, 20L);
-		
+
 		// Handles ticking from Evil -> Neutral -> Good
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				List<String> to_remove = new ArrayList<String>();
-				
+
 				for(Entry<String, Integer> data : align_time.entrySet()) {
 					String p_name = data.getKey();
-					
+
 					if(p_name == null) {
 						continue;
 					}
-					
+
 					int penalty = data.getValue();
-					
+
 					if(Bukkit.getPlayer(p_name) != null) {
 						Player pl = Bukkit.getPlayer(p_name);
 						if(!pl.getWorld().getName().equalsIgnoreCase(Main.plugin.getServer().getWorlds().get(0).getName())) {
@@ -179,9 +179,9 @@ public class KarmaMechanics implements Listener {
 					} else if(Bukkit.getPlayer(p_name) == null) {
 						continue;
 					}
-					
+
 					penalty -= 1; // Subtract 1 second.
-					
+
 					if(penalty <= 0) {
 						// Time to change alignments!
 						try {
@@ -202,24 +202,24 @@ public class KarmaMechanics implements Listener {
 						align_time.put(p_name, penalty);
 					}
 				}
-				
+
 				for(String s : to_remove) {
 					align_time.remove(s);
 				}
 			}
 		}, 5 * 20L, 20L);
-		
+
 		log.info("[KarmaMechanics] has been enabled.");
 	}
-	
+
 	public void onDisable() {
 		log.info("[KarmaMechanics] has been disabled.");
 	}
-	
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		final Player p = e.getPlayer();
-		
+
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {
 				if(Main.plugin.getServer().getPlayer(p.getName()) != null) {
@@ -228,24 +228,24 @@ public class KarmaMechanics implements Listener {
 				}
 			}
 		}, 30L);
-		
+
 	}
-	
+
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
 		plast_hit.remove(p.getName());
 		saved_location.remove(p.getName());
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onEntityDamageEntity(EntityDamageByEntityEvent e) {
-		
+
 		Entity ent = e.getEntity();
 		if(e.getEntity().getPassenger() != null) {
 			ent = e.getEntity().getPassenger();
 		}
-		
+
 		if(ent instanceof Player && !(e.getDamager() instanceof Player) && !(e.getDamager() instanceof Arrow)) { // The attacker ain't a player.
 			Player attacked = (Player) ent;
 			if(last_hit_time.containsKey(attacked.getName())) {
@@ -256,21 +256,21 @@ public class KarmaMechanics implements Listener {
 				}
 			}
 		}
-		
+
 		if(e.getDamager() instanceof Player && ent instanceof Player) {
 			Player attacker = (Player) e.getDamager();
 			Player attacked = (Player) ent;
 			if(attacker.getName().equalsIgnoreCase(attacked.getName())) { return; // Same person!
 			}
-			
+
 			if(DuelMechanics.isPvPDisabled(attacker) || DuelMechanics.isPvPDisabled(attacked)) { return; } // No damage ever taken.
 			if(e.getDamage() <= 0) { return; }
-			
+
 			if(DuelMechanics.duel_map.containsKey(attacker.getName()) && DuelMechanics.duel_map.get(attacker.getName()).equalsIgnoreCase(attacked.getName())) { return; // They're dueling.
 			}
-			
+
 			last_attack_time.put(attacker.getName(), System.currentTimeMillis());
-			
+
 			if(HealthMechanics.noob_players.contains(attacker.getName())) {
 				// Warn them.
 				if(HealthMechanics.noob_player_warning.containsKey(attacker.getName())) {
@@ -291,7 +291,7 @@ public class KarmaMechanics implements Listener {
 					HealthMechanics.noob_player_warning.put(attacker.getName(), 0);
 				}
 			}
-			
+
 			if(getRawAlignment(attacker.getName()).equalsIgnoreCase("good")) { // They were good until now!
 				if(PlayerManager.getPlayerModel(attacker).getToggleList() != null){
 					if(PlayerManager.getPlayerModel(attacker).getToggleList().contains("pvp")){
@@ -308,12 +308,12 @@ public class KarmaMechanics implements Listener {
 			if(getRawAlignment(attacker.getName()).equalsIgnoreCase("neutral")) { // update the timer.
 				align_time.put(attacker.getName(), (120)); // Expires in 2 minutes from last hit.
 			}
-			
+
 			last_hit_time.put(attacked.getName(), System.currentTimeMillis());
 			plast_hit.put(attacked.getName(), attacker.getName()); // Store who the last player to hurt this person was.
-			
+
 		}
-		
+
 		if(e.getDamager().getType() == EntityType.ARROW && ent instanceof Player) {
 			Arrow a = (Arrow) e.getDamager();
 			if(a.getShooter() instanceof Player) {
@@ -326,7 +326,7 @@ public class KarmaMechanics implements Listener {
 				if(DuelMechanics.duel_map.containsKey(attacker.getName()) && DuelMechanics.duel_map.get(attacker.getName()).equalsIgnoreCase(attacked.getName())) { return; // They're dueling.
 				}
 				last_attack_time.put(attacker.getName(), System.currentTimeMillis());
-				
+
 				if(getRawAlignment(attacker.getName()).equalsIgnoreCase("good")) { // They were good until now!
 					if(PlayerManager.getPlayerModel(attacker).getToggleList() != null){
 						if(PlayerManager.getPlayerModel(attacker).getToggleList().contains("pvp")){
@@ -343,13 +343,13 @@ public class KarmaMechanics implements Listener {
 				if(getRawAlignment(attacker.getName()).equalsIgnoreCase("neutral")) { // update the timer.
 					align_time.put(attacker.getName(), (120)); // Expires in 2 minutes from last hit.
 				}
-				
+
 				last_hit_time.put(attacked.getName(), System.currentTimeMillis());
 				plast_hit.put(attacked.getName(), attacker.getName()); // The attacker killed the other player. FUCK!
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerKilled(PlayerDeathEvent e) {
 		if(e.getEntity() instanceof Player) {
@@ -369,17 +369,17 @@ public class KarmaMechanics implements Listener {
 			if(HealthMechanics.last_hit_location.containsKey(p.getName()) && DuelMechanics.isDamageDisabled(HealthMechanics.last_hit_location.get(p.getName()))) {
 				impossible_kill = true;
 			}
-			
+
 			List<ItemStack> saved_gear = new ArrayList<ItemStack>();
 			String align = getRawAlignment(p.getName());
-			
+
 			if(Bukkit.getMotd().toLowerCase().contains("developer server")) {
 				e.getDrops().clear();
 				return; // No loot on US-0
 			}
-			
+
 			if(align == null) { return; } // NPC death, not important.
-			
+
 			boolean neutral_boots = false, neutral_legs = false, neutral_chest = false, neutral_helmet = false, neutral_weapon = false;
 			if(HealthMechanics.combat_logger.contains(p.getName()) && align.equalsIgnoreCase("neutral")) {
 				// So we need to know what is dropped  and what isn't ... can't we just use saved_gear and then detect they're a combat logger?
@@ -421,7 +421,7 @@ public class KarmaMechanics implements Listener {
 				if(new Random().nextInt(100) <= 50) {
 					neutral_weapon = true;
 				}
-				
+
 				if(new Random().nextInt(100) <= 25) {
 					int index = new Random().nextInt(4);
 					if(index == 0) {
@@ -438,11 +438,11 @@ public class KarmaMechanics implements Listener {
 					}
 				}
 			}
-			
+
 			if(impossible_kill == false && (align.equalsIgnoreCase("good") || align.equalsIgnoreCase("neutral"))) { // Damage armor, but keep it.
 				double durability_to_take = (RepairMechanics.blocks_per_armor * 0.30D); // 30%
 				double w_durability_to_take = (RepairMechanics.hits_per_weapon * 0.30D);
-				
+
 				if(!neutral_boots && p.getInventory().getBoots() != null && p.getInventory().getBoots().getType() != Material.AIR) {
 					ItemStack boots = p.getInventory().getBoots();
 					e.getDrops().remove(boots);
@@ -483,9 +483,9 @@ public class KarmaMechanics implements Listener {
 						saved_gear.add(helmet);
 					}
 				}
-				
+
 				List<ItemStack> drop_copy = new ArrayList<ItemStack>(e.getDrops());
-				
+
 				for(ItemStack is : drop_copy) {
 					if(ProfessionMechanics.isSkillItem(is)) {
 						e.getDrops().remove(is);
@@ -495,7 +495,7 @@ public class KarmaMechanics implements Listener {
 						}
 					}
 				}
-				
+
 				ItemStack weapon_slot = p.getInventory().getItem(0);
 				if(!neutral_weapon && !ItemMechanics.getDamageData(weapon_slot).equalsIgnoreCase("no")) {
 					e.getDrops().remove(weapon_slot);
@@ -505,7 +505,7 @@ public class KarmaMechanics implements Listener {
 					}
 				}
 			}
-			
+
 			if(impossible_kill == false && MountMechanics.mule_inventory.containsKey(p.getName())) {
 				// Check if drops contain the mule, if so, drop the loot.
 				boolean has_mule = false;
@@ -520,13 +520,13 @@ public class KarmaMechanics implements Listener {
 					}
 					break;
 				}
-				
+
 				if(has_mule) {
 					// Drop the loots!
 					for(ItemStack is : MountMechanics.mule_inventory.get(p.getName()).getContents()) {
 						e.getDrops().add(is);
 					}
-					
+
 					//final ItemStack f_mule = mule;
 					Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 						public void run() {
@@ -537,10 +537,10 @@ public class KarmaMechanics implements Listener {
 							}
 						}
 					}, 4L);
-					
+
 				}
 			}
-			
+
 			if(impossible_kill == true) {
 				for(ItemStack is : e.getDrops()) {
 					if(!(saved_gear.contains(is))) {
@@ -550,23 +550,23 @@ public class KarmaMechanics implements Listener {
 				e.getDrops().clear();
 				// No items lost in safe zones.
 			}
-			
+
 			for(ItemStack is : e.getDrops()) {
 				if(PetMechanics.isPermUntradeable(is)) {
 					saved_gear.add(is);
 				}
 			}
-			
+
 			for(ItemStack is : saved_gear) {
 				if(e.getDrops().contains(is)) {
 					e.getDrops().remove(is);
 				}
 			}
-			
+
 			if(saved_gear.size() > 0) { // We have some saved gear we need to store for when player respawns lol.
 				KarmaMechanics.saved_gear.put(p.getName(), saved_gear);
 			}
-			
+
 			if(HealthMechanics.combat_logger.contains(p.getName())) {
 				e.getDrops().clear(); // Drop no items, just save some.
 				MountMechanics.mule_inventory.remove(p.getName());
@@ -575,43 +575,43 @@ public class KarmaMechanics implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		if(e.getEntity() instanceof Player) {
 			Player p = (Player) e.getEntity();
 			p.closeInventory();
-			
+
 			if(!plast_hit.containsKey(p.getName())) { return; } // No data for who killed them.
-			
+
 			if(last_hit_time.containsKey(p.getName())) {
 				if((System.currentTimeMillis() - last_hit_time.get(p.getName()) > (8 * 1000))) { return; // Been 8 seconds since they were last hit, so we don't need to punish anyone.
 				}
 			}
-			
+
 			String killer_name = plast_hit.get(p.getName());
-			
+
 			plast_hit.remove(p.getName());
 			if(Bukkit.getPlayer(killer_name) != null && Bukkit.getPlayer(killer_name).isOnline()) {
 				Player killer = Bukkit.getPlayer(killer_name);
 				int unlawful_kills = RecordMechanics.player_kills.get(killer.getName()).get(0);
 				int lawful_kills = RecordMechanics.player_kills.get(killer.getName()).get(1);
-				
+
 				if(killer.getWorld().getName().equalsIgnoreCase(killer.getName())) {
-					AchievmentMechanics.addAchievment(p.getName(), "Home Field Advantage");
+					AchievementMechanics.addAchievement(p.getName(), "Home Field Advantage");
 				}
-				
+
 				if((getRawAlignment(p.getName()).equalsIgnoreCase("good") || p.getWorld().getName().equalsIgnoreCase(p.getName())) && !(killer.getWorld().getName().equalsIgnoreCase(killer.getName()))) { // The person killed was Lawful or in their home, AND the killer was NOT in their home.
-				
+
 					if(p.getWorld().getName().equalsIgnoreCase(p.getName())) {
-						AchievmentMechanics.addAchievment(p.getName(), "Knock, Knock");
+						AchievementMechanics.addAchievement(p.getName(), "Knock, Knock");
 					}
-					
+
 					if(!getRawAlignment(killer.getName()).equalsIgnoreCase("evil")) { // The killer is now going to turn chaotic.
 						setAlignment(killer.getName(), "evil", 2); // Killer is now chaotic.
 						unlawful_kills += 1;
 					}
-					
+
 					if(align_time.containsKey(killer.getName())) {
 						int cur_penalty = align_time.get(killer.getName());
 						align_time.put(killer.getName(), (cur_penalty + (1200))); // +20 more minutes, bandit scum!
@@ -622,18 +622,18 @@ public class KarmaMechanics implements Listener {
 						unlawful_kills = unlawful_kills++;
 					}
 				}
-				
+
 				if(getRawAlignment(killer.getName()).equalsIgnoreCase("evil") && getRawAlignment(p.getName()).equalsIgnoreCase("neutral")) { // The person killed was neutral, killer was chaotic.
 					// Add 10 minutes.
 					int cur_penalty = align_time.get(killer.getName());
 					align_time.put(killer.getName(), cur_penalty + (600)); // +20 more minutes, bandit scum!
 					if(cur_penalty >= 3600) {
-						AchievmentMechanics.addAchievment(killer.getName(), "A long wait...");
+						AchievementMechanics.addAchievement(killer.getName(), "A long wait...");
 					}
 					killer.sendMessage(ChatColor.RED + "NEUTRAL player slain, " + ChatColor.BOLD + "+600s" + ChatColor.RED + " added to Chaotic timer.");
 					unlawful_kills += 1;
 				}
-				
+
 				if(getRawAlignment(p.getName()).equalsIgnoreCase("evil")) { // The person killed was chaotic.
 					if(getRawAlignment(killer.getName()).equalsIgnoreCase("evil")) { // The killer was also evil, bandit v. bandit! Take 10 mins of penalty off.
 						int cur_penalty = align_time.get(killer.getName());
@@ -641,65 +641,65 @@ public class KarmaMechanics implements Listener {
 						killer.sendMessage(ChatColor.GREEN + "Chaotic player slain, " + ChatColor.BOLD + "-600s" + ChatColor.GREEN + " removed from Chatoic timer.");
 						lawful_kills += 1;
 						if(lawful_kills >= 5) {
-							AchievmentMechanics.addAchievment(killer.getName(), "Enforcer of Justice I");
+							AchievementMechanics.addAchievement(killer.getName(), "Enforcer of Justice I");
 							if(lawful_kills >= 10) {
-								AchievmentMechanics.addAchievment(killer.getName(), "Enforcer of Justice II");
+								AchievementMechanics.addAchievement(killer.getName(), "Enforcer of Justice II");
 								if(lawful_kills >= 25) {
-									AchievmentMechanics.addAchievment(killer.getName(), "Enforcer of Justice III");
+									AchievementMechanics.addAchievement(killer.getName(), "Enforcer of Justice III");
 								}
 							}
 						}
 					} else {
-						AchievmentMechanics.addAchievment(killer.getName(), "Hero");
+						AchievementMechanics.addAchievement(killer.getName(), "Hero");
 					}
 				}
-				
+
 				int total_kills = unlawful_kills + lawful_kills;
 				if(total_kills >= 1) {
-					AchievmentMechanics.addAchievment(killer.getName(), "Man Hunter I");
+					AchievementMechanics.addAchievement(killer.getName(), "Man Hunter I");
 					if(total_kills >= 3) {
-						AchievmentMechanics.addAchievment(killer.getName(), "Man Hunter II");
+						AchievementMechanics.addAchievement(killer.getName(), "Man Hunter II");
 						if(total_kills >= 5) {
-							AchievmentMechanics.addAchievment(killer.getName(), "Man Hunter III");
+							AchievementMechanics.addAchievement(killer.getName(), "Man Hunter III");
 							if(total_kills >= 10) {
-								AchievmentMechanics.addAchievment(killer.getName(), "Man Hunter IV");
+								AchievementMechanics.addAchievement(killer.getName(), "Man Hunter IV");
 								if(total_kills >= 15) {
-									AchievmentMechanics.addAchievment(killer.getName(), "Man Hunter V");
+									AchievementMechanics.addAchievement(killer.getName(), "Man Hunter V");
 									if(total_kills >= 20) {
-										AchievmentMechanics.addAchievment(killer.getName(), "Man Hunter VI");
+										AchievementMechanics.addAchievement(killer.getName(), "Man Hunter VI");
 									}
 								}
 							}
 						}
 					}
 				}
-				
+
 				if(unlawful_kills > 0 && lawful_kills > 0) {
-					AchievmentMechanics.addAchievment(killer.getName(), "A Sinner and a Saint");
+					AchievementMechanics.addAchievement(killer.getName(), "A Sinner and a Saint");
 				}
-				
+
 				List<Integer> all_kills = new ArrayList<Integer>(Arrays.asList(unlawful_kills, lawful_kills));
 				RecordMechanics.player_kills.put(killer_name, all_kills);
 			}
-			
+
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent e) {
 		final Player p = e.getPlayer();
-		
+
 		// If they have saved_gear, they SHOULD be dead.
 		/*if(p.getLocation().distanceSquared(e.getRespawnLocation()) <= 2){
 			// They're respawning on themselves, ignore.
 				// Non-legit death, they won't loose any items.
 			return;
 		}*/
-		
+
 		if(saved_gear.containsKey(p.getName())) {
 			List<ItemStack> l_saved_gear = saved_gear.get(p.getName());
 			saved_gear.remove(p.getName());
-			
+
 			for(ItemStack i : l_saved_gear) {
 				if(i == null || i.getType() == Material.AIR) {
 					continue;
@@ -707,9 +707,9 @@ public class KarmaMechanics implements Listener {
 				p.getInventory().setItem(p.getInventory().firstEmpty(), ItemMechanics.removeAttributes(i));
 			}
 		}
-		
+
 	}
-	
+
 	/*@EventHandler(ignoreCancelled = false)
 	public void onPlayerMoveEvent(PlayerMoveEvent e){
 		Player p = e.getPlayer(); // The person MOVING.
@@ -734,7 +734,7 @@ public class KarmaMechanics implements Listener {
 				return;
 			}
 
-			boolean pvp_off_to = DuelMechanics.isPvPDisabled(e.getTo());	
+			boolean pvp_off_to = DuelMechanics.isPvPDisabled(e.getTo());
 
 			if(p_align.equalsIgnoreCase("evil") && pvp_off_to){
 				e.setCancelled(true);
@@ -761,7 +761,7 @@ public class KarmaMechanics implements Listener {
 			return;
 		}
 	}*/
-	
+
 	public int getSecondsSinceLastAttack(String p_name) {
 		if(!(last_attack_time.containsKey(p_name))) { return 9999; }
 		long last_att = last_attack_time.get(p_name);
@@ -769,23 +769,23 @@ public class KarmaMechanics implements Listener {
 		int return_val = (int) Math.round(seconds_left);
 		return return_val;
 	}
-	
+
 	public static void sendAlignColor(Player p_to_send, Player p_viewer) {
 		p_viewer = null; // Completely depreciated, kept for backwards compatibility. (variable)
-		
+
 		/*if(CommunityMechanics.isPlayerOnBuddyList(p_viewer, p_to_send.getName()) && (!(p_to_send.isOp()))){
 			return; // They're buds, don't change colors.
 		}
 		if(PartyMechanics.arePartyMembers(p_viewer.getName(), p_to_send.getName())){
 			return; // Let party plugin handle colors.
 		}*/
-		
+
 		String align = getRawAlignment(p_to_send.getName());
 		ChatColor c = null;
 		if(align == null || align.equalsIgnoreCase("")) {
 			align = "good";
 		}
-		
+
 		if(align.equalsIgnoreCase("good")) {
 			c = ChatColor.WHITE;
 			CommunityMechanics.setColor(p_to_send, c);
@@ -801,7 +801,7 @@ public class KarmaMechanics implements Listener {
 			CommunityMechanics.setColor(p_to_send, c);
 			return;
 		}
-		
+
 		/*EntityPlayer ent_p_edited = ((CraftPlayer) p_to_send).getHandle();
 		if(ent_p_edited instanceof Player){
 			HealthMechanics.setOverheadHP((Player) ent_p_edited, p_to_send.getLevel());
@@ -856,7 +856,7 @@ public class KarmaMechanics implements Listener {
 
 		ent_p_edited.name = ChatColor.stripColor(r_name);*/
 	}
-	
+
 	public static int getSecondsUntilAlignmentChange(String p_name) {
 		if(!(align_time.containsKey(p_name))) { return 0; }
 		return align_time.get(p_name);
@@ -871,11 +871,11 @@ public class KarmaMechanics implements Listener {
 		}
 		return (int)seconds_difference;*/
 	}
-	
+
 	public static void setAlignment(String p_name, String new_align, int echo_type) { // 0 = none, 1 = short, 2 = all
 		align_map.put(p_name, new_align);
 		//align_time.put(p_name, System.currentTimeMillis()); // Time of last alignment change.
-		
+
 		if(Bukkit.getPlayer(p_name) != null && Bukkit.getPlayer(p_name).isOnline() && !Bukkit.getPlayer(p_name).getPlayerListName().equalsIgnoreCase("")) {
 			final Player p = Bukkit.getPlayer(p_name);
 			sendAlignColor(p, p);
@@ -936,23 +936,23 @@ public class KarmaMechanics implements Listener {
 			}
 		}
 	}
-	
+
 	public static String getRawAlignment(String p_name) {
 		if(!(align_map.containsKey(p_name))) {
 			align_map.put(p_name, "good");
 		}
 		return align_map.get(p_name);
 	}
-	
+
 	public static String getAlignment(String p_name) {
 		if(!(align_map.containsKey(p_name))) { return ChatColor.GRAY.toString() + "N/A"; }
 		if(align_map.get(p_name).equalsIgnoreCase("good")) { return ChatColor.DARK_GREEN.toString() + ChatColor.UNDERLINE.toString() + "Lawful"; }
 		if(align_map.get(p_name).equalsIgnoreCase("neutral")) { return ChatColor.GOLD.toString() + ChatColor.UNDERLINE.toString() + "Neutral"; }
 		if(align_map.get(p_name).equalsIgnoreCase("evil")) { return ChatColor.DARK_RED.toString() + ChatColor.UNDERLINE.toString() + "Chaotic"; }
-		
+
 		return ChatColor.GRAY.toString() + "N/A";
 	}
-	
+
 	public static String getAlignmentDescription(String align) {
 		if(align == null || align.equalsIgnoreCase("")) { return ChatColor.ITALIC.toString() + "-30% Durability Arm/Wep on Death"; }
 		if(align.equalsIgnoreCase("good")) { return ChatColor.ITALIC.toString() + "-30% Durability Arm/Wep on Death"; }
@@ -960,5 +960,5 @@ public class KarmaMechanics implements Listener {
 		if(align.equalsIgnoreCase("evil")) { return ChatColor.ITALIC.toString() + "Inventory LOST on Death"; }
 		return "Error 001"; // Lol'd.
 	}
-	
+
 }

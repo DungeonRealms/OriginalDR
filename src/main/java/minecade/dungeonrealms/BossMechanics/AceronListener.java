@@ -253,7 +253,7 @@ public class AceronListener implements Listener {
                     }
                     return;
                 }
-                
+
                 if (percent_hp <= 30 && !BossMechanics.is_jumping.contains(boss) && !BossMechanics.invincible_mob.contains(boss)
                         && !spawned_wolf.contains(boss)) {
                     // They did 30% HP on aceron

@@ -11,7 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import minecade.dungeonrealms.Main;
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.EcashMechanics.EcashMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
@@ -438,7 +438,7 @@ public class MountMechanics implements Listener {
                 /*
                  * for(Entry<Entity, String> entry : inv_mule_map.entrySet()){ String p_name = entry.getValue(); Entity ent = entry.getKey();
                  * if(Bukkit.getPlayer(p_name) != null){ Player pl = Bukkit.getPlayer(p_name); Location to_loc = null; to_loc = pl.getLocation();
-                 * 
+                 *
                  * walkTo((LivingEntity)ent, to_loc.getX(), to_loc.getY() + 1, to_loc.getZ(), 1.0F); } }
                  */
 
@@ -623,7 +623,7 @@ public class MountMechanics implements Listener {
          * try { NBTTagList description = CraftItemStack.asNMSCopy(is).getTag().getCompound("display").getList("Lore", 0); int x = 0; while (description.size()
          * > x) { if (description.get(x).toString().contains("Portal Key Shards")) { String content = description.get(x).toString(); return
          * Double.parseDouble(ChatColor.stripColor((content.substring(0, content.indexOf(" "))))); } x++; }
-         * 
+         *
          * } catch (NullPointerException e) { return 0; } return 0;
          */
     }
@@ -635,7 +635,7 @@ public class MountMechanics implements Listener {
         	if(is.getItemMeta().getDisplayName().contains(":")){
         		rest = is.getItemMeta().getDisplayName().split(":")[1];
         	}
-            
+
             if (rest.contains(ChatColor.YELLOW.toString())) {
                 return 5;
             } else if (rest.contains(ChatColor.LIGHT_PURPLE.toString())) {
@@ -654,13 +654,13 @@ public class MountMechanics implements Listener {
         /*
          * try { NBTTagList description = CraftItemStack.asNMSCopy(is).getTag().getCompound("display").getList("Lore", 0); int x = 0; while (description.size()
          * > x) { if (description.get(x).toString().contains("Portal Key Shards")) { String content = description.get(x).toString();
-         * 
+         *
          * if(content.contains(ChatColor.YELLOW.toString())){ return 5; } if(content.contains(ChatColor.LIGHT_PURPLE.toString())){ return 4; }
          * if(content.contains(ChatColor.AQUA.toString())){ return 3; } if(content.contains(ChatColor.GREEN.toString())){ return 2; }
          * if(content.contains(ChatColor.WHITE.toString())){ return 1; }
-         * 
+         *
          * return 1; } x++; }
-         * 
+         *
          * } catch (NullPointerException e) { return 0; } return 0;
          */
     }
@@ -1041,7 +1041,7 @@ public class MountMechanics implements Listener {
                 pl.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "-" + ChatColor.RED + price + ChatColor.BOLD + "G");
                 pl.sendMessage(ChatColor.GREEN + "Transaction successful.");
                 if (isMount(product)) {
-                    AchievmentMechanics.addAchievment(pl.getName(), "Saddle Up!");
+                    AchievementMechanics.addAchievement(pl.getName(), "Saddle Up!");
                     pl.sendMessage(ChatColor.GRAY + "You are now the proud owner of a mount -- " + ChatColor.UNDERLINE
                             + "to summon your new mount, simply right click with the saddle in your player's hand.");
                 }
@@ -1188,21 +1188,21 @@ public class MountMechanics implements Listener {
      * @EventHandler public void onVehicleMove(VehicleMoveEvent e){ if(e.getVehicle() instanceof Horse){ Horse h = (Horse)e.getVehicle(); if(h.getPassenger() !=
      * null && h.getPassenger() instanceof Player){ Player rider = (Player)h.getPassenger(); String rider_align =
      * KarmaMechanics.getRawAlignment(rider.getName()); Location to_loc = e.getTo();
-     * 
+     *
      * if((rider_align.equalsIgnoreCase("evil") && DuelMechanics.isPvPDisabled(to_loc)) || DuelMechanics.isRestrictedArea(to_loc)){
      * if(mount_map.containsKey(rider.getName())){ Entity ent = mount_map.get(rider.getName()); ent.eject(); ent.remove(); mount_map.remove(rider.getName());
      * inv_mount_map.remove(ent); } rider.updateInventory();
-     * 
+     *
      * if(DuelMechanics.isPvPDisabled(to_loc)){ rider.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " enter " +
      * ChatColor.BOLD.toString() + "NON-PVP" + ChatColor.RED + " zones with a chaotic alignment."); } else if(DuelMechanics.isRestrictedArea(to_loc)){
      * rider.sendMessage(ChatColor.GRAY + ChatColor.ITALIC.toString() + "A magical force prevents your mount from going in that direction."); }
-     * 
+     *
      * return; // Don't go to a non-chaotic zone OR restricted zones (as a chaotic player), Mr. Horse. } } } }
      */
 
     /*
      * @EventHandler public void onPlayerTeleport(PlayerTeleportEvent e){ final Player new_p = e.getPlayer();
-     * 
+     *
      * /instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, new Runnable() { public void run() { if(new_p == null ||
      * !(new_p.isOnline())){return;} for(String s : mount_map.keySet()){ if(Bukkit.getPlayer(s) != null){ Player pl = Bukkit.getPlayer(s);
      * //new_p.hidePlayer(pl); } } } }, 40L); }

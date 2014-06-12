@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import minecade.dungeonrealms.Main;
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.EnchantMechanics.EnchantMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
@@ -143,7 +143,7 @@ public class ProfessionMechanics implements Listener {
     // Epicenter location (placed fishing spawn), then a list of all the locations that could have water effects nearby.
 
     public static HashMap<String, Integer> fish_caught_count = new HashMap<String, Integer>();
-    // PLAYER_NAME, Fish caught (in session, for achievments)
+    // PLAYER_NAME, Fish caught (in session, for achievements)
 
     // Custom Fish Effects {
     public static HashMap<String, Integer> fish_health_regen = new HashMap<String, Integer>();
@@ -322,30 +322,30 @@ public class ProfessionMechanics implements Listener {
         /*
          * this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() { public void run() { for(Entry<String, Long> data :
          * last_swing.entrySet()){ String p_name = data.getKey();
-         * 
+         *
          * if(getServer().getPlayer(p_name) != null){ Player pl = getServer().getPlayer(p_name); Block b = pl.getTargetBlock(transparent, 8); ItemStack is =
          * pl.getItemInHand();
-         * 
+         *
          * if(b.getType() == Material.STONE){ sendPotionPacket(pl, new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, 4));
          * last_swing.put(pl.getName(), System.currentTimeMillis()); continue; }
-         * 
+         *
          * if(b.getType() == Material.COAL_ORE || b.getType() == Material.EMERALD_ORE || b.getType() == Material.IRON_ORE || b.getType() == Material.DIAMOND_ORE
          * || b.getType() == Material.GOLD_ORE){ if((isSkillItem(is)) && (getSkillType(is).equalsIgnoreCase("mining"))){ int pickaxe_tier = getItemTier(is); int
          * ore_tier = getOreTier(b.getType());
-         * 
+         *
          * if(pickaxe_tier < ore_tier){ // Cannot mine. Too low level of pickaxe. sendPotionPacket(pl, new PotionEffect(PotionEffectType.SLOW_DIGGING,
          * Integer.MAX_VALUE, 4)); //slow_mining.put(pl.getName(), true); last_swing.put(pl.getName(), System.currentTimeMillis()); continue; }
-         * 
+         *
          * if(slow_mining.containsKey(pl.getName())){ int current_debuff = slow_mining.get(pl.getName()); int expected_debuff = getDebuffLevel(pickaxe_tier,
          * ore_tier); if(current_debuff == expected_debuff){ continue; // Do nothing, it's handled. } } removeMobEffect(pl,
          * PotionEffectType.SLOW_DIGGING.getId());
-         * 
+         *
          * int diff = pickaxe_tier - ore_tier;
-         * 
+         *
          * if(diff >= 3){ sendPotionPacket(pl, new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, 0)); removeMobEffect(pl,
          * PotionEffectType.SLOW_DIGGING.getId()); pl.removePotionEffect(PotionEffectType.SLOW_DIGGING); slow_mining.put(pl.getName(), 0);
          * last_swing.put(pl.getName(), System.currentTimeMillis()); }
-         * 
+         *
          * if(pickaxe_tier == 4 || pickaxe_tier == 5){ if(pickaxe_tier == 4){ if(diff == 0){ // Diamond ore. sendPotionPacket(pl, new
          * PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, 3)); slow_mining.put(pl.getName(), 3); } if(diff == 1){ // Iron ore.
          * sendPotionPacket(pl, new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, 3)); slow_mining.put(pl.getName(), 3); } } if(pickaxe_tier ==
@@ -355,12 +355,12 @@ public class ProfessionMechanics implements Listener {
          * PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, 2)); slow_mining.put(pl.getName(), 2); } if(diff == 1){ // Lvl 1 debuff
          * sendPotionPacket(pl, new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, 1)); slow_mining.put(pl.getName(), 1); } if(diff == 2){ //
          * Lvl 0 debuff sendPotionPacket(pl, new PotionEffect(PotionEffectType.SLOW_DIGGING, Integer.MAX_VALUE, 0)); slow_mining.put(pl.getName(), 0); } }
-         * 
+         *
          * if(diff > 2){ last_swing.remove(pl.getName()); slow_mining.remove(pl.getName());
-         * 
+         *
          * removeMobEffect(pl, PotionEffectType.SLOW_DIGGING.getId()); pl.removePotionEffect(PotionEffectType.SLOW_DIGGING); removeMobEffect(pl,
          * PotionEffectType.FAST_DIGGING.getId()); pl.removePotionEffect(PotionEffectType.FAST_DIGGING); }
-         * 
+         *
          * // It's an ore, we may be slowing them down. last_swing.put(pl.getName(), System.currentTimeMillis()); } } } } } }, 20 * 20L, 1L);
          */
 
@@ -1344,9 +1344,9 @@ public class ProfessionMechanics implements Listener {
                 new_stat = true;
                 if (skill.equalsIgnoreCase("mining")) {
                     is.setType(Material.STONE_PICKAXE);
-                    AchievmentMechanics.addAchievment(pl.getName(), "Leveling up your pickaxe I");
+                    AchievementMechanics.addAchievement(pl.getName(), "Leveling up your pickaxe I");
                 } else if (skill.equalsIgnoreCase("fishing")) {
-                    AchievmentMechanics.addAchievment(pl.getName(), "Leveling up your Rod I");
+                    AchievementMechanics.addAchievement(pl.getName(), "Leveling up your Rod I");
                 }
                 im.setDisplayName(ChatColor.GREEN.toString() + "Apprentice " + item_name);
             }
@@ -1354,9 +1354,9 @@ public class ProfessionMechanics implements Listener {
                 new_stat = true;
                 if (skill.equalsIgnoreCase("mining")) {
                     is.setType(Material.IRON_PICKAXE);
-                    AchievmentMechanics.addAchievment(pl.getName(), "Leveling up your pickaxe II");
+                    AchievementMechanics.addAchievement(pl.getName(), "Leveling up your pickaxe II");
                 } else if (skill.equalsIgnoreCase("fishing")) {
-                    AchievmentMechanics.addAchievment(pl.getName(), "Leveling up your Rod II");
+                    AchievementMechanics.addAchievement(pl.getName(), "Leveling up your Rod II");
                 }
                 im.setDisplayName(ChatColor.AQUA.toString() + "Expert " + item_name);
             }
@@ -1364,9 +1364,9 @@ public class ProfessionMechanics implements Listener {
                 new_stat = true;
                 if (skill.equalsIgnoreCase("mining")) {
                     is.setType(Material.DIAMOND_PICKAXE);
-                    AchievmentMechanics.addAchievment(pl.getName(), "Leveling up your pickaxe III");
+                    AchievementMechanics.addAchievement(pl.getName(), "Leveling up your pickaxe III");
                 } else if (skill.equalsIgnoreCase("fishing")) {
-                    AchievmentMechanics.addAchievment(pl.getName(), "Leveling up your Rod III");
+                    AchievementMechanics.addAchievement(pl.getName(), "Leveling up your Rod III");
                 }
                 im.setDisplayName(ChatColor.LIGHT_PURPLE.toString() + "Supreme " + item_name);
             }
@@ -1374,13 +1374,13 @@ public class ProfessionMechanics implements Listener {
                 new_stat = true;
                 if (skill.equalsIgnoreCase("mining")) {
                     is.setType(Material.GOLD_PICKAXE);
-                    AchievmentMechanics.addAchievment(pl.getName(), "Leveling up your pickaxe IV");
+                    AchievementMechanics.addAchievement(pl.getName(), "Leveling up your pickaxe IV");
                 } else if (skill.equalsIgnoreCase("fishing")) {
-                    AchievmentMechanics.addAchievment(pl.getName(), "Leveling up your Rod IV");
+                    AchievementMechanics.addAchievement(pl.getName(), "Leveling up your Rod IV");
                 }
-                if (AchievmentMechanics.hasAchievment(pl.getName(), "Leveling up your pickaxe IV")
-                        && AchievmentMechanics.hasAchievment(pl.getName(), "Leveling up your Rod IV")) {
-                    AchievmentMechanics.addAchievment(pl.getName(), "The Skill Master");
+                if (AchievementMechanics.hasAchievement(pl.getName(), "Leveling up your pickaxe IV")
+                        && AchievementMechanics.hasAchievement(pl.getName(), "Leveling up your Rod IV")) {
+                    AchievementMechanics.addAchievement(pl.getName(), "The Skill Master");
                 }
                 im.setDisplayName(ChatColor.YELLOW.toString() + "Master " + item_name);
             }
@@ -3177,17 +3177,17 @@ public class ProfessionMechanics implements Listener {
 
                         int fish_caught = fish_caught_count.get(pl.getName());
                         if (fish_caught >= 1) {
-                            AchievmentMechanics.addAchievment(pl.getName(), "Gone Fishing I");
+                            AchievementMechanics.addAchievement(pl.getName(), "Gone Fishing I");
                             if (fish_caught >= 10) {
-                                AchievmentMechanics.addAchievment(pl.getName(), "Gone Fishing II");
+                                AchievementMechanics.addAchievement(pl.getName(), "Gone Fishing II");
                                 if (fish_caught >= 25) {
-                                    AchievmentMechanics.addAchievment(pl.getName(), "Gone Fishing III");
+                                    AchievementMechanics.addAchievement(pl.getName(), "Gone Fishing III");
                                     if (fish_caught >= 50) {
-                                        AchievmentMechanics.addAchievment(pl.getName(), "Gone Fishing IV");
+                                        AchievementMechanics.addAchievement(pl.getName(), "Gone Fishing IV");
                                         if (fish_caught >= 100) {
-                                            AchievmentMechanics.addAchievment(pl.getName(), "Gone Fishing V");
+                                            AchievementMechanics.addAchievement(pl.getName(), "Gone Fishing V");
                                             if (fish_caught >= 200) {
-                                                AchievmentMechanics.addAchievment(pl.getName(), "Gone Fishing VI");
+                                                AchievementMechanics.addAchievement(pl.getName(), "Gone Fishing VI");
                                             }
                                         }
                                     }
@@ -3216,26 +3216,26 @@ public class ProfessionMechanics implements Listener {
 
         /*
          * Player pl = (Player)e.getPlayer(); if(ignoreFurnaceOpenEvent.contains(pl.getName())){ return; // Anti-loop }
-         * 
+         *
          * e.setCancelled(true); // Don't open vanilla inventory.
-         * 
+         *
          * Block b = pl.getTargetBlock(transparent, 8);
-         * 
+         *
          * if(furnace_inventory.containsKey(pl.getName())){ HashMap<Block, Furnace> instanced_furnaces = furnace_inventory.get(pl.getName());
          * if(instanced_furnaces.containsKey(b)){ Furnace f = instanced_furnaces.get(b); f.setBurnTime((short)32000); f.setCookTime((short)2);
-         * 
+         *
          * ignoreFurnaceOpenEvent.add(pl.getName()); pl.openInventory(f.getInventory()); ignoreFurnaceOpenEvent.remove(pl.getName()); return; } }
-         * 
+         *
          * //Inventory furnace = Bukkit.createInventory(null, InventoryType.FURNACE); Furnace f = (Furnace)b.getState(); f.setBurnTime((short)32000);
          * f.setCookTime((short)2);
-         * 
+         *
          * if(furnace_inventory.containsKey(pl.getName())){ HashMap<Block, Furnace> instanced_furnaces = furnace_inventory.get(pl.getName());
          * instanced_furnaces.put(b, f); furnace_inventory.put(pl.getName(), instanced_furnaces); } else if(!(furnace_inventory.containsKey(pl.getName()))){
          * HashMap<Block, Furnace> instanced_furnaces = new HashMap<Block, Furnace>(); instanced_furnaces.put(b, f); furnace_inventory.put(pl.getName(),
          * instanced_furnaces); }
-         * 
+         *
          * ignoreFurnaceOpenEvent.add(pl.getName()); pl.openInventory(f.getInventory()); ignoreFurnaceOpenEvent.remove(pl.getName());
-         * 
+         *
          * }
          */
     }

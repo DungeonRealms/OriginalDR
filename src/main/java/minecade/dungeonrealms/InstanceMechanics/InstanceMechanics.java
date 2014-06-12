@@ -22,7 +22,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import minecade.dungeonrealms.Main;
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
@@ -302,21 +302,21 @@ public class InstanceMechanics implements Listener {
                                 pl.sendMessage("");
 
                                 if (formal_dungeon_name.equalsIgnoreCase("Varenglade")) {
-                                    AchievmentMechanics.addAchievment(pl.getName(), "Burick the Fanatic");
+                                    AchievementMechanics.addAchievement(pl.getName(), "Burick the Fanatic");
 
                                     if (party_size == 1) {
-                                        AchievmentMechanics.addAchievment(pl.getName(), "Braving Burick");
+                                        AchievementMechanics.addAchievement(pl.getName(), "Braving Burick");
                                     }
                                 }
 
                                 if (formal_dungeon_name.equalsIgnoreCase("Bandit Trove")) {
-                                    AchievmentMechanics.addAchievment(pl.getName(), "Mayel the Cruel");
+                                    AchievementMechanics.addAchievement(pl.getName(), "Mayel the Cruel");
                                 }
                                 if (formal_dungeon_name.equalsIgnoreCase("Infernal Abyss")) {
-                                    AchievmentMechanics.addAchievment(pl.getName(), "The Infernal Abyss");
+                                    AchievementMechanics.addAchievement(pl.getName(), "The Infernal Abyss");
                                 }
                                 if (formal_dungeon_name.equalsIgnoreCase("The Dark Depths of Aceron")) {
-                                    AchievmentMechanics.addAchievment(pl.getName(), "The Dark Depths of Aceron");
+                                    AchievementMechanics.addAchievement(pl.getName(), "The Dark Depths of Aceron");
                                 }
                                 // if(formal_dungeon_name.eq)
                                 String instance_template = pl.getWorld().getName();
@@ -842,7 +842,7 @@ public class InstanceMechanics implements Listener {
         }
         List<Integer> portal_shards = Hive.player_portal_shards.get(p_name);
         int current_shards = portal_shards.get(tier_index);
-        
+
         current_shards += tokens_to_give;
         portal_shards.set(tier_index, current_shards);
 

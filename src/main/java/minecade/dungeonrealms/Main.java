@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import me.vilsol.betanpc.BetaNPC;
 import me.vilsol.itemgenerator.ItemGenerator;
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.BossMechanics.BossMechanics;
 import minecade.dungeonrealms.ChatMechanics.ChatMechanics;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
@@ -62,7 +62,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin implements Listener {
 
-    private static AchievmentMechanics achievmentMechanics;
+    private static AchievementMechanics achievementMechanics;
     private static BossMechanics bossMechanics;
     private static ChatMechanics chatMechanics;
     private static CommunityMechanics communityMechanics;
@@ -102,7 +102,7 @@ public class Main extends JavaPlugin implements Listener {
     private static LevelMechanics levelMechanics;
     private static Hive hive;
     private static HiveServer hiveServer;
-    
+
     private static BetaNPC betaNPC;
 
     public static Main plugin;
@@ -116,7 +116,7 @@ public class Main extends JavaPlugin implements Listener {
         log = this.getLogger();
 
         int serverid = Integer.parseInt(getServer().getMotd().split("-")[1].split(" ")[0]);
-        
+
         if (getServer().getMotd().contains("US-99") || getServer().getMotd().contains("US-B1") || (serverid >= 100 && serverid <= 110)) {
             Config.sql_url = "jdbc:mysql://" + Config.Hive_IP + ":" + Config.SQL_port + "/dungeonrealms_test";
         }
@@ -125,12 +125,12 @@ public class Main extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new LevelMechanics(), this);
         getServer().getPluginManager().registerEvents(new LogListener(), this);
-        
+
         getCommand("isunomadyet").setExecutor(new CommandIsUnoMadYet());
         getCommand("setlevel").setExecutor(new CommandSetLevel());
         levelMechanics = new LevelMechanics();
         hearthstoneMechanics = new HearthstoneMechanics();
-        achievmentMechanics = new AchievmentMechanics();
+        achievementMechanics = new AchievementMechanics();
         bossMechanics = new BossMechanics();
         chatMechanics = new ChatMechanics();
         communityMechanics = new CommunityMechanics();
@@ -169,11 +169,11 @@ public class Main extends JavaPlugin implements Listener {
         hive = new Hive();
         hiveServer = new HiveServer();
         betaNPC = new BetaNPC();
-        
+
         hive.onEnable();
         hearthstoneMechanics.onEnable();
         hiveServer.onEnable();
-        achievmentMechanics.onEnable();
+        achievementMechanics.onEnable();
         bossMechanics.onEnable();
         chatMechanics.onEnable();
         healthMechanics.onEnable();
@@ -212,7 +212,7 @@ public class Main extends JavaPlugin implements Listener {
         betaNPC.onEnable();
         levelMechanics.onEnable();
         ItemGenerator.loadModifiers();
-        
+
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -237,7 +237,7 @@ public class Main extends JavaPlugin implements Listener {
     public void onDisable() {
         ConnectionPool.refresh = false;
         shopMechanics.onDisable();
-        achievmentMechanics.onDisable();
+        achievementMechanics.onDisable();
         bossMechanics.onDisable();
         chatMechanics.onDisable();
         communityMechanics.onDisable();

@@ -353,7 +353,7 @@ public class BossMechanics implements Listener {
             }
         }.runTaskLater(Main.plugin, 5L);
     }
-    
+
     public void announceBossDrop(final ItemStack item, final List<Player> toPlayers) {
         new BukkitRunnable() {
             @Override
@@ -450,11 +450,11 @@ public class BossMechanics implements Listener {
                 //    gem_drop -= 5;
                 //    ent.getWorld().dropItemNaturally(ent.getLocation(), MoneyMechanics.makeGems(5));
                 //}
-                
+
                 int perPlayer = Math.round(gem_drop / ent.getWorld().getPlayers().size());
-                
+
                 announceGemDrop(gem_drop, perPlayer, ent.getWorld().getPlayers());
-                
+
                 for (Player p : ent.getWorld().getPlayers()) {
                     MoneyMechanics.addMoneyCert(p, perPlayer, false);
                     LevelMechanics.addXP(p, 5000);
@@ -549,11 +549,11 @@ public class BossMechanics implements Listener {
                 //    gem_drop -= 5;
                 //    ent.getWorld().dropItemNaturally(ent.getLocation(), MoneyMechanics.makeGems(5));
                 //}
-                
+
                 int perPlayer = Math.round(gem_drop / ent.getWorld().getPlayers().size());
-                
+
                 announceGemDrop(gem_drop, perPlayer, ent.getWorld().getPlayers());
-                
+
                 for (Player p : ent.getWorld().getPlayers()) {
                     MoneyMechanics.addMoneyCert(p, perPlayer, false);
                     LevelMechanics.addXP(p, 10000);
@@ -657,16 +657,16 @@ public class BossMechanics implements Listener {
                                             ChatColor.WHITE.toString() + ChatColor.BOLD.toString() + "Value:" + ChatColor.WHITE.toString() + " " + 500
                                                     + " Gems" + "," + ChatColor.GRAY.toString() + "Exchange at any bank for GEM(s)"));
                         }*/
-                        
+
                       //while (gem_drop > 0) {
                         //    gem_drop -= 5;
                         //    ent.getWorld().dropItemNaturally(ent.getLocation(), MoneyMechanics.makeGems(5));
                         //}
-                        
+
                         int perPlayer = Math.round(gem_drop / ent.getWorld().getPlayers().size());
-                        
+
                         announceGemDrop(gem_drop, perPlayer, ent.getWorld().getPlayers());
-                        
+
                         for (Player p : ent.getWorld().getPlayers()) {
                             MoneyMechanics.addMoneyCert(p, perPlayer, false);
                         }
@@ -764,11 +764,11 @@ public class BossMechanics implements Listener {
                 //    gem_drop -= 5;
                 //    ent.getWorld().dropItemNaturally(ent.getLocation(), MoneyMechanics.makeGems(5));
                 //}
-                
+
                 int perPlayer = Math.round(gem_drop / ent.getWorld().getPlayers().size());
-                
+
                 announceGemDrop(gem_drop, perPlayer, ent.getWorld().getPlayers());
-                
+
                 for (Player p : ent.getWorld().getPlayers()) {
                     MoneyMechanics.addMoneyCert(p, perPlayer, false);
                     LevelMechanics.addXP(p, 1000);

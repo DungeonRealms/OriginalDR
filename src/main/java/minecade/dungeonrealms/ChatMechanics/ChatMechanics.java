@@ -184,19 +184,19 @@ public class ChatMechanics implements Listener {
 
         /*
          * Connection con = null;
-         * 
+         *
          * PreparedStatement pst = null;
-         * 
+         *
          * try { con = DriverManager.getConnection(Config.sql_url, Config.sql_user, Config.sql_password); pst = con.prepareStatement(
          * "SELECT unmute FROM mute_map WHERE pname = '" + p_name + "'");
-         * 
+         *
          * pst.execute(); ResultSet rs = pst.getResultSet(); if(!rs.next()) { mute_list.remove(p_name); return; } long unmute = rs.getLong("unmute");
          * mute_list.put(p_name, unmute);
-         * 
+         *
          * } catch(SQLException ex) { log.log(Level.SEVERE, ex.getMessage(), ex);
-         * 
+         *
          * } finally { try { if(pst != null) { pst.close(); } if(con != null) { con.close(); }
-         * 
+         *
          * } catch(SQLException ex) { log.log(Level.WARNING, ex.getMessage(), ex); } }
          */
     }

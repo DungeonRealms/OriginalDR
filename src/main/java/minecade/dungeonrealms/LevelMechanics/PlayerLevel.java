@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import minecade.dungeonrealms.Main;
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.BossMechanics.AceronListener;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
@@ -105,7 +105,7 @@ public class PlayerLevel {
         final int level = getLevel();
         final int xp = getXP();
         if (level == 0) {
-            //Its bugged so dont save? 
+            //Its bugged so dont save?
             //TODO: See why its saving twice?
             return;
         }
@@ -138,7 +138,7 @@ public class PlayerLevel {
         updateScoreboardLevel();
         if(getLevel() == 100){
             CommunityMechanics.sendPacketCrossServer("@level100@" + p_name + ":", -1, true);
-            AchievmentMechanics.addAchievment(p_name, "Over Acheiver");
+            AchievementMechanics.addAchievement(p_name, "Over Acheiver");
             Bukkit.broadcastMessage(ChatColor.AQUA.toString() + ChatColor.BOLD + p_name + ChatColor.WHITE + " has reached level 100!");
         }
         new LogModel(LogType.LEVEL_UP, p_name, new JsonBuilder("level", getLevel()).getJson());

@@ -19,65 +19,65 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class CommandGL implements CommandExecutor {
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player p = (Player) sender;
-		
+
 		if(args.length <= 0) {
 			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax. " + ChatColor.RED + "/gl <MESSAGE>");
 			return true;
 		}
-		
+
 		if(TutorialMechanics.onTutorialIsland(p) && !(p.isOp())) {
 			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " chat while on tutorial island.");
 			p.sendMessage(ChatColor.GRAY + "Either finish the tutorial or type /skip to enable chat.");
 			return true;
 		}
-		
+
 		if(ChatMechanics.mute_list.containsKey(p.getName())) {
 			long time_left = ChatMechanics.mute_list.get(p.getName());
 			p.sendMessage(ChatColor.RED + "You are currently " + ChatColor.BOLD + "GLOBALLY MUTED" + ChatColor.RED + ". You will be unmuted in " + time_left + " minute(s).");
 			return true;
 		}
-		
+
 		String msg = "";
-		
+
 		for(String s : args) {
 			msg += s + " ";
 		}
-		
+
 		String rank = PermissionMechanics.getRank(p.getName());
-		
+
 		if(PlayerManager.getPlayerModel(p).getGlobalChatDelay() != 0) {
 			long old_time = PlayerManager.getPlayerModel(p).getGlobalChatDelay();
 			long cur_time = System.currentTimeMillis();
-			
+
 			int personal_delay = ChatMechanics.GChat_Delay;
 			ItemStack global_amp = EcashMechanics.tickGlobalAmplifier(p);
 			if(global_amp != null) {
 				// They have one!
 				personal_delay *= 0.50D;
-				
+
 				// EcashMechanics.setMessagesLeftOnGlobalAmplifier(global_amp,
 				// -1, true);
 				// It will subtract from the item in getGlobalAmplifier.
 			}
-			
+
 			if((cur_time - old_time) < (personal_delay * 1000) && !(p.isOp()) && !(rank.equalsIgnoreCase("GM")) && !(rank.equalsIgnoreCase("PMOD") && !(rank.equalsIgnoreCase("WD")))) {
 				int s_delay_left = personal_delay - (int) ((cur_time - old_time) / 1000);
 				p.sendMessage(ChatColor.RED + "You can send another GLOBAL MESSAGE in " + s_delay_left + ChatColor.BOLD + "s");
 				return true;
 			}
 		}
-		
+
 		PlayerManager.getPlayerModel(p).setGlobalChatDelay(System.currentTimeMillis());
-		
+
 		boolean trade = false;
 		if(ChatMechanics.hasTradeKeyword(msg)) {
 			trade = true;
 		}
-		
+
 		String prefix = ChatMechanics.getPlayerPrefix(p);
 		String message = ChatMechanics.fixCapsLock(msg);
 	      if (PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("global")) {
@@ -94,7 +94,7 @@ public class CommandGL implements CommandExecutor {
 			String before = "";
 			if(split.length > 0) before = split[0];
 			if(split.length > 1) after = split[1];
-			
+
 			normal = new JSONMessage(prefix + ChatColor.WHITE + aprefix, ChatColor.WHITE);
 			normal.addText(before + " ");
 			normal.addItem(p.getItemInHand(), ChatColor.BOLD + "SHOW", ChatColor.UNDERLINE);
@@ -105,7 +105,7 @@ public class CommandGL implements CommandExecutor {
 			filter.addItem(p.getItemInHand(), ChatColor.BOLD + "SHOW", ChatColor.UNDERLINE);
 			filter.addText(ChatMechanics.censorMessage(after));
 		}
-		
+
 		for(Player pl : Bukkit.getServer().getOnlinePlayers()) {
 			if(CommunityMechanics.isPlayerOnIgnoreList(p, pl.getName()) || CommunityMechanics.isPlayerOnIgnoreList(pl, p.getName())) {
 				continue; // Either sender has the sendie ignored or vise versa,
@@ -124,24 +124,24 @@ public class CommandGL implements CommandExecutor {
 				continue; // Don't send global chat to players on tutorial
 							// island.
 			}
-			
+
 			if(normal != null){
 				JSONMessage toSend = normal;
 				if(ChatMechanics.hasAdultFilter(pl.getName())) {
 					toSend = filter;
 				}
 				ChatColor p_color = ChatMechanics.getPlayerColor(p, pl);
-				
+
 				if(trade){
 					toSend.setText(ChatColor.GREEN + "<" + ChatColor.BOLD + "T" + ChatColor.GREEN + ">" + " " + prefix + p_color + aprefix);
 				}else{
 					toSend.setText(ChatColor.AQUA + "<" + ChatColor.BOLD + "G" + ChatColor.AQUA + ">" + " " + prefix + p_color + aprefix);
 				}
-				
+
 				toSend.sendToPlayer(pl);
 			}else{
 				ChatColor p_color = ChatMechanics.getPlayerColor(p, p);
-				
+
 				if(trade){
 					pl.sendMessage(ChatColor.GREEN + "<" + ChatColor.BOLD + "T" + ChatColor.GREEN + ">" + " " + prefix + p_color + aprefix + message);
 				}else{
@@ -149,10 +149,10 @@ public class CommandGL implements CommandExecutor {
 				}
 			}
 		}
-		
+
 		Main.log.info(ChatColor.stripColor("" + "<" + "G" + ">" + " " + prefix + p.getName() + ": " + msg));
-		
+
 		return true;
 	}
-	
+
 }

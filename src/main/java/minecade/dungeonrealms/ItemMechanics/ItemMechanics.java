@@ -319,9 +319,9 @@ public class ItemMechanics implements Listener {
                     }
                     /*
                      * int str_val = getStrVal(is); int dex_val = getDexVal(is); int vit_val = getVitVal(is);
-                     * 
+                     *
                      * log.info(pl.getName() + " - " + is.getItemMeta().getDisplayName());
-                     * 
+                     *
                      * if(str_val > 0){ str_data.put(pl.getName(), generateTotalStrVal(pl)); } if(dex_val > 0){ dex_data.put(pl.getName(),
                      * generateTotalDexVal(pl)); } if(vit_val > 0){ vit_data.put(pl.getName(), generateTotalVitVal(pl)); }
                      */
@@ -2748,13 +2748,13 @@ public class ItemMechanics implements Listener {
         /*
          * List<Integer> dmg_range = new ArrayList<Integer>(); NBTTagList description =
          * CraftItemStack.asNMSCopy(is).getTag().getCompound("display").getList("Lore", 0);
-         * 
+         *
          * String dmg_data = description.get(0).toString(); dmg_data = dmg_data.replaceAll(red.toString() + "DMG: ", "");
-         * 
+         *
          * dmg_data = dmg_data.replaceAll(" ", "");
-         * 
+         *
          * int min_dmg = Integer.parseInt(dmg_data.split("-")[0]); int max_dmg = Integer.parseInt(dmg_data.split("-")[1]);
-         * 
+         *
          * dmg_range.add(min_dmg); dmg_range.add(max_dmg); return dmg_range;
          */
     }
@@ -4131,9 +4131,9 @@ public class ItemMechanics implements Listener {
                         // Player pl = (Player)edbee.getDamager();
                         /*
                          * if(EcashMechanics.personal_clones.containsKey(pl.getName())){ String npc_name = npc.getName(); String pl_name = pl.getName();
-                         * 
+                         *
                          * if(pl_name.length() > 14){ pl_name = pl_name.substring(0, 14); }
-                         * 
+                         *
                          * if(ChatColor.stripColor(npc.getName()).equalsIgnoreCase(pl_name)){ npc.getWorld().spawnParticle(npc.getLocation().add(0, 1, 0),
                          * Particle.CRIT, 1F, 20); npc.remove(); EcashMechanics.personal_clones.remove(pl.getName());
                          * EcashMechanics.personal_clones_msg.remove(pl.getName()); return; } }
@@ -4496,9 +4496,9 @@ public class ItemMechanics implements Listener {
 
     /**
      * Gets entities inside a cone.
-     * 
+     *
      * @see Utilities#getPlayersInCone(List, Location, int, int, int)
-     * 
+     *
      * @param entities
      *            - {@code List<Entity>}, list of nearby entities
      * @param startpoint
@@ -4532,7 +4532,7 @@ public class ItemMechanics implements Listener {
 
     /**
      * Created an integer vector in 2d between two points
-     * 
+     *
      * @param x1
      *            - {@code int}, X pos 1
      * @param y1
@@ -4549,7 +4549,7 @@ public class ItemMechanics implements Listener {
 
     /**
      * Get the angle between two vectors.
-     * 
+     *
      * @param vector1
      *            - {@code int[]}, vector 1
      * @param vector2
@@ -5690,9 +5690,9 @@ public class ItemMechanics implements Listener {
      * public void shootFireball(Double speed, Location shootLocation) { org.bukkit.util.Vector directionVector = shootLocation.getDirection().normalize();
      * double startShift = 2; Vector shootShiftVector = new Vector(directionVector.getX() * startShift, directionVector.getY() * startShift,
      * directionVector.getZ() * startShift); shootLocation = shootLocation.add(shootShiftVector.getX(), shootShiftVector.getY(), shootShiftVector.getZ());
-     * 
+     *
      * Fireball fireballl = shootLocation.getWorld().spawn(shootLocation, Fireball.class); fireballl.setVelocity(directionVector.multiply(speed));
-     * 
+     *
      * if(fireballl instanceof Fireball){ ((Fireball) fireballl).setIsIncendiary(false);// Remove fire ((Fireball)
      * fireballl).setShooter(this.player.getPlayer()); } }
      */
@@ -5783,7 +5783,7 @@ public class ItemMechanics implements Listener {
                             /*
                              * String target_align = KarmaMechanics.getRawAlignment(ptarget.getName()); String shooter_align =
                              * KarmaMechanics.getRawAlignment(pshooter.getName());
-                             * 
+                             *
                              * if(target_align.equalsIgnoreCase("good") && CommunityMechanics.toggle_list.containsKey(pshooter.getName()))
                              */
                         }
@@ -6305,17 +6305,17 @@ public class ItemMechanics implements Listener {
 
         /*
          * net.minecraft.server.v1_7_R1.ItemStack nms = CraftItemStack.asNMSCopy(iss);
-         * 
+         *
          * NBTTagCompound tag = nms.tag; tag = new NBTTagCompound(); tag.setCompound("display", new NBTTagCompound()); nms.tag = tag; tag =
          * nms.tag.getCompound("display");
-         * 
+         *
          * for(String s : desc.split(",")){ if(s.length() <= 1){continue;} NBTTagList lore = tag.getList("Lore"); if(lore == null){lore = new
          * NBTTagList("Lore");}
-         * 
+         *
          * lore.add(new NBTTagString("", s)); tag.set("Lore", lore); }
-         * 
+         *
          * tag.setString("Name", name); nms.tag.setCompound("display", tag); nms.tag.set("CustomPotionEffects", new NBTTagList());
-         * 
+         *
          * nms.setTag(nms.tag);
          */
 
@@ -6327,12 +6327,12 @@ public class ItemMechanics implements Listener {
          * ItemStack iss = new ItemStack(m, 1, meta_data); CraftItemStack css = new CraftItemStack(iss); net.minecraft.server.ItemStack nms = css.getHandle();
          * NBTTagCompound tag = nms.tag; tag = new NBTTagCompound(); tag.setCompound("display", new NBTTagCompound()); nms.tag = tag; tag =
          * nms.tag.getCompound("display");
-         * 
+         *
          * for(String s : desc.split(",")){ if(s.length() <= 1){continue;} NBTTagList lore = tag.getList("Lore"); if(lore == null){lore = new
          * NBTTagList("Lore");}
-         * 
+         *
          * lore.add(new NBTTagString("", s)); tag.set("Lore", lore); }
-         * 
+         *
          * tag.setString("Name", name); nms.tag.setCompound("display", tag); css.getHandle().setTag(nms.tag); return css;
          */
 

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import minecade.dungeonrealms.Main;
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.EnchantMechanics.EnchantMechanics;
 import minecade.dungeonrealms.Hive.Hive;
@@ -325,7 +325,7 @@ public class TutorialMechanics implements Listener {
 						pl.getInventory().addItem(map);
 						pl.updateInventory();
 						pl.playSound(pl.getLocation(), Sound.BAT_TAKEOFF, 1F, 0.8F);
-						AchievmentMechanics.addAchievment(pl.getName(), "Cartographer");
+						AchievementMechanics.addAchievement(pl.getName(), "Cartographer");
 					}
 				}
 			}

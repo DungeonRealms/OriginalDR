@@ -34,7 +34,7 @@ import java.util.zip.ZipOutputStream;
 
 import me.Bogdacutu.VoidGenerator.VoidGeneratorGenerator;
 import minecade.dungeonrealms.Main;
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.ChatMechanics.ChatMechanics;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
@@ -634,23 +634,23 @@ public class RealmMechanics implements Listener {
         /*
          * Thread realm_backup = new Thread(new Runnable(){ public void run(){ while(true){ try { Thread.sleep(120 * 1000); } catch (InterruptedException e)
          * {e.printStackTrace();}
-         * 
+         *
          * for(World w : getServer().getWorlds()){ if(Hive.server_frozen == true){ return; }
-         * 
+         *
          * if(w.getName().equalsIgnoreCase(RealmMechanics.main_world_name)){ continue; // Main world, idc. }
-         * 
+         *
          * if(InstanceMechanics.isInstance(w.getName())){ continue; }
-         * 
+         *
          * if(uploading_realms.contains(w.getName())){ continue; }
-         * 
+         *
          * w.save();
-         * 
+         *
          * try { File prev_backup = new File(rootDir + "/realms/backup/" + w.getName() + ".zip"); if(prev_backup.exists()){ prev_backup.delete(); }
          * zipDirectory(new File(w.getName()), new File(rootDir + "/realms/backup/" + w.getName() + ".zip")); } catch (IOException e) { e.printStackTrace();
          * continue; }
-         * 
+         *
          * } } } });
-         * 
+         *
          * realm_backup.start();
          */
 
@@ -732,7 +732,7 @@ public class RealmMechanics implements Listener {
      * the main world. if(inv_portal_map.containsKey(p.getName())){ Location portal_loc = inv_portal_map.get(p.getName()); Location p_loc = p.getLocation();
      * if(p_loc.distanceSquared(portal_loc) > 1024){ portal_map.remove(portal_loc); inv_portal_map.remove(p.getName());
      * portal_loc.getBlock().setType(Material.AIR); portal_loc.add(0, 1, 0).getBlock().setType(Material.AIR);
-     * 
+     *
      * p.sendMessage(ChatColor.LIGHT_PURPLE + "Your realm entrance portal has closed because you've traveled " + ChatColor.BOLD + ">32 blocks" +
      * ChatColor.LIGHT_PURPLE + " away."); has_portal.remove(p.getName()); } } } } } }
      */
@@ -2278,7 +2278,7 @@ public class RealmMechanics implements Listener {
 
             /*
              * for(Entry<Location, String> data : portal_map.entrySet()){ Location loc = data.getKey(); if(loc.distanceSquared(portal_l) <= 4){
-             * 
+             *
              * } }
              */
 
@@ -2338,7 +2338,7 @@ public class RealmMechanics implements Listener {
 
         if (p.isSneaking() && e.getItem().getType() == Material.NETHER_STAR
                 && (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)) {
-        	
+
             String m = Bukkit.getMotd();
             if(m.contains("US-100") || m.contains("US-101") || m.contains("US-102") || m.contains("US-103") || m.contains("US-104") || m.contains("US-105") || m.contains("US-106") || m.contains("US-107") || m.contains("US-108") || m.contains("US-108") || m.contains("US-109") || m.contains("US-110")){
             	p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " do this on the " + ChatColor.UNDERLINE + "Beta Servers" + ChatColor.RED + "!");
@@ -2453,7 +2453,7 @@ public class RealmMechanics implements Listener {
                     target.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "ADDED" + ChatColor.GREEN + " to " + p.getName() + "'s build list.");
                     target.sendMessage(ChatColor.GRAY + "You can now place/destroy blocks in their realm until the end of their game session.");
 
-                    AchievmentMechanics.addAchievment(p.getName(), "Creative Companion");
+                    AchievementMechanics.addAchievement(p.getName(), "Creative Companion");
 
                     if (flying_realms.containsKey(p.getWorld().getName()) && DuelMechanics.isDamageDisabled(p.getWorld().getSpawnLocation())
                             && safe_realms.containsKey(p.getWorld().getName())) {
@@ -2490,7 +2490,7 @@ public class RealmMechanics implements Listener {
 
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK && i.getType() == Material.NETHER_STAR) {
             e.setCancelled(true);
-            
+
             String m = Bukkit.getMotd();
             if(m.contains("US-100") || m.contains("US-101") || m.contains("US-102") || m.contains("US-103") || m.contains("US-104") || m.contains("US-105") || m.contains("US-106") || m.contains("US-107") || m.contains("US-108") || m.contains("US-108") || m.contains("US-109") || m.contains("US-110")){
             	p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " do this on the " + ChatColor.UNDERLINE + "Beta Servers" + ChatColor.RED + "!");
@@ -2651,7 +2651,7 @@ public class RealmMechanics implements Listener {
             if (new_realm == true) { // We don't need to load the world if we're just moving the portal.
                 /*
                  * Thread t = new Thread(new Runnable() { public void run() { realmHandler(p, p.getName()); } });
-                 * 
+                 *
                  * t.start();
                  */
 
@@ -3291,11 +3291,11 @@ public class RealmMechanics implements Listener {
          * try{ if(i.hasItemMeta() && i.getItemMeta().hasLore()){ for(String s : i.getItemMeta().getLore()){
          * if(ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("untradeable") ||
          * ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("permanent untradeable")){ return false; } } }
-         * 
+         *
          * NBTTagList description = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getList("Lore", 0);
-         * 
+         *
          * if(description.get(description.size() - 1).toString().contains("Untradeable")){ return false; }
-         * 
+         *
          * } catch (Exception e) { return true; } return true;
          */
     }
@@ -4238,13 +4238,13 @@ public class RealmMechanics implements Listener {
         }
 
         if (new_tier >= 2) {
-            AchievmentMechanics.addAchievment(p.getName(), "Expanding I");
+            AchievementMechanics.addAchievement(p.getName(), "Expanding I");
             if (new_tier >= 4) {
-                AchievmentMechanics.addAchievment(p.getName(), "Expanding II");
+                AchievementMechanics.addAchievement(p.getName(), "Expanding II");
                 if (new_tier >= 6) {
-                    AchievmentMechanics.addAchievment(p.getName(), "Expanding III");
+                    AchievementMechanics.addAchievement(p.getName(), "Expanding III");
                     if (new_tier == 7) {
-                        AchievmentMechanics.addAchievment(p.getName(), "Expanding IV");
+                        AchievementMechanics.addAchievement(p.getName(), "Expanding IV");
                     }
                 }
             }

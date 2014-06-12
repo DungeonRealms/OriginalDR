@@ -7,7 +7,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import minecade.dungeonrealms.Main;
-import minecade.dungeonrealms.AchievmentMechanics.AchievmentMechanics;
+import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.DonationMechanics.DonationMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.EcashMechanics.EcashMechanics;
@@ -1095,7 +1095,7 @@ public class MerchantMechanics implements Listener {
                 return;
             }
             e.setCancelled(true);
-            
+
             String m = Bukkit.getMotd();
             if(m.contains("US-100") || m.contains("US-101") || m.contains("US-102") || m.contains("US-103") || m.contains("US-104") || m.contains("US-105") || m.contains("US-106") || m.contains("US-107") || m.contains("US-108") || m.contains("US-108") || m.contains("US-109") || m.contains("US-110")){
             	p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " do this on the " + ChatColor.UNDERLINE + "Beta Servers" + ChatColor.RED + "!");
@@ -1212,11 +1212,11 @@ public class MerchantMechanics implements Listener {
              * "You do not have enough E-CASH to complete this purchase."); pl.sendMessage(ChatColor.GRAY + "" + amount_to_buy + " X " + price_per + " EC/ea = "
              * + total_price + " EC."); pl.sendMessage(ChatColor.GRAY + "Purchase more E-CASH at store.dungeonrealms.net to make this awesome purchase!");
              * return; }
-             * 
+             *
              * int total_ecash = Hive.player_ecash.get(pl.getName()); total_ecash -= total_price;
-             * 
+             *
              * final String p_name = pl.getName(); final int ftotal_ecash = total_ecash;
-             * 
+             *
              * Hive.player_ecash.put(pl.getName(), total_ecash); Thread t = new Thread(new Runnable(){ public void run(){ DonationMechanics.setECASH_SQL(p_name,
              * ftotal_ecash); } }); t.start();
              */
@@ -1390,10 +1390,10 @@ public class MerchantMechanics implements Listener {
             }
             pl.updateInventory();
 
-            AchievmentMechanics.addAchievment(pl.getName(), "Supporter");
+            AchievementMechanics.addAchieement(pl.getName(), "Supporter");
 
             if (product.getType() == Material.JUKEBOX) {
-                AchievmentMechanics.addAchievment(p_name, "The Bard");
+                AchievementMechanics.addAchievement(p_name, "The Bard");
             }
 
             ecash_item_being_bought.remove(pl.getName());
@@ -1787,10 +1787,10 @@ public class MerchantMechanics implements Listener {
          * if(e.isLeftClick() && e.getCursor() != null && ((slot_num < 27) || slot_num == 0 || slot_num == 1 || slot_num == 2 || slot_num == 3 || slot_num == 9
          * || slot_num == 10 || slot_num == 11 || slot_num == 12 || slot_num == 18 || slot_num == 19 || slot_num == 20 || slot_num == 21)){
          * e.setCancelled(true);
-         * 
+         *
          * ItemStack current = new ItemStack(Material.AIR); ItemStack cursor = CraftItemStack.asCraftCopy(e.getCursor()); if(e.getCurrentItem() != null){
          * current = e.getCurrentItem(); }
-         * 
+         *
          * e.setCursor(current); e.setCurrentItem(cursor); clicker.updateInventory(); // Hack for double click stack. }
          */
 
@@ -1947,7 +1947,7 @@ public class MerchantMechanics implements Listener {
         /*
          * if(!isTradeButton(e.getCurrentItem())){ x = -1; while(x < 26){ x++; if((x == 0 || x == 1 || x == 2 || x == 3 || x == 4 || x == 9 || x == 10 || x ==
          * 11 || x == 12 || x == 13 || x == 22 || x == 18 || x == 19 || x == 20 || x == 21)){ continue; }
-         * 
+         *
          * ItemStack i = new ItemStack(Material.AIR); tradeWin.setItem(x, i); } }
          */
 

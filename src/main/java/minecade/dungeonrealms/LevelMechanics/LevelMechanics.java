@@ -40,7 +40,7 @@ public class LevelMechanics implements Listener {
             }
         }.runTaskTimer(Main.plugin, 100, 10 * 20);
     }
-    
+
     public void onEnable(){
         Main.plugin.getCommand("addxp").setExecutor(new CommandAddXP());
     }
