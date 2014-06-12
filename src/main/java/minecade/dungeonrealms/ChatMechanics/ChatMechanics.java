@@ -263,8 +263,6 @@ public class ChatMechanics implements Listener {
                 return ChatColor.DARK_PURPLE;
             } else if (p.getName().equalsIgnoreCase("iFamasssxD")) {
                 return ChatColor.DARK_GREEN;
-            } else if(p.getName().equalsIgnoreCase("Azubuso")) {
-            	return ChatColor.GOLD;
             } else if (Main.isDev(p.getName())) {
                 return ChatColor.DARK_AQUA;
             }
