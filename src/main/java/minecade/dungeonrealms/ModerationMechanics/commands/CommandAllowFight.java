@@ -53,7 +53,7 @@ public class CommandAllowFight implements CommandExecutor {
 				ModerationMechanics.allowsFight.remove(p.getName());
 				HealthMechanics.health_data.put(p.getName(), user_health.get(p.getName()));
 				user_health.remove(p.getName());
-				HealthMechanics.generateMaxHP(p);
+				HealthMechanics.setPlayerHP(p.getName(), HealthMechanics.health_data.get(p.getName()));
 				sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You toggled off fight mode");
 			}
 		}
