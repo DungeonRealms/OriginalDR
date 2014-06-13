@@ -34,14 +34,8 @@ public class CommandShop implements CommandExecutor {
 			return true;
 		}
 		
-		if(args.length == 0) {
-			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax");
-			p.sendMessage(ChatColor.RED + "/shop");
-			p.sendMessage(ChatColor.GRAY + "Usage: /shop info, /shop open, /shop close, /shop see.");
-			return true;
-		}
-		
 		if (args.length == 2) {
+			ShopMechanics.downloadShopDatabaseData(args[1]);
 			if (args[0].equalsIgnoreCase("info")) {
 				if (ShopMechanics.doesPlayerHaveShopSQL(args[1])) {
 					if (ShopMechanics.hasLocalShop(args[1]) && ShopMechanics.inverse_shop_owners.containsKey(args[1])) {
@@ -246,12 +240,19 @@ public class CommandShop implements CommandExecutor {
 					else {
 						p.sendMessage(ChatColor.RED + "Player " + args[1] + " does not have a shop on any server. (This command is case sensitive!)");
 					}
+					return true;
 				}
 				else {
 					p.openInventory(ShopMechanics.shop_stock.get(args[1]));
 					return true;
 				}
 			}
+		}
+		else {
+			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax");
+			p.sendMessage(ChatColor.RED + "/shop");
+			p.sendMessage(ChatColor.GRAY + "Usage: /shop info, /shop open, /shop close, /shop see.");
+			return true;
 		}
 
 		return false;
