@@ -1185,6 +1185,7 @@ public class ChatMechanics implements Listener {
     public static void sendAllServersStaffMessage(String message) {
     	List<Object> query = new ArrayList<Object>();
     	query.add(null);
+    	query.add(null);
     	query.add(true);
     	CommunityMechanics.social_query_list.put(GuildMechanics.nextSessionId(), query);
     }
