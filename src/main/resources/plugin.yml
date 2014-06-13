@@ -112,6 +112,10 @@ commands:
   toggletabchat:
     description: Toggles tabcomplete chat
     usage: /<command>
+  toggleguildchat:
+    description: Toggles receiving of guild recruitment chat
+    usage: /<command>
+    aliases: [noguildchat, togglegr, tgr]
   allowfight:
     description: Toggles fight mode
     usage: /<command>

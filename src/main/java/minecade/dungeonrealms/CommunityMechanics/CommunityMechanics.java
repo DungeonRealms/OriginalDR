@@ -36,6 +36,7 @@ import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleFilter;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleGlobal;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleGlobalChat;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleGuild;
+import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleGuildChat;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleIndicator;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleParty;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleProfile;
@@ -148,6 +149,7 @@ public class CommunityMechanics implements Listener {
 		Main.plugin.getCommand("togglefilter").setExecutor(new CommandToggleFilter());
 		Main.plugin.getCommand("toggleglobal").setExecutor(new CommandToggleGlobal());
 		Main.plugin.getCommand("toggleguild").setExecutor(new CommandToggleGuild());
+		Main.plugin.getCommand("toggleguildchat").setExecutor(new CommandToggleGuildChat());
 		Main.plugin.getCommand("toggleparty").setExecutor(new CommandToggleParty());
 		Main.plugin.getCommand("toggleprofile").setExecutor(new CommandToggleProfile());
 		Main.plugin.getCommand("togglepvp").setExecutor(new CommandTogglePvP());
@@ -226,6 +228,7 @@ public class CommunityMechanics implements Listener {
 		toggle_map.add("toggleindicator");
 		toggle_map.add("toggleglobalchat");
 		toggle_map.add("toggletabchat");
+		toggle_map.add("toggleguildchat");
 
 		CrossServerPacketThread = new CrossServerPacketThread();
 		CrossServerPacketThread.start();

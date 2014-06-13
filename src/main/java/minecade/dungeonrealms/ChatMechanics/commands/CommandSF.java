@@ -2,6 +2,7 @@ package minecade.dungeonrealms.ChatMechanics.commands;
 
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.ChatMechanics.ChatMechanics;
+import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.jsonlib.JSONMessage;
 
@@ -33,7 +34,7 @@ public class CommandSF implements CommandExecutor {
 		for (String s : args) msg += s + " ";
 		
 		if (PermissionMechanics.isStaff(pl)) {
-			String aprefix = pl.getName() + ": " + ChatColor.WHITE;
+			String aprefix = pl.getName() + "@" + ChatColor.DARK_GRAY + "" + ChatColor.BOLD + Hive.getPlayerServer(pl.getName(), false) + ": " + ChatColor.WHITE;
 			JSONMessage filter = null;
 	        JSONMessage normal = null;
 			

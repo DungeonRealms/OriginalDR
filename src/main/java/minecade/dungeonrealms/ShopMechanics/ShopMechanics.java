@@ -58,6 +58,7 @@ import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -98,7 +99,9 @@ public class ShopMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
 
 	private static final String ALPHA_NUM = "123456789";
-
+	
+	private static final Integer COOLDOWN_TIME = 10;
+	
 	static HashMap<Block, Hologram> shop_nameplates = new HashMap<Block, Hologram>();
 	// NPC linked list that assigns an NPC to a given shop block.
 
@@ -111,6 +114,9 @@ public class ShopMechanics implements Listener {
 	static HashMap<Block, String> shop_owners = new HashMap<Block, String>();
 	// Owner of a given block shop.
 
+	static HashMap<String, Integer> openclose_cooldown = new HashMap<String, Integer>();
+	// Stores players while waiting for open/close cooldown to run out
+	
 	public static HashMap<Block, Block> chest_partners = new HashMap<Block, Block>();
 	// Allows us to get the owner w/o using List<Block>, the blocks will always have the inverse values of each other.
 
@@ -184,6 +190,7 @@ public class ShopMechanics implements Listener {
 		store_backup = new BackupStoreData();
 		store_backup.runTaskTimerAsynchronously(Main.plugin, 100L, 20L * 5);
 
+		
 		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				ConnectionPool.refresh = true;
@@ -239,6 +246,28 @@ public class ShopMechanics implements Listener {
 			}
 		}, 10 * 20L, 5 * 20L);
 
+		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
+			public void run()  {
+				if (openclose_cooldown.size() <= 0) {
+					return;
+				}
+				if (Bukkit.getServer().getOnlinePlayers().length <= 0) return;
+				for (Player pl : Bukkit.getOnlinePlayers()) {
+					if (pl == null) return; // Just in case.
+					if (openclose_cooldown.containsKey(pl.getName())) {
+						int i = openclose_cooldown.get(pl.getName());
+						if (i <= 0) {
+							openclose_cooldown.remove(pl.getName());
+							if (pl != null)  pl.sendMessage(ChatColor.RED + ""  + ChatColor.BOLD + "You may now open or close your shop again.");
+							return;
+						}
+						i--;
+						openclose_cooldown.put(pl.getName(), i);
+					}
+				}
+			}
+		}, 10 * 20L, 20L);
+		
 		log.info("[ShopMechanics] has been enabled.");
 	}
 
@@ -1441,9 +1470,14 @@ public class ShopMechanics implements Listener {
 				// Fix for corrupt shops.
 			}
 			if(i.getItem(slot).getDurability() == (short) 8) {
+				// Stop them from spamming open/close
+				if (openclose_cooldown.containsKey(((Player)e.getWhoClicked()).getName())) {
+					((Player)e.getWhoClicked()).sendMessage(ChatColor.RED + "You must wait another [" + ChatColor.GOLD + "" + ChatColor.BOLD + openclose_cooldown.get(((Player)e.getWhoClicked()).getName()) + "" + ChatColor.RED + "] seconds before reopening your shop.");
+					return;
+				}
 				// TODO: OPEN store.
 				i.setItem(slot, green_button);
-
+				openclose_cooldown.put(((Player)e.getWhoClicked()).getName(), COOLDOWN_TIME);
 				List<ItemStack> to_remove = new ArrayList<ItemStack>();
 				for(ItemStack is : i.getContents()) {
 					if(is == null) {
@@ -1467,9 +1501,15 @@ public class ShopMechanics implements Listener {
 				return;
 			}
 			if(i.getItem(slot).getDurability() == (short) 10) {
+				// Stop them from spam open/closing their shop
+				if (openclose_cooldown.containsKey(((Player)e.getWhoClicked()).getName())) {
+					((Player)e.getWhoClicked()).sendMessage(ChatColor.RED + "You must wait another [" + ChatColor.GOLD + "" + ChatColor.BOLD + openclose_cooldown.get(((Player)e.getWhoClicked()).getName()) + "" + ChatColor.RED + "] seconds before closing your shop again.");
+					return;
+				}
 				// TODO: CLOSE store.
 				int button_slot = (i.getSize() - 1);
 				i.setItem(button_slot, gray_button);
+				openclose_cooldown.put(((Player)e.getWhoClicked()).getName(), COOLDOWN_TIME);
 				open_shops.remove(p_shop);
 				open_shops.remove(chest_partners.get(p_shop));
 				//modifying_stock.add(p.getName());

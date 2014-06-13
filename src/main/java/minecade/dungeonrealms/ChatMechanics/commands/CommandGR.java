@@ -76,7 +76,7 @@ public class CommandGR implements CommandExecutor {
 
         String prefix = ChatMechanics.getPlayerPrefix(pl);
         String message = ChatMechanics.fixCapsLock(msg);
-            if (PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("global")) {
+            if (PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("guild")) {
                 pl.sendMessage(ChatColor.RED + "You currently have global messaging " + ChatColor.BOLD + "DISABLED." + ChatColor.RED
                         + " Type '/toggleglobal' to re-enable.");
                 return true;
@@ -104,21 +104,16 @@ public class CommandGR implements CommandExecutor {
 
         for(Player p : Bukkit.getServer().getOnlinePlayers()) {
             if(CommunityMechanics.isPlayerOnIgnoreList(pl, p.getName()) || CommunityMechanics.isPlayerOnIgnoreList(pl, p.getName())) {
-                continue; // Either sender has the sendie ignored or vise versa,
-                            // no need for them to be able to see each other's
-                            // messages.
+                continue; // Either sender has the sendee ignored or vice versa, no need for them to be able to see each other's messages.
             }
             if(PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("global")) {
-                continue; // They have global off, and only want to hear from
-                            // their buds.
+                continue; // They have global off, and only want to hear from their buds.
             }
-            if(PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("tchat")) {
-                continue; // They have global off, and only want to hear from
-                            // their buds.
+            if(PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("guildchat")) {
+            	continue; // They have guildchat off, so stop them from receiving the messages.
             }
             if(TutorialMechanics.onTutorialIsland(p)) {
-                continue; // Don't send global chat to players on tutorial
-                            // island.
+                continue; // Don't send any outside chat to players on tutorial island.
             }
 
             if(normal != null){

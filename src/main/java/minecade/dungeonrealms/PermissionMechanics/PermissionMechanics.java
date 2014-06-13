@@ -243,7 +243,7 @@ public class PermissionMechanics implements Listener {
 	
 	public static boolean isStaff(Player pl) {
 		String rank = getRank(pl.getName());
-		if (!pl.isOp() && !rank.equalsIgnoreCase("gm") && !rank.equalsIgnoreCase("pmod") && !rank.equalsIgnoreCase("wd")) {
+		if (!pl.isOp() && !rank.equalsIgnoreCase("gm") && !rank.equalsIgnoreCase("pmod")) {
 			return false;
 		}
 		return true;
