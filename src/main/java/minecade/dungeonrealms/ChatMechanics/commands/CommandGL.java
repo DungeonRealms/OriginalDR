@@ -25,7 +25,7 @@ public class CommandGL implements CommandExecutor {
 		Player p = (Player) sender;
 
 		if(args.length <= 0) {
-			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax. " + ChatColor.RED + "/gl <MESSAGE>");
+			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax. You must supply a message! " + ChatColor.RED + "/gl <MESSAGE>");
 			return true;
 		}
 
@@ -74,8 +74,12 @@ public class CommandGL implements CommandExecutor {
 		PlayerManager.getPlayerModel(p).setGlobalChatDelay(System.currentTimeMillis());
 
 		boolean trade = false;
+		boolean guild = false;
 		if(ChatMechanics.hasTradeKeyword(msg)) {
 			trade = true;
+		}
+		if (ChatMechanics.hasGuildKeyword(msg)) {
+			guild = true;
 		}
 
 		String prefix = ChatMechanics.getPlayerPrefix(p);
@@ -112,11 +116,11 @@ public class CommandGL implements CommandExecutor {
 							// no need for them to be able to see each other's
 							// messages.
 			}
-			if(trade == false && PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("global")) {
+			if(!trade && PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("global")) {
 				continue; // They have global off, and only want to hear from
 							// their buds.
 			}
-			if(trade == true && PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("tchat")) {
+			if(trade && PlayerManager.getPlayerModel(pl).getToggleList() != null && PlayerManager.getPlayerModel(pl).getToggleList().contains("tchat")) {
 				continue; // They have global off, and only want to hear from
 							// their buds.
 			}
@@ -134,7 +138,9 @@ public class CommandGL implements CommandExecutor {
 
 				if(trade){
 					toSend.setText(ChatColor.GREEN + "<" + ChatColor.BOLD + "T" + ChatColor.GREEN + ">" + " " + prefix + p_color + aprefix);
-				}else{
+				}else if(guild) {
+					toSend.setText(ChatColor.RED + "<" + ChatColor.BOLD + "GR" + ChatColor.RED + ">" + " " + prefix + p_color + aprefix);
+				} else {
 					toSend.setText(ChatColor.AQUA + "<" + ChatColor.BOLD + "G" + ChatColor.AQUA + ">" + " " + prefix + p_color + aprefix);
 				}
 
@@ -144,7 +150,9 @@ public class CommandGL implements CommandExecutor {
 
 				if(trade){
 					pl.sendMessage(ChatColor.GREEN + "<" + ChatColor.BOLD + "T" + ChatColor.GREEN + ">" + " " + prefix + p_color + aprefix + message);
-				}else{
+				}else if (guild) {
+					pl.sendMessage(ChatColor.RED + "<" + ChatColor.BOLD + "GR" + ChatColor.RED + ">" + " " + prefix + p_color + aprefix + message);
+				} else {
 					pl.sendMessage(ChatColor.AQUA + "<" + ChatColor.BOLD + "G" + ChatColor.AQUA + ">" + " " + prefix + p_color + aprefix + message);
 				}
 			}

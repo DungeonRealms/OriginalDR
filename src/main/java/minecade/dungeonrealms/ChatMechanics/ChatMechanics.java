@@ -13,7 +13,9 @@ import java.util.logging.Logger;
 
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.ChatMechanics.commands.CommandGL;
+import minecade.dungeonrealms.ChatMechanics.commands.CommandGR;
 import minecade.dungeonrealms.ChatMechanics.commands.CommandL;
+import minecade.dungeonrealms.ChatMechanics.commands.CommandSF;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.EcashMechanics.EcashMechanics;
@@ -84,6 +86,8 @@ public class ChatMechanics implements Listener {
 
         Main.plugin.getCommand("l").setExecutor(new CommandL());
         Main.plugin.getCommand("gl").setExecutor(new CommandGL());
+        Main.plugin.getCommand("gr").setExecutor(new CommandGR());
+        Main.plugin.getCommand("sf").setExecutor(new CommandSF());
 
         Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
@@ -99,9 +103,7 @@ public class ChatMechanics implements Listener {
                         mute_list.remove(p_name);
                         if (Bukkit.getPlayer(p_name) != null) {
                             Player p = Bukkit.getPlayer(p_name);
-                            p.sendMessage("");
-                            p.sendMessage(ChatColor.GREEN + "Your " + ChatColor.BOLD + "GLOBAL MUTE" + ChatColor.GREEN + " has expired.");
-                            p.sendMessage("");
+                            p.sendMessage("\n" + ChatColor.GREEN + "Your " + ChatColor.BOLD + "GLOBAL MUTE" + ChatColor.GREEN + " has expired." + "\n");
                         }
                     } else if (minutes_left > 0) {
                         mute_list.put(p_name, minutes_left);
@@ -480,6 +482,14 @@ public class ChatMechanics implements Listener {
         msg = msg.toLowerCase();
         if (msg.startsWith("trade") || msg.startsWith("selling") || msg.startsWith("buying") || msg.startsWith("wts") || msg.startsWith("wtb")
                 || msg.startsWith("wtt") || msg.startsWith("trading") || msg.startsWith("shops")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean hasGuildKeyword(String msg) {
+        msg = msg.toLowerCase();
+        if (msg.startsWith("guild") || msg.startsWith("recruiting") || msg.startsWith("lf") || msg.startsWith("guilds")) {
             return true;
         }
         return false;

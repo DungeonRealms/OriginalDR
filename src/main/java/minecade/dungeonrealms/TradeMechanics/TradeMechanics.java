@@ -133,11 +133,11 @@ public class TradeMechanics implements Listener {
         /*
          * ItemStack iss = orig_i; CraftItemStack css = new CraftItemStack(iss); net.minecraft.server.ItemStack nms = css.getHandle(); NBTTagCompound tag =
          * nms.tag; tag = new NBTTagCompound(); tag.setCompound("display", new NBTTagCompound()); nms.tag = tag; tag = nms.tag.getCompound("display");
-         * 
+         *
          * NBTTagList lore = nms.getTag().getCompound("display").getList("Lore");
-         * 
+         *
          * if(!(desc.equalsIgnoreCase(""))){ if(lore == null){lore = new NBTTagList("Lore");} lore.add(new NBTTagString("", desc)); tag.set("Lore", lore); }
-         * 
+         *
          * tag.setString("Name", name); nms.tag.setCompound("display", tag); css.getHandle().setTag(nms.tag); orig_i.setDurability(orig_i.getDurability());
          */
 
@@ -841,14 +841,14 @@ public class TradeMechanics implements Listener {
     public ItemStack makeUnique(ItemStack is) {
         /*
          * if(is == null){return null;} if(is.getMaxStackSize() == 1){return is;}
-         * 
+         *
          * ItemStack unique = new ItemStack(is.getType(), 1, is.getDurability()); ItemMeta im = unique.getItemMeta();
-         * 
+         *
          * if(im != null && im.hasDisplayName()){ im.setDisplayName(im.getDisplayName() + ChatColor.BLACK.toString()); } else{
          * im.setDisplayName(RealmMechanics.getFormalMatName(is.getType(), is.getDurability()) + ChatColor.BLACK.toString()); }
-         * 
+         *
          * unique.setItemMeta(im);
-         * 
+         *
          * return unique; //return is;
          */
         return is;
@@ -858,10 +858,10 @@ public class TradeMechanics implements Listener {
         /*
          * if(is == null){return null;} if(is.getMaxStackSize() == 1){return is;} if(!(is.hasItemMeta())){return is;} ItemStack normal =
          * CraftItemStack.asCraftCopy(is); ItemMeta im = normal.getItemMeta();
-         * 
+         *
          * String o_display = im.getDisplayName(); o_display = o_display.substring(0, o_display.lastIndexOf(ChatColor.BLACK.toString()));
          * im.setDisplayName(o_display); normal.setItemMeta(im);
-         * 
+         *
          * return normal; //return is;
          */
         return is;

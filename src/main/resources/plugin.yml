@@ -14,9 +14,6 @@ commands:
     description: Toggle indicators.
     usage: /<command>
     aliases: [toggleindicators]
-  achievment:
-    description: Root command.
-    usage: /<command>
   boss:
     description: Root cmd.
     usage: /<command>
@@ -30,6 +27,13 @@ commands:
     description: Send a message globally.
     usage: /<command>
     aliases: [global, all]
+  gr:
+    description: Send a guild recruitment message
+    usage: /<command>
+    aliases: [guildr, grecruit]
+  sf:
+    description: Send a staff only message
+    aliases: [staffchat, staffc, staffonly]
   l:
     description: Send a message locally
     usage: /<command>
