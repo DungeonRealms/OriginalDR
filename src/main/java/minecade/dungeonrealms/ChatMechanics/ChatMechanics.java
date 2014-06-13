@@ -1158,7 +1158,6 @@ public class ChatMechanics implements Listener {
     		}
     	}
     	
-    	to_send_local.add(sender);
     	for (Player staff : to_send_local) {
     		ChatColor pColor = getPlayerColor(sender, staff);
     		String prefix = getPlayerPrefix(sender);
@@ -1173,7 +1172,7 @@ public class ChatMechanics implements Listener {
     		
     		message = fixCapsLock(message);
     		
-    		staff.sendMessage(ChatColor.GOLD + "<SC> LOCAL" + prefix + pColor + sender.getName() + ": " + message);
+    		staff.sendMessage(ChatColor.GOLD + "<SC> LOCAL " + prefix + pColor + sender.getName() + ": " + message);
     	}
     	
     	log.info("<SC> " +  sender.getName() + ": " + raw_message);
