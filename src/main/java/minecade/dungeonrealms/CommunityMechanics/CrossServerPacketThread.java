@@ -14,8 +14,7 @@ public class CrossServerPacketThread extends Thread {
 				List<Object> data = edata.getValue();
 				// CommunityMechanics.log.info("d2 - " + data.toString());
 				String query = (String) data.get(0);
-				String p_name = (String) data.get(1); // Will just be null if
-														// all_servers=true
+				String p_name = (String) data.get(1); // Will just be null if all_servers=true
 				boolean all_servers = (boolean) data.get(2);
 				int server_num = -1;
 				if(all_servers == false) {

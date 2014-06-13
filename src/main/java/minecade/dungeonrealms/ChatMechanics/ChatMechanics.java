@@ -15,7 +15,7 @@ import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.ChatMechanics.commands.CommandGL;
 import minecade.dungeonrealms.ChatMechanics.commands.CommandGR;
 import minecade.dungeonrealms.ChatMechanics.commands.CommandL;
-import minecade.dungeonrealms.ChatMechanics.commands.CommandSF;
+import minecade.dungeonrealms.ChatMechanics.commands.CommandSC;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.EcashMechanics.EcashMechanics;
@@ -87,7 +87,7 @@ public class ChatMechanics implements Listener {
         Main.plugin.getCommand("l").setExecutor(new CommandL());
         Main.plugin.getCommand("gl").setExecutor(new CommandGL());
         Main.plugin.getCommand("gr").setExecutor(new CommandGR());
-        Main.plugin.getCommand("sc").setExecutor(new CommandSF());
+        Main.plugin.getCommand("sc").setExecutor(new CommandSC());
 
         Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 

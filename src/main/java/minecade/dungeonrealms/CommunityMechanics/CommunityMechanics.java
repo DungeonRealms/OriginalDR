@@ -1483,6 +1483,9 @@ public class CommunityMechanics implements Listener {
 		if (toggle.equalsIgnoreCase("toggletabchat")) {
 			desc += "Toggles tabcomplete chat.";
 		}
+		if (toggle.equalsIgnoreCase("toggleguildchat")) {
+			desc += "Toggles guild recruitment chat";
+		}
 		return desc;
 	}
 
