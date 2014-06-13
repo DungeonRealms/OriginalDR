@@ -1,10 +1,12 @@
 package minecade.dungeonrealms.DonationMechanics;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -30,6 +32,9 @@ import minecade.dungeonrealms.DonationMechanics.commands.CommandRewardSubLife;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.google.common.io.Files;
+
 
 public class DonationMechanics implements Listener {
 	
@@ -86,24 +91,72 @@ public class DonationMechanics implements Listener {
 		server_list.put(2001, "72.20.42.198"); // BR-1
 		log.info("" + Bukkit.getOnlinePlayers().length);
 		
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				tickSubscriberDays();
-				log.info("[DonationMechanics] Ticked all user's subscriber days forward by ONE.");
-				
-				tickFreeEcash();
-				log.info("[DonationMechanics] Reset all 'Free E-cash' users, login for more e-cash!");
-			}
-		}.runTaskTimerAsynchronously(Main.plugin, 24 * 3600 * 20L, 24 * 3600 * 20L);
+		final File timeFile = new File("plugins/DonationMechanics/lastDonationUpdateTime.txt");
 		
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				tickLifetimeSubEcash();
-				log.info("[DonationMechanics] 999 E-CASH has been given to all sub++ users.");
+		if (Bukkit.getMotd().contains("US-1")) {
+			
+			if (!timeFile.exists()) {
+				try {
+					new File("plugins/DonationMechanics/").mkdirs();
+					timeFile.createNewFile();
+					FileWriter writer = new FileWriter(timeFile, false);
+					writer.write(String.valueOf(System.currentTimeMillis()));
+					writer.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-		}.runTaskTimerAsynchronously(Main.plugin, 30 * 24 * 3600 * 20L, 30 * 24 * 3600 * 20L);
+			
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					
+					if (timeFile.exists()) {
+						
+						try {
+							// 86400000 = number of milliseconds in a day
+							if (System.currentTimeMillis() - Long.valueOf(Files.readFirstLine(timeFile, Charset.defaultCharset())) >= 86400000) {
+								tickSubscriberDays();
+								log.info("[DonationMechanics] Ticked all user's subscriber days forward by ONE.");
+								
+								tickFreeEcash();
+								log.info("[DonationMechanics] Reset all 'Free E-cash' users, login for more e-cash!");
+								
+								tickLifetimeSubEcash();
+								log.info("[DonationMechanics] 999 E-CASH has been given to all sub++ users.");
+								
+								FileWriter writer = new FileWriter(timeFile, false);
+								writer.write(String.valueOf(System.currentTimeMillis()));
+								writer.close();
+							}
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+						}
+						catch (NumberFormatException e) {
+							e.printStackTrace();
+						}
+						
+					}
+					else {
+						
+						try {
+							new File("plugins/DonationMechanics/").mkdirs();
+							timeFile.createNewFile();
+							FileWriter writer = new FileWriter(timeFile, false);
+							writer.write(String.valueOf(System.currentTimeMillis()));
+							writer.close();
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+					}
+					
+				}
+			}.runTaskTimerAsynchronously(Main.plugin, 0, 20L);
+		}
 		
 		if(new File("plugins/Votifier.jar").exists()) {
 			log.info("[DonationMechanics] Votifier.jar detected, registering listener.");
