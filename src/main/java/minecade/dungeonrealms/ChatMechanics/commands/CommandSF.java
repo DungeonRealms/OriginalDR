@@ -57,20 +57,19 @@ public class CommandSF implements CommandExecutor {
 			 
 			for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 				String pRank = PermissionMechanics.getRank(p.getName());
-				if (!pRank.equalsIgnoreCase("gm") || !pRank.equalsIgnoreCase("pmod") || !pRank.equalsIgnoreCase("wd") || !p.isOp()) {
-					continue;
-				}
-				if (normal != null) {
-					JSONMessage toSend = normal;
-					if (ChatMechanics.hasAdultFilter(p.getName())) {
-						toSend = filter;
+				if (PermissionMechanics.isStaff(p)) {	
+					if (normal != null) {
+						JSONMessage toSend = normal;
+						if (ChatMechanics.hasAdultFilter(p.getName())) {
+							toSend = filter;
+						}
+						ChatColor pColor = ChatMechanics.getPlayerColor(pl, p);
+						toSend.setText(ChatColor.GOLD + "<" + ChatColor.BOLD + "Staff" + ChatColor.GOLD + ">" + " " + prefix + pColor + aprefix);
+						toSend.sendToPlayer(p);
+					} else {
+						ChatColor pColor = ChatMechanics.getPlayerColor(pl, p);
+						p.sendMessage(ChatColor.GOLD + "<" + ChatColor.BOLD + "Staff" + ChatColor.GOLD + ">" + " " + prefix + pColor + aprefix + msg);
 					}
-					ChatColor pColor = ChatMechanics.getPlayerColor(pl, p);
-					toSend.setText(ChatColor.GOLD + "<" + ChatColor.BOLD + "Staff" + ChatColor.GOLD + ">" + " " + prefix + pColor + aprefix);
-					toSend.sendToPlayer(p);
-				} else {
-					ChatColor pColor = ChatMechanics.getPlayerColor(pl, p);
-					p.sendMessage(ChatColor.GOLD + "<" + ChatColor.BOLD + "Staff" + ChatColor.GOLD + ">" + " " + prefix + pColor + aprefix + msg);
 				}
 			}
 		} else return true;
