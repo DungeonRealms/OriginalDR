@@ -257,7 +257,7 @@ public class ShopMechanics implements Listener {
 						int i = openclose_cooldown.get(pl.getName());
 						if (i <= 0) {
 							openclose_cooldown.remove(pl.getName());
-							if (pl != null)  pl.sendMessage(ChatColor.GREEN + ""  + ChatColor.BOLD + "You may now open or close your shop again.");
+							if (pl != null)  pl.sendMessage(ChatColor.GREEN + "You may now " + ChatColor.UNDERLINE + "open/close" + ChatColor.GREEN + " your shop again.");
 							return;
 						}
 						i--;
@@ -1471,7 +1471,7 @@ public class ShopMechanics implements Listener {
 
 			if(i.getItem(slot).getDurability() == (short) 8) {
 				if (openclose_cooldown.containsKey(p.getName())) {
-					p.sendMessage(ChatColor.RED + "You must wait another [" + ChatColor.GOLD + "" + ChatColor.BOLD + openclose_cooldown.get(p.getName()) + "" + ChatColor.RED + "] seconds before reopening your shop.");
+					p.sendMessage(ChatColor.RED + "You must wait another " + ChatColor.UNDERLINE + openclose_cooldown.get(p.getName()) + "" + ChatColor.RED + " seconds before reopening your shop.");
 					return;
 				}
 				// TODO: OPEN store.
@@ -1501,7 +1501,7 @@ public class ShopMechanics implements Listener {
 			}
 			if(i.getItem(slot).getDurability() == (short) 10) {
 				if (openclose_cooldown.containsKey(p.getName())) {
-					p.sendMessage(ChatColor.RED + "You must wait another [" + ChatColor.GOLD + "" + ChatColor.BOLD + openclose_cooldown.get(p.getName()) + "" + ChatColor.RED + "] seconds before closing your shop again.");
+					p.sendMessage(ChatColor.RED + "You must wait another " + ChatColor.UNDERLINE + openclose_cooldown.get(p.getName()) + "" + ChatColor.RED + " seconds before closing your shop again.");
 					return;
 				}
 				// TODO: CLOSE store.

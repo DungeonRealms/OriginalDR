@@ -382,6 +382,48 @@ public class ChatMechanics implements Listener {
         return return_string;
     }
 
+    public static String getPlayerPrefix(String p_name) {
+        String rank = PermissionMechanics.getRank(p_name);
+        String return_string = "";
+        return_string = return_string + ChatColor.WHITE + GuildMechanics.getGuildPrefix(p_name) + ChatColor.RESET;
+
+        if (Bukkit.getOfflinePlayer(p_name).isOp() || rank.equalsIgnoreCase("GM")) {
+            if (Main.isDev(p_name)) {
+                return_string += "" + ChatColor.DARK_AQUA + ChatColor.BOLD.toString() + "DEV" + " " + ChatColor.GRAY;
+            } else if (p_name.equalsIgnoreCase("Bradez1571")) {
+                return_string += ChatColor.RED.toString() + ChatColor.BOLD + "CM " + ChatColor.RED;
+            } else {
+                return_string += "" + ChatColor.AQUA + ChatColor.BOLD.toString() + "GM" + " " + ChatColor.AQUA;
+            }
+        }
+
+        if (rank.equalsIgnoreCase("PMOD")) {
+            return_string += "" + ChatColor.WHITE + ChatColor.BOLD + "PMOD" + " ";
+        }
+
+        if (rank.equalsIgnoreCase("SUB")) {
+            return_string += "" + ChatColor.GREEN + ChatColor.BOLD + "S" + " ";
+        }
+
+        if (rank.equalsIgnoreCase("SUB+")) {
+            return_string += "" + ChatColor.GOLD + ChatColor.BOLD + "S+" + " ";
+        }
+
+        if (rank.equalsIgnoreCase("SUB++")) {
+            return_string += "" + ChatColor.DARK_AQUA + ChatColor.BOLD + "S++" + " ";
+        }
+
+        if (rank.equalsIgnoreCase("WD")) {
+            return_string += "" + ChatColor.DARK_AQUA + ChatColor.BOLD + "BUILDER" + " ";
+        }
+
+        if (rank.equalsIgnoreCase("DEFAULT")) {
+            return_string += ChatColor.GRAY;
+        }
+
+        return return_string;
+    }
+    
     public static String getPlayerPrefix(String p_name, boolean guild_prefix) {
         String rank = PermissionMechanics.getRank(p_name);
         OfflinePlayer op = Bukkit.getOfflinePlayer(p_name);
@@ -1105,5 +1147,46 @@ public class ChatMechanics implements Listener {
             hologram.show(p.getLocation().add(0, 1.2, 0), 20, null);
             hologram_chat.put(p.getName(), System.currentTimeMillis() + (1000 * 10));
         }
+    }
+    
+    public static void sendAllStaffMessage(Player sender, String raw_message) {
+    	List<Player> to_send_local = new ArrayList<Player>();
+    	
+    	for (Player pl : Bukkit.getOnlinePlayers()) {
+    		if (PermissionMechanics.isStaff(pl)) {
+    			to_send_local.add(pl);
+    		}
+    	}
+    	
+    	to_send_local.add(sender);
+    	for (Player staff : to_send_local) {
+    		ChatColor pColor = getPlayerColor(sender, staff);
+    		String prefix = getPlayerPrefix(sender);
+    		
+    		String message = raw_message;
+    		if (hasAdultFilter(staff.getName())) {
+    			message = censorMessage(message);
+    		}
+    		if (message.endsWith(" ")) {
+    			message = message.substring(0, message.length() -1);
+    		}
+    		
+    		message = fixCapsLock(message);
+    		
+    		staff.sendMessage(ChatColor.GOLD + "<SC> LOCAL" + prefix + pColor + sender.getName() + ": " + message);
+    	}
+    	
+    	log.info("<SC> " +  sender.getName() + ": " + raw_message);
+    	
+    	String local_server = Hive.getServerPrefixFromNum(Hive.getPlayerServer(sender.getName(), false));
+    	String message_to_send  = "&staffchat/" + local_server + "*" + sender.getName() + ":" + raw_message;
+    	sendAllServersStaffMessage(message_to_send);
+    }
+    
+    public static void sendAllServersStaffMessage(String message) {
+    	List<Object> query = new ArrayList<Object>();
+    	query.add(null);
+    	query.add(true);
+    	CommunityMechanics.social_query_list.put(GuildMechanics.nextSessionId(), query);
     }
 }
