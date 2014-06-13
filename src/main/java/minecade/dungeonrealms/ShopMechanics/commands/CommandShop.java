@@ -252,6 +252,7 @@ public class CommandShop implements CommandExecutor {
 			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax");
 			p.sendMessage(ChatColor.RED + "/shop");
 			p.sendMessage(ChatColor.GRAY + "Usage: /shop info, /shop open, /shop close, /shop see.");
+			p.sendMessage(ChatColor.GRAY + "This command is case sensitive!");
 			return true;
 		}
 
