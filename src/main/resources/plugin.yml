@@ -31,9 +31,10 @@ commands:
     description: Send a guild recruitment message
     usage: /<command>
     aliases: [guildr, grecruit]
-  sf:
+  sc:
     description: Send a staff only message
-    aliases: [staffchat, staffc, staffonly]
+    usage: /<command> 
+    aliases: [sf, staffchat, staffc, staffonly]
   l:
     description: Send a message locally
     usage: /<command>

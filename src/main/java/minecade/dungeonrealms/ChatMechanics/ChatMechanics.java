@@ -73,7 +73,7 @@ public class ChatMechanics implements Listener {
 
     public static List<String> bad_words = new ArrayList<String>(Arrays.asList("shit", "fuck", "cunt", "bitch", "whore", "slut", "wank", "asshole", "cock",
             "dick", "clit", "homo", "fag", "queer", "nigger", "dike", "dyke", "retard", "motherfucker", "vagina", "boob", "pussy", "rape", "gay", "penis",
-            "cunt", "titty"));
+            "cunt", "titty", "anus", "faggot")); // Faggot is not a food in this case!
 
     public static volatile CopyOnWriteArrayList<String> async_mute_update = new CopyOnWriteArrayList<String>();
     // Controls the LoginProcessThread to getMuteSQL().
@@ -87,7 +87,7 @@ public class ChatMechanics implements Listener {
         Main.plugin.getCommand("l").setExecutor(new CommandL());
         Main.plugin.getCommand("gl").setExecutor(new CommandGL());
         Main.plugin.getCommand("gr").setExecutor(new CommandGR());
-        Main.plugin.getCommand("sf").setExecutor(new CommandSF());
+        Main.plugin.getCommand("sc").setExecutor(new CommandSF());
 
         Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 

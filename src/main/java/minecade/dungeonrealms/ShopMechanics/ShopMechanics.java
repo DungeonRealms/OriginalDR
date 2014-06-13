@@ -58,7 +58,6 @@ import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -100,7 +99,7 @@ public class ShopMechanics implements Listener {
 
 	private static final String ALPHA_NUM = "123456789";
 	
-	private static final Integer COOLDOWN_TIME = 10;
+	private static final Integer COOLDOWN_TIME = 6;
 	
 	static HashMap<Block, Hologram> shop_nameplates = new HashMap<Block, Hologram>();
 	// NPC linked list that assigns an NPC to a given shop block.
@@ -258,7 +257,7 @@ public class ShopMechanics implements Listener {
 						int i = openclose_cooldown.get(pl.getName());
 						if (i <= 0) {
 							openclose_cooldown.remove(pl.getName());
-							if (pl != null)  pl.sendMessage(ChatColor.RED + ""  + ChatColor.BOLD + "You may now open or close your shop again.");
+							if (pl != null)  pl.sendMessage(ChatColor.GREEN + ""  + ChatColor.BOLD + "You may now open or close your shop again.");
 							return;
 						}
 						i--;
@@ -1469,15 +1468,15 @@ public class ShopMechanics implements Listener {
 				i.setItem(slot, CraftItemStack.asCraftCopy(green_button));
 				// Fix for corrupt shops.
 			}
+
 			if(i.getItem(slot).getDurability() == (short) 8) {
-				// Stop them from spamming open/close
-				if (openclose_cooldown.containsKey(((Player)e.getWhoClicked()).getName())) {
-					((Player)e.getWhoClicked()).sendMessage(ChatColor.RED + "You must wait another [" + ChatColor.GOLD + "" + ChatColor.BOLD + openclose_cooldown.get(((Player)e.getWhoClicked()).getName()) + "" + ChatColor.RED + "] seconds before reopening your shop.");
+				if (openclose_cooldown.containsKey(p.getName())) {
+					p.sendMessage(ChatColor.RED + "You must wait another [" + ChatColor.GOLD + "" + ChatColor.BOLD + openclose_cooldown.get(p.getName()) + "" + ChatColor.RED + "] seconds before reopening your shop.");
 					return;
 				}
 				// TODO: OPEN store.
 				i.setItem(slot, green_button);
-				openclose_cooldown.put(((Player)e.getWhoClicked()).getName(), COOLDOWN_TIME);
+				openclose_cooldown.put(p.getName(), COOLDOWN_TIME);
 				List<ItemStack> to_remove = new ArrayList<ItemStack>();
 				for(ItemStack is : i.getContents()) {
 					if(is == null) {
@@ -1501,15 +1500,14 @@ public class ShopMechanics implements Listener {
 				return;
 			}
 			if(i.getItem(slot).getDurability() == (short) 10) {
-				// Stop them from spam open/closing their shop
-				if (openclose_cooldown.containsKey(((Player)e.getWhoClicked()).getName())) {
-					((Player)e.getWhoClicked()).sendMessage(ChatColor.RED + "You must wait another [" + ChatColor.GOLD + "" + ChatColor.BOLD + openclose_cooldown.get(((Player)e.getWhoClicked()).getName()) + "" + ChatColor.RED + "] seconds before closing your shop again.");
+				if (openclose_cooldown.containsKey(p.getName())) {
+					p.sendMessage(ChatColor.RED + "You must wait another [" + ChatColor.GOLD + "" + ChatColor.BOLD + openclose_cooldown.get(p.getName()) + "" + ChatColor.RED + "] seconds before closing your shop again.");
 					return;
 				}
 				// TODO: CLOSE store.
 				int button_slot = (i.getSize() - 1);
 				i.setItem(button_slot, gray_button);
-				openclose_cooldown.put(((Player)e.getWhoClicked()).getName(), COOLDOWN_TIME);
+				openclose_cooldown.put(p.getName(), COOLDOWN_TIME);
 				open_shops.remove(p_shop);
 				open_shops.remove(chest_partners.get(p_shop));
 				//modifying_stock.add(p.getName());

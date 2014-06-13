@@ -22,7 +22,7 @@ public class CommandSF implements CommandExecutor {
 		if (pl == null) return true;
 		
 		if (args.length <= 0) {
-			pl.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect syntax. You must supply a message! " + ChatColor.GOLD + "/sf <MESSAGE>");
+			pl.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect syntax. You must supply a message! " + ChatColor.GOLD + "/sc <MESSAGE>");
 			return true;
 		}
 		
@@ -34,7 +34,7 @@ public class CommandSF implements CommandExecutor {
 		for (String s : args) msg += s + " ";
 		
 		if (PermissionMechanics.isStaff(pl)) {
-			String aprefix = pl.getName() + "@" + ChatColor.DARK_GRAY + "" + ChatColor.BOLD + Hive.getPlayerServer(pl.getName(), false) + ": " + ChatColor.WHITE;
+			String aprefix = pl.getName() + ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "@" + Hive.getServerPrefixFromNum(Hive.getPlayerServer(pl.getName(), false)) + "-" + Hive.getPlayerServer(pl.getName(), false) + ": " + ChatColor.WHITE;
 			JSONMessage filter = null;
 	        JSONMessage normal = null;
 			
@@ -65,11 +65,11 @@ public class CommandSF implements CommandExecutor {
 							toSend = filter;
 						}
 						ChatColor pColor = ChatMechanics.getPlayerColor(pl, p);
-						toSend.setText(ChatColor.GOLD + "<" + ChatColor.BOLD + "Staff" + ChatColor.GOLD + ">" + " " + prefix + pColor + aprefix);
+						toSend.setText(ChatColor.GOLD + "<" + ChatColor.BOLD + "SC" + ChatColor.GOLD + ">" + " " + prefix + pColor + aprefix);
 						toSend.sendToPlayer(p);
 					} else {
 						ChatColor pColor = ChatMechanics.getPlayerColor(pl, p);
-						p.sendMessage(ChatColor.GOLD + "<" + ChatColor.BOLD + "Staff" + ChatColor.GOLD + ">" + " " + prefix + pColor + aprefix + msg);
+						p.sendMessage(ChatColor.GOLD + "<" + ChatColor.BOLD + "SC" + ChatColor.GOLD + ">" + " " + prefix + pColor + aprefix + msg);
 					}
 				}
 			}
