@@ -34,7 +34,7 @@ public class CommandSF implements CommandExecutor {
 		for (String s : args) msg += s + " ";
 		
 		if (PermissionMechanics.isStaff(pl)) {
-			String aprefix = pl.getName() + ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "@" + Hive.getServerPrefixFromNum(Hive.getPlayerServer(pl.getName(), false)) + "-" + Hive.getPlayerServer(pl.getName(), false) + ": " + ChatColor.WHITE;
+			String aprefix = pl.getName() + ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "@" + Hive.getServerPrefixFromNum(Hive.getPlayerServer(pl.getName(), false)) + ": " + ChatColor.WHITE;
 			JSONMessage filter = null;
 	        JSONMessage normal = null;
 			
