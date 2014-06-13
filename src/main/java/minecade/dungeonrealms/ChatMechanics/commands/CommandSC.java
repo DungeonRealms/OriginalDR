@@ -26,7 +26,8 @@ public class CommandSC implements CommandExecutor {
 		String msg = "";
 		
 		for (String s : args) msg += s + " ";
-		
+		msg = ChatColor.WHITE + msg;
+		if (msg.endsWith(" ")) msg = msg.substring(0, msg.length() -1);
 		if (PermissionMechanics.isStaff(pl)) {
 			ChatMechanics.sendAllStaffMessage(pl, msg);
 		} else return true;
