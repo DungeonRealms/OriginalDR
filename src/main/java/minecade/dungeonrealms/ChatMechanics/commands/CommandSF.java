@@ -32,7 +32,7 @@ public class CommandSF implements CommandExecutor {
 		
 		for (String s : args) msg += s + " ";
 		
-		if (rank.equalsIgnoreCase("gm") || rank.equalsIgnoreCase("pmod") || rank.equalsIgnoreCase("wd") || pl.isOp()) {
+		if (PermissionMechanics.isStaff(pl)) {
 			String aprefix = pl.getName() + ": " + ChatColor.WHITE;
 			JSONMessage filter = null;
 	        JSONMessage normal = null;
