@@ -577,6 +577,9 @@ public class RealmMechanics implements Listener {
                         if (!(player_god_mode.containsKey(opl.getName()))) {
                             player_god_mode.put(opl.getName(), System.currentTimeMillis() + 999999999);
                             Player pl = (Player) opl.getPlayer();
+                            if (pl == null) {
+                            	continue;
+                            }
                             // pl.setLevel(9999);
                             if (HealthMechanics.getMaxHealthValue(pl.getName()) < 10000) {
                                 HealthMechanics.setPlayerHP(pl.getName(), 10000);
