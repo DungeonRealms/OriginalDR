@@ -57,7 +57,7 @@ public class CommandSF implements CommandExecutor {
 			 
 			for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 				String pRank = PermissionMechanics.getRank(p.getName());
-				if (pRank.equalsIgnoreCase("gm") || pRank.equalsIgnoreCase("pmod") || pRank.equalsIgnoreCase("wd") || p.isOp()) {
+				if (!pRank.equalsIgnoreCase("gm") || !pRank.equalsIgnoreCase("pmod") || !pRank.equalsIgnoreCase("wd") || !p.isOp()) {
 					continue;
 				}
 				if (normal != null) {
