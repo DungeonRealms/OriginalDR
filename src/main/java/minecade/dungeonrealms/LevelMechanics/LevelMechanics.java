@@ -24,7 +24,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -143,7 +142,7 @@ public class LevelMechanics implements Listener {
     public static int calculateXP(Player player, LivingEntity kill, int mob_level) {
     	int xp = (int) Math.round((6.5 * Math.pow(mob_level,1.35)) + 40 + new Random().nextInt(50));
         //int xp = mob_level * 15 + new Random().nextInt(50) + 5;
-        int level = getPlayerLevel(player);
+        //int level = getPlayerLevel(player);
         ItemStack weapon = kill.getEquipment().getItemInHand();
 
         //if (level - 8 > mob_level)

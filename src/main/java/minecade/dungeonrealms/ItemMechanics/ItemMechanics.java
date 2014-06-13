@@ -6062,7 +6062,8 @@ public class ItemMechanics implements Listener {
         return Integer.parseInt(ChatColor.stripColor(im.getDisplayName().split("/ ")[1]));
     }
 
-    public int subtractArrow(Player pl) {
+    @SuppressWarnings("deprecation")
+	public int subtractArrow(Player pl) {
         for (ItemStack is : pl.getInventory().getContents()) {
             if (is == null || is.getType() == Material.AIR) {
                 continue;

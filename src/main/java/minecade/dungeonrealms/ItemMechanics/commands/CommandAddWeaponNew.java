@@ -1,6 +1,5 @@
 package minecade.dungeonrealms.ItemMechanics.commands;
 
-import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.enums.ItemRarity;
 import minecade.dungeonrealms.enums.ItemTier;
 import minecade.dungeonrealms.enums.ItemType;

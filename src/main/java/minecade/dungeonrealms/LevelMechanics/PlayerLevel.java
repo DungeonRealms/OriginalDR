@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
-import minecade.dungeonrealms.BossMechanics.AceronListener;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
 import minecade.dungeonrealms.ScoreboardMechanics.ScoreboardMechanics;
