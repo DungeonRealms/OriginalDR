@@ -35,6 +35,7 @@ import minecade.dungeonrealms.PetMechanics.PetMechanics;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
 import minecade.dungeonrealms.RepairMechanics.RepairMechanics;
+import minecade.dungeonrealms.ShopMechanics.commands.CommandShop;
 import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
 import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.database.ConnectionPool;
@@ -110,10 +111,10 @@ public class ShopMechanics implements Listener {
 	static HashMap<Block, String> shop_owners = new HashMap<Block, String>();
 	// Owner of a given block shop.
 
-	static HashMap<Block, Block> chest_partners = new HashMap<Block, Block>();
+	public static HashMap<Block, Block> chest_partners = new HashMap<Block, Block>();
 	// Allows us to get the owner w/o using List<Block>, the blocks will always have the inverse values of each other.
 
-	static HashMap<String, Block> inverse_shop_owners = new HashMap<String, Block>();
+	public static HashMap<String, Block> inverse_shop_owners = new HashMap<String, Block>();
 	// Find block_1 of the shop owned by PLAYER_NAME
 
 	public static HashMap<String, Inventory> shop_stock = new HashMap<String, Inventory>();
@@ -144,8 +145,8 @@ public class ShopMechanics implements Listener {
 	// Collection bin of users in inventory format. This is rendered at many different times depending on the situation.
 	// Player Login, if they have items waiting -- Server stop, all shops converted to collection bins
 
-	ItemStack gray_button = setIinfo(new ItemStack(Material.INK_SACK, 1, (short) 8), ChatColor.GREEN.toString() + "Click to OPEN Shop.", ChatColor.GRAY.toString() + "This will open your shop to the public.");
-	ItemStack green_button = setIinfo(new ItemStack(Material.INK_SACK, 1, (short) 10), ChatColor.RED.toString() + "Click to CLOSE Shop.", ChatColor.GRAY.toString() + "This will allow you to edit your stock.");
+	public static ItemStack gray_button = setIinfo(new ItemStack(Material.INK_SACK, 1, (short) 8), ChatColor.GREEN.toString() + "Click to OPEN Shop.", ChatColor.GRAY.toString() + "This will open your shop to the public.");
+	public static ItemStack green_button = setIinfo(new ItemStack(Material.INK_SACK, 1, (short) 10), ChatColor.RED.toString() + "Click to CLOSE Shop.", ChatColor.GRAY.toString() + "This will allow you to edit your stock.");
 
 	public static List<Player> price_update_needed = new ArrayList<Player>();
 	// Used with an item is put in shop and needs to update price of other items. (right click reprice)
@@ -177,6 +178,8 @@ public class ShopMechanics implements Listener {
 
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
+		
+		Main.plugin.getCommand("shop").setExecutor(new CommandShop());
 
 		store_backup = new BackupStoreData();
 		store_backup.runTaskTimerAsynchronously(Main.plugin, 100L, 20L * 5);
@@ -392,7 +395,7 @@ public class ShopMechanics implements Listener {
 		}
 	}
 
-	public int getServerLocationOfShop(String p_name) {
+	public static int getServerLocationOfShop(String p_name) {
 		if(shop_server.containsKey(p_name)) { return shop_server.get(p_name); }
 
 		shop_server.put(p_name, -1);
@@ -796,7 +799,7 @@ public class ShopMechanics implements Listener {
 		return 0;
 	}
 
-	public boolean doesPlayerHaveShopSQL(String p_name) {
+	public static boolean doesPlayerHaveShopSQL(String p_name) {
 		int server_num = getServerLocationOfShop(p_name);
 		if(server_num == -1) { return false; }
 		return true;
@@ -855,7 +858,7 @@ public class ShopMechanics implements Listener {
 
 	}
 
-	public ItemStack setIinfo(ItemStack orig_i, String name, String desc) {
+	public static ItemStack setIinfo(ItemStack orig_i, String name, String desc) {
 		ItemMeta im = orig_i.getItemMeta();
 		im.setDisplayName(name);
 		List<String> lore_list = new ArrayList<String>(Arrays.asList(desc));
@@ -864,7 +867,7 @@ public class ShopMechanics implements Listener {
 		return orig_i;
 	}
 
-	public boolean hasLocalShop(String p_name) {
+	public static boolean hasLocalShop(String p_name) {
 		if(shop_stock.containsKey(p_name)) { return true; }
 		return false;
 	}
@@ -1857,7 +1860,7 @@ public class ShopMechanics implements Listener {
 					}
 				}, 2L);
 				if(!LevelMechanics.canPlayerUseTier(p, ItemMechanics.getItemTier(e.getCurrentItem()))){
-				    p.sendMessage(ChatColor.RED + "This item requires " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level " + LevelMechanics.getLevelToUse(ItemMechanics.getItemTier(e.getCurrentItem())) + " to use this item.");
+				    p.sendMessage(ChatColor.RED + "This item requires " + ChatColor.UNDERLINE + "at least" + ChatColor.RED + " level " + LevelMechanics.getLevelToUse(ItemMechanics.getItemTier(e.getCurrentItem())) + " to use this item.");
 				    p.sendMessage(ChatColor.GRAY + "Do you really want to purchase it?");
 				}
 				p.sendMessage(ChatColor.GREEN + "Enter the " + ChatColor.BOLD + "QUANTITY" + ChatColor.GREEN + " you'd like to purchase.");
