@@ -45,14 +45,14 @@ public class CommandShop implements CommandExecutor {
 			if (args[0].equalsIgnoreCase("info")) {
 				if (ShopMechanics.doesPlayerHaveShopSQL(args[1])) {
 					if (ShopMechanics.hasLocalShop(args[1]) && ShopMechanics.inverse_shop_owners.containsKey(args[1])) {
-						Block shop = ShopMechanics.inverse_shop_owners.get(p.getName());
+						Block shop = ShopMechanics.inverse_shop_owners.get(args[1]);
 						p.sendMessage(ChatColor.YELLOW + "Player " + args[1] + " has "
 								+ (ShopMechanics.isShopOpen(shop) ? "a closed" : "an open") + " shop on this server.");
 						p.sendMessage(ChatColor.GRAY + "Shop Location: " + (int) shop.getLocation().getX() + ", "
 								+ (int) shop.getLocation().getY() + ", " + (int) shop.getLocation().getZ());
 						return true;
 					}
-					int server_num = ShopMechanics.getServerLocationOfShop(p.getName());
+					int server_num = ShopMechanics.getServerLocationOfShop(args[1]);
 					String motd = Bukkit.getMotd();
 					int local_server_num = Integer.parseInt(motd.substring(motd.indexOf("-") + 1, motd.indexOf(" ")));
 					String prefix = "US-";
@@ -84,7 +84,7 @@ public class CommandShop implements CommandExecutor {
 				if (!ShopMechanics.hasLocalShop(args[1]) || !ShopMechanics.inverse_shop_owners.containsKey(args[1])) {
 					p.sendMessage(ChatColor.RED + "Player " + args[1] + " does not have a shop on this server.");
 					if (ShopMechanics.doesPlayerHaveShopSQL(args[1])) {
-						int server_num = ShopMechanics.getServerLocationOfShop(p.getName());
+						int server_num = ShopMechanics.getServerLocationOfShop(args[1]);
 						String motd = Bukkit.getMotd();
 						int local_server_num = Integer.parseInt(motd.substring(motd.indexOf("-") + 1, motd.indexOf(" ")));
 						String prefix = "US-";
@@ -111,7 +111,7 @@ public class CommandShop implements CommandExecutor {
 					}
 				}
 				else {
-					Block shop = ShopMechanics.inverse_shop_owners.get(p.getName());
+					Block shop = ShopMechanics.inverse_shop_owners.get(args[1]);
 					if (ShopMechanics.isShopOpen(shop)) {
 						p.sendMessage(ChatColor.YELLOW + "Player " + args[1] + "'s shop is already open.");
 					}
@@ -152,7 +152,7 @@ public class CommandShop implements CommandExecutor {
 				if (!ShopMechanics.hasLocalShop(args[1]) || !ShopMechanics.inverse_shop_owners.containsKey(args[1])) {
 					p.sendMessage(ChatColor.RED + "Player " + args[1] + " does not have a shop on this server.");
 					if (ShopMechanics.doesPlayerHaveShopSQL(args[1])) {
-						int server_num = ShopMechanics.getServerLocationOfShop(p.getName());
+						int server_num = ShopMechanics.getServerLocationOfShop(args[1]);
 						String motd = Bukkit.getMotd();
 						int local_server_num = Integer.parseInt(motd.substring(motd.indexOf("-") + 1, motd.indexOf(" ")));
 						String prefix = "US-";
@@ -179,7 +179,7 @@ public class CommandShop implements CommandExecutor {
 					}
 				}
 				else {
-					Block shop = ShopMechanics.inverse_shop_owners.get(p.getName());
+					Block shop = ShopMechanics.inverse_shop_owners.get(args[1]);
 					if (!ShopMechanics.isShopOpen(shop)) {
 						p.sendMessage(ChatColor.YELLOW + "Player " + args[1] + "'s shop is already closed.");
 					}
@@ -202,7 +202,7 @@ public class CommandShop implements CommandExecutor {
 								viewers.add(he_p);
 							}
 							for(Player he_p : viewers) {
-								if(!he_p.getName().equalsIgnoreCase(p.getName())) {
+								if(!he_p.getName().equalsIgnoreCase(args[1])) {
 									he_p.playSound(p.getLocation(), Sound.CHEST_CLOSE, 1F, 1F);
 									he_p.closeInventory();
 									//he_p.sendMessage(ChatColor.RED + "Shop closed.");
@@ -221,7 +221,7 @@ public class CommandShop implements CommandExecutor {
 				if (!ShopMechanics.hasLocalShop(args[1]) || !ShopMechanics.inverse_shop_owners.containsKey(args[1])) {
 					p.sendMessage(ChatColor.RED + "Player " + args[1] + " does not have a shop on this server.");
 					if (ShopMechanics.doesPlayerHaveShopSQL(args[1])) {
-						int server_num = ShopMechanics.getServerLocationOfShop(p.getName());
+						int server_num = ShopMechanics.getServerLocationOfShop(args[1]);
 						String motd = Bukkit.getMotd();
 						int local_server_num = Integer.parseInt(motd.substring(motd.indexOf("-") + 1, motd.indexOf(" ")));
 						String prefix = "US-";
