@@ -935,7 +935,7 @@ public class ConnectProtocol implements Runnable {
 						String sender_server_name = inputLine.substring(inputLine.indexOf("/") + 1, inputLine.indexOf("*"));
 						String raw_message = inputLine.substring(inputLine.indexOf(":") + 1, inputLine.length());
 
-						if (Bukkit.getOnlinePlayers().length <= 0) { in.close(); return; } // No one to get receive message
+						if (Bukkit.getOnlinePlayers().length <= 0) { in.close(); return; } // No one to receive message
 						for (Player pl : Bukkit.getOnlinePlayers()) {
 							if (PermissionMechanics.isStaff(pl)) {
 								ChatColor pColor = ChatMechanics.getPlayerColor(sender_name, pl.getName());
@@ -946,7 +946,7 @@ public class ConnectProtocol implements Runnable {
 								if (message.endsWith(" ")) message = message.substring(0, message.length() - 1);
 								message = ChatMechanics.fixCapsLock(message);
 
-								pl.sendMessage(ChatColor.GOLD + "<SC> " + sender_server_name + " " + prefix + pColor + sender_name + ": " + ChatColor.WHITE + message);
+								pl.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "<SC> " + ChatColor.GOLD + sender_server_name + " " + prefix + pColor + sender_name + ": " + ChatColor.WHITE + message);
 							}
 							continue;
 						}
@@ -977,7 +977,7 @@ public class ConnectProtocol implements Runnable {
 							}
 
 							ChatColor p_color = ChatMechanics.getPlayerColor(p_sender, g_member);
-							String prefix = ChatMechanics.getPlayerPrefix(p_sender); // No need for guild prefix here, not even using it with false parameter
+							String prefix = ChatMechanics.getPlayerPrefix(p_sender);
 
 							String personal_msg = raw_msg;
 							if (ChatMechanics.hasAdultFilter(g_member)) {
@@ -991,7 +991,7 @@ public class ConnectProtocol implements Runnable {
 							personal_msg = ChatMechanics.fixCapsLock(personal_msg);
 
 							pl_g_member.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(g_name)
-									+ ChatColor.DARK_AQUA + ">" + " " + ChatColor.GRAY + "" + sender_server_name + " " + prefix + p_color
+									+ ChatColor.DARK_AQUA + ">" + " " + ChatColor.GRAY + "" + sender_server_name + "" + ChatColor.GRAY + " " + prefix + p_color
 									+ p_sender + ": " + ChatColor.GRAY + personal_msg);
 						}
 					}

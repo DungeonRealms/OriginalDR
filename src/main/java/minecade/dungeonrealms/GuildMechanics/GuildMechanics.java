@@ -2970,7 +2970,7 @@ public class GuildMechanics implements Listener {
 		
 		for(Player pl : to_send_local) {
 			ChatColor p_color = ChatMechanics.getPlayerColor(sender, pl);
-			String prefix = ChatMechanics.getPlayerPrefix(sender.getName(), false);
+			String prefix = ChatMechanics.getPlayerPrefix(sender);
 			
 			String personal_msg = raw_msg;
 			if(ChatMechanics.hasAdultFilter(pl.getName())) {
