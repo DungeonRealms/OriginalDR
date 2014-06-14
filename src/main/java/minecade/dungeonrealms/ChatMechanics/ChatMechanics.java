@@ -1177,14 +1177,14 @@ public class ChatMechanics implements Listener {
     	
     	log.info("<SC> " +  sender.getName() + ": " + raw_message);
     	
-    	String local_server = Hive.getServerPrefixFromNum(Hive.getPlayerServer(sender.getName(), false));
+    	String local_server = Bukkit.getMotd().substring(0, Bukkit.getMotd().indexOf(" "));
     	String message_to_send  = "&staffchat/" + local_server + "*" + sender.getName() + ":" + raw_message;
     	sendAllServersStaffMessage(message_to_send);
     }
     
     public static void sendAllServersStaffMessage(String message) {
     	List<Object> query = new ArrayList<Object>();
-    	query.add(null);
+    	query.add(message);
     	query.add(null);
     	query.add(true);
     	CommunityMechanics.social_query_list.put(GuildMechanics.nextSessionId(), query);
