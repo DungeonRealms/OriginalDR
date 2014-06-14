@@ -2912,7 +2912,7 @@ public class GuildMechanics implements Listener {
 				}
 				continue;
 			}
-			String message_to_send = "[gpromote]" + new_owner + "," + getGuild(new_owner) + ":3";
+			String message_to_send = "[gpromote]" + new_owner + "," + getGuild(owner.getName()) + ":3";
 			
 			sendGuildMessageCrossServer(message_to_send);
 			updateGuildSQL(getGuild(new_owner));
