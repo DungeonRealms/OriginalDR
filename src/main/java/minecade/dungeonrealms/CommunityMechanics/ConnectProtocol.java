@@ -975,7 +975,7 @@ public class ConnectProtocol implements Runnable {
 							if (pl_g_member == null || !pl_g_member.getName().equalsIgnoreCase(g_member)) {
 								continue;
 							}
-/sc 
+							
 							ChatColor p_color = ChatMechanics.getPlayerColor(p_sender, g_member);
 							String prefix = ChatMechanics.getPlayerPrefix(p_sender, false);
 
