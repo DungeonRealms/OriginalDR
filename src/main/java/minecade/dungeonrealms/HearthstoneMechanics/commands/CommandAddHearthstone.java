@@ -25,7 +25,7 @@ public class CommandAddHearthstone implements CommandExecutor {
         }
         Location l = p.getLocation();
         if (!l.getWorld().getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName())) {
-            p.sendMessage(ChatColor.RED + "You must be in Andulicia to do this.");
+            p.sendMessage(ChatColor.RED + "You must be in Andalucia to do this.");
             return true;
         }
         if (HearthstoneMechanics.spawn_map.values().contains(new Location(l.getWorld(), l.getBlockX(), l.getBlockY(), l.getBlockZ()))) {
