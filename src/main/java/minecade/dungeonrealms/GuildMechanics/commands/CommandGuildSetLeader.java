@@ -18,8 +18,12 @@ public class CommandGuildSetLeader implements CommandExecutor {
 		if (pl == null) return true;
 
 		if (args.length < 1) {
-			pl.sendMessage(ChatColor.RED + "Invalid syntax. You must supply a player! /gsetleader <PLAYER> [GUILD]");
+			pl.sendMessage(ChatColor.RED + "Invalid syntax. You must supply a player! /gsetleader <PLAYER>");
 			return true;
+		}
+		
+		if (args.length == 1 && GuildMechanics.inGuild(pl.getName())) {
+			pl.sendMessage(ChatColor.RED + "You are " + ChatColor.UNDERLINE + "not" + ChatColor.RED + " in a guild. Please specify a guild name! /gsetleader <PLAYER> <GUILD>");
 		}
 
 		if (GuildMechanics.inGuild(pl.getName()) || PermissionMechanics.isGM(pl.getName()) || pl.isOp()) {
@@ -33,17 +37,26 @@ public class CommandGuildSetLeader implements CommandExecutor {
 						pl.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "No guild exists by that name!");
 						return true;
 					}
+					if (GuildMechanics.inGuild(args[0]) && !GuildMechanics.getGuild(args[0]).equals(g_name)) {
+						pl.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + args[0] + ChatColor.RED + " is already in a different guild; " + ChatColor.UNDERLINE + g_name);
+						return true;
+					}
+					
 					GuildMechanics.setGuildRank(GuildMechanics.getGuildOwner(g_name), 1);
 					GuildMechanics.setGuildRank(args[0], 3);
 					
 					pl.sendMessage(ChatColor.GREEN + "You've set " + ChatColor.UNDERLINE + "" + args[0] + ChatColor.GREEN + " as guild leader of " + ChatColor.UNDERLINE + g_name);
-					GuildMechanics.sendMessageToGuild(pl, "I've set " + ChatColor.BOLD + args[0] + ChatColor.WHITE + " as leader of your guild");
+					GuildMechanics.sendGuildMessageCrossServer(ChatColor.AQUA + "" + ChatColor.UNDERLINE + pl.getName() + ChatColor.GRAY + " has set " + ChatColor.AQUA + "" + ChatColor.UNDERLINE + args[0] + " as " + ChatColor.BOLD + "LEADER" + ChatColor.GRAY + " of your guild.");
 				} else {
+					if (GuildMechanics.inGuild(args[0]) && !GuildMechanics.getGuild(args[0]).equals(GuildMechanics.getGuild(pl.getName()))) {
+						pl.sendMessage(ChatColor.RED + "That user isn't part of your guild.");
+						return true;
+					}
 					GuildMechanics.setGuildRank(GuildMechanics.getGuildOwner(GuildMechanics.getGuild(pl.getName())), 1);
 					GuildMechanics.setGuildRank(args[0], 3);
 					
-					pl.sendMessage(ChatColor.GREEN + "You've set " + ChatColor.UNDERLINE + "" + args[0] + ChatColor.GREEN + " as guild leader of " + ChatColor.UNDERLINE + GuildMechanics.getGuild(pl.getName()));
-					GuildMechanics.sendMessageToGuild(pl, "I've set " + ChatColor.BOLD + args[0] + ChatColor.WHITE + " as leader of our guild");
+					pl.sendMessage(ChatColor.GREEN + "You've set " + ChatColor.UNDERLINE + args[0] + ChatColor.GREEN + " as guild leader of " + ChatColor.UNDERLINE + GuildMechanics.getGuild(pl.getName()));
+					GuildMechanics.sendGuildMessageCrossServer(ChatColor.AQUA + "" + ChatColor.UNDERLINE + pl.getName() + ChatColor.GRAY + " has set " + ChatColor.AQUA + "" + ChatColor.UNDERLINE + args[0] + " as " + ChatColor.BOLD + "LEADER" + ChatColor.GRAY + " of your guild.");
 				}
 			}
 		}

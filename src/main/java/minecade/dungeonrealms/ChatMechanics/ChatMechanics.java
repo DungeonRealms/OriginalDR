@@ -1172,10 +1172,10 @@ public class ChatMechanics implements Listener {
     		
     		message = fixCapsLock(message);
     		
-    		staff.sendMessage(ChatColor.GOLD + "<" + ChatColor.BOLD + "SC " + ChatColor.GOLD + "> " + prefix + pColor + sender.getName() + ": " + message);
+    		staff.sendMessage(ChatColor.GOLD + "<" + ChatColor.BOLD + "SC" + ChatColor.GOLD + "> " + prefix + pColor + sender.getName() + ": " + message);
     	}
     	
-    	log.info("<SC> " +  sender.getName() + ": " + raw_message);
+    	log.info("<SC>" +  sender.getName() + ": " + raw_message);
     	
     	String local_server = Bukkit.getMotd().substring(0, Bukkit.getMotd().indexOf(" "));
     	String message_to_send  = "&staffchat/" + local_server + "*" + sender.getName() + ":" + raw_message;
