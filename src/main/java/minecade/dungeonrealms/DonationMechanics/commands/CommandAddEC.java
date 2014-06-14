@@ -22,6 +22,10 @@ public class CommandAddEC implements CommandExecutor {
 			ps = (Player) sender;
 			if(!(ps.isOp())) { return true; }
 		}
+		if (args.length != 2) {
+			ps.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Incorrect Syntax." + ChatColor.RESET + ""
+					+ ChatColor.GRAY + " Usage: /addec <player> <amount>");
+		}
 		final String p_name = args[0];
 		final int amount = Integer.parseInt(args[1]);
 		

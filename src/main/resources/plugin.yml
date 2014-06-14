@@ -149,6 +149,9 @@ commands:
   removesub:
     description: Removes any sub/sub+ status.
     usage: /<command>
+  addsubdaystoall:
+    description: Adds specified number of days to all subscribers.
+    usage: /<command> <number>
   accept:
     description: Accept given user into beta (nonpaying)
     usage: /<command>

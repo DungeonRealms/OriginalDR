@@ -11,12 +11,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,9 +29,6 @@ import minecade.dungeonrealms.DonationMechanics.commands.CommandRewardSubLife;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitRunnable;
-
-
 
 public class DonationMechanics implements Listener {
 	
@@ -91,6 +85,7 @@ public class DonationMechanics implements Listener {
 		server_list.put(2001, "72.20.42.198"); // BR-1
 		log.info("" + Bukkit.getOnlinePlayers().length);
 		
+		/* Do NOT uncomment!  The timer is now handled by a separate donation-dedicated server!
 		if (Bukkit.getMotd().contains("US-0")) {
 			Calendar nextUpdate = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"));
 			nextUpdate.set(nextUpdate.get(Calendar.YEAR), nextUpdate.get(Calendar.MONTH), nextUpdate.get(Calendar.DATE) + 1, 0, 0);
@@ -123,6 +118,7 @@ public class DonationMechanics implements Listener {
 			}.runTaskLaterAsynchronously(Main.plugin, secToUp * 20L);
 			
 		}
+		*/
 			
 		if(new File("plugins/Votifier.jar").exists()) {
 			log.info("[DonationMechanics] Votifier.jar detected, registering listener.");
@@ -171,6 +167,34 @@ public class DonationMechanics implements Listener {
 		//}
 		
 		//return rank_map.get(p_name);
+	}
+	
+	public static void addSubscriberDaysToAll(int number) {
+		Connection con = null;
+		PreparedStatement pst = null;
+		
+		try {
+			con = DriverManager.getConnection(sql_url, sql_user, sql_password);
+			pst = con.prepareStatement("UPDATE player_database SET player_database.sdays_left = player_database.sdays_left + ? WHERE player_database.sdays_left IS NOT NULL");
+			pst.setInt(1, number);
+			pst.executeUpdate();
+			
+		} catch(SQLException ex) {
+			log.log(Level.SEVERE, ex.getMessage(), ex);
+			
+		} finally {
+			try {
+				if(pst != null) {
+					pst.close();
+				}
+				if(con != null) {
+					con.close();
+				}
+				
+			} catch(SQLException ex) {
+				log.log(Level.WARNING, ex.getMessage(), ex);
+			}
+		}
 	}
 	
 	public static void tickSubscriberDays() {
