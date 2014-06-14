@@ -2866,7 +2866,7 @@ public class GuildMechanics implements Listener {
 			}
 		}
 		
-		String message_to_send = "[gpromote]" + s_to_promote + "," + g_name + ":2";
+		String message_to_send = "[gpromote]" + s_to_promote + "," + g_name + ":2_";
 		sendGuildMessageCrossServer(message_to_send);
 		
 		// Now we need to update the guild data in SQL.
@@ -2884,11 +2884,12 @@ public class GuildMechanics implements Listener {
 					for (String members : getGuildMembers(getGuild(user_to_set_owner))) {
 						Player pl = Bukkit.getPlayer(members);
 						if (pl != null) {
-							pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + guild_handle_map.get(guild_name) + ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + user_to_set_owner + " has been " + ChatColor.UNDERLINE + "promoted" + ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD OWNER.");
+							pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(guild_name)
+									+ ChatColor.DARK_AQUA + ">" + ChatColor.AQUA + " " + ChatColor.UNDERLINE + sender.getName() + ChatColor.GRAY + " has set " + ChatColor.AQUA  + "" + ChatColor.UNDERLINE + user_to_set_owner + ChatColor.GRAY + " as the " + ChatColor.BOLD + "LEADER" + ChatColor.GRAY + " of your guild.");
 						}
 						continue;
 					}
-					String message_to_send = "[gpromote]" + user_to_set_owner + "," + guild_name + ":3";
+					String message_to_send = "[gpromote]" + user_to_set_owner + "," + guild_name + ":3_" + sender.getName();
 
 					sendGuildMessageCrossServer(message_to_send);
 					updateGuildSQL(guild_name);
@@ -2908,11 +2909,12 @@ public class GuildMechanics implements Listener {
 			for (String members : getGuildMembers(getGuild(new_owner))) {
 				Player pl = Bukkit.getPlayer(members);
 				if (pl != null) {
-					pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + guild_handle_map.get(getGuild(new_owner)) + ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + new_owner + " has been " + ChatColor.UNDERLINE + "promoted" + ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD OWNER.");
+					pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(getGuild(owner.getName()))
+							+ ChatColor.DARK_AQUA + ">" + ChatColor.AQUA + " " + ChatColor.UNDERLINE + owner.getName() + ChatColor.GRAY + " has set " + ChatColor.AQUA  + "" + ChatColor.UNDERLINE + new_owner + ChatColor.GRAY + " as the " + ChatColor.BOLD + "LEADER" + ChatColor.GRAY + " of your guild.");
 				}
 				continue;
 			}
-			String message_to_send = "[gpromote]" + new_owner + "," + getGuild(owner.getName()) + ":3";
+			String message_to_send = "[gpromote]" + new_owner + "," + getGuild(owner.getName()) + ":3_" + owner.getName();
 			
 			sendGuildMessageCrossServer(message_to_send);
 			updateGuildSQL(getGuild(new_owner));
@@ -2944,7 +2946,7 @@ public class GuildMechanics implements Listener {
 			}
 		}
 		
-		String message_to_send = "[gdemote]" + s_to_demote + "," + g_name + ":1";
+		String message_to_send = "[gdemote]" + s_to_demote + "," + g_name + ":1_";
 		sendGuildMessageCrossServer(message_to_send);
 		
 		// Now we need to update the guild data in SQL.

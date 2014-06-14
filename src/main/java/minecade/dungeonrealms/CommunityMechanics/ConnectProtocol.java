@@ -763,11 +763,12 @@ public class ConnectProtocol implements Runnable {
 				}
 
 				if (inputLine.startsWith("[gpromote]")) {
-					// [gpromote]p_name,g_name:rank
+					// [gpromote]p_name,g_name:rank_
 					String p_name = inputLine.substring(inputLine.indexOf("]") + 1, inputLine.indexOf(","));
 					String g_name = inputLine.substring(inputLine.indexOf(",") + 1, inputLine.indexOf(":"));
-					int rank = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.length()));
-
+					int rank = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.indexOf("_")));
+					String o_name = inputLine.substring(inputLine.indexOf("_") +1, inputLine.length()); // Only used by promote to owner
+					
 					if (!(GuildMechanics.guild_map.containsKey(g_name))) {
 						in.close();
 						return; // Nothing to do here.
@@ -776,8 +777,7 @@ public class ConnectProtocol implements Runnable {
 					if (rank == 3) {
 						if (Bukkit.getPlayer(p_name) != null) {
 							Player promoted = Bukkit.getPlayer(p_name);
-							promoted.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA
-									+ "to the rank of " + ChatColor.BOLD + "GUILD OWNER" + ChatColor.DARK_AQUA + " in " + GuildMechanics.getGuild(p_name));
+							promoted.sendMessage(ChatColor.GRAY + "You have been promoted to " + ChatColor.AQUA  + "" + ChatColor.BOLD + "GUILD LEADER" + ChatColor.GRAY + " of " + ChatColor.AQUA + "" + ChatColor.UNDERLINE + GuildMechanics.getGuild(p_name));
 						}
 
 						for (String s : GuildMechanics.getOnlineGuildMembers(g_name)) {
@@ -785,8 +785,7 @@ public class ConnectProtocol implements Runnable {
 								Player pl = Bukkit.getPlayer(ChatColor.stripColor(s));
 								GuildMechanics.updateGuildTabList(pl);
 								pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(g_name)
-										+ ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + p_name + " has been " + ChatColor.UNDERLINE + "promoted"
-										+ ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD OWNER.");
+										+ ChatColor.DARK_AQUA + ">" + ChatColor.AQUA + " " + ChatColor.UNDERLINE + o_name + ChatColor.GRAY + " has set " + ChatColor.AQUA  + "" + ChatColor.UNDERLINE + p_name + ChatColor.GRAY + " as the " + ChatColor.BOLD + "LEADER" + ChatColor.GRAY + " of your guild.");
 							}
 						}
 					} else if (rank == 2) {
