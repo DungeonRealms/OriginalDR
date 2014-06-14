@@ -38,6 +38,7 @@ import minecade.dungeonrealms.GuildMechanics.commands.CommandGuildSetLeader;
 import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
+import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
 import minecade.dungeonrealms.RepairMechanics.RepairMechanics;
 import minecade.dungeonrealms.database.ConnectionPool;
@@ -2870,6 +2871,52 @@ public class GuildMechanics implements Listener {
 		
 		// Now we need to update the guild data in SQL.
 		updateGuildSQL(g_name);
+	}
+	
+	public static void promoteToOwnerInSpecificGuild(Player sender, String user_to_set_owner, String guild_name) {
+		if (PermissionMechanics.isGM(sender.getName()) || sender.isOp()) {
+			if (guild_map.containsKey(guild_name)) {
+				if (inGuild(user_to_set_owner) && getGuild(user_to_set_owner).equals(guild_name)) {
+					setGuildRank(getGuildOwner(guild_name), 1);
+					setGuildRank(user_to_set_owner, 3);
+					
+					sender.sendMessage(ChatColor.GREEN + "You set " + ChatColor.UNDERLINE + user_to_set_owner + ChatColor.GREEN + " as guild owner of the guild " + ChatColor.UNDERLINE + guild_name + ChatColor.GREEN + ".");
+					for (String members : getGuildMembers(getGuild(user_to_set_owner))) {
+						Player pl = Bukkit.getPlayer(members);
+						if (pl != null) {
+							pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(user_to_set_owner) + ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + user_to_set_owner + " has been " + ChatColor.UNDERLINE + "promoted" + ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD OWNER.");
+						}
+						continue;
+					}
+					
+					String message_to_send = "[gpromote]" + user_to_set_owner + "," + guild_name + ":3";
+					sendGuildMessageCrossServer(message_to_send);
+					updateGuildSQL(guild_name);
+				}
+			}
+		}
+	}
+	
+	public static void promoteToOwnerInOwnGuild(Player owner, String new_owner) {
+		if (!inGuild(owner.getName()) || !guild_map.containsKey(getGuild(owner.getName()))) return;
+		
+		if (inGuild(new_owner) && getGuild(new_owner).equals(getGuild(owner.getName()))) {
+			setGuildRank(owner.getName(), 2);
+			setGuildRank(new_owner, 3);
+			
+			owner.sendMessage(ChatColor.GREEN + "You promoted " + ChatColor.UNDERLINE + new_owner + ChatColor.GREEN + " to guild owner of your guild.");
+			for (String members : getGuildMembers(getGuild(new_owner))) {
+				Player pl = Bukkit.getPlayer(members);
+				if (pl != null) {
+					pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(new_owner) + ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + new_owner + " has been " + ChatColor.UNDERLINE + "promoted" + ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD OWNER.");
+				}
+				continue;
+			}
+			String message_to_send = "[gpromote]" + new_owner + "," + getGuild(new_owner) + ":3";
+			
+			sendGuildMessageCrossServer(message_to_send);
+			updateGuildSQL(getGuild(new_owner));
+		}
 	}
 	
 	public static void demoteOfficer(String s_to_demote, Player p_owner) {
