@@ -991,7 +991,7 @@ public class ConnectProtocol implements Runnable {
 							personal_msg = ChatMechanics.fixCapsLock(personal_msg);
 
 							pl_g_member.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(g_name)
-									+ ChatColor.DARK_AQUA + ">" + " " + ChatColor.GRAY + "" + sender_server_name + "" + ChatColor.GRAY + " " + prefix + p_color
+									+ ChatColor.DARK_AQUA + ">" + " " + ChatColor.GRAY + "" + sender_server_name + " " + prefix + p_color
 									+ p_sender + ": " + ChatColor.GRAY + personal_msg);
 						}
 					}

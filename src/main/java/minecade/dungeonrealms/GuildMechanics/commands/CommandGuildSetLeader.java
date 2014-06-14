@@ -17,17 +17,14 @@ public class CommandGuildSetLeader implements CommandExecutor {
 
 		if (pl == null) return true;
 
-		if (args.length < 1  && !pl.isOp() && !PermissionMechanics.isGM(pl.getName())) {
-			pl.sendMessage(ChatColor.RED + "Invalid syntax. You must supply a player! /gsetleader <PLAYER>");
-			return true;
-		} else if (args.length <= 1 && PermissionMechanics.isGM(pl.getName()) || pl.isOp()) {
-			pl.sendMessage(ChatColor.RED + "Invalid syntax. You must supply a player and/or guild! /gsetleader <PLAYER> [GUILD]");
+		if (args.length < 1) {
+			pl.sendMessage(ChatColor.RED + "Invalid syntax. You must supply a player! /gsetleader <PLAYER> [GUILD]");
 			return true;
 		}
 
 		if (GuildMechanics.inGuild(pl.getName()) || PermissionMechanics.isGM(pl.getName()) || pl.isOp()) {
 			if (GuildMechanics.isGuildLeader(pl.getName()) || PermissionMechanics.isGM(pl.getName()) || pl.isOp()) {
-				if (args.length != 1) {
+				if (args.length > 1) {
 					String g_name = "";
 					for(String s : args) g_name += s + " ";
 					g_name = g_name.substring(args[0].length(), g_name.length() - 1);
