@@ -91,20 +91,25 @@ public class DonationMechanics implements Listener {
 		server_list.put(2001, "72.20.42.198"); // BR-1
 		log.info("" + Bukkit.getOnlinePlayers().length);
 		
-		if (Bukkit.getMotd().contains("US-1")) {
-			Calendar nextUpdate = Calendar.getInstance(TimeZone.getDefault());
+		if (Bukkit.getMotd().contains("US-0")) {
+			Calendar nextUpdate = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"));
 			nextUpdate.set(nextUpdate.get(Calendar.YEAR), nextUpdate.get(Calendar.MONTH), nextUpdate.get(Calendar.DATE) + 1, 0, 0);
-			Calendar now = Calendar.getInstance(TimeZone.getDefault());
+			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"));
 			Long msToUp = nextUpdate.getTimeInMillis() - now.getTimeInMillis();
 			Long secToUp = TimeUnit.MILLISECONDS.toSeconds(msToUp);
 			log.info("[DonationMechanics] Scheduled daily donation duties to run in "
-					+ String.format("%d hours, %d minutes, %d seconds", TimeUnit.MILLISECONDS.toHours(msToUp),
-							TimeUnit.MILLISECONDS.toMinutes(msToUp), secToUp));
-			
+					+ String.format(
+							"%d hours, %d minutes, %d seconds",
+							TimeUnit.MILLISECONDS.toHours(msToUp),
+							TimeUnit.MILLISECONDS.toMinutes(msToUp)
+									- TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(msToUp)), secToUp
+									- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(msToUp))));
+
 			new BukkitRunnable() {
 
 				@Override
 				public void run() {
+					log.info("[DonationMechanics] Time is 12:00:00 AM ES/DT.  Running daily donation duties.");
 					tickSubscriberDays();
 					log.info("[DonationMechanics] Ticked all user's subscriber days forward by ONE.");
 					
@@ -115,7 +120,7 @@ public class DonationMechanics implements Listener {
 					log.info("[DonationMechanics] 999 E-CASH has been given to all sub++ users.");
 				}
 				
-			}.runTaskLater(Main.plugin, secToUp * 20L);
+			}.runTaskLaterAsynchronously(Main.plugin, secToUp * 20L);
 			
 		}
 			
