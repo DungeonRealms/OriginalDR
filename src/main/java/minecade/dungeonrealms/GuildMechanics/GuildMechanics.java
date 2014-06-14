@@ -2884,12 +2884,12 @@ public class GuildMechanics implements Listener {
 					for (String members : getGuildMembers(getGuild(user_to_set_owner))) {
 						Player pl = Bukkit.getPlayer(members);
 						if (pl != null) {
-							pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(user_to_set_owner) + ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + user_to_set_owner + " has been " + ChatColor.UNDERLINE + "promoted" + ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD OWNER.");
+							pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + guild_handle_map.get(guild_name) + ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + user_to_set_owner + " has been " + ChatColor.UNDERLINE + "promoted" + ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD OWNER.");
 						}
 						continue;
 					}
-					
 					String message_to_send = "[gpromote]" + user_to_set_owner + "," + guild_name + ":3";
+
 					sendGuildMessageCrossServer(message_to_send);
 					updateGuildSQL(guild_name);
 				}
@@ -2908,7 +2908,7 @@ public class GuildMechanics implements Listener {
 			for (String members : getGuildMembers(getGuild(new_owner))) {
 				Player pl = Bukkit.getPlayer(members);
 				if (pl != null) {
-					pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(new_owner) + ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + new_owner + " has been " + ChatColor.UNDERLINE + "promoted" + ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD OWNER.");
+					pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + guild_handle_map.get(getGuild(new_owner)) + ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + new_owner + " has been " + ChatColor.UNDERLINE + "promoted" + ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD OWNER.");
 				}
 				continue;
 			}
