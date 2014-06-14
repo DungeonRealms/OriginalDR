@@ -34,6 +34,7 @@ import minecade.dungeonrealms.GuildMechanics.commands.CommandGMotd;
 import minecade.dungeonrealms.GuildMechanics.commands.CommandGPromote;
 import minecade.dungeonrealms.GuildMechanics.commands.CommandGQuit;
 import minecade.dungeonrealms.GuildMechanics.commands.CommandGuild;
+import minecade.dungeonrealms.GuildMechanics.commands.CommandGuildSetLeader;
 import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
@@ -186,6 +187,7 @@ public class GuildMechanics implements Listener {
 		Main.plugin.getCommand("gpromote").setExecutor(new CommandGPromote());
 		Main.plugin.getCommand("gquit").setExecutor(new CommandGQuit());
 		Main.plugin.getCommand("guild").setExecutor(new CommandGuild());
+		Main.plugin.getCommand("gsetleader").setExecutor(new CommandGuildSetLeader());
 		
 		// Player movement event for guild creation.
 		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
@@ -2988,7 +2990,7 @@ public class GuildMechanics implements Listener {
 		log.info("<G> " + sender.getName() + ": " + raw_msg);
 		
 		String local_server = Bukkit.getMotd().substring(0, Bukkit.getMotd().indexOf(" "));
-		String message_to_send = "&" + g_name + "/" + ChatMechanics.getPlayerPrefix(sender.getName(), false) + "" + sender.getName() + "@" + local_server + ":" + raw_msg;
+		String message_to_send = "&" + g_name + "/" + sender.getName() + "@" + local_server + ":" + raw_msg;
 		sendGuildMessageCrossServer(message_to_send);
 	}
 	

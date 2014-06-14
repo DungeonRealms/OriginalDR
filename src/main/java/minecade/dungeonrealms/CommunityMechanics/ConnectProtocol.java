@@ -977,7 +977,7 @@ public class ConnectProtocol implements Runnable {
 							}
 
 							ChatColor p_color = ChatMechanics.getPlayerColor(p_sender, g_member);
-							String prefix = ChatMechanics.getPlayerPrefix(p_sender, false);
+							String prefix = ChatMechanics.getPlayerPrefix(p_sender); // No need for guild prefix here, not even using it with false parameter
 
 							String personal_msg = raw_msg;
 							if (ChatMechanics.hasAdultFilter(g_member)) {
@@ -991,7 +991,7 @@ public class ConnectProtocol implements Runnable {
 							personal_msg = ChatMechanics.fixCapsLock(personal_msg);
 
 							pl_g_member.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(g_name)
-									+ ChatColor.DARK_AQUA + ">" + " " + ChatColor.GRAY + "" + sender_server_name + "" + ChatColor.GRAY + " " + prefix + p_color
+									+ ChatColor.DARK_AQUA + ">" + " " + ChatColor.GRAY + "" + sender_server_name + " " + prefix + p_color
 									+ p_sender + ": " + ChatColor.GRAY + personal_msg);
 						}
 					}

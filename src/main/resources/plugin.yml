@@ -219,6 +219,10 @@ commands:
     description: Uploads guild banner to website for highscores.
     usage: /<command>
     aliases: [guildbanner, setguildbanner, uploadbanner, uploadguildbanner, uploadgbanner]
+  gsetleader:
+    description: Sets a guilds leader
+    usage: /<command>
+    aliases: [gsl, gsetl, guildsl]
   instance:
     description: Root command.
     usage: /<command>
