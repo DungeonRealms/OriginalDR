@@ -1374,7 +1374,7 @@ public class HealthMechanics implements Listener {
 			long hours = (System.currentTimeMillis() - Hive.player_first_login.get(p.getName())) / 3600000;
 			int i_hours = 24 - (int) hours;
 			p.sendMessage("");
-			p.sendMessage(ChatColor.RED + "You have " + ChatColor.BOLD + i_hours + "h " + ChatColor.RED + "left in your 'Newbie Protection'. After this time expires, you will loose items as you normally would when PK'd.");
+			p.sendMessage(ChatColor.RED + "You have " + ChatColor.BOLD + i_hours + "h " + ChatColor.RED + "left in your 'Newbie Protection'. After this time expires, you will lose items as you normally would when PK'd.");
 			p.sendMessage(ChatColor.GRAY.toString() + ChatColor.UNDERLINE + "WARNING: " + ChatColor.GRAY + "If you engage in PvP with another player, you will forfeit this protection.");
 		}
 

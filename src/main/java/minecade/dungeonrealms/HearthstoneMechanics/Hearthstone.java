@@ -7,19 +7,23 @@ import java.sql.SQLException;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.database.ConnectionPool;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Hearthstone {
-    Location tp_loc;
-    int timer_seconds;
-    String tp_name;
-    Player p;
-    String p_name;
+    private Location tp_loc;
+    private int timer_seconds;
+    private String tp_name;
+    private Player p;
+    private String p_name;
 
-    public Hearthstone(String p_name) {
+    @SuppressWarnings("deprecation")
+	public Hearthstone(String p_name) {
         this.p_name = p_name;
+        this.timer_seconds = 0;
+        p = Bukkit.getPlayer(p_name);
         loadData(p_name);
         HearthstoneMechanics.hearthstone_map.put(p_name, this);
     }
@@ -82,10 +86,12 @@ public class Hearthstone {
         new BukkitRunnable() {
             public void run() {
                 try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
-                        "UPDATE hearthstone SET location_name = ?, timer = ? WHERE p_name = ?;")) {
-                    pst.setString(1, tp_name);
-                    pst.setInt(2, timer_seconds);
-                    pst.setString(3, p_name);
+                        "INSERT INTO hearthstone VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE location_name = ?, timer = ?;")) {
+                    pst.setString(1, p_name);
+                    pst.setString(2, tp_name);
+                    pst.setInt(3, timer_seconds);
+                    pst.setString(4, tp_name);
+                    pst.setInt(5, timer_seconds);
                     pst.executeUpdate();
                     // System.out.print("[HeartstoneMechanics] Saved " + p.getName() + "s Hearthstone data.");
                     pst.close();
