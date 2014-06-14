@@ -1172,7 +1172,7 @@ public class ChatMechanics implements Listener {
     		
     		message = fixCapsLock(message);
     		
-    		staff.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "<SC> " + prefix + pColor + sender.getName() + ": " + message);
+    		staff.sendMessage(ChatColor.GOLD + "<" + ChatColor.BOLD + "SC " + ChatColor.GOLD + "> " + prefix + pColor + sender.getName() + ": " + message);
     	}
     	
     	log.info("<SC> " +  sender.getName() + ": " + raw_message);

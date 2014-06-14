@@ -946,7 +946,7 @@ public class ConnectProtocol implements Runnable {
 								if (message.endsWith(" ")) message = message.substring(0, message.length() - 1);
 								message = ChatMechanics.fixCapsLock(message);
 
-								pl.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "<SC> " + ChatColor.GOLD + sender_server_name + " " + prefix + pColor + sender_name + ": " + ChatColor.WHITE + message);
+								pl.sendMessage(ChatColor.GOLD + "<" + ChatColor.BOLD + "SC" + ChatColor.GOLD  + "> " + sender_server_name + " " + prefix + pColor + sender_name + ": " + ChatColor.WHITE + message);
 							}
 							continue;
 						}

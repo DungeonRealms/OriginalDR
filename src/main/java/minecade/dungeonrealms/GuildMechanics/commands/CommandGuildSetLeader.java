@@ -33,14 +33,14 @@ public class CommandGuildSetLeader implements CommandExecutor {
 						pl.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "No guild exists by that name!");
 						return true;
 					}
-					GuildMechanics.setGuildRank(GuildMechanics.getGuildOwner(g_name), 3);
-					GuildMechanics.setGuildRank(args[0], 1);
+					GuildMechanics.setGuildRank(GuildMechanics.getGuildOwner(g_name), 1);
+					GuildMechanics.setGuildRank(args[0], 3);
 					
 					pl.sendMessage(ChatColor.GREEN + "You've set " + ChatColor.UNDERLINE + "" + args[0] + ChatColor.GREEN + " as guild leader of " + ChatColor.UNDERLINE + g_name);
 					GuildMechanics.sendMessageToGuild(pl, "I've set " + ChatColor.BOLD + args[0] + ChatColor.WHITE + " as leader of your guild");
 				} else {
-					GuildMechanics.setGuildRank(GuildMechanics.getGuildOwner(GuildMechanics.getGuild(pl.getName())), 3);
-					GuildMechanics.setGuildRank(args[0], 1);
+					GuildMechanics.setGuildRank(GuildMechanics.getGuildOwner(GuildMechanics.getGuild(pl.getName())), 1);
+					GuildMechanics.setGuildRank(args[0], 3);
 					
 					pl.sendMessage(ChatColor.GREEN + "You've set " + ChatColor.UNDERLINE + "" + args[0] + ChatColor.GREEN + " as guild leader of " + ChatColor.UNDERLINE + GuildMechanics.getGuild(pl.getName()));
 					GuildMechanics.sendMessageToGuild(pl, "I've set " + ChatColor.BOLD + args[0] + ChatColor.WHITE + " as leader of our guild");
