@@ -304,6 +304,7 @@ public class HearthstoneMechanics implements Listener {
                 p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "-" + ChatColor.RED + price + ChatColor.BOLD + "G");
                 getHearthStone(p.getName()).setLocationName(changing_homes.get(p.getName()));
                 getHearthStone(p.getName()).setLocation(spawn_map.get(changing_homes.get(p.getName())));
+                getHearthStone(p.getName()).saveData();
                 p.playSound(p.getLocation(), Sound.LEVEL_UP, 1, 1);
                 checkInventoryAndReset(p);
             } else {
