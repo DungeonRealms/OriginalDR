@@ -18,7 +18,7 @@ public class CommandGuildSetLeader implements CommandExecutor {
 
 		if (pl == null) return true;
 
-		if (GuildMechanics.inGuild(pl.getName())) {
+		if (!GuildMechanics.inGuild(pl.getName())) {
 			pl.sendMessage(ChatColor.RED + "You must be part of a guild first.");
 			return true;
 		}
@@ -61,7 +61,7 @@ public class CommandGuildSetLeader implements CommandExecutor {
 			pl.sendMessage(ChatColor.RED + "The user you're trying to set as leader is currently " + ChatColor.UNDERLINE + "offline" + ChatColor.RED + ".");
 			return true;
 		}
-		pl.sendMessage(ChatColor.RED + "You must be the " + ChatColor.BOLD + "guild leader" + ChatColor.RED + " to change a guilds owner.");
+		pl.sendMessage(ChatColor.RED + "You must be the " + ChatColor.BOLD + "GUILD LEADER" + ChatColor.RED + " to change your guild's owner.");
 		return true;
 	}
 
