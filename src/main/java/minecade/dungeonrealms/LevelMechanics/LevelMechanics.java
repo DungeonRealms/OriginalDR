@@ -185,8 +185,10 @@ public class LevelMechanics implements Listener {
             return;
         }
         if (PartyMechanics.party_map.containsKey(p.getName())) {
-            int newXP = (int) Math.round((xp * (1 - (0.1D * (PartyMechanics.party_map.get(p.getName()).getPartyMembers().size() - 1)))));
-            xp = newXP;
+        	if (PartyMechanics.party_map.get(p.getName()).getPartyMembers().size() >= 1) {
+        		int newXP = (int) Math.round((xp * (1 - (0.1D * (PartyMechanics.party_map.get(p.getName()).getPartyMembers().size() - 1)))));
+        		xp = newXP;
+        	}
         }
 
         getPlayerData(p).addXP(xp);
