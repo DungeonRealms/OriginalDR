@@ -48,7 +48,7 @@ public class CommandGuildSetLeader implements CommandExecutor {
 			return true;
 		}
 		Player to_promote = Bukkit.getPlayer(args[0]);
-		if (to_promote.isOnline()) {
+		if (to_promote != null) {
 			GuildMechanics.promoteToOwnerInOwnGuild(pl, to_promote.getName());
 			return true;
 		}
