@@ -54,6 +54,10 @@ public class CommandGPromote implements CommandExecutor {
 			p.sendMessage(ChatColor.RED + "You cannot promote others to co-owner.");
 			return true;
 		} else if (GuildMechanics.isGuildLeader(p.getName()) && GuildMechanics.isGuildOfficer(p_name_2promote)) {
+			if (GuildMechanics.getGuildCoOwners(GuildMechanics.getGuild(p.getName())).size() == 2) {
+				p.sendMessage(ChatColor.RED + "You've already set 2 guild co-owners, demote one of them to set another!");
+				return true;
+			}
 			GuildMechanics.promoteToCoOwner(p_name_2promote, p);
 			return true;
 		}

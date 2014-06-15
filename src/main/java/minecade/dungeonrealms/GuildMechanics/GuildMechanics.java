@@ -3040,7 +3040,7 @@ public class GuildMechanics implements Listener {
 		p_owner.sendMessage(ChatColor.DARK_AQUA + "You have " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA + " " + s_to_promote + " to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.GREEN + ".");
 		if(Bukkit.getPlayer(s_to_promote) != null) {
 			Player to_promote = Bukkit.getPlayer(s_to_promote);
-			to_promote.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted " + ChatColor.DARK_AQUA + s_to_promote + " to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.DARK_AQUA + " in " + getGuild(s_to_promote));
+			to_promote.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA + " " + s_to_promote + " to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.DARK_AQUA + " in " + getGuild(s_to_promote));
 		}
 		String g_name = getGuild(s_to_promote);
 		
@@ -3072,7 +3072,7 @@ public class GuildMechanics implements Listener {
 		// Tell the world!
 		p_owner.sendMessage(ChatColor.RED + "You have " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + s_to_demote + " to the rank of " + ChatColor.BOLD + "GUILD OFFICER.");
 		if(Bukkit.getPlayer(s_to_demote) != null) {
-			Bukkit.getPlayer(s_to_demote).sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + "to the rank of " + ChatColor.BOLD + "GUILD OFFICER" + ChatColor.RED + " in " + getGuild(s_to_demote));
+			Bukkit.getPlayer(s_to_demote).sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + " to the rank of " + ChatColor.BOLD + "GUILD OFFICER" + ChatColor.RED + " in " + getGuild(s_to_demote));
 		}
 		
 		String g_name = getGuild(s_to_demote);
@@ -3095,7 +3095,7 @@ public class GuildMechanics implements Listener {
 		if (PermissionMechanics.isGM(sender.getName()) || sender.isOp()) {
 			if (guild_map.containsKey(guild_name)) {
 				if (areGuildies(getGuildOwner(guild_name), user_to_set_owner)) {
-					setGuildRank(getGuildOwner(guild_name), 3); // Let's not completely remove the original owner from power and leave him as co-owner.
+					setGuildRank(getGuildOwner(guild_name), 2); // Let's not completely remove the original owner from power and leave him as officer.
 					setGuildRank(user_to_set_owner, 4);
 					
 					sender.sendMessage(ChatColor.GREEN + "You set " + ChatColor.UNDERLINE + user_to_set_owner + ChatColor.GREEN + " as guild owner of the guild " + ChatColor.UNDERLINE + guild_name + ChatColor.GREEN + ".");
@@ -3137,7 +3137,7 @@ public class GuildMechanics implements Listener {
 		}
 		
 		if (areGuildies(owner.getName(), new_owner)) {
-			setGuildRank(owner.getName(), 3); // Let's not completely remove the original owner from power and leave him as co-owner.
+			setGuildRank(owner.getName(), 2); // Let's not completely remove the original owner from power and leave him as officer.
 			setGuildRank(new_owner, 4);
 			
 			owner.sendMessage(ChatColor.GREEN + "You promoted " + ChatColor.UNDERLINE + new_owner + ChatColor.GREEN + " to guild owner of your guild.");
@@ -3153,6 +3153,8 @@ public class GuildMechanics implements Listener {
 			
 			sendGuildMessageCrossServer(message_to_send);
 			updateGuildSQL(getGuild(new_owner));
+			Main.log.info("<" + GuildMechanics.guild_handle_map.get(getGuild(owner.getName())) + "> " + owner.getName() + " set " + new_owner + " as leader of the guild " + getGuild(owner.getName()));
+			return;
 		}
 		owner.sendMessage(ChatColor.RED + "The user " + ChatColor.UNDERLINE + new_owner + ChatColor.RED + " is not in your guild.");
 		Main.log.info("<" + GuildMechanics.guild_handle_map.get(getGuild(owner.getName())) + "> " + owner.getName() + " tried to set " + new_owner + " as leader of the guild " + getGuild(owner.getName()));
