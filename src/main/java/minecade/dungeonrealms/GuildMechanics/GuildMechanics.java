@@ -2913,12 +2913,12 @@ public class GuildMechanics implements Listener {
 			owner.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "aren't" + ChatColor.RED + " in a guild!");
 			return;
 		}
-		if (getGuildOwner(getGuild(owner.getName())).equalsIgnoreCase(owner.getName())) {
+		if (getGuildOwner(getGuild(owner.getName())).equals(owner.getName())) {
 			owner.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "aren't" + ChatColor.RED + " the owner of this guild!");
 			return;
 		}
 		
-		if (inGuild(new_owner) && getGuild(new_owner).equalsIgnoreCase((getGuild(owner.getName())))) {
+		if (inGuild(new_owner) && getGuild(new_owner).equals(getGuild(owner.getName()))) {
 			setGuildRank(owner.getName(), 2); // Let's not completely remove the original owner from power and leave him as officer.
 			setGuildRank(new_owner, 3);
 			

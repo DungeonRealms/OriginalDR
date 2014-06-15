@@ -194,7 +194,7 @@ public class AchievementMechanics implements Listener {
             }
             if (!Hive.first_login.contains(pl.getName()) && Hive.forum_usergroup.containsKey(pl.getName()) && Hive.forum_usergroup.get(pl.getName()) == -1) {
                 pl.sendMessage(ChatColor.RED + "You just earned the '" + ChatColor.UNDERLINE + a + ChatColor.RED
-                        + "' Achievement, unfortunetly you can't claim this achievment until you register at " + ChatColor.UNDERLINE
+                        + "' Achievement, unfortunetly you can't claim this achievement until you register at " + ChatColor.UNDERLINE
                         + "dungeonrealms.net/forum/register.php");
             } else {
                 pl.sendMessage(ChatColor.DARK_AQUA.toString() + ChatColor.BOLD.toString() + ">> " + ChatColor.DARK_AQUA.toString()
@@ -211,18 +211,18 @@ public class AchievementMechanics implements Listener {
                 }
             }
         }
-        log.info("[AchievementMechanics] Added achievment '" + a + "' to player " + p_name + "!");
+        log.info("[AchievementMechanics] Added achievement '" + a + "' to player " + p_name + "!");
 
-        int achievment_count = o_a.split(",").length;
-        if (achievment_count >= 10) {
+        int achievement_count = o_a.split(",").length;
+        if (achievement_count >= 10) {
             addAchievement(p_name, "Dungeon Realm Novice");
-            if (achievment_count >= 25) {
+            if (achievement_count >= 25) {
                 addAchievement(p_name, "Dungeon Realm Apprentice");
-                if (achievment_count >= 50) {
+                if (achievement_count >= 50) {
                     addAchievement(p_name, "Dungeon Realm Adept");
-                    if (achievment_count >= 100) {
+                    if (achievement_count >= 100) {
                         addAchievement(p_name, "Dungeon Realm Expert");
-                        if (achievment_count >= 200) {
+                        if (achievement_count >= 200) {
                             addAchievement(p_name, "Dungeon Realm Master");
                         }
                     }
