@@ -1523,7 +1523,7 @@ public class GuildMechanics implements Listener {
 		
 		TabAPI.setTabString(Main.plugin, pl, 8, 1, ChatColor.DARK_AQUA + "" + "Guild", 0);
 		TabAPI.setTabString(Main.plugin, pl, 9, 1, ChatColor.DARK_AQUA + "" + "Co-Owners", 0);
-		TabAPI.setTabString(Main.plugin, pl, 10, 1, "[" + getOnlineCoOwnersCount(g_name) + "/" + getTotalCoOwnersCount(g_name) + "]", 0);
+		TabAPI.setTabString(Main.plugin, pl, 10, 1, ChatColor.DARK_AQUA + "[" + getOnlineCoOwnersCount(g_name) + "/" + getTotalCoOwnersCount(g_name) + "]", 0);
 		
 		List<String> members = getOnlineGuildMembers(g_name);
 		List<String> pruned_members = new ArrayList<String>();
