@@ -52,7 +52,7 @@ public class CommandGuildSetLeader implements CommandExecutor {
 			GuildMechanics.promoteToOwnerInOwnGuild(pl, to_promote.getName());
 			return true;
 		}
-		GuildMechanics.promoteToOwnerInOwnGuild(pl, ((OfflinePlayer)to_promote).getName());
+		GuildMechanics.promoteToOwnerInOwnGuild(pl, Bukkit.getOfflinePlayer(args[0]).getName());
 		return true;
 	}
 

@@ -2345,7 +2345,7 @@ public class RealmMechanics implements Listener {
                 && (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)) {
 
             String m = Bukkit.getMotd();
-            if(m.contains("US-100") || m.contains("US-101") || m.contains("US-102") || m.contains("US-103") || m.contains("US-104") || m.contains("US-105") || m.contains("US-106") || m.contains("US-107") || m.contains("US-108") || m.contains("US-108") || m.contains("US-109") || m.contains("US-110") || m.contains("US-99")){
+            if(m.contains("US-100") || m.contains("US-101") || m.contains("US-102") || m.contains("US-103") || m.contains("US-104") || m.contains("US-105") || m.contains("US-106") || m.contains("US-107") || m.contains("US-108") || m.contains("US-108") || m.contains("US-109") || m.contains("US-110")){
             	p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " do this on the " + ChatColor.UNDERLINE + "Beta Servers" + ChatColor.RED + "!");
             	return;
             }
@@ -2497,7 +2497,7 @@ public class RealmMechanics implements Listener {
             e.setCancelled(true);
 
             String m = Bukkit.getMotd();
-            if(m.contains("US-100") || m.contains("US-101") || m.contains("US-102") || m.contains("US-103") || m.contains("US-104") || m.contains("US-105") || m.contains("US-106") || m.contains("US-107") || m.contains("US-108") || m.contains("US-108") || m.contains("US-109") || m.contains("US-110") || m.contains("US-99")){
+            if(m.contains("US-100") || m.contains("US-101") || m.contains("US-102") || m.contains("US-103") || m.contains("US-104") || m.contains("US-105") || m.contains("US-106") || m.contains("US-107") || m.contains("US-108") || m.contains("US-108") || m.contains("US-109") || m.contains("US-110")){
             	p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " do this on the " + ChatColor.UNDERLINE + "Beta Servers" + ChatColor.RED + "!");
             	return;
             }
