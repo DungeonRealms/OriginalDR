@@ -3005,9 +3005,9 @@ public class GuildMechanics implements Listener {
 		setGuildRank(s_to_demote, 1);
 		
 		// Tell the world!
-		p_owner.sendMessage(ChatColor.RED + "You have " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + s_to_demote + " to the rank of " + ChatColor.BOLD + "GUILD MEMBER.");
+		p_owner.sendMessage(ChatColor.RED + "You have " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + " " + s_to_demote + " to the rank of " + ChatColor.BOLD + "GUILD MEMBER.");
 		if(Bukkit.getPlayer(s_to_demote) != null) {
-			Bukkit.getPlayer(s_to_demote).sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + "to the rank of " + ChatColor.BOLD + "GUILD MEMBER" + ChatColor.RED + " in " + getGuild(s_to_demote));
+			Bukkit.getPlayer(s_to_demote).sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + " to the rank of " + ChatColor.BOLD + "GUILD MEMBER" + ChatColor.RED + " in " + getGuild(s_to_demote));
 		}
 		
 		String g_name = getGuild(s_to_demote);
@@ -3040,7 +3040,7 @@ public class GuildMechanics implements Listener {
 		p_owner.sendMessage(ChatColor.DARK_AQUA + "You have " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA + " " + s_to_promote + " to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.GREEN + ".");
 		if(Bukkit.getPlayer(s_to_promote) != null) {
 			Player to_promote = Bukkit.getPlayer(s_to_promote);
-			to_promote.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA + " to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.DARK_AQUA + " in " + getGuild(s_to_promote));
+			to_promote.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted " + ChatColor.DARK_AQUA + s_to_promote + " to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.DARK_AQUA + " in " + getGuild(s_to_promote));
 		}
 		String g_name = getGuild(s_to_promote);
 		

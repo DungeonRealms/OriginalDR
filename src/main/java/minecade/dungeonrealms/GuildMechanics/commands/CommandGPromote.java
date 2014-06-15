@@ -35,6 +35,11 @@ public class CommandGPromote implements CommandExecutor {
 			p_name_2promote = Bukkit.getPlayer(p_name_2promote).getName();
 		}
 		
+		if (GuildMechanics.isGuildLeader(p_name_2promote)) {
+			p.sendMessage(ChatColor.RED + "You cant change the owner's rank.");
+			return true;
+		}
+		
 		if(p_name_2promote.equalsIgnoreCase(p.getName())) {
 			p.sendMessage(ChatColor.RED + "You cannot promote yourself in your own guild.");
 			return true;

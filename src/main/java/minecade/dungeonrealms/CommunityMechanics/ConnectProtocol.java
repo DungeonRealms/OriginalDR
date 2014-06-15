@@ -748,7 +748,7 @@ public class ConnectProtocol implements Runnable {
 						// Tell the world!
 						if (Bukkit.getPlayer(p_name) != null) {
 							Player demoted = Bukkit.getPlayer(p_name);
-							demoted.sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + "to the rank of "
+							demoted.sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + " to the rank of "
 									+ ChatColor.BOLD + "GUILD MEMBER" + ChatColor.RED + " in " + g_name);
 						}
 
@@ -765,7 +765,7 @@ public class ConnectProtocol implements Runnable {
 						// Tell the world!
 						if (Bukkit.getPlayer(p_name) != null) {
 							Player demoted = Bukkit.getPlayer(p_name);
-							demoted.sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + "to the rank of "
+							demoted.sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + " to the rank of "
 									+ ChatColor.BOLD + "GUILD OFFICER" + ChatColor.RED + " in " + g_name);
 						}
 
@@ -797,7 +797,7 @@ public class ConnectProtocol implements Runnable {
 						if (Bukkit.getPlayer(p_name) != null) {
 							Player promoted = Bukkit.getPlayer(p_name);
 							promoted.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA
-									+ "to the rank of " + ChatColor.BOLD + "GUILD OFFICER" + ChatColor.DARK_AQUA + " in " + GuildMechanics.getGuild(p_name));
+									+ " to the rank of " + ChatColor.BOLD + "GUILD OFFICER" + ChatColor.DARK_AQUA + " in " + GuildMechanics.getGuild(p_name));
 						}
 
 						for (String s : GuildMechanics.getOnlineGuildMembers(g_name)) {
@@ -813,7 +813,7 @@ public class ConnectProtocol implements Runnable {
 						if (Bukkit.getPlayer(p_name) != null) {
 							Player promoted = Bukkit.getPlayer(p_name);
 							promoted.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA
-									+ "to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.DARK_AQUA + " in " + GuildMechanics.getGuild(p_name));
+									+ " to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.DARK_AQUA + " in " + GuildMechanics.getGuild(p_name));
 						}
 
 						for (String s : GuildMechanics.getOnlineGuildMembers(g_name)) {
