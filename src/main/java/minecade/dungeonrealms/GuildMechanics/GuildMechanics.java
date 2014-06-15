@@ -1521,9 +1521,8 @@ public class GuildMechanics implements Listener {
 		
 		TabAPI.setTabString(Main.plugin, pl, 2, 2, ChatColor.DARK_AQUA + "" + "Members [" + getOnlineGuildCount(g_name) + "/" + getGuildMemberCount(g_name) + "]", 0);
 		
-		TabAPI.setTabString(Main.plugin, pl, 8, 1, ChatColor.DARK_AQUA + "" + "Guild", 0);
-		TabAPI.setTabString(Main.plugin, pl, 9, 1, ChatColor.DARK_AQUA + "" + "Co-Owners", 0);
-		TabAPI.setTabString(Main.plugin, pl, 10, 1, ChatColor.DARK_AQUA + "[" + getOnlineCoOwnersCount(g_name) + "/" + getTotalCoOwnersCount(g_name) + "]", 0);
+		TabAPI.setTabString(Main.plugin, pl, 8, 1, ChatColor.DARK_AQUA + "" + "Co-Owners", 0);
+		TabAPI.setTabString(Main.plugin, pl, 9, 1, ChatColor.DARK_AQUA + "[" + getOnlineCoOwnersCount(g_name) + "/" + getTotalCoOwnersCount(g_name) + "]", 0);
 		
 		List<String> members = getOnlineGuildMembers(g_name);
 		List<String> pruned_members = new ArrayList<String>();
@@ -1682,7 +1681,7 @@ public class GuildMechanics implements Listener {
 			TabAPI.setTabString(Main.plugin, pl, 3, 0, ChatColor.GRAY + "N/A" + TabAPI.nextNull());
 		}
 		
-		x = 10; // Reset X for parsing.
+		x = 9; // Reset X for parsing.
 		List<String> coowners = getGuildCoOwners(g_name);
 		List<String> pruned_coowner = new ArrayList<String>();
 		List<String> to_remove_coowner = new ArrayList<String>();
@@ -1733,7 +1732,7 @@ public class GuildMechanics implements Listener {
 		
 		for(String s : pruned_coowner) {
 			x++;
-			if(x >= 13) {
+			if(x >= 12) {
 				break;
 			}
 			if(s.contains(ChatColor.GREEN.toString()) || s.contains(ChatColor.YELLOW.toString())) {
@@ -1750,7 +1749,7 @@ public class GuildMechanics implements Listener {
 		}
 		
 		if(pruned_coowner.size() == 0) {
-			TabAPI.setTabString(Main.plugin, pl, 11, 1, ChatColor.GRAY + "N/A" + TabAPI.nextNull());
+			TabAPI.setTabString(Main.plugin, pl, 10, 1, ChatColor.GRAY + "N/A" + TabAPI.nextNull());
 		}
 		
 		TabAPI.updatePlayer(pl);
