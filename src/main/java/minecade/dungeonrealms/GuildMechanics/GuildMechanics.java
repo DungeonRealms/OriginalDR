@@ -2893,19 +2893,19 @@ public class GuildMechanics implements Listener {
 
 					sendGuildMessageCrossServer(message_to_send);
 					updateGuildSQL(guild_name);
-					Main.log.info("<" + GuildMechanics.guild_handle_map.get(guild_name) + "> " + sender.getName() + " set " + user_to_set_owner + " as leader of the guild " + getGuild(guild_name));
+					Main.log.info("<" + GuildMechanics.guild_handle_map.get(guild_name) + "> " + sender.getName() + " set " + user_to_set_owner + " as leader of the guild " + guild_name);
 					return;
 				}
 				sender.sendMessage(ChatColor.RED + "The user " + ChatColor.UNDERLINE + user_to_set_owner + ChatColor.RED + " that you're trying to set as leader of " + ChatColor.UNDERLINE + guild_name + ChatColor.RED + " is in a different guild! (" + ChatColor.UNDERLINE + getGuild(user_to_set_owner) + ChatColor.RED + ")"); 
-				Main.log.info("<" + GuildMechanics.guild_handle_map.get(guild_name) + "> " + sender.getName() + " tried to set " + user_to_set_owner + " as leader of the guild " + getGuild(guild_name));
+				Main.log.info("<" + GuildMechanics.guild_handle_map.get(guild_name) + "> " + sender.getName() + " tried to set " + user_to_set_owner + " as leader of the guild " + guild_name);
 				return;
 			}
 			sender.sendMessage(ChatColor.RED + "The guild " + ChatColor.UNDERLINE + guild_name + ChatColor.RED + " does not exist in our database.");
-			Main.log.info("<" + GuildMechanics.guild_handle_map.get(guild_name) + "> " + sender.getName() + " tried to set " + user_to_set_owner + " as leader of the guild " + getGuild(guild_name));
+			Main.log.info("<" + GuildMechanics.guild_handle_map.get(guild_name) + "> " + sender.getName() + " tried to set " + user_to_set_owner + " as leader of the guild " + guild_name);
 			return;
 		}
 		sender.sendMessage(ChatColor.RED + "You are not authorized to change other guilds' leaders. /gsetleader <PLAYER>");
-		Main.log.info("<" + GuildMechanics.guild_handle_map.get(guild_name) + "> " + sender.getName() + " tried to set " + user_to_set_owner + " as leader of the guild " + getGuild(guild_name));
+		Main.log.info("<" + GuildMechanics.guild_handle_map.get(guild_name) + "> " + sender.getName() + " tried to set " + user_to_set_owner + " as leader of the guild " + guild_name);
 	}
 	
 	public static void promoteToOwnerInOwnGuild(Player owner, String new_owner) {

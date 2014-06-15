@@ -5,7 +5,6 @@ import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,7 +35,8 @@ public class CommandGuildSetLeader implements CommandExecutor {
 				if (to_promote != null) {
 					p_name = to_promote.getName();
 				} else{
-					p_name = Bukkit.getOfflinePlayer(args[0]).getName();
+					pl.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + args[0] + ChatColor.RED + " is not online.");
+					return true;
 				}
 				for(String s : args) g_name += s + " ";
 				g_name = g_name.substring(p_name.length(), g_name.length() - 1);
