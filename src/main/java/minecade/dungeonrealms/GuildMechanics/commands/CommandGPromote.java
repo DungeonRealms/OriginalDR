@@ -25,8 +25,8 @@ public class CommandGPromote implements CommandExecutor {
 			return true;
 		}
 		
-		if(!(GuildMechanics.isGuildLeader(p.getName()))) {
-			p.sendMessage(ChatColor.RED + "You must be the " + ChatColor.BOLD + "GUILD OWNER" + ChatColor.RED + " to use " + ChatColor.BOLD + "/gpromote.");
+		if(!(GuildMechanics.isGuildLeader(p.getName())) || !GuildMechanics.isGuildCoOwner(p.getName())) {
+			p.sendMessage(ChatColor.RED + "You must be the " + ChatColor.BOLD + "GUILD OWNER" + ChatColor.RED + " or " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.RED + " to use " + ChatColor.BOLD + "/gpromote.");
 			return true;
 		}
 		
@@ -46,11 +46,20 @@ public class CommandGPromote implements CommandExecutor {
 		}
 		
 		if(GuildMechanics.isGuildOfficer(p_name_2promote)) {
-			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + p_name_2promote + ChatColor.RED + " is already a " + ChatColor.UNDERLINE + "guild officer");
-			p.sendMessage(ChatColor.GRAY + "Use " + ChatColor.RED + "/gdemote " + p_name_2promote + ChatColor.GRAY + " to take away their rank.");
+			if (GuildMechanics.getGuildCoOwners(GuildMechanics.getGuild(p.getName())).size() == 2) {
+				p.sendMessage(ChatColor.RED + "There are already " + ChatColor.UNDERLINE + "2" + ChatColor.RED + " Co-Owners in your guild, demote one of them with " + ChatColor.UNDERLINE + "/gdemote <PLAYER>"); 
+				p.sendMessage(ChatColor.RED + "Here's the names of your co-owners:");
+				for (String cos : GuildMechanics.getGuildCoOwners(GuildMechanics.getGuild(p.getName()))) {
+					p.sendMessage(ChatColor.RED + cos);
+				}
+				return true;
+			}
+			GuildMechanics.promoteToCoOwner(p_name_2promote, p);
+			return true;
+		} else if (GuildMechanics.isGuildCoOwner(p_name_2promote)) {
+			p.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + p_name_2promote + ChatColor.RED + " is already a co-owner.\n You can take away their rank by doing " + ChatColor.UNDERLINE + "/gdemote <PLAYER>");
 			return true;
 		}
-		
 		GuildMechanics.promoteToOfficer(p_name_2promote, p);
 		return true;
 	}

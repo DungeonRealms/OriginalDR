@@ -21,7 +21,7 @@ public class CommandGBanner implements CommandExecutor {
 		
 		String g_name = GuildMechanics.getGuild(p.getName());
 		
-		if(!(GuildMechanics.isGuildLeader(p.getName()))) {
+		if(!(GuildMechanics.isGuildLeader(p.getName()) || GuildMechanics.isGuildCoOwner(p.getName()))) {
 			p.sendMessage(ChatColor.RED + "You must be the " + ChatColor.BOLD + "GUILD LEADER" + ChatColor.RED + " to use " + ChatColor.BOLD + "/gbanner.");
 			return true;
 		}

@@ -742,22 +742,40 @@ public class ConnectProtocol implements Runnable {
 						return; // Nothing to do here.
 					}
 
-					GuildMechanics.setGuildRank(p_name, rank); // rank == 2 for
-					// officer.
+					if (rank == 1) { // rank == 1 for demotion to member from officer
+						GuildMechanics.setGuildRank(p_name, rank); 
 
-					// Tell the world!
-					if (Bukkit.getPlayer(p_name) != null) {
-						Player demoted = Bukkit.getPlayer(p_name);
-						demoted.sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + "to the rank of "
-								+ ChatColor.BOLD + "GUILD MEMBER" + ChatColor.RED + " in " + g_name);
-					}
+						// Tell the world!
+						if (Bukkit.getPlayer(p_name) != null) {
+							Player demoted = Bukkit.getPlayer(p_name);
+							demoted.sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + "to the rank of "
+									+ ChatColor.BOLD + "GUILD MEMBER" + ChatColor.RED + " in " + g_name);
+						}
 
-					for (String s : GuildMechanics.getOnlineGuildMembers(g_name)) {
-						if (Bukkit.getPlayer(ChatColor.stripColor(s)) != null) {
-							Player pl = Bukkit.getPlayer(ChatColor.stripColor(s));
-							pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(g_name)
-									+ ChatColor.DARK_AQUA + ">" + ChatColor.RED + " " + p_name + " has been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED
-									+ " to the rank of " + ChatColor.BOLD + "GUILD MEMBER.");
+						for (String s : GuildMechanics.getOnlineGuildMembers(g_name)) {
+							if (Bukkit.getPlayer(ChatColor.stripColor(s)) != null) {
+								Player pl = Bukkit.getPlayer(ChatColor.stripColor(s));
+								pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(g_name)
+										+ ChatColor.DARK_AQUA + ">" + ChatColor.RED + " " + p_name + " has been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED
+										+ " to the rank of " + ChatColor.BOLD + "GUILD MEMBER.");
+							}
+						}
+					} else if (rank == 2) {
+						GuildMechanics.setGuildRank(p_name, rank);
+						// Tell the world!
+						if (Bukkit.getPlayer(p_name) != null) {
+							Player demoted = Bukkit.getPlayer(p_name);
+							demoted.sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + "to the rank of "
+									+ ChatColor.BOLD + "GUILD OFFICER" + ChatColor.RED + " in " + g_name);
+						}
+
+						for (String s : GuildMechanics.getOnlineGuildMembers(g_name)) {
+							if (Bukkit.getPlayer(ChatColor.stripColor(s)) != null) {
+								Player pl = Bukkit.getPlayer(ChatColor.stripColor(s));
+								pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(g_name)
+										+ ChatColor.DARK_AQUA + ">" + ChatColor.RED + " " + p_name + " has been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED
+										+ " to the rank of " + ChatColor.BOLD + "GUILD OFFICER.");
+							}
 						}
 					}
 				}
@@ -768,13 +786,45 @@ public class ConnectProtocol implements Runnable {
 					String g_name = inputLine.substring(inputLine.indexOf(",") + 1, inputLine.indexOf(":"));
 					int rank = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.indexOf("_")));
 					String o_name = inputLine.substring(inputLine.indexOf("_") +1, inputLine.length()); // Only used by promote to owner
-					
+
 					if (!(GuildMechanics.guild_map.containsKey(g_name))) {
 						in.close();
 						return; // Nothing to do here.
 					}
 
-					if (rank == 3) {
+					if (rank == 2) {
+						GuildMechanics.setGuildRank(p_name, rank);
+						if (Bukkit.getPlayer(p_name) != null) {
+							Player promoted = Bukkit.getPlayer(p_name);
+							promoted.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA
+									+ "to the rank of " + ChatColor.BOLD + "GUILD OFFICER" + ChatColor.DARK_AQUA + " in " + GuildMechanics.getGuild(p_name));
+						}
+
+						for (String s : GuildMechanics.getOnlineGuildMembers(g_name)) {
+							if (Bukkit.getPlayer(ChatColor.stripColor(s)) != null) {
+								Player pl = Bukkit.getPlayer(ChatColor.stripColor(s));
+								pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(g_name)
+										+ ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + p_name + " has been " + ChatColor.UNDERLINE + "promoted"
+										+ ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD OFFICER.");
+							}
+						}
+					} else if (rank == 3) {
+						GuildMechanics.setGuildRank(p_name, rank);
+						if (Bukkit.getPlayer(p_name) != null) {
+							Player promoted = Bukkit.getPlayer(p_name);
+							promoted.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA
+									+ "to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.DARK_AQUA + " in " + GuildMechanics.getGuild(p_name));
+						}
+
+						for (String s : GuildMechanics.getOnlineGuildMembers(g_name)) {
+							if (Bukkit.getPlayer(ChatColor.stripColor(s)) != null) {
+								Player pl = Bukkit.getPlayer(ChatColor.stripColor(s));
+								pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(g_name)
+										+ ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + p_name + " has been " + ChatColor.UNDERLINE + "promoted"
+										+ ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER.");
+							}
+						}
+					} else if (rank == 4) {
 						GuildMechanics.downloadGuildDataSQL(g_name, false);
 						if (Bukkit.getPlayer(p_name) != null) {
 							Player promoted = Bukkit.getPlayer(p_name);
@@ -790,22 +840,6 @@ public class ConnectProtocol implements Runnable {
 										+ ChatColor.DARK_AQUA + ">" + ChatColor.AQUA + " " + ChatColor.UNDERLINE + o_name + ChatColor.GRAY + " has set " + ChatColor.AQUA  + "" + ChatColor.UNDERLINE + p_name + ChatColor.GRAY + " as the " + ChatColor.BOLD + "LEADER" + ChatColor.GRAY + " of your guild.");
 							}
 							continue;
-						}
-					} else if (rank == 2) {
-						GuildMechanics.setGuildRank(p_name, rank);
-						if (Bukkit.getPlayer(p_name) != null) {
-							Player promoted = Bukkit.getPlayer(p_name);
-							promoted.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA
-									+ "to the rank of " + ChatColor.BOLD + "GUILD OFFICER" + ChatColor.DARK_AQUA + " in " + GuildMechanics.getGuild(p_name));
-						}
-
-						for (String s : GuildMechanics.getOnlineGuildMembers(g_name)) {
-							if (Bukkit.getPlayer(ChatColor.stripColor(s)) != null) {
-								Player pl = Bukkit.getPlayer(ChatColor.stripColor(s));
-								pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(g_name)
-										+ ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + p_name + " has been " + ChatColor.UNDERLINE + "promoted"
-										+ ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD OFFICER.");
-							}
 						}
 					}
 				}

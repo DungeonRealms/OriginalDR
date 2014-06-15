@@ -172,6 +172,16 @@ public class GuildMechanics implements Listener {
 	
 	// Used for confirming /gquit
 	
+	
+	/**
+	 * @Note For all people wondering:
+	 * 
+	 * :1 = Member
+	 * :2 = Officer
+	 * :3 = Co-Owner
+	 * :4 = Founder/Owner/Leader
+	 * 
+	 */
 	public void onEnable() {
 		instance = this;
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
@@ -604,12 +614,12 @@ public class GuildMechanics implements Listener {
 					guild_creation_data.remove(pl.getName());
 					guild_creation_name_check.remove(pl.getName());
 					
-					guild_map.put(guild_name, new ArrayList<String>(Arrays.asList(pl.getName() + ":3")));
+					guild_map.put(guild_name, new ArrayList<String>(Arrays.asList(pl.getName() + ":4")));
 					guild_colors.put(guild_name, c);
 					guild_handle_map.put(guild_name, guild_handle);
 					
 					player_guilds.put(pl.getName(), guild_name);
-					player_guild_rank.put(pl.getName(), 3); // 3 = founder
+					player_guild_rank.put(pl.getName(), 4); // 4 = founder, 3 = Co-Owner, 2 = Officer, 1 = Member
 					
 					pl.sendMessage("");
 					pl.sendMessage(ChatColor.GRAY + "Guild Registrar: " + ChatColor.WHITE + "Congratulations, you are now the proud owner of the '" + guild_name + "' guild!");
@@ -1273,7 +1283,7 @@ public class GuildMechanics implements Listener {
 		for(String s : guild_map.get(g_name)) {
 			String p_name = s.substring(0, s.indexOf(":"));
 			int rank = Integer.parseInt(s.substring(s.indexOf(":") + 1, s.length()));
-			if(rank == 3) {
+			if(rank == 4) {
 				if(Bukkit.getPlayer(p_name) != null) {
 					return ChatColor.GREEN.toString() + p_name;
 				} else if(guild_member_server.containsKey(p_name)) {
@@ -1285,6 +1295,39 @@ public class GuildMechanics implements Listener {
 		}
 		
 		return null;
+	}
+	
+	public static List<String> getGuildCoOwners(String g_name) {
+		List<String> owners = new ArrayList<String>();
+		for (String s : guild_map.get(g_name)) {
+			String p_name = s.substring(0, s.indexOf(":"));
+			int rank = Integer.parseInt(s.substring(s.indexOf(":") + 1, s.length()));
+			if (rank == 3) {
+				if (Bukkit.getPlayer(p_name) != null) {
+					owners.add(ChatColor.GREEN.toString() + s);
+				} else if (guild_member_server.containsKey(s)) {
+					owners.add(ChatColor.YELLOW.toString() + guild_member_server.get(s) + " " + s);
+				} else {
+					owners.add(ChatColor.GRAY.toString() + s);
+				}
+			}
+		}
+		return owners;
+	}
+	
+	public static int getOnlineCoOwnersCount(String g_name) {
+		int count = 0;
+		for (String s : getOnlineGuildMembers(g_name)) {
+			if (getGuildRank(s, g_name) == 3 && (s.contains(ChatColor.YELLOW.toString()) || s.contains(ChatColor.GREEN.toString()))) {
+				 count++;
+			}
+			continue;
+		}
+		return count;
+	}
+	
+	public static int getTotalCoOwnersCount(String g_name) {
+		return getGuildCoOwners(g_name).size();
 	}
 	
 	public static List<String> getOnlineGuildMembers(String g_name) {
@@ -1479,6 +1522,8 @@ public class GuildMechanics implements Listener {
 		
 		TabAPI.setTabString(Main.plugin, pl, 2, 2, ChatColor.DARK_AQUA + "" + "Members [" + getOnlineGuildCount(g_name) + "/" + getGuildMemberCount(g_name) + "]", 0);
 		
+		TabAPI.setTabString(Main.plugin, pl, 8, 1, ChatColor.DARK_AQUA + "" + "Co-Owners [" + getOnlineCoOwnersCount(g_name) + "/" + getTotalCoOwnersCount(g_name) + "]", 0);
+		
 		List<String> members = getOnlineGuildMembers(g_name);
 		List<String> pruned_members = new ArrayList<String>();
 		List<String> to_remove_mem = new ArrayList<String>();
@@ -1636,6 +1681,77 @@ public class GuildMechanics implements Listener {
 			TabAPI.setTabString(Main.plugin, pl, 3, 0, ChatColor.GRAY + "N/A" + TabAPI.nextNull());
 		}
 		
+		x = 2; // Reset X for parsing.
+		List<String> coowners = getGuildCoOwners(g_name);
+		List<String> pruned_coowner = new ArrayList<String>();
+		List<String> to_remove_coowner = new ArrayList<String>();
+		
+		for(String s : coowners) {
+			if(pruned_coowner.size() > 16) {
+				break;
+			}
+			if(s.contains(ChatColor.GREEN.toString())) {
+				to_remove_coowner.add(s);
+				pruned_coowner.add(s);
+			}
+		}
+		
+		for(String s : to_remove_coowner) {
+			coowners.remove(s);
+		}
+		
+		if(pruned_coowner.size() < 2) {
+			for(String s : coowners) {
+				if(pruned_coowner.size() > 2) {
+					break;
+				}
+				String s_copy = s;
+				if(s_copy.contains(" ")) {
+					// THey're on another server.
+					s_copy = s.substring(s.indexOf(" ") + 1, s.length());
+				}
+				if(s.contains(ChatColor.YELLOW.toString())) {
+					pruned_coowner.add(s);
+					to_remove_coowner.add(s);
+				}
+			}
+		}
+		
+		for(String s : to_remove_coowner) {
+			officers.remove(s);
+		}
+		
+		if(pruned_coowner.size() < 2) {
+			for(String s : coowners) {
+				if(pruned_coowner.size() > 2) {
+					break;
+				}
+				pruned_coowner.add(s);
+			}
+		}
+		
+		for(String s : pruned_coowner) {
+			x++;
+			if(x >= 2) {
+				break;
+			}
+			if(s.contains(ChatColor.GREEN.toString()) || s.contains(ChatColor.YELLOW.toString())) {
+				if(s.contains(ChatColor.YELLOW.toString())) {
+					// Change to (gray) US-0 (green) Username
+					s = ChatColor.stripColor(s);
+					s.replaceAll(ChatColor.YELLOW.toString(), "");
+					s = ChatColor.GRAY.toString() + s.substring(0, s.indexOf(" ")) + " " + ChatColor.GREEN.toString() + s.substring(s.indexOf(" ") + 1, s.length());
+				}
+				TabAPI.setTabString(Main.plugin, pl, x, 0, s, 50);
+			} else {
+				TabAPI.setTabString(Main.plugin, pl, x, 0, s, 9999999);
+			}
+		}
+		
+		if(pruned_coowner.size() == 0) {
+			TabAPI.setTabString(Main.plugin, pl, 9, 1, ChatColor.GRAY + "N/A" + TabAPI.nextNull());
+		}
+		
 		TabAPI.updatePlayer(pl);
 	}
 	
@@ -1709,7 +1825,7 @@ public class GuildMechanics implements Listener {
 	// Sends new guild data to SQL and sets the owner as a member.
 	public void createGuildSQL(final String guild_name, final String guild_handle, final int guild_color, final String guild_owner) {
 		
-		Hive.sql_query.add("INSERT INTO guilds (guild_name, guild_handle, guild_color, members, guild_server_num) VALUES('" + guild_name + "', '" + guild_handle + "', '" + guild_color + "', '" + guild_owner + ":3," + "', '" + "-1" + "')");
+		Hive.sql_query.add("INSERT INTO guilds (guild_name, guild_handle, guild_color, members, guild_server_num) VALUES('" + guild_name + "', '" + guild_handle + "', '" + guild_color + "', '" + guild_owner + ":4," + "', '" + "-1" + "')");
 		Hive.sql_query.add("INSERT INTO player_database (p_name, guild_name) VALUES('" + guild_owner + "', '" + guild_name + "') ON DUPLICATE KEY UPDATE guild_name='" + guild_name + "'");
 		
 		/*Thread t = new Thread(new Runnable() {
@@ -2263,7 +2379,7 @@ public class GuildMechanics implements Listener {
 		guild_members.remove(p_name + ":" + rank_num);
 		guild_map.put(g_name, guild_members);
 		
-		if(rank_num == 3) {
+		if(rank_num == 4) {
 			// Guild leader just quit. Disband guild. Local, Remote, SQL.
 			for(String s : getGuildMembers(g_name)) {
 				if(Bukkit.getPlayer(s) != null) {
@@ -2280,7 +2396,7 @@ public class GuildMechanics implements Listener {
 		
 		setPlayerGuildSQL(p_name, null, true);
 		if(rank_num != 3) {
-			// Rank_num 3, guild is deleted bellow.
+			// Rank_num 4, guild is deleted bellow.
 			updateGuildSQL(g_name);
 		}
 		
@@ -2292,7 +2408,7 @@ public class GuildMechanics implements Listener {
 			updateGuildTabList(pl);
 		}
 		
-		if(rank_num == 3) {
+		if(rank_num == 4) {
 			// Delete local guild data.
 			guild_map.remove(g_name);
 			guild_handle_map.remove(g_name);
@@ -2625,7 +2741,12 @@ public class GuildMechanics implements Listener {
 	}
 	
 	public static boolean isGuildLeader(String p_name) {
-		if(getRankNum(p_name) == 3) { return true; }
+		if(getRankNum(p_name) == 4) { return true; }
+		return false;
+	}
+	
+	public static boolean isGuildCoOwner(String p_name){
+		if (getRankNum(p_name) == 3) return true;
 		return false;
 	}
 	
@@ -2873,12 +2994,109 @@ public class GuildMechanics implements Listener {
 		updateGuildSQL(g_name);
 	}
 	
+	public static void demoteOfficer(String s_to_demote, Player p_owner) {
+		// We've already performed all necessary checks at this point.
+		if(!(areGuildies(s_to_demote, p_owner.getName()))) {
+			// Just incase they quit at an exact moment or something.
+			p_owner.sendMessage(ChatColor.RED + s_to_demote + " is no longer in your guild.");
+			return;
+		}
+		
+		setGuildRank(s_to_demote, 1);
+		
+		// Tell the world!
+		p_owner.sendMessage(ChatColor.RED + "You have " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + s_to_demote + " to the rank of " + ChatColor.BOLD + "GUILD MEMBER.");
+		if(Bukkit.getPlayer(s_to_demote) != null) {
+			Bukkit.getPlayer(s_to_demote).sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + "to the rank of " + ChatColor.BOLD + "GUILD MEMBER" + ChatColor.RED + " in " + getGuild(s_to_demote));
+		}
+		
+		String g_name = getGuild(s_to_demote);
+		
+		for(String mem : getGuildMembers(getGuild(s_to_demote))) {
+			if(Bukkit.getPlayer(mem) != null) {
+				Player p_mem = Bukkit.getPlayer(mem);
+				p_mem.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + guild_handle_map.get(g_name) + ChatColor.DARK_AQUA + ">" + ChatColor.RED + " " + s_to_demote + " has been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + " to the rank of " + ChatColor.BOLD + "GUILD MEMBER.");
+			}
+		}
+		
+		String message_to_send = "[gdemote]" + s_to_demote + "," + g_name + ":1";
+		sendGuildMessageCrossServer(message_to_send);
+		
+		// Now we need to update the guild data in SQL.
+		updateGuildSQL(g_name);
+	}
+	
+	public static void promoteToCoOwner(String s_to_promote, Player p_owner) {
+		if(!(areGuildies(s_to_promote, p_owner.getName()))) {
+			// Just incase they quit at an exact moment or something.
+			p_owner.sendMessage(ChatColor.RED + s_to_promote + " is no longer in your guild.");
+			return;
+		}
+		
+		setGuildRank(s_to_promote, 3);
+		player_guild_rank.put(s_to_promote, 3);
+		
+		// Tell the world!
+		p_owner.sendMessage(ChatColor.DARK_AQUA + "You have " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA + " " + s_to_promote + " to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.GREEN + ".");
+		if(Bukkit.getPlayer(s_to_promote) != null) {
+			Player to_promote = Bukkit.getPlayer(s_to_promote);
+			to_promote.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA + " to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.DARK_AQUA + " in " + getGuild(s_to_promote));
+		}
+		String g_name = getGuild(s_to_promote);
+		
+		for(String mem : getGuildMembers(getGuild(s_to_promote))) {
+			// TODO: Cross-server congratulations.
+			if(Bukkit.getPlayer(mem) != null) {
+				Player p_mem = Bukkit.getPlayer(mem);
+				p_mem.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + guild_handle_map.get(g_name) + ChatColor.DARK_AQUA + ">" + ChatColor.GREEN + " " + s_to_promote + " has been " + ChatColor.UNDERLINE + "promoted" + ChatColor.GREEN + " to the rank of " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.GREEN + ".");
+			}
+		}
+		
+		String message_to_send = "[gpromote]" + s_to_promote + "," + g_name + ":3_";
+		sendGuildMessageCrossServer(message_to_send);
+		
+		// Now we need to update the guild data in SQL.
+		updateGuildSQL(g_name);
+	}
+	
+	public static void demoteCoOwner(String s_to_demote, Player p_owner) { // Demotes to officer
+		// We've already performed all necessary checks at this point.
+		if(!(areGuildies(s_to_demote, p_owner.getName()))) {
+			// Just incase they quit at an exact moment or something.
+			p_owner.sendMessage(ChatColor.RED + s_to_demote + " is no longer in your guild.");
+			return;
+		}
+		
+		setGuildRank(s_to_demote, 2);
+		
+		// Tell the world!
+		p_owner.sendMessage(ChatColor.RED + "You have " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + s_to_demote + " to the rank of " + ChatColor.BOLD + "GUILD OFFICER.");
+		if(Bukkit.getPlayer(s_to_demote) != null) {
+			Bukkit.getPlayer(s_to_demote).sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + "to the rank of " + ChatColor.BOLD + "GUILD OFFICER" + ChatColor.RED + " in " + getGuild(s_to_demote));
+		}
+		
+		String g_name = getGuild(s_to_demote);
+		
+		for(String mem : getGuildMembers(getGuild(s_to_demote))) {
+			if(Bukkit.getPlayer(mem) != null) {
+				Player p_mem = Bukkit.getPlayer(mem);
+				p_mem.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + guild_handle_map.get(g_name) + ChatColor.DARK_AQUA + ">" + ChatColor.RED + " " + s_to_demote + " has been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + " to the rank of " + ChatColor.BOLD + "GUILD OFFICER.");
+			}
+		}
+		
+		String message_to_send = "[gdemote]" + s_to_demote + "," + g_name + ":2";
+		sendGuildMessageCrossServer(message_to_send);
+		
+		// Now we need to update the guild data in SQL.
+		updateGuildSQL(g_name);
+	}
+	
 	public static void promoteToOwnerInSpecificGuild(Player sender, String user_to_set_owner, String guild_name) {
 		if (PermissionMechanics.isGM(sender.getName()) || sender.isOp()) {
 			if (guild_map.containsKey(guild_name)) {
-				if (inGuild(user_to_set_owner) && getGuild(user_to_set_owner).equals(guild_name)) {
-					setGuildRank(getGuildOwner(guild_name), 1);
-					setGuildRank(user_to_set_owner, 3);
+				if (areGuildies(getGuildOwner(guild_name), user_to_set_owner)) {
+					setGuildRank(getGuildOwner(guild_name), 3); // Let's not completely remove the original owner from power and leave him as co-owner.
+					setGuildRank(user_to_set_owner, 4);
 					
 					sender.sendMessage(ChatColor.GREEN + "You set " + ChatColor.UNDERLINE + user_to_set_owner + ChatColor.GREEN + " as guild owner of the guild " + ChatColor.UNDERLINE + guild_name + ChatColor.GREEN + ".");
 					for (String members : getGuildMembers(getGuild(user_to_set_owner))) {
@@ -2889,7 +3107,7 @@ public class GuildMechanics implements Listener {
 						}
 						continue;
 					}
-					String message_to_send = "[gpromote]" + user_to_set_owner + "," + guild_name + ":3_" + sender.getName();
+					String message_to_send = "[gpromote]" + user_to_set_owner + "," + guild_name + ":4_" + sender.getName();
 
 					sendGuildMessageCrossServer(message_to_send);
 					updateGuildSQL(guild_name);
@@ -2918,9 +3136,9 @@ public class GuildMechanics implements Listener {
 			return;
 		}
 		
-		if (inGuild(new_owner) && getGuild(new_owner).equals(getGuild(owner.getName()))) {
-			setGuildRank(owner.getName(), 2); // Let's not completely remove the original owner from power and leave him as officer.
-			setGuildRank(new_owner, 3);
+		if (areGuildies(owner.getName(), new_owner)) {
+			setGuildRank(owner.getName(), 3); // Let's not completely remove the original owner from power and leave him as co-owner.
+			setGuildRank(new_owner, 4);
 			
 			owner.sendMessage(ChatColor.GREEN + "You promoted " + ChatColor.UNDERLINE + new_owner + ChatColor.GREEN + " to guild owner of your guild.");
 			for (String members : getGuildMembers(getGuild(owner.getName()))) {
@@ -2931,7 +3149,7 @@ public class GuildMechanics implements Listener {
 				}
 				continue;
 			}
-			String message_to_send = "[gpromote]" + new_owner + "," + getGuild(owner.getName()) + ":3_" + owner.getName();
+			String message_to_send = "[gpromote]" + new_owner + "," + getGuild(owner.getName()) + ":4_" + owner.getName();
 			
 			sendGuildMessageCrossServer(message_to_send);
 			updateGuildSQL(getGuild(new_owner));
@@ -2940,37 +3158,6 @@ public class GuildMechanics implements Listener {
 		Main.log.info("<" + GuildMechanics.guild_handle_map.get(getGuild(owner.getName())) + "> " + owner.getName() + " tried to set " + new_owner + " as leader of the guild " + getGuild(owner.getName()));
 	}
 	
-	public static void demoteOfficer(String s_to_demote, Player p_owner) {
-		// We've already performed all necessary checks at this point.
-		if(!(areGuildies(s_to_demote, p_owner.getName()))) {
-			// Just incase they quit at an exact moment or something.
-			p_owner.sendMessage(ChatColor.RED + s_to_demote + " is no longer in your guild.");
-			return;
-		}
-		
-		setGuildRank(s_to_demote, 1);
-		
-		// Tell the world!
-		p_owner.sendMessage(ChatColor.RED + "You have " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + s_to_demote + " to the rank of " + ChatColor.BOLD + "GUILD MEMBER.");
-		if(Bukkit.getPlayer(s_to_demote) != null) {
-			Bukkit.getPlayer(s_to_demote).sendMessage(ChatColor.RED + "You have been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + "to the rank of " + ChatColor.BOLD + "GUILD MEMBER" + ChatColor.RED + " in " + getGuild(s_to_demote));
-		}
-		
-		String g_name = getGuild(s_to_demote);
-		
-		for(String mem : getGuildMembers(getGuild(s_to_demote))) {
-			if(Bukkit.getPlayer(mem) != null) {
-				Player p_mem = Bukkit.getPlayer(mem);
-				p_mem.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + guild_handle_map.get(g_name) + ChatColor.DARK_AQUA + ">" + ChatColor.RED + " " + s_to_demote + " has been " + ChatColor.UNDERLINE + "demoted" + ChatColor.RED + " to the rank of " + ChatColor.BOLD + "GUILD MEMBER.");
-			}
-		}
-		
-		String message_to_send = "[gdemote]" + s_to_demote + "," + g_name + ":1_";
-		sendGuildMessageCrossServer(message_to_send);
-		
-		// Now we need to update the guild data in SQL.
-		updateGuildSQL(g_name);
-	}
 	
 	public static void inviteToGuild(Player to_invite, Player p_owner) {
 		if(getRankNum(p_owner.getName()) < 2) {

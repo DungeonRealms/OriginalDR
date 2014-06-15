@@ -21,12 +21,12 @@ public class CommandGBio implements CommandExecutor {
 		if(args.length == 0) {
 			String g_name = GuildMechanics.getGuild(p.getName());
 			
-			if(!(GuildMechanics.isGuildLeader(p.getName()))) {
+			if(!(GuildMechanics.isGuildLeader(p.getName()) || GuildMechanics.isGuildCoOwner(p.getName()))) {
 				// TODO: Display the biography if it exists.
 				if((!(GuildMechanics.guild_bio.containsKey(GuildMechanics.getGuild(p.getName())))) || GuildMechanics.guild_bio.get(GuildMechanics.getGuild(p.getName())) == null) {
 					// NO MOTD.
 					p.sendMessage(ChatColor.RED + "No " + ChatColor.BOLD + "GUILD BIOGRAPHY" + ChatColor.RED + " currently set.");
-					p.sendMessage(ChatColor.GRAY + "Your guild leader should use /gbio to write one!");
+					p.sendMessage(ChatColor.GRAY + "Your guild leader/co-owner should use /gbio to write one!");
 					return true;
 				}
 				if(GuildMechanics.guild_bio.containsKey(g_name) && GuildMechanics.guild_bio.get(g_name) != null) {

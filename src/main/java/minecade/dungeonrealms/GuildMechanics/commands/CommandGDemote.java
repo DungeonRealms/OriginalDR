@@ -25,8 +25,8 @@ public class CommandGDemote implements CommandExecutor {
 			return true;
 		}
 		
-		if(!(GuildMechanics.isGuildLeader(p.getName()))) {
-			p.sendMessage(ChatColor.RED + "You must be the " + ChatColor.BOLD + "GUILD OWNER" + ChatColor.RED + " to use " + ChatColor.BOLD + "/gdemote.");
+		if(!(GuildMechanics.isGuildLeader(p.getName()) || GuildMechanics.isGuildCoOwner(p.getName()))) {
+			p.sendMessage(ChatColor.RED + "You must be the " + ChatColor.BOLD + "GUILD OWNER" + ChatColor.RED + " or " + ChatColor.BOLD + "CO-OWNER" + ChatColor.RED +  " to use " + ChatColor.BOLD + "/gdemote.");
 			return true;
 		}
 		
@@ -46,12 +46,14 @@ public class CommandGDemote implements CommandExecutor {
 			return true;
 		}
 		
-		if(!GuildMechanics.isGuildOfficer(p_name_2demote)) {
+		if(!GuildMechanics.isGuildOfficer(p_name_2demote) && !GuildMechanics.isGuildCoOwner(p_name_2demote)) {
 			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + p_name_2demote + ChatColor.RED + " is not yet a " + ChatColor.UNDERLINE + "guild officer");
 			p.sendMessage(ChatColor.GRAY + "Use " + ChatColor.RED + "/gpromote " + p_name_2demote + ChatColor.GRAY + " to make them a guild officer.");
 			return true;
+		} else if (!GuildMechanics.isGuildCoOwner(p_name_2demote) && GuildMechanics.isGuildLeader(p.getName())) {
+			GuildMechanics.demoteCoOwner(p_name_2demote, p);
+			return true;
 		}
-		
 		GuildMechanics.demoteOfficer(p_name_2demote, p);
 		return true;
 	}
