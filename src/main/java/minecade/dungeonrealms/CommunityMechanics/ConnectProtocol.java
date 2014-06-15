@@ -735,7 +735,7 @@ public class ConnectProtocol implements Runnable {
 					// [gdemote]p_name,g_name:rank
 					String p_name = inputLine.substring(inputLine.indexOf("]") + 1, inputLine.indexOf(","));
 					String g_name = inputLine.substring(inputLine.indexOf(",") + 1, inputLine.indexOf(":"));
-					int rank = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.length()));
+					int rank = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.indexOf("*")));
 
 					if (!(GuildMechanics.guild_map.containsKey(g_name))) {
 						in.close();
