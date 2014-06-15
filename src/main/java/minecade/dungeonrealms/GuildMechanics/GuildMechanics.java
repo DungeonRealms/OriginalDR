@@ -3094,7 +3094,7 @@ public class GuildMechanics implements Listener {
 	public static void promoteToOwnerInSpecificGuild(Player sender, String user_to_set_owner, String guild_name) {
 		if (PermissionMechanics.isGM(sender.getName()) || sender.isOp()) {
 			if (guild_map.containsKey(guild_name)) {
-				if (areGuildies(getGuildOwner(guild_name), user_to_set_owner)) {
+				if (getGuild(getGuildOwner(guild_name)).equals(getGuild(user_to_set_owner))) {
 					setGuildRank(getGuildOwner(guild_name), 2); // Let's not completely remove the original owner from power and leave him as officer.
 					setGuildRank(user_to_set_owner, 4);
 					
