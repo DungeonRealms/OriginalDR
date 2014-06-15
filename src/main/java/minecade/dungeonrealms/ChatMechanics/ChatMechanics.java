@@ -65,7 +65,6 @@ public class ChatMechanics implements Listener {
     public static Logger log = Logger.getLogger("Minecraft");
 
     public static ConcurrentHashMap<String, Long> mute_list = new ConcurrentHashMap<String, Long>();
-    public static ConcurrentHashMap<String, Long> hologram_chat = new ConcurrentHashMap<String, Long>();
     // public static CopyOnWriteArrayList<String> sending_message = new CopyOnWriteArrayList<String>();
     public static List<String> recent_death = new ArrayList<String>();
 
@@ -535,23 +534,6 @@ public class ChatMechanics implements Listener {
             return true;
         }
         return false;
-    }
-
-    @EventHandler
-    public void onPlayerLogin(PlayerLoginEvent e) {
-        final Player p = e.getPlayer();
-        if (!(mute_list.containsKey(p.getName()))) {
-            async_mute_update.add(p.getName());
-        }
-        hologram_chat.put(p.getName(), 0L);
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
-        setMuteStateSQL(e.getPlayer().getName());
-        if (hologram_chat.containsKey(e.getPlayer().getName())) {
-            hologram_chat.remove(e.getPlayer().getName());
-        }
     }
 
     @EventHandler
@@ -1050,7 +1032,6 @@ public class ChatMechanics implements Listener {
                 p.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
             }
             p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "No one heard you.");
-            sendHologramChat(p, personal_msg, prefix, p_color);
         }
 
         for (Player pl : to_send) {
@@ -1104,50 +1085,11 @@ public class ChatMechanics implements Listener {
             toSend.sendToPlayer(p);
         } else {
             p.sendMessage(prefix + p_color + p.getName() + ": " + ChatColor.WHITE + personal_msg);
-        }
-
-        sendHologramChat(p, personal_msg, prefix, p_color);
+        };
 
         log.info(ChatColor.stripColor("" + p.getName() + ": " + msg));
     }
 
-    public boolean canShowAnotherHologram(Player p) {
-        // The timer has expired
-        if (!p.isOp() && !PermissionMechanics.isGM(p.getName()) && PermissionMechanics.getRank(p.getName()).equalsIgnoreCase("default")) {
-            return false;
-        }
-        if (hologram_chat.containsKey(p.getName()) && (hologram_chat.get(p.getName()) <= System.currentTimeMillis())) {
-            return true;
-        }
-        return false;
-    }
-
-    public void sendHologramChat(Player p, String personal_msg, String prefix, ChatColor p_color) {
-        if (canShowAnotherHologram(p)) {
-            Hologram hologram = null;
-            List<String> lines = new ArrayList<String>();
-            lines.add(prefix + p_color + p.getName());
-            lines.add(" ");
-            if (personal_msg.length() < 20) {
-                lines.add(personal_msg);
-            }
-            if (personal_msg.length() >= 20 && personal_msg.length() < 40) {
-                String double_string = personal_msg;
-                lines.add(double_string.substring(0, personal_msg.length()));
-            }
-            if (personal_msg.length() >= 40 && personal_msg.length() < 60) {
-                String otherString = personal_msg;
-                lines.add(otherString.substring(40, personal_msg.length()));
-            }
-            if (personal_msg.length() >= 60 && personal_msg.length() <= 80) {
-                String otherString = personal_msg;
-                lines.add(otherString.substring(40, personal_msg.length()));
-            }
-            hologram = new Hologram(Main.plugin, lines);
-            hologram.show(p.getLocation().add(0, 1.2, 0), 20, null);
-            hologram_chat.put(p.getName(), System.currentTimeMillis() + (1000 * 10));
-        }
-    }
     
     public static void sendAllStaffMessage(Player sender, String raw_message) {
     	List<Player> to_send_local = new ArrayList<Player>();

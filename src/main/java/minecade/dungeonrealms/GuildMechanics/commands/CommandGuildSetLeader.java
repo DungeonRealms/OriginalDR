@@ -18,8 +18,8 @@ public class CommandGuildSetLeader implements CommandExecutor {
 
 		if (pl == null) return true;
 
-		if (!GuildMechanics.inGuild(pl.getName())) {
-			pl.sendMessage(ChatColor.RED + "You must be part of a guild first.");
+		if (!GuildMechanics.inGuild(pl.getName()) && !(pl.isOp() || PermissionMechanics.isGM(pl.getName()))) {
+			pl.sendMessage(ChatColor.RED + "You must be part of a guild to do this.");
 			return true;
 		}
 		
@@ -34,19 +34,16 @@ public class CommandGuildSetLeader implements CommandExecutor {
 
 		if (args.length > 1) {
 			if (pl.isOp() || PermissionMechanics.isGM(pl.getName())) {
-				Player to_promote = Bukkit.getPlayer(args[0]);
 				String g_name = "";
 				String p_name = "";
-				if (to_promote != null) {
-					p_name = to_promote.getName();
-				} else{
-					pl.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + args[0] + ChatColor.RED + " is not online.");
-					return true;
-				}
 				for(String s : args) g_name += s + " ";
 				g_name = g_name.substring(p_name.length(), g_name.length() - 1);
 				g_name = g_name.substring(1, g_name.length());
-				GuildMechanics.promoteToOwnerInSpecificGuild(pl, p_name, g_name);
+				if (GuildMechanics.guild_map.containsKey(g_name)) {
+					GuildMechanics.promoteToOwnerInSpecificGuild(pl, p_name, g_name);
+				} else {
+					pl.sendMessage(ChatColor.RED + "No guild exists by the name of " + ChatColor.UNDERLINE + g_name);
+				}
 				return true;
 			}
 			pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "can't" + ChatColor.RED + " change other guilds' leaders!");

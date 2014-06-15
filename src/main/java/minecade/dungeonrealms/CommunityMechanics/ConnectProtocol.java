@@ -36,6 +36,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.iConomy.util.Downloader;
+
 @SuppressWarnings("deprecation")
 public class ConnectProtocol implements Runnable {
 	private Socket clientSocket;
@@ -784,8 +786,8 @@ public class ConnectProtocol implements Runnable {
 					// [gpromote]p_name,g_name:rank_
 					String p_name = inputLine.substring(inputLine.indexOf("]") + 1, inputLine.indexOf(","));
 					String g_name = inputLine.substring(inputLine.indexOf(",") + 1, inputLine.indexOf(":"));
-					int rank = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.indexOf("_")));
-					String o_name = inputLine.substring(inputLine.indexOf("_") +1, inputLine.length()); // Only used by promote to owner
+					int rank = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.indexOf("*")));
+					String o_name = !inputLine.substring(inputLine.indexOf("*") + 1).equals("") ? inputLine.substring(inputLine.indexOf("*") + 1, inputLine.length()) : null; // Only used by promote to owner
 
 					if (!(GuildMechanics.guild_map.containsKey(g_name))) {
 						in.close();
@@ -825,7 +827,11 @@ public class ConnectProtocol implements Runnable {
 							}
 						}
 					} else if (rank == 4) {
-						GuildMechanics.downloadGuildDataSQL(g_name, false);
+						if (o_name == null) { in.close(); return; } // Didn't receive sender name
+						if (GuildMechanics.getGuild(o_name).equals(g_name)) {
+							GuildMechanics.setGuildRank(o_name, 2);
+						}
+						GuildMechanics.setGuildRank(p_name, rank);
 						if (Bukkit.getPlayer(p_name) != null) {
 							Player promoted = Bukkit.getPlayer(p_name);
 							promoted.sendMessage(ChatColor.GRAY + "You have been promoted to " + ChatColor.AQUA  + "" + ChatColor.BOLD + "GUILD LEADER" + ChatColor.GRAY + " of " + ChatColor.AQUA + "" + ChatColor.UNDERLINE + GuildMechanics.getGuild(p_name));

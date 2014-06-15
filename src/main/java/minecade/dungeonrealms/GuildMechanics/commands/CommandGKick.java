@@ -29,7 +29,7 @@ public class CommandGKick implements CommandExecutor {
 		int g_rank = GuildMechanics.getRankNum(p.getName());
 		String g_name = GuildMechanics.getGuild(p.getName());
 		
-		if(g_rank < 2) { // 2 = officer, 3 = co-owner, 4 = owner -> 1 is just a member.
+		if(g_rank < 2) { // 2 = officer, 3 = co-owner, 4 = owner, -> 1 is just a member.
 			p.sendMessage(ChatColor.RED + "You must be at least a guild " + ChatColor.BOLD + "OFFICER" + ChatColor.RED + " to use " + ChatColor.BOLD + "/gkick");
 			return true;
 		}
@@ -42,12 +42,12 @@ public class CommandGKick implements CommandExecutor {
 		}
 		
 		if(GuildMechanics.getGuildRank(p_to_kick, g_name) == 2 && !(GuildMechanics.isGuildLeader(p.getName()) || GuildMechanics.isGuildCoOwner(p.getName()))) {
-			p.sendMessage(ChatColor.RED + "You cannot kick a fellow guild officer -- Only the guild leader can do that.");
+			p.sendMessage(ChatColor.RED + "You cannot kick a fellow guild officer. Only the guild leader or co-owner can do that.");
 			return true;
 		}
 		
-		if(GuildMechanics.getGuildRank(p_to_kick, g_name) == 3) {
-			p.sendMessage(ChatColor.RED + "You cannot kick the guild leader.");
+		if(GuildMechanics.getGuildRank(p_to_kick, g_name) >= 3) {
+			p.sendMessage(ChatColor.RED + "You cannot kick someone who has equal or greater power than you.");
 			return true;
 		}
 		
