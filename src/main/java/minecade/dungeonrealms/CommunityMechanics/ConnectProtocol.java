@@ -775,9 +775,11 @@ public class ConnectProtocol implements Runnable {
 					}
 
 					if (rank == 3) {
+						GuildMechanics.downloadGuildDataSQL(g_name, false);
 						if (Bukkit.getPlayer(p_name) != null) {
 							Player promoted = Bukkit.getPlayer(p_name);
 							promoted.sendMessage(ChatColor.GRAY + "You have been promoted to " + ChatColor.AQUA  + "" + ChatColor.BOLD + "GUILD LEADER" + ChatColor.GRAY + " of " + ChatColor.AQUA + "" + ChatColor.UNDERLINE + GuildMechanics.getGuild(p_name));
+							GuildMechanics.updateGuildTabList(promoted);
 						}
 
 						for (String s : GuildMechanics.getOnlineGuildMembers(g_name)) {
@@ -787,6 +789,7 @@ public class ConnectProtocol implements Runnable {
 								pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(g_name)
 										+ ChatColor.DARK_AQUA + ">" + ChatColor.AQUA + " " + ChatColor.UNDERLINE + o_name + ChatColor.GRAY + " has set " + ChatColor.AQUA  + "" + ChatColor.UNDERLINE + p_name + ChatColor.GRAY + " as the " + ChatColor.BOLD + "LEADER" + ChatColor.GRAY + " of your guild.");
 							}
+							continue;
 						}
 					} else if (rank == 2) {
 						GuildMechanics.setGuildRank(p_name, rank);

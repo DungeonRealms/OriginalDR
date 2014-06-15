@@ -2893,23 +2893,40 @@ public class GuildMechanics implements Listener {
 
 					sendGuildMessageCrossServer(message_to_send);
 					updateGuildSQL(guild_name);
+					Main.log.info("<" + GuildMechanics.guild_handle_map.get(guild_name) + "> " + sender.getName() + " set " + user_to_set_owner + " as leader of the guild " + getGuild(guild_name));
+					return;
 				}
+				sender.sendMessage(ChatColor.RED + "The user " + ChatColor.UNDERLINE + user_to_set_owner + ChatColor.RED + " that you're trying to set as leader of " + ChatColor.UNDERLINE + guild_name + ChatColor.RED + " is in a different guild! (" + ChatColor.UNDERLINE + getGuild(user_to_set_owner) + ChatColor.RED + ")"); 
+				Main.log.info("<" + GuildMechanics.guild_handle_map.get(guild_name) + "> " + sender.getName() + " tried to set " + user_to_set_owner + " as leader of the guild " + getGuild(guild_name));
+				return;
 			}
+			sender.sendMessage(ChatColor.RED + "The guild " + ChatColor.UNDERLINE + guild_name + ChatColor.RED + " does not exist in our database.");
+			Main.log.info("<" + GuildMechanics.guild_handle_map.get(guild_name) + "> " + sender.getName() + " tried to set " + user_to_set_owner + " as leader of the guild " + getGuild(guild_name));
+			return;
 		}
+		sender.sendMessage(ChatColor.RED + "You are not authorized to change other guilds' leaders. /gsetleader <PLAYER>");
+		Main.log.info("<" + GuildMechanics.guild_handle_map.get(guild_name) + "> " + sender.getName() + " tried to set " + user_to_set_owner + " as leader of the guild " + getGuild(guild_name));
 	}
 	
 	public static void promoteToOwnerInOwnGuild(Player owner, String new_owner) {
-		if (!inGuild(owner.getName()) || !guild_map.containsKey(getGuild(owner.getName()))) return;
+		if (!inGuild(owner.getName())) {
+			owner.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "aren't" + ChatColor.RED + " in a guild!");
+			return;
+		}
+		if (getGuildOwner(getGuild(owner.getName())).equalsIgnoreCase(owner.getName())) {
+			owner.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "aren't" + ChatColor.RED + " the owner of this guild!");
+			return;
+		}
 		
-		if (inGuild(new_owner) && getGuild(new_owner).equals(getGuild(owner.getName()))) {
-			setGuildRank(owner.getName(), 2);
+		if (inGuild(new_owner) && getGuild(new_owner).equalsIgnoreCase((getGuild(owner.getName())))) {
+			setGuildRank(owner.getName(), 2); // Let's not completely remove the original owner from power and leave him as officer.
 			setGuildRank(new_owner, 3);
 			
 			owner.sendMessage(ChatColor.GREEN + "You promoted " + ChatColor.UNDERLINE + new_owner + ChatColor.GREEN + " to guild owner of your guild.");
-			for (String members : getGuildMembers(getGuild(new_owner))) {
+			for (String members : getGuildMembers(getGuild(owner.getName()))) {
 				Player pl = Bukkit.getPlayer(members);
 				if (pl != null) {
-					pl.sendMessage(ChatColor.DARK_AQUA.toString() + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(getGuild(owner.getName()))
+					pl.sendMessage(ChatColor.DARK_AQUA + "<" + ChatColor.BOLD + GuildMechanics.guild_handle_map.get(getGuild(owner.getName()))
 							+ ChatColor.DARK_AQUA + ">" + ChatColor.AQUA + " " + ChatColor.UNDERLINE + owner.getName() + ChatColor.GRAY + " has set " + ChatColor.AQUA  + "" + ChatColor.UNDERLINE + new_owner + ChatColor.GRAY + " as the " + ChatColor.BOLD + "LEADER" + ChatColor.GRAY + " of your guild.");
 				}
 				continue;
@@ -2919,6 +2936,8 @@ public class GuildMechanics implements Listener {
 			sendGuildMessageCrossServer(message_to_send);
 			updateGuildSQL(getGuild(new_owner));
 		}
+		owner.sendMessage(ChatColor.RED + "The user " + ChatColor.UNDERLINE + new_owner + ChatColor.RED + " is not in your guild.");
+		Main.log.info("<" + GuildMechanics.guild_handle_map.get(getGuild(owner.getName())) + "> " + owner.getName() + " tried to set " + new_owner + " as leader of the guild " + getGuild(owner.getName()));
 	}
 	
 	public static void demoteOfficer(String s_to_demote, Player p_owner) {

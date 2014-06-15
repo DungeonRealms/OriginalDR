@@ -1,8 +1,11 @@
 package minecade.dungeonrealms.GuildMechanics.commands;
 
 import minecade.dungeonrealms.GuildMechanics.GuildMechanics;
+import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,16 +27,32 @@ public class CommandGuildSetLeader implements CommandExecutor {
 			}
 			return true;
 		}
-		
-		if (args.length > 1 && pl.isOp()) {
-			String g_name = "";
-			for(String s : args) g_name += s + " ";
-			g_name = g_name.substring(args[0].length(), g_name.length() - 1);
-			if (g_name.endsWith(" ")) g_name = g_name.substring(1, g_name.length() - 1);
-			GuildMechanics.promoteToOwnerInSpecificGuild(pl, args[0], g_name);
-		} else if (args.length == 1 && GuildMechanics.inGuild(pl.getName()) && GuildMechanics.isGuildLeader(pl.getName())) {
-			GuildMechanics.promoteToOwnerInOwnGuild(pl, args[0]);
+
+		if (args.length > 1) {
+			if (pl.isOp() || PermissionMechanics.isGM(pl.getName())) {
+				Player to_promote = Bukkit.getPlayer(args[0]);
+				String g_name = "";
+				String p_name = "";
+				if (to_promote.isOnline()) {
+					p_name = to_promote.getName();
+				} else{
+					p_name = Bukkit.getOfflinePlayer(args[0]).getName();
+				}
+				for(String s : args) g_name += s + " ";
+				g_name = g_name.substring(p_name.length(), g_name.length() - 1);
+				if (g_name.endsWith(" ")) g_name = g_name.substring(1, g_name.length() - 1);
+				GuildMechanics.promoteToOwnerInSpecificGuild(pl, p_name, g_name);
+				return true;
+			}
+			pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "can't" + ChatColor.RED + " change other guilds' leaders!");
+			return true;
 		}
+		Player to_promote = Bukkit.getPlayer(args[0]);
+		if (to_promote.isOnline()) {
+			GuildMechanics.promoteToOwnerInOwnGuild(pl, to_promote.getName());
+			return true;
+		}
+		GuildMechanics.promoteToOwnerInOwnGuild(pl, ((OfflinePlayer)to_promote).getName());
 		return true;
 	}
 
