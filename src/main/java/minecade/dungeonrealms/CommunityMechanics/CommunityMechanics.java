@@ -211,6 +211,7 @@ public class CommunityMechanics implements Listener {
 		ip_whitelist.add("72.8.172.254");
 		ip_whitelist.add("74.63.199.162");
 		ip_whitelist.add("80.192.218.84"); // Testing packet connection for bradez
+		ip_whitelist.add("85.25.47.171"); // GM Tool Packet Manager
 
 		toggle_map.add("toggledebug");
 		toggle_map.add("toggleff");
