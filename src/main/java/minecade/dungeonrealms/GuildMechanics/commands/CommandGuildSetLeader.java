@@ -33,7 +33,7 @@ public class CommandGuildSetLeader implements CommandExecutor {
 				Player to_promote = Bukkit.getPlayer(args[0]);
 				String g_name = "";
 				String p_name = "";
-				if (to_promote.isOnline()) {
+				if (to_promote != null) {
 					p_name = to_promote.getName();
 				} else{
 					p_name = Bukkit.getOfflinePlayer(args[0]).getName();
