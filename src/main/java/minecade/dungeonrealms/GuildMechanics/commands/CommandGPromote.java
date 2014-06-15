@@ -25,7 +25,7 @@ public class CommandGPromote implements CommandExecutor {
 			return true;
 		}
 		
-		if(!(GuildMechanics.isGuildLeader(p.getName())) || !GuildMechanics.isGuildCoOwner(p.getName())) {
+		if(!(GuildMechanics.isGuildLeader(p.getName()) || GuildMechanics.isGuildCoOwner(p.getName()))) {
 			p.sendMessage(ChatColor.RED + "You must be the " + ChatColor.BOLD + "GUILD OWNER" + ChatColor.RED + " or " + ChatColor.BOLD + "GUILD CO-OWNER" + ChatColor.RED + " to use " + ChatColor.BOLD + "/gpromote.");
 			return true;
 		}
