@@ -50,8 +50,12 @@ public class CommandGDemote implements CommandExecutor {
 			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + p_name_2demote + ChatColor.RED + " is not yet a " + ChatColor.UNDERLINE + "guild officer");
 			p.sendMessage(ChatColor.GRAY + "Use " + ChatColor.RED + "/gpromote " + p_name_2demote + ChatColor.GRAY + " to make them a guild officer.");
 			return true;
-		} else if (!GuildMechanics.isGuildCoOwner(p_name_2demote) && GuildMechanics.isGuildLeader(p.getName())) {
-			GuildMechanics.demoteCoOwner(p_name_2demote, p);
+		} else if (GuildMechanics.isGuildCoOwner(p_name_2demote)) {
+			if (GuildMechanics.isGuildLeader(p.getName())) {
+				GuildMechanics.demoteCoOwner(p_name_2demote, p);
+				return true;
+			}
+			p.sendMessage(ChatColor.RED + "Only the " + ChatColor.BOLD + "GUILD OWNER" + ChatColor.RED + " is able to demote co-owners.");
 			return true;
 		}
 		GuildMechanics.demoteOfficer(p_name_2demote, p);

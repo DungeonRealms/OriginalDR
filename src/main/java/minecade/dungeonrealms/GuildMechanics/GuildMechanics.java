@@ -1317,11 +1317,10 @@ public class GuildMechanics implements Listener {
 	
 	public static int getOnlineCoOwnersCount(String g_name) {
 		int count = 0;
-		for (String s : getOnlineGuildMembers(g_name)) {
-			if (getGuildRank(s, g_name) == 3 && (s.contains(ChatColor.YELLOW.toString()) || s.contains(ChatColor.GREEN.toString()))) {
+		for (String s : getGuildCoOwners(g_name)) {
+			if (s.contains(ChatColor.YELLOW.toString()) || s.contains(ChatColor.GREEN.toString())) {
 				 count++;
 			}
-			continue;
 		}
 		return count;
 	}
@@ -1360,7 +1359,7 @@ public class GuildMechanics implements Listener {
 		int count = 0;
 		for(String s : getOnlineGuildMembers(g_name)) {
 			if(s.contains(" ")) {
-				// THey're on another server.
+				// They're on another server.
 				s = s.substring(s.indexOf(" ") + 1, s.length());
 			}
 			if(getGuildRank(ChatColor.stripColor(s), g_name) == 1) {
@@ -1522,8 +1521,8 @@ public class GuildMechanics implements Listener {
 		
 		TabAPI.setTabString(Main.plugin, pl, 2, 2, ChatColor.DARK_AQUA + "" + "Members [" + getOnlineGuildCount(g_name) + "/" + getGuildMemberCount(g_name) + "]", 0);
 		
-		TabAPI.setTabString(Main.plugin, pl, 8, 1, ChatColor.DARK_AQUA + "" + "Guild Co-", 0);
-		TabAPI.setTabString(Main.plugin, pl, 9, 1, ChatColor.DARK_AQUA + "" + "Owners [" + getOnlineCoOwnersCount(g_name) + "/" + getTotalCoOwnersCount(g_name) + "]", 0);
+		TabAPI.setTabString(Main.plugin, pl, 8, 1, ChatColor.DARK_AQUA + "" + "Guild", 0);
+		TabAPI.setTabString(Main.plugin, pl, 9, 1, ChatColor.DARK_AQUA + "" + "Co-Owners [" + getOnlineCoOwnersCount(g_name) + "/" + getTotalCoOwnersCount(g_name) + "]", 0);
 		
 		List<String> members = getOnlineGuildMembers(g_name);
 		List<String> pruned_members = new ArrayList<String>();
@@ -1708,7 +1707,7 @@ public class GuildMechanics implements Listener {
 				}
 				String s_copy = s;
 				if(s_copy.contains(" ")) {
-					// THey're on another server.
+					// They're on another server.
 					s_copy = s.substring(s.indexOf(" ") + 1, s.length());
 				}
 				if(s.contains(ChatColor.YELLOW.toString())) {
@@ -1733,7 +1732,7 @@ public class GuildMechanics implements Listener {
 		
 		for(String s : pruned_coowner) {
 			x++;
-			if(x >= 11) {
+			if(x >= 12) {
 				break;
 			}
 			if(s.contains(ChatColor.GREEN.toString()) || s.contains(ChatColor.YELLOW.toString())) {
