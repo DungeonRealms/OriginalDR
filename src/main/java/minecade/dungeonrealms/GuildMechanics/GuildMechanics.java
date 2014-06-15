@@ -1681,13 +1681,13 @@ public class GuildMechanics implements Listener {
 			TabAPI.setTabString(Main.plugin, pl, 3, 0, ChatColor.GRAY + "N/A" + TabAPI.nextNull());
 		}
 		
-		x = 2; // Reset X for parsing.
+		x = 8; // Reset X for parsing.
 		List<String> coowners = getGuildCoOwners(g_name);
 		List<String> pruned_coowner = new ArrayList<String>();
 		List<String> to_remove_coowner = new ArrayList<String>();
 		
 		for(String s : coowners) {
-			if(pruned_coowner.size() > 16) {
+			if(pruned_coowner.size() > 2) {
 				break;
 			}
 			if(s.contains(ChatColor.GREEN.toString())) {
@@ -1732,7 +1732,7 @@ public class GuildMechanics implements Listener {
 		
 		for(String s : pruned_coowner) {
 			x++;
-			if(x >= 2) {
+			if(x >= 10) {
 				break;
 			}
 			if(s.contains(ChatColor.GREEN.toString()) || s.contains(ChatColor.YELLOW.toString())) {
@@ -1742,9 +1742,9 @@ public class GuildMechanics implements Listener {
 					s.replaceAll(ChatColor.YELLOW.toString(), "");
 					s = ChatColor.GRAY.toString() + s.substring(0, s.indexOf(" ")) + " " + ChatColor.GREEN.toString() + s.substring(s.indexOf(" ") + 1, s.length());
 				}
-				TabAPI.setTabString(Main.plugin, pl, x, 0, s, 50);
+				TabAPI.setTabString(Main.plugin, pl, x, 1, s, 50);
 			} else {
-				TabAPI.setTabString(Main.plugin, pl, x, 0, s, 9999999);
+				TabAPI.setTabString(Main.plugin, pl, x, 1, s, 9999999);
 			}
 		}
 		
