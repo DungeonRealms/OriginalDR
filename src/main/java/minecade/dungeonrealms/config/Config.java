@@ -138,4 +138,5 @@ public class Config {
     
     public static String local_IP = Bukkit.getIp();
     
+    public static String realmPath = "/rdata/";
 }

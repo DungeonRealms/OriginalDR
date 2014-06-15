@@ -119,6 +119,7 @@ public class Main extends JavaPlugin implements Listener {
 
         if (getServer().getMotd().contains("US-99") || getServer().getMotd().contains("US-B1") || (serverid >= 100 && serverid <= 110)) {
             Config.sql_url = "jdbc:mysql://" + Config.Hive_IP + ":" + Config.SQL_port + "/dungeonrealms_test";
+            Config.realmPath = "/rdata/_beta-files_/";
         }
 
         getServer().getPluginManager().registerEvents(new ScoreboardMechanics(), this);
