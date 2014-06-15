@@ -18,6 +18,11 @@ public class CommandGuildSetLeader implements CommandExecutor {
 
 		if (pl == null) return true;
 
+		if (GuildMechanics.inGuild(pl.getName())) {
+			pl.sendMessage(ChatColor.RED + "You must be part of a guild first.");
+			return true;
+		}
+		
 		if (args.length < 1) {
 			if (!pl.isOp()) {
 				pl.sendMessage(ChatColor.RED + "Invalid syntax. You must supply a player! /gsetleader <PLAYER> - <PLAYER> must be online!");
@@ -47,12 +52,16 @@ public class CommandGuildSetLeader implements CommandExecutor {
 			pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "can't" + ChatColor.RED + " change other guilds' leaders!");
 			return true;
 		}
-		Player to_promote = Bukkit.getPlayer(args[0]);
-		if (to_promote != null) {
-			GuildMechanics.promoteToOwnerInOwnGuild(pl, to_promote.getName());
+		if (GuildMechanics.isGuildLeader(pl.getName())) {
+			Player to_promote = Bukkit.getPlayer(args[0]);
+			if (to_promote != null) {
+				GuildMechanics.promoteToOwnerInOwnGuild(pl, to_promote.getName());
+				return true;
+			}
+			pl.sendMessage(ChatColor.RED + "The user you're trying to set as leader is currently " + ChatColor.UNDERLINE + "offline" + ChatColor.RED + ".");
 			return true;
 		}
-		pl.sendMessage(ChatColor.RED + "The user you're trying to set as leader is currently " + ChatColor.UNDERLINE + "offline" + ChatColor.RED + ".");
+		pl.sendMessage(ChatColor.RED + "You must be the " + ChatColor.BOLD + "guild leader" + ChatColor.RED + " to change a guilds owner.");
 		return true;
 	}
 

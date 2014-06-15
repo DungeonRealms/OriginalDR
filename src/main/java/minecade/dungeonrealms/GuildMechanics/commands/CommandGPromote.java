@@ -50,20 +50,16 @@ public class CommandGPromote implements CommandExecutor {
 			return true;
 		}
 
-		if(GuildMechanics.isGuildOfficer(p_name_2promote)) {
-			if (GuildMechanics.isGuildLeader(p.getName())) {
-				if (GuildMechanics.getGuildCoOwners(GuildMechanics.getGuild(p.getName())).size() == 2) {
-					p.sendMessage(ChatColor.RED + "There are already " + ChatColor.UNDERLINE + "2" + ChatColor.RED + " Co-Owners in your guild, demote one of them with " + ChatColor.UNDERLINE + "/gdemote <PLAYER>"); 
-					p.sendMessage(ChatColor.RED + "Here's the names of your co-owners:");
-					for (String cos : GuildMechanics.getGuildCoOwners(GuildMechanics.getGuild(p.getName()))) {
-						p.sendMessage(ChatColor.RED + cos);
-					}
-					return true;
+		if (GuildMechanics.isGuildLeader(p.getName()) && GuildMechanics.isGuildOfficer(p_name_2promote)) {
+			if (GuildMechanics.getGuildCoOwners(GuildMechanics.getGuild(p.getName())).size() == 2) {
+				p.sendMessage(ChatColor.RED + "There are already " + ChatColor.UNDERLINE + "2" + ChatColor.RED + " Co-Owners in your guild, demote one of them with " + ChatColor.UNDERLINE + "/gdemote <PLAYER>"); 
+				p.sendMessage(ChatColor.RED + "\nHere's the names of your co-owners:");
+				for (String cos : GuildMechanics.getGuildCoOwners(GuildMechanics.getGuild(p.getName()))) {
+					p.sendMessage(ChatColor.RED + cos);
 				}
-				GuildMechanics.promoteToCoOwner(p_name_2promote, p);
 				return true;
 			}
-			p.sendMessage(ChatColor.RED + "You are not permitted to promote others to co-owner.");
+			GuildMechanics.promoteToCoOwner(p_name_2promote, p);
 			return true;
 		} else if (GuildMechanics.isGuildCoOwner(p_name_2promote) && GuildMechanics.isGuildLeader(p.getName())) {
 			p.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + p_name_2promote + ChatColor.RED + " is already a co-owner.\n You can take away their rank by doing " + ChatColor.UNDERLINE + "/gdemote <PLAYER>");
