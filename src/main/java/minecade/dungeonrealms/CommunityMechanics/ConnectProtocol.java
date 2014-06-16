@@ -933,6 +933,18 @@ public class ConnectProtocol implements Runnable {
 					}
 
 				}
+				
+				if (inputLine.startsWith("[gupdate]")) {
+					String g_name = inputLine.substring(inputLine.indexOf("]") +  1, inputLine.length());
+					if (g_name.endsWith(" ")) g_name = g_name.substring(0, g_name.length() -1);
+					GuildMechanics.updateGuildSQL(g_name);
+					for (String mem : GuildMechanics.getOnlineGuildMembers(g_name)) {
+						Player pl = Bukkit.getPlayer(mem);
+						if (pl == null) continue;
+						GuildMechanics.updateGuildTabList(pl);
+					}
+				}
+				
 				// TODO: Add /shard to character journal
 				// TODO: Fix all the inconsistancies with buddy login/logout
 				// Players should ONLY get messages about a player logging

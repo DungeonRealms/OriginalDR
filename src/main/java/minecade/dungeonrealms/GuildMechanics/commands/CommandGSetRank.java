@@ -22,7 +22,7 @@ public class CommandGSetRank implements CommandExecutor {
 		}
 
 		if (args.length < 1) {
-			pl.sendMessage(ChatColor.RED + "Invalid syntax. \u00A7n/gsetrank <1-4> or /gsetrank <PLAYER> <1-4>");
+			pl.sendMessage(ChatColor.RED + "Invalid syntax. \u00A7n/gsetrank <1-4> \u00A7cor \u00A7n/gsetrank <PLAYER> <1-4>");
 			return true;
 		}
 		
@@ -36,7 +36,7 @@ public class CommandGSetRank implements CommandExecutor {
 				pl.sendMessage(ChatColor.RED + "Please choose a rank between \u00A7n1 \u00A7cand \u00A7n4."); // \u00A7 = § - too lazy to use ChatColor, takes up less space as well.
 				return true;
 			}
-			if (GuildMechanics.inGuild(pl.getName())) {
+			if (GuildMechanics.guild_map.containsKey(GuildMechanics.getGuild(pl.getName()))) {
 				GuildMechanics.setGuildRank(pl.getName(), Integer.parseInt(args[0]));
 				String rank = "";
 				switch (Integer.parseInt(args[0])) {
@@ -56,9 +56,10 @@ public class CommandGSetRank implements CommandExecutor {
 					break;
 				}
 				pl.sendMessage(ChatColor.GREEN + "You set your rank to " + ChatColor.UNDERLINE + rank);
+				GuildMechanics.sendGuildMessageCrossServer("[gupdate]" + GuildMechanics.getGuild(args[0])); 
 				return true;
 			}
-			pl.sendMessage(ChatColor.RED + "You aren't in a guild.");
+			pl.sendMessage(ChatColor.RED + "You aren't in an existant guild.");
 		}
 
 		if (args.length == 2) {
@@ -66,8 +67,9 @@ public class CommandGSetRank implements CommandExecutor {
 				pl.sendMessage(ChatColor.RED + "Please choose a rank between \u00A7n1 \u00A7cand \u00A7n4."); // \u00A7 = § - too lazy to use ChatColor, takes up less space as well.
 				return true;
 			}
-			if (GuildMechanics.inGuild(args[0])) {
+			if (GuildMechanics.guild_map.containsKey(GuildMechanics.getGuild(args[0]))) {
 				GuildMechanics.setGuildRank(args[0], Integer.parseInt(args[1]));
+				GuildMechanics.updateGuildSQL(GuildMechanics.getGuild(args[0]));
 				String rank = "";
 				switch (Integer.parseInt(args[1])) {
 				case 1:
@@ -86,9 +88,10 @@ public class CommandGSetRank implements CommandExecutor {
 					break;
 				}
 				pl.sendMessage(ChatColor.GREEN + "You set " + ChatColor.UNDERLINE + args[0] + ChatColor.RED + " to the rank " + ChatColor.UNDERLINE + rank);
+				GuildMechanics.sendGuildMessageCrossServer("[gupdate]" + GuildMechanics.getGuild(args[0])); 
 				return true;
 			}
-			pl.sendMessage(ChatColor.RED + "That user isn't in a guild.");
+			pl.sendMessage(ChatColor.RED + "The guild the user is doesn't exist.");
 		}
 		return true;
 	}
