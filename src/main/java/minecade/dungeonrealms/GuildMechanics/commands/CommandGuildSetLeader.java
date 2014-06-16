@@ -17,7 +17,7 @@ public class CommandGuildSetLeader implements CommandExecutor {
 		Player pl = (Player)sender;
 
 		if (pl == null) return true;
-		
+
 		if (!GuildMechanics.inGuild(pl.getName()) && !(pl.isOp() || PermissionMechanics.isGM(pl.getName()))) {
 			pl.sendMessage(ChatColor.RED + "You must be part of a guild to do this.");
 			return true;
@@ -34,11 +34,6 @@ public class CommandGuildSetLeader implements CommandExecutor {
 
 		if (args.length > 1) {
 			if (pl.isOp() || PermissionMechanics.isGM(pl.getName())) {
-				Player targ = Bukkit.getPlayer(args[0]);
-				if (targ == null) {
-					pl.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + args[0] + ChatColor.RED + " is offline.");
-					return true;
-				}
 				String g_name = "";
 				String p_name = "";
 				for(String s : args) g_name += s + " ";
