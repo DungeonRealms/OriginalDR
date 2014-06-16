@@ -1,7 +1,6 @@
 package minecade.dungeonrealms.GuildMechanics.commands;
 
 import minecade.dungeonrealms.GuildMechanics.GuildMechanics;
-import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -17,13 +16,16 @@ public class CommandGSetRank implements CommandExecutor {
 		Player pl = (Player)sender;
 		if (pl == null) return true;
 
-		if (!pl.isOp() || !PermissionMechanics.isGM(pl.getName())) return true;
-
-		if (args.length == 0 || args.length > 2) {
-			pl.sendMessage(ChatColor.RED + "Invalid syntax. Player also must be in a guild. \u00A7n/gsetrank <PLAYER> <1-4> \u00A7cor \u00A7n/gsetrank <1-4> \u00A7cif you're setting yourself.");
+		if (!pl.isOp()) {
+			pl.sendMessage(ChatColor.RED + "You lack the permissions to use this command.");
 			return true;
 		}
 
+		if (args.length < 1) {
+			pl.sendMessage(ChatColor.RED + "Invalid syntax. \u00A7n/gsetrank <1-4> or /gsetrank <PLAYER> <1-4>");
+			return true;
+		}
+		
 		if ((args.length == 2 && !isInt(args[1])) || (args.length == 1 && !isInt(args[0]))) {
 			pl.sendMessage("Your rank parameter must be an integer!");
 			return true;
