@@ -38,7 +38,6 @@ import minecade.dungeonrealms.GuildMechanics.commands.CommandGuildSetLeader;
 import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
-import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
 import minecade.dungeonrealms.RepairMechanics.RepairMechanics;
 import minecade.dungeonrealms.database.ConnectionPool;

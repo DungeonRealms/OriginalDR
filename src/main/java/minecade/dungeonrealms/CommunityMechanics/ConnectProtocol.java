@@ -36,7 +36,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.iConomy.util.Downloader;
 
 @SuppressWarnings("deprecation")
 public class ConnectProtocol implements Runnable {

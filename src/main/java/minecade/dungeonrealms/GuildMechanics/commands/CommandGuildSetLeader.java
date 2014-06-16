@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 public class CommandGuildSetLeader implements CommandExecutor {
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player pl = (Player)sender;

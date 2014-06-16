@@ -24,7 +24,6 @@ import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
 import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.ModerationMechanics.ModerationMechanics;
-import minecade.dungeonrealms.MonsterMechanics.Hologram;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
 import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
 import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
@@ -55,8 +54,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
