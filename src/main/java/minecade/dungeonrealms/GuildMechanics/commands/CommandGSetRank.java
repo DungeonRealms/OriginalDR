@@ -55,7 +55,7 @@ public class CommandGSetRank implements CommandExecutor {
 				default: 
 					break;
 				}
-				pl.sendMessage(ChatColor.RED + "You set " + ChatColor.UNDERLINE + args[0] + ChatColor.RED + " to the rank " + ChatColor.UNDERLINE + rank);
+				pl.sendMessage(ChatColor.GREEN + "You set your rank to " + ChatColor.UNDERLINE + rank);
 				return true;
 			}
 			pl.sendMessage(ChatColor.RED + "You aren't in a guild.");
@@ -85,7 +85,7 @@ public class CommandGSetRank implements CommandExecutor {
 				default: 
 					break;
 				}
-				pl.sendMessage(ChatColor.RED + "You set " + ChatColor.UNDERLINE + args[0] + ChatColor.RED + " to the rank " + ChatColor.UNDERLINE + rank);
+				pl.sendMessage(ChatColor.GREEN + "You set " + ChatColor.UNDERLINE + args[0] + ChatColor.RED + " to the rank " + ChatColor.UNDERLINE + rank);
 				return true;
 			}
 			pl.sendMessage(ChatColor.RED + "That user isn't in a guild.");
