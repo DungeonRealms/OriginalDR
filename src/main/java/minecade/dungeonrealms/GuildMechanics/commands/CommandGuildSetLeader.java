@@ -34,6 +34,11 @@ public class CommandGuildSetLeader implements CommandExecutor {
 
 		if (args.length > 1) {
 			if (pl.isOp() || PermissionMechanics.isGM(pl.getName())) {
+				Player targ = Bukkit.getPlayer(args[0]);
+				if (targ == null) {
+					pl.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + args[0] + ChatColor.RED + " is offline.");
+					return true;
+				}
 				String g_name = "";
 				String p_name = "";
 				for(String s : args) g_name += s + " ";
