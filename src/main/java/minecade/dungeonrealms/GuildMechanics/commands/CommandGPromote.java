@@ -33,36 +33,41 @@ public class CommandGPromote implements CommandExecutor {
 		String p_name_2promote = args[0];
 		if(Bukkit.getPlayer(p_name_2promote) != null) {
 			p_name_2promote = Bukkit.getPlayer(p_name_2promote).getName();
+		} else {
+			p_name_2promote = args[0];
 		}
 
 		if (GuildMechanics.isGuildLeader(p_name_2promote)) {
-			p.sendMessage(ChatColor.RED + "You cant change the owner's rank.");
+			p.sendMessage(ChatColor.RED + "You can't promote the owner of a guild.");
 			return true;
 		}
 
-		if(p_name_2promote.equalsIgnoreCase(p.getName())) {
+		if (p_name_2promote.equalsIgnoreCase(p.getName())) {
 			p.sendMessage(ChatColor.RED + "You cannot promote yourself in your own guild.");
 			return true;
 		}
 
-		if(!(GuildMechanics.areGuildies(p.getName(), p_name_2promote))) {
-			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + p_name_2promote + ChatColor.RED + " is not in YOUR guild.");
+		if (!(GuildMechanics.areGuildies(p.getName(), p_name_2promote))) {
+			p.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + p_name_2promote + ChatColor.RED + " is not in YOUR guild. But in " + ChatColor.UNDERLINE + GuildMechanics.getGuild(p_name_2promote));
+			return true;
+		}
+
+		if (GuildMechanics.isGuildCoOwner(p.getName()) && !(GuildMechanics.isGuildOfficer(p_name_2promote) && GuildMechanics.isGuildCoOwner(p_name_2promote))) {
+			GuildMechanics.promoteToOfficer(p_name_2promote, p);
 			return true;
 		}
 
 		if (GuildMechanics.isGuildCoOwner(p.getName()) && GuildMechanics.isGuildOfficer(p_name_2promote)) {
-			p.sendMessage(ChatColor.RED + "You cannot promote others to co-owner.");
-			return true;
-		} else if (GuildMechanics.isGuildLeader(p.getName()) && GuildMechanics.isGuildOfficer(p_name_2promote)) {
-			if (GuildMechanics.getGuildCoOwners(GuildMechanics.getGuild(p.getName())).size() == 2) {
-				p.sendMessage(ChatColor.RED + "You've already set 2 guild co-owners, demote one of them to set another!");
-				return true;
-			}
-			GuildMechanics.promoteToCoOwner(p_name_2promote, p);
+			p.sendMessage(ChatColor.RED + "You aren't allowed to promote others to the rank of " + ChatColor.BOLD + "CO-OWNER");
 			return true;
 		}
 
-		if (GuildMechanics.isGuildCoOwner(p.getName()) && !GuildMechanics.isGuildOfficer(p_name_2promote) || GuildMechanics.isGuildLeader(p_name_2promote) && !GuildMechanics.isGuildOfficer(p_name_2promote)) {
+		if (GuildMechanics.getGuildCoOwners(GuildMechanics.getGuild(p.getName())).size() == 2 && GuildMechanics.isGuildLeader(p.getName())) {
+			p.sendMessage(ChatColor.RED + "You've already set 2 guild co-owners, demote one of them to set another!");
+			return true;
+		}
+
+		if ((GuildMechanics.isGuildCoOwner(p.getName()) && !GuildMechanics.isGuildOfficer(p_name_2promote)) || (GuildMechanics.isGuildLeader(p.getName()) && !GuildMechanics.isGuildOfficer(p_name_2promote))) {
 			GuildMechanics.promoteToOfficer(p_name_2promote, p);
 			return true;
 		}

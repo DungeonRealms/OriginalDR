@@ -41,7 +41,7 @@ public class CommandGuildSetLeader implements CommandExecutor {
 					return true;
 				}
 				String g_name = "";
-				String p_name = "";
+				String p_name = targ.getName();
 				for(String s : args) g_name += s + " ";
 				g_name = g_name.substring(p_name.length(), g_name.length() - 1);
 				g_name = g_name.substring(1, g_name.length());
@@ -55,6 +55,7 @@ public class CommandGuildSetLeader implements CommandExecutor {
 			pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "can't" + ChatColor.RED + " change other guilds' leaders!");
 			return true;
 		}
+		
 		if (GuildMechanics.isGuildLeader(pl.getName())) {
 			Player to_promote = Bukkit.getPlayer(args[0]);
 			if (to_promote != null) {

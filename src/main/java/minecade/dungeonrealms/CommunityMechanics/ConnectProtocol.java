@@ -786,7 +786,7 @@ public class ConnectProtocol implements Runnable {
 					String p_name = inputLine.substring(inputLine.indexOf("]") + 1, inputLine.indexOf(","));
 					String g_name = inputLine.substring(inputLine.indexOf(",") + 1, inputLine.indexOf(":"));
 					int rank = Integer.parseInt(inputLine.substring(inputLine.indexOf(":") + 1, inputLine.indexOf("*")));
-					String o_name = !inputLine.substring(inputLine.indexOf("*") + 1).equals("") ? inputLine.substring(inputLine.indexOf("*") + 1, inputLine.length()) : null; // Only used by promote to owner
+					String o_name = !inputLine.substring(inputLine.indexOf("*") + 1).equals("") ? inputLine.substring(inputLine.indexOf("*") + 1, inputLine.length()) : ""; // Only used by promote to owner
 
 					if (!(GuildMechanics.guild_map.containsKey(g_name))) {
 						in.close();
