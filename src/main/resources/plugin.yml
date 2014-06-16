@@ -225,7 +225,11 @@ commands:
   gsetleader:
     description: Sets a guilds leader
     usage: /<command>
-    aliases: [gsl, gsetl, guildsl]
+    aliases: [gsl, gsetl, guildsl, guildsetleader]
+  gsetrank:
+    description: Sets a users guild rank 1-4 as rank
+    usage: /<command> [player] <rank as int>
+    aliases: [gsr, gsetr, guildsetrank, guildposition]
   instance:
     description: Root command.
     usage: /<command>

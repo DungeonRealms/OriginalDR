@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import me.confuser.barapi.BarAPI;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
+import minecade.dungeonrealms.ChatMechanics.ChatMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.FatigueMechanics.FatigueMechanics;
 import minecade.dungeonrealms.Hive.Hive;

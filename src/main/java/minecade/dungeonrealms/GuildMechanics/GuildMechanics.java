@@ -33,6 +33,7 @@ import minecade.dungeonrealms.GuildMechanics.commands.CommandGKick;
 import minecade.dungeonrealms.GuildMechanics.commands.CommandGMotd;
 import minecade.dungeonrealms.GuildMechanics.commands.CommandGPromote;
 import minecade.dungeonrealms.GuildMechanics.commands.CommandGQuit;
+import minecade.dungeonrealms.GuildMechanics.commands.CommandGSetRank;
 import minecade.dungeonrealms.GuildMechanics.commands.CommandGuild;
 import minecade.dungeonrealms.GuildMechanics.commands.CommandGuildSetLeader;
 import minecade.dungeonrealms.Hive.Hive;
@@ -198,6 +199,7 @@ public class GuildMechanics implements Listener {
 		Main.plugin.getCommand("gquit").setExecutor(new CommandGQuit());
 		Main.plugin.getCommand("guild").setExecutor(new CommandGuild());
 		Main.plugin.getCommand("gsetleader").setExecutor(new CommandGuildSetLeader());
+		Main.plugin.getCommand("gsetrank").setExecutor(new CommandGSetRank());
 		
 		// Player movement event for guild creation.
 		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
@@ -2677,7 +2679,6 @@ public class GuildMechanics implements Listener {
 		
 		return false;
 	}
-	
 	public static boolean inGuild(String p_name) {
 		if(player_guilds.containsKey(p_name)) { return true; }
 		return false;

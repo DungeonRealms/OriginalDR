@@ -794,7 +794,7 @@ public class ConnectProtocol implements Runnable {
 					}
 
 					if (rank == 2) {
-						GuildMechanics.setGuildRank(p_name, rank);
+						GuildMechanics.downloadGuildDataSQL(g_name, false);
 						if (Bukkit.getPlayer(p_name) != null) {
 							Player promoted = Bukkit.getPlayer(p_name);
 							promoted.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA
@@ -810,7 +810,7 @@ public class ConnectProtocol implements Runnable {
 							}
 						}
 					} else if (rank == 3) {
-						GuildMechanics.setGuildRank(p_name, rank);
+						GuildMechanics.downloadGuildDataSQL(g_name, false);
 						if (Bukkit.getPlayer(p_name) != null) {
 							Player promoted = Bukkit.getPlayer(p_name);
 							promoted.sendMessage(ChatColor.DARK_AQUA + "You have been " + ChatColor.UNDERLINE + "promoted" + ChatColor.DARK_AQUA
@@ -826,11 +826,8 @@ public class ConnectProtocol implements Runnable {
 							}
 						}
 					} else if (rank == 4) {
-						if (o_name == null) { in.close(); return; } // Didn't receive sender name
-						if (GuildMechanics.getGuild(o_name).equals(g_name)) {
-							GuildMechanics.setGuildRank(o_name, 2);
-						}
-						GuildMechanics.setGuildRank(p_name, rank);
+						if (o_name == "") { in.close(); return; } // Didn't receive sender name
+						GuildMechanics.downloadGuildDataSQL(g_name, false);
 						if (Bukkit.getPlayer(p_name) != null) {
 							Player promoted = Bukkit.getPlayer(p_name);
 							promoted.sendMessage(ChatColor.GRAY + "You have been promoted to " + ChatColor.AQUA  + "" + ChatColor.BOLD + "GUILD LEADER" + ChatColor.GRAY + " of " + ChatColor.AQUA + "" + ChatColor.UNDERLINE + GuildMechanics.getGuild(p_name));

@@ -36,14 +36,10 @@ public class CommandGuildSetLeader implements CommandExecutor {
 		if (args.length > 1) {
 			if (pl.isOp() || PermissionMechanics.isGM(pl.getName())) {
 				Player targ = Bukkit.getPlayer(args[0]);
-				if (targ == null) {
-					pl.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + args[0] + ChatColor.RED + " is offline.");
-					return true;
-				}
 				String g_name = "";
-				String p_name = targ.getName();
+				String p_name = targ != null ? targ.getName() : args[0];
 				for(String s : args) g_name += s + " ";
-				g_name = g_name.substring(p_name.length(), g_name.length() - 1);
+				g_name = g_name.substring(args[0].length(), g_name.length() - 1);
 				g_name = g_name.substring(1, g_name.length());
 				if (GuildMechanics.guild_map.containsKey(g_name)) {
 					GuildMechanics.promoteToOwnerInSpecificGuild(pl, p_name, g_name);
