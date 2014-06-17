@@ -1207,6 +1207,11 @@ public class ShopMechanics implements Listener {
 		final Player p = e.getPlayer();
 		if(!(p.isSneaking())) { return; }
 
+		if (shop_shutdown) {
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " open a new shop while Shards are preparing to download a new snapshot.");
+			return;
+		}
+ 		
 		if(openning_shop.contains(p.getName())) {
 			if(isShopOwner(p, e.getClickedBlock())) {
 				//TODO: Left click an opening shop = remove it instantly.

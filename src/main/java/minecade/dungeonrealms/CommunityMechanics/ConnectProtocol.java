@@ -143,6 +143,13 @@ public class ConnectProtocol implements Runnable {
 					Hive.sendTimeout(30);
 					Thread.sleep(20000);
 					Hive.sendTimeout(10);
+					ShopMechanics.shop_shutdown = true;
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							ShopMechanics.removeAllShops();
+						}
+					}.runTaskLater(Main.plugin, 1L);
 					MoneyMechanics.no_bank_use = true;
 					Thread.sleep(5000);
 					Hive.sendTimeout(5);
@@ -156,23 +163,15 @@ public class ConnectProtocol implements Runnable {
 					Hive.sendTimeout(1);
 					Thread.sleep(1000);
 					Hive.get_payload_spoof = true; // This will kick everyone.
-					Thread.sleep(1000);
+					Thread.sleep(2000); // Seven seconds after removal of shops, upload collection bin.
+					ShopMechanics.uploadAllCollectionBinData();
+					
 					int timeout = 30;
 					while ((ShopMechanics.need_sql_update.size() > 0 || Hive.player_count > 0) && timeout > 0) {
 						timeout--;
 						Thread.sleep(1000);
 					}
-
-					ShopMechanics.shop_shutdown = true;
-					new BukkitRunnable() {
-						@Override
-						public void run() {
-							ShopMechanics.removeAllShops();
-						}
-					}.runTaskLater(Main.plugin, 1L);
-					Main.d("Pausing for 7 seconds.");
-					Thread.sleep(7000);
-					ShopMechanics.uploadAllCollectionBinData();
+					
 					Main.d("Pausing for 10 seconds.");
 					Thread.sleep(10000);
 					timeout = 0;
@@ -933,7 +932,7 @@ public class ConnectProtocol implements Runnable {
 					}
 
 				}
-				
+
 				if (inputLine.startsWith("[gupdate]")) {
 					String g_name = inputLine.substring(inputLine.indexOf("]") +  1, inputLine.length());
 					if (g_name.endsWith(" ")) g_name = g_name.substring(0, g_name.length() -1);
@@ -944,7 +943,7 @@ public class ConnectProtocol implements Runnable {
 						GuildMechanics.updateGuildTabList(pl);
 					}
 				}
-				
+
 				// TODO: Add /shard to character journal
 				// TODO: Fix all the inconsistancies with buddy login/logout
 				// Players should ONLY get messages about a player logging
