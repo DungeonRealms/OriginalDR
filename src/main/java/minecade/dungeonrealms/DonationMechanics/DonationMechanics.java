@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandAddEC;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandAddPet;
+import minecade.dungeonrealms.DonationMechanics.commands.CommandAddSubDaysToAll;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandGiveSub;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandGiveSubLife;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandGiveSubPlus;
@@ -65,6 +66,7 @@ public class DonationMechanics implements Listener {
 		Main.plugin.getCommand("removesub").setExecutor(new CommandRemoveSub());
 		Main.plugin.getCommand("removesubplus").setExecutor(new CommandRemoveSubPlus());
 		Main.plugin.getCommand("rewardsublife").setExecutor(new CommandRewardSubLife());
+		Main.plugin.getCommand("addsubdaystoall").setExecutor(new CommandAddSubDaysToAll());
 		
 		RankThread = new RankThread();
 		RankThread.start();
