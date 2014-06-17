@@ -945,8 +945,8 @@ public class RealmMechanics implements Listener {
         mat_shop_3.setItem(28, new ItemStack(Material.STAINED_GLASS, 6, (short) 15));
         mat_shop_3.setItem(29, new ItemStack(Material.PACKED_ICE, 4, (short) 0));
         mat_shop_3.setItem(30, new ItemStack(Material.getMaterial(3), 8, (short) 2));
-        // mat_shop_3.setItem(31, new ItemStack(Material.PISTON_BASE, 64, (short)80));
-        // mat_shop_3.setItem(32, new ItemStack(Material.PISTON_STICKY_BASE, 64, (short)120));
+        mat_shop_3.setItem(31, new ItemStack(Material.PISTON_BASE, 64, (short)80));
+        mat_shop_3.setItem(32, new ItemStack(Material.PISTON_STICKY_BASE, 64, (short)120));
         // mat_shop_3.setItem(8, new ItemStack(Material.COAL_ORE, 10, (short)0));
         // mat_shop_3.setItem(9, new ItemStack(Material.IRON_ORE, 15, (short)0));
         // mat_shop_3.setItem(10, new ItemStack(Material.EMERALD_ORE, 20, (short)0));
