@@ -208,6 +208,13 @@ public class ConnectProtocol implements Runnable {
 					MoneyMechanics.no_bank_use = true;
 					Thread.sleep(5000);
 					Hive.sendTimeout(5);
+					ShopMechanics.shop_shutdown = true;
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							ShopMechanics.removeAllShops();
+						}
+					}.runTaskLater(Main.plugin, 1L);
 					Thread.sleep(1000);
 					Hive.sendTimeout(4);
 					Thread.sleep(1000);
@@ -218,24 +225,16 @@ public class ConnectProtocol implements Runnable {
 					Hive.sendTimeout(1);
 					Thread.sleep(1000);
 					Hive.get_payload_spoof = true; // This will kick everyone.
+					Thread.sleep(2000);
+					ShopMechanics.uploadAllCollectionBinData();
 					Thread.sleep(1000);
+					
 					int timeout = 30;
 					while ((ShopMechanics.need_sql_update.size() > 0 || Hive.player_count > 0) && timeout > 0) {
 						timeout--;
 						Thread.sleep(1000);
 					}
 
-					ShopMechanics.shop_shutdown = true;
-					new BukkitRunnable() {
-						@Override
-						public void run() {
-							ShopMechanics.removeAllShops();
-						}
-					}.runTaskLater(Main.plugin, 1L);
-					// Sleep 1 second
-					Thread.sleep(5000);
-					ShopMechanics.uploadAllCollectionBinData();
-					Thread.sleep(5000);
 					timeout = 0;
 					while (!ShopMechanics.all_collection_bins_uploaded && timeout < 100 && Hive.sql_query.size() > 0) {
 						// Not done uploading collection bins.
