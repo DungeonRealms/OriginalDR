@@ -9,8 +9,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.avaje.ebeaninternal.server.deploy.generatedproperty.GeneratedInsertDate;
-
 @SuppressWarnings("deprecation")
 public class CommandGPromote implements CommandExecutor {
 
@@ -54,8 +52,12 @@ public class CommandGPromote implements CommandExecutor {
 			return true;
 		}
 
-		if (GuildMechanics.isGuildCoOwner(p.getName()) || GuildMechanics.isGuildLeader(p.getName()) && !(GuildMechanics.isGuildOfficer(p_name_2promote) && GuildMechanics.isGuildCoOwner(p_name_2promote))) {
-			GuildMechanics.promoteToOfficer(p_name_2promote, p);
+		if (!GuildMechanics.isGuildOfficer(p_name_2promote) && !GuildMechanics.isGuildCoOwner(p_name_2promote)) {
+			if (GuildMechanics.getRankNum(p.getName()) >= 3) {
+				GuildMechanics.promoteToOfficer(p_name_2promote, p);
+				return true;
+			}
+			p.sendMessage(ChatColor.RED + "You can't promote the guild owner.");
 			return true;
 		}
 
@@ -64,11 +66,11 @@ public class CommandGPromote implements CommandExecutor {
 			return true;
 		}
 
-		if (GuildMechanics.getGuildCoOwners(GuildMechanics.getGuild(p.getName())).size() == 2 && GuildMechanics.isGuildLeader(p.getName())) {
+		if (GuildMechanics.getTotalCoOwnersCount(GuildMechanics.getGuild(p.getName())) == 2 && GuildMechanics.isGuildLeader(p.getName())) {
 			p.sendMessage(ChatColor.RED + "You've already set 2 guild co-owners, demote one of them to set another!");
 			return true;
 		}
-		
+
 		if (GuildMechanics.isGuildLeader(p.getName()) && GuildMechanics.isGuildOfficer(p_name_2promote)) {
 			GuildMechanics.promoteToCoOwner(p_name_2promote, p);
 		}
