@@ -29,18 +29,20 @@ public class CommandClearsShops implements CommandExecutor {
 		if (!ShopMechanics.inverse_shop_owners.isEmpty()) {
 			ShopMechanics.saveOpenShopsToCollBin();
 			if (args.length == 1 && args[0].equalsIgnoreCase("stdb")) { // SaveToDatabase and re-download to simulate shutdown/reboot
-				ShopMechanics.uploadAllCollectionBinData();
-				while (!ShopMechanics.all_collection_bins_uploaded) {
-					ShopMechanics.uploadAllCollectionBinData();
-				}
+				new BukkitRunnable() {
+					public void run() {
+						ShopMechanics.uploadAllCollectionBinData();
+					}
+				}.runTaskLater(Main.plugin, 20L * 5);
+				
 				new BukkitRunnable() {
 					public void run() {
 						for (Player p : Bukkit.getOnlinePlayers()) {
-							ShopMechanics.downloadShopDatabaseData(p.getName());
+							ShopMechanics.need_sql_update.add(p.getName());
 							Main.log.info("Loaded " + p.getName() + "'s shop data.");
 						}
 					}
-				}.runTaskLater(Main.plugin, 20L * 6); // Six seconds later
+				}.runTaskLater(Main.plugin, 20L * 10);
 			}
 			pl.sendMessage(ChatColor.GREEN + "Check console for more information.");
 		}
