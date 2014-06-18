@@ -26,9 +26,9 @@ public class CommandClearsShops implements CommandExecutor {
 		if (args.length > 1) return true;
 
 		if (!ShopMechanics.inverse_shop_owners.isEmpty()) {
-
+			ShopMechanics.saveOpenShopsToCollBin();
 			if (args.length == 1 && args[0].equalsIgnoreCase("stdb")) { // SaveToDatabase and re-download to simulate shutdown/reboot
-				ShopMechanics.saveOpenShopsToCollBin();
+				ShopMechanics.uploadAllCollectionBinData();
 				new BukkitRunnable() {
 					public void run() {
 						for (String p_name : ShopMechanics.inverse_shop_owners.keySet()) {
