@@ -286,7 +286,7 @@ public class EcashMechanics implements Listener {
          * Material m = data.getValue(); loc.getBlock().setType(m); gold_curse_blocks_timing.remove(loc); gold_curse_blocks.remove(loc); } } } }, 20 * 20L, 3L);
          */
 
-        Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
             public void run() {
                 for (String s : flaming_armor) {
                     if (Bukkit.getServer().getPlayer(s) != null) {
@@ -302,7 +302,7 @@ public class EcashMechanics implements Listener {
             }
         }, 10 * 20L, 5L);
 
-        Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
             public void run() {
                 for (String s : demonic_aura) {
                     try {

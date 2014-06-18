@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 import me.confuser.barapi.BarAPI;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
-import minecade.dungeonrealms.ChatMechanics.ChatMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.FatigueMechanics.FatigueMechanics;
 import minecade.dungeonrealms.Hive.Hive;
@@ -143,7 +142,7 @@ public class HealthMechanics implements Listener {
 		//objective.setDisplayName("§c" + "❤");
 
 		// "in combat" Handler, removes players from the in_combat list after 'HealthRegenCombatDelay' is over.
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
 			public void run() {
 				if(!in_combat.isEmpty()) {
 					Map<String, Long> hmash = new HashMap<String, Long>(in_combat);

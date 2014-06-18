@@ -70,7 +70,7 @@ public class RepairMechanics implements Listener {
 		instance = this;
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
 			public void run() {
 				for(Entry<Player, Integer> data : repair_state.entrySet()) {
 					int step = data.getValue();

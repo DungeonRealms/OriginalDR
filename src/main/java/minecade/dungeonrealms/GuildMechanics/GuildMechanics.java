@@ -202,7 +202,7 @@ public class GuildMechanics implements Listener {
 		Main.plugin.getCommand("gsetrank").setExecutor(new CommandGSetRank());
 		
 		// Player movement event for guild creation.
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
 			public void run() {
 				for(String s : guild_creation_npc_location.keySet()) {
 					if(Bukkit.getPlayer(s) != null) {
@@ -222,7 +222,7 @@ public class GuildMechanics implements Listener {
 		}, 10 * 20L, 1 * 20L);
 		
 		// Handles guild invite expiration/timeout.
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
 			public void run() {
 				for(Entry<String, Long> data : guild_invite_time.entrySet()) {
 					String p_name = data.getKey();
@@ -248,7 +248,7 @@ public class GuildMechanics implements Listener {
 		}, 5 * 20L, 20L);
 		
 		// Refreshes Tab API menu thing.
-		Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
 			public void run() {
 				for(Player pl : Bukkit.getServer().getOnlinePlayers()) {
 					if(Hive.login_time.containsKey(pl.getName()) && (System.currentTimeMillis() - Hive.login_time.get(pl.getName()) > 5000)) {

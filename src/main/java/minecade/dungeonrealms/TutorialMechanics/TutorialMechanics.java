@@ -115,7 +115,7 @@ public class TutorialMechanics implements Listener {
 			}
 		}, 20 * 20L);
 		
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
 			public void run() {
 				for(Player pl : Main.plugin.getServer().getOnlinePlayers()) {
 					if(onTutorialIsland(pl)) {

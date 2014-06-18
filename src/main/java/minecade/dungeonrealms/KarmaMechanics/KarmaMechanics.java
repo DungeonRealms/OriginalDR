@@ -86,7 +86,7 @@ public class KarmaMechanics implements Listener {
 		evil_spawns.add(new Location(Bukkit.getWorlds().get(0), -419, 61, 830));
 
 		// Handles Async movement.
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
 			public void run() {
 				for(Player p : Main.plugin.getServer().getOnlinePlayers()) {
 					if(p == null || p.getPlayerListName().equalsIgnoreCase("")) {
@@ -158,7 +158,7 @@ public class KarmaMechanics implements Listener {
 		}, 5 * 20L, 20L);
 
 		// Handles ticking from Evil -> Neutral -> Good
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
 			public void run() {
 				List<String> to_remove = new ArrayList<String>();
 

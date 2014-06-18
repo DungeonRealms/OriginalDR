@@ -189,8 +189,16 @@ public class ShopMechanics implements Listener {
 		store_backup = new BackupStoreData();
 		store_backup.runTaskTimerAsynchronously(Main.plugin, 100L, 20L * 5);
 
+		Main.plugin.getServer().getScheduler().runTaskTimer(Main.plugin, new Runnable() {
+			@Override
+			public void run() {
+				if (shop_shutdown) {
+					log.info(">> Shop shutdown initialised.");
+				}
+			}
+		}, 20L * 10, 20L * 5); 
 		
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
 			public void run() {
 				ConnectionPool.refresh = true;
 			}

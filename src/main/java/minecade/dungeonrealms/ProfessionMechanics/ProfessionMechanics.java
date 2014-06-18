@@ -364,7 +364,7 @@ public class ProfessionMechanics implements Listener {
          * // It's an ore, we may be slowing them down. last_swing.put(pl.getName(), System.currentTimeMillis()); } } } } } }, 20 * 20L, 1L);
          */
 
-        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+        Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
             public void run() {
                 for (Entry<Location, Long> data : ore_respawn.entrySet()) {
                     Location loc = data.getKey();
@@ -404,7 +404,7 @@ public class ProfessionMechanics implements Listener {
             }
         }, 5 * 20L, 2 * 20L);
 
-        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+        Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
             public void run() {
                 for (Entry<String, Long> data : last_swing.entrySet()) {
                     String p_name = data.getKey();
@@ -432,7 +432,7 @@ public class ProfessionMechanics implements Listener {
             }
         }, 10 * 20L, 5L);
 
-        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+        Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
             public void run() {
                 int chance = splashCounter * splashCounter;
                 if (splashCounter == 1)

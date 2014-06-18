@@ -92,7 +92,7 @@ public class ChatMechanics implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
         // Inform muted players when their mutes expire.
-        Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
             public void run() {
                 for (Entry<String, Long> data : mute_list.entrySet()) {
                     String p_name = data.getKey();
@@ -114,7 +114,7 @@ public class ChatMechanics implements Listener {
         }, 60 * 20L, 60 * 20L);
 
         // Dynamnically change the global chat delay based on population
-        Bukkit.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
             public void run() {
                 if (Hive.player_count <= 20) {
                     GChat_Delay = 2;

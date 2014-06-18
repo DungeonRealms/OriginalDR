@@ -412,7 +412,7 @@ public class MountMechanics implements Listener {
             }
         }, 5 * 20L, 20L);
 
-        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+        Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
             public void run() {
                 for (Entity mount : inv_mount_map.keySet()) {
                     if (Bukkit.getPlayer(inv_mount_map.get(mount)) != null) {
@@ -445,7 +445,7 @@ public class MountMechanics implements Listener {
             }
         }, 5 * 20L, 1L);
 
-        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+        Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
             public void run() {
                 for (Entry<Entity, String> data : inv_mount_map.entrySet()) {
                     Entity mount = data.getKey();

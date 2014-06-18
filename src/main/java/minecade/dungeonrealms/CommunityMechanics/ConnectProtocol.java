@@ -149,7 +149,7 @@ public class ConnectProtocol implements Runnable {
 						public void run() {
 							ShopMechanics.removeAllShops();
 						}
-					}.runTaskLater(Main.plugin, 1L);
+					}.runTaskLater(Main.plugin, 20L);
 					MoneyMechanics.no_bank_use = true;
 					Thread.sleep(5000);
 					Hive.sendTimeout(5);
@@ -205,16 +205,16 @@ public class ConnectProtocol implements Runnable {
 					Hive.sendTimeout(30);
 					Thread.sleep(20000);
 					Hive.sendTimeout(10);
-					MoneyMechanics.no_bank_use = true;
-					Thread.sleep(5000);
-					Hive.sendTimeout(5);
 					ShopMechanics.shop_shutdown = true;
 					new BukkitRunnable() {
 						@Override
 						public void run() {
 							ShopMechanics.removeAllShops();
 						}
-					}.runTaskLater(Main.plugin, 1L);
+					}.runTaskLater(Main.plugin, 20L);
+					MoneyMechanics.no_bank_use = true;
+					Thread.sleep(5000);
+					Hive.sendTimeout(5);
 					Thread.sleep(1000);
 					Hive.sendTimeout(4);
 					Thread.sleep(1000);
@@ -225,9 +225,8 @@ public class ConnectProtocol implements Runnable {
 					Hive.sendTimeout(1);
 					Thread.sleep(1000);
 					Hive.get_payload_spoof = true; // This will kick everyone.
-					Thread.sleep(2000);
-					ShopMechanics.uploadAllCollectionBinData();
-					Thread.sleep(1000);
+					Thread.sleep(2000); // Seven seconds after removal of shops, upload collection bin.
+					ShopMechanics.uploadAllCollectionBinData();;
 					
 					int timeout = 30;
 					while ((ShopMechanics.need_sql_update.size() > 0 || Hive.player_count > 0) && timeout > 0) {

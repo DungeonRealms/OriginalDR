@@ -174,7 +174,7 @@ public class RestrictionMechanics implements Listener {
             }
         }, 15 * 20L, 20L);
 
-        Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+        Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
             public void run() {
                 for (Player p : Main.plugin.getServer().getOnlinePlayers()) {
                     if (p == null || !(Hive.login_time.containsKey(p.getName()))) {

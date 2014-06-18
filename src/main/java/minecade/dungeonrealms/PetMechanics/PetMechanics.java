@@ -327,7 +327,7 @@ public class PetMechanics implements Listener {
 			}
 		}, 10 * 20L, 8 * 20L);
 		
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
 			public void run() {
 				for(Entry<Entity, List<Entity>> data : baby_chick_map.entrySet()) {
 					Entity mother = data.getKey();
@@ -354,7 +354,7 @@ public class PetMechanics implements Listener {
 			}
 		}, 8 * 20L, 15L);
 		
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
 			public void run() {
 				//HashMap<Entity, String> to_update = new HashMap<Entity, String>();
 				//List<Entity> to_remove = new ArrayList<Entity>();

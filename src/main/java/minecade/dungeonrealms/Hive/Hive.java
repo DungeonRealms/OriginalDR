@@ -437,7 +437,7 @@ public class Hive implements Listener {
 			}
 		}, 15 * 20L);
 
-		Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
+		Main.plugin.getServer().getScheduler().runTaskTimerAsynchronously(Main.plugin, new Runnable() {
 			public void run() {
 				updateServerPopulations();
 			}
