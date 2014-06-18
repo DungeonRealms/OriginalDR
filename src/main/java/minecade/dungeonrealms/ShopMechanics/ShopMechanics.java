@@ -752,12 +752,16 @@ public class ShopMechanics implements Listener {
 
 	public static void saveOpenShopsToCollBin() {
 		int shop_count = 0;
-		for (String p : inverse_shop_owners.keySet()) {
+		Iterator<Map.Entry<String, Block>> iter = inverse_shop_owners.entrySet().iterator();
+		Map.Entry<String, Block> entry;
+		while (iter.hasNext()) {
+			entry = iter.next();
+			String p = entry.getKey();
 			try {
 				final Block b1 = inverse_shop_owners.get(p);
 				final Block b2 = chest_partners.get(b1);
 				Player s_owner = Bukkit.getPlayer(p);
-				
+
 				if(shop_stock.containsKey(p)) {
 					Inventory i = shop_stock.get(p);
 					List<ItemStack> li = new ArrayList<ItemStack>();
@@ -780,7 +784,7 @@ public class ShopMechanics implements Listener {
 						}
 					}
 				}
-				
+
 				final String shop_owner_n = p;
 				b1.setType(Material.AIR);
 				b2.setType(Material.AIR);
@@ -822,6 +826,7 @@ public class ShopMechanics implements Listener {
 				return;
 			}
 		}
+
 		log.info("[ShopMechanics] >> Uploaded/Removed " + shop_count + " shops before shutdown.");
 	}
 

@@ -34,6 +34,7 @@ public class CommandClearsShops implements CommandExecutor {
 					public void run() {
 						for (Player p : Bukkit.getOnlinePlayers()) {
 							ShopMechanics.downloadShopDatabaseData(p.getName());
+							Main.log.info("Loaded " + p.getName() + "'s shop data.");
 						}
 					}
 				}.runTaskLater(Main.plugin, 20L * 6); // Six seconds later
