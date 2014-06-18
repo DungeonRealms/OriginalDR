@@ -4,6 +4,7 @@ import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,8 +32,8 @@ public class CommandClearsShops implements CommandExecutor {
 				ShopMechanics.uploadAllCollectionBinData();
 				new BukkitRunnable() {
 					public void run() {
-						for (String p_name : ShopMechanics.inverse_shop_owners.keySet()) {
-							ShopMechanics.downloadShopDatabaseData(p_name);
+						for (Player p : Bukkit.getOnlinePlayers()) {
+							ShopMechanics.downloadShopDatabaseData(p.getName());
 						}
 					}
 				}.runTaskLater(Main.plugin, 20L * 6); // Six seconds later

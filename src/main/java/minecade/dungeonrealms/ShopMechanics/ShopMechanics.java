@@ -814,7 +814,7 @@ public class ShopMechanics implements Listener {
 				asyncSetShopServerSQL(shop_owner_n, -1);
 
 				if(!(need_sql_update.contains(p))) {
-					need_sql_update.add(p); // Update SQL after an item is sold from the shop.
+					need_sql_update.add(p);
 				}
 				shop_count++;
 			} catch(Exception err) {
