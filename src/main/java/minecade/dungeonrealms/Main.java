@@ -328,4 +328,184 @@ public class Main extends JavaPlugin implements Listener {
         return false;
     }
 
+	public static AchievementMechanics getAchievementMechanics() {
+		return achievementMechanics;
+	}
+
+	public static BossMechanics getBossMechanics() {
+		return bossMechanics;
+	}
+
+	public static ChatMechanics getChatMechanics() {
+		return chatMechanics;
+	}
+
+	public static CommunityMechanics getCommunityMechanics() {
+		return communityMechanics;
+	}
+
+	public static DonationMechanics getDonationMechanics() {
+		return donationMechanics;
+	}
+
+	public static DuelMechanics getDuelMechanics() {
+		return duelMechanics;
+	}
+
+	public static EcashMechanics getEcashMechanics() {
+		return ecashMechanics;
+	}
+
+	public static EnchantMechanics getEnchantMechanics() {
+		return enchantMechanics;
+	}
+
+	public static FatigueMechanics getFatigueMechanics() {
+		return fatigueMechanics;
+	}
+
+	public static GuildMechanics getGuildMechanics() {
+		return guildMechanics;
+	}
+
+	public static HealthMechanics getHealthMechanics() {
+		return healthMechanics;
+	}
+
+	public static InstanceMechanics getInstanceMechanics() {
+		return instanceMechanics;
+	}
+
+	public static ItemMechanics getItemMechanics() {
+		return itemMechanics;
+	}
+
+	public static KarmaMechanics getKarmaMechanics() {
+		return karmaMechanics;
+	}
+
+	public static LootMechanics getLootMechanics() {
+		return lootMechanics;
+	}
+
+	public static MerchantMechanics getMerchantMechanics() {
+		return merchantMechanics;
+	}
+
+	public static ModerationMechanics getModerationMechanics() {
+		return moderationMechanics;
+	}
+
+	public static MoneyMechanics getMoneyMechanics() {
+		return moneyMechanics;
+	}
+
+	public static MonsterMechanics getMonsterMechanics() {
+		return monsterMechanics;
+	}
+
+	public static MountMechanics getMountMechanics() {
+		return mountMechanics;
+	}
+
+	public static PartyMechanics getPartyMechanics() {
+		return partyMechanics;
+	}
+
+	public static PermissionMechanics getPermissionMechanics() {
+		return permissionMechanics;
+	}
+
+	public static PetMechanics getPetMechanics() {
+		return petMechanics;
+	}
+
+	public static PowerupMechanics getPowerupMechanics() {
+		return powerupMechanics;
+	}
+
+	public static ProfessionMechanics getProfessionMechanics() {
+		return professionMechanics;
+	}
+
+	public static RealmMechanics getRealmMechanics() {
+		return realmMechanics;
+	}
+
+	public static RecordMechanics getRecordMechanics() {
+		return recordMechanics;
+	}
+
+	public static RepairMechanics getRepairMechanics() {
+		return repairMechanics;
+	}
+
+	public static RestrictionMechanics getRestrictionMechanics() {
+		return restrictionMechanics;
+	}
+
+	public static ShopMechanics getShopMechanics() {
+		return shopMechanics;
+	}
+
+	public static SpawnMechanics getSpawnMechanics() {
+		return spawnMechanics;
+	}
+
+	public static SubscriberMechanics getSubscriberMechanics() {
+		return subscriberMechanics;
+	}
+
+	public static TeleportationMechanics getTeleportationMechanics() {
+		return teleportationMechanics;
+	}
+
+	public static TradeMechanics getTradeMechanics() {
+		return tradeMechanics;
+	}
+
+	public static TutorialMechanics getTutorialMechanics() {
+		return tutorialMechanics;
+	}
+
+	public static WeatherMechanics getWeatherMechanics() {
+		return weatherMechanics;
+	}
+
+	public static HearthstoneMechanics getHearthstoneMechanics() {
+		return hearthstoneMechanics;
+	}
+
+	public static LevelMechanics getLevelMechanics() {
+		return levelMechanics;
+	}
+
+	public static Hive getHive() {
+		return hive;
+	}
+
+	public static HiveServer getHiveServer() {
+		return hiveServer;
+	}
+
+	public static BetaNPC getBetaNPC() {
+		return betaNPC;
+	}
+
+	public static Main getPlugin() {
+		return plugin;
+	}
+
+	public static Logger getLog() {
+		return log;
+	}
+
+	public static List<String> getDevs() {
+		return devs;
+	}
+
+	public static List<String> getMasters() {
+		return masters;
+	}
+
 }
