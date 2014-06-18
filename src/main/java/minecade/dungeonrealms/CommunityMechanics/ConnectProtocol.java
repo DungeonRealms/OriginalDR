@@ -147,7 +147,7 @@ public class ConnectProtocol implements Runnable {
 					new BukkitRunnable() {
 						@Override
 						public void run() {
-							ShopMechanics.removeAllShops();
+							ShopMechanics.saveOpenShopsToCollBin();
 						}
 					}.runTaskLater(Main.plugin, 20L);
 					MoneyMechanics.no_bank_use = true;
@@ -209,7 +209,7 @@ public class ConnectProtocol implements Runnable {
 					new BukkitRunnable() {
 						@Override
 						public void run() {
-							ShopMechanics.removeAllShops();
+							ShopMechanics.saveOpenShopsToCollBin();
 						}
 					}.runTaskLater(Main.plugin, 20L);
 					MoneyMechanics.no_bank_use = true;

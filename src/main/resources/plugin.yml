@@ -432,6 +432,9 @@ commands:
   shop:
     description: Root command.
     usage: /<command>
+  clearshops:
+    description: Clear all open shops and save them
+    usage: /<command>
   addspawn:
     description: Registers a new spawn point.
     usage: /<command>
