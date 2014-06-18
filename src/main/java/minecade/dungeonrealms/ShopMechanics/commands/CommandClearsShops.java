@@ -22,18 +22,20 @@ public class CommandClearsShops implements CommandExecutor {
 			pl.sendMessage(ChatColor.RED + "You don't have the required permission for this command.");
 			return true;
 		}
-		
+
 		if (args.length > 1) return true;
 
 		if (!ShopMechanics.inverse_shop_owners.isEmpty()) {
-			ShopMechanics.saveOpenShopsToCollBin();
-			if (args[0].equalsIgnoreCase("stdb")) { // SaveToDatabase
+
+			if (args.length == 1 && args[0].equalsIgnoreCase("stdb")) { // SaveToDatabase and re-download to simulate shutdown/reboot
+				ShopMechanics.saveOpenShopsToCollBin();
 				new BukkitRunnable() {
 					public void run() {
-						ShopMechanics.uploadAllCollectionBinData(); // Lets save it to database as well. 
-						// (Note you wont be able to actually grab it from the bin directly after without downloading data from db.)
+						for (String p_name : ShopMechanics.inverse_shop_owners.keySet()) {
+							ShopMechanics.downloadShopDatabaseData(p_name);
+						}
 					}
-				}.runTaskLater(Main.plugin, 20L * 2);
+				}.runTaskLater(Main.plugin, 20L * 6); // Six seconds later
 			}
 			pl.sendMessage(ChatColor.GREEN + "Check console for more information.");
 		}
