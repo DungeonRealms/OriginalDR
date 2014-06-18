@@ -752,7 +752,7 @@ public class ShopMechanics implements Listener {
 
 	public static void saveOpenShopsToCollBin() {
 		int shop_count = 0;
-		Iterator<Map.Entry<String, Block>> iter = inverse_shop_owners.entrySet().iterator();
+		Iterator<Map.Entry<String, Block>> iter = new HashMap<String, Block>(inverse_shop_owners).entrySet().iterator(); // Probably not the best way to do this, but w/e.
 		Map.Entry<String, Block> entry;
 		while (iter.hasNext()) {
 			entry = iter.next();

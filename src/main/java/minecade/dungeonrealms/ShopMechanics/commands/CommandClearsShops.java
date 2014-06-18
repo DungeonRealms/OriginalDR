@@ -30,6 +30,9 @@ public class CommandClearsShops implements CommandExecutor {
 			ShopMechanics.saveOpenShopsToCollBin();
 			if (args.length == 1 && args[0].equalsIgnoreCase("stdb")) { // SaveToDatabase and re-download to simulate shutdown/reboot
 				ShopMechanics.uploadAllCollectionBinData();
+				while (!ShopMechanics.all_collection_bins_uploaded) {
+					ShopMechanics.uploadAllCollectionBinData();
+				}
 				new BukkitRunnable() {
 					public void run() {
 						for (Player p : Bukkit.getOnlinePlayers()) {
