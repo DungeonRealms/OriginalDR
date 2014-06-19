@@ -30,7 +30,7 @@ public class Utils {
     
     public static boolean isBeta(){
     	int this_server_num = Integer.parseInt(Bukkit.getMotd().split("-")[1].split(" ")[0]);
-		if(this_server_num >= 100 && this_server_num <= 110) return true;
+		if(this_server_num >= 99 && this_server_num <= 110) return true;
 		return false;
     }
     

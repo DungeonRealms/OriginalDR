@@ -1,11 +1,22 @@
 package minecade.dungeonrealms.LevelMechanics;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.ConfirmItem;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.DexterityItem;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.EmptySlot;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.IntelligenceItem;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.StatsGUI;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.StrengthItem;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.VitalityItem;
 import minecade.dungeonrealms.LevelMechanics.commands.CommandAddXP;
+import minecade.dungeonrealms.LevelMechanics.commands.CommandStats;
 import minecade.dungeonrealms.MonsterMechanics.Hologram;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
 import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
@@ -24,10 +35,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class LevelMechanics implements Listener {
+	
+	private HashMap<String, Integer> freeStatPoints = new HashMap<String, Integer>();
+	public final static String FREE_STAT_NOTICE = ChatColor.GREEN + "You have " + ChatColor.BOLD + " free " + ChatColor.GREEN
+			+ " stat points!  Type /stats to allocate them.";
 
     // Player name, PlayerLevel data
     public LevelMechanics(){
@@ -38,11 +54,44 @@ public class LevelMechanics implements Listener {
                 }
             }
         }.runTaskTimer(Main.plugin, 100, 10 * 20);
+        new BukkitRunnable() {
+        	@SuppressWarnings("deprecation")
+			public void run() {
+        		for (Entry<String, Integer> entry : freeStatPoints.entrySet()) {
+        			String pName = entry.getKey();
+        			Player player = Bukkit.getPlayer(pName);
+        			
+        			if (player != null) {
+        				entry.setValue(entry.getValue() + 1);
+        				if (entry.getValue() == 180) {
+        					player.sendMessage(FREE_STAT_NOTICE);
+        				}
+        			}
+        			else {
+        				continue;
+        			}
+        			
+        		}
+        	}
+        }.runTaskTimer(Main.plugin, 0, 1 * 20);
     }
 
     public void onEnable(){
         Main.plugin.getCommand("addxp").setExecutor(new CommandAddXP());
+        Main.plugin.getCommand("stats").setExecutor(new CommandStats());
+        
+        // register items for stats GUI
+        new StrengthItem().registerItem();
+        new DexterityItem().registerItem();
+        new IntelligenceItem().registerItem();
+        new VitalityItem().registerItem();
+        new ConfirmItem().registerItem();
+        new EmptySlot().registerItem();
+        
+        // register menu for stats GUI
+        new StatsGUI();
     }
+    
     @EventHandler
     public void onAsyncLogin(AsyncPlayerPreLoginEvent e) {
         new PlayerLevel(e.getName(), false);
@@ -167,6 +216,7 @@ public class LevelMechanics implements Listener {
         }
         return 1;
     }
+    
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent e) {
         PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().setPlayer(e.getPlayer());
@@ -176,7 +226,10 @@ public class LevelMechanics implements Listener {
                 PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().updateScoreboardLevel();
             }
         }.runTaskLater(Main.plugin, 20 * 1);
-
+    }
+    
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
     }
 
     public static void addXP(Player p, int xp) {
@@ -256,4 +309,20 @@ public class LevelMechanics implements Listener {
         }
         return PlayerManager.getPlayerModel(p_name).getPlayerLevel().getLevel();
     }
+
+    /**
+     * Returns a list of the players with free stat points on this shard.
+     */
+	public List<String> getPlayersWithFreeStatPoints() {
+		return new ArrayList<String>(freeStatPoints.keySet());
+	}
+
+	/**
+	 * Add a player with free stats to the map so they will be notified every three minutes.
+	 * @param pname - the player's name
+	 */
+	public void addPlayerWithFreeStatPoints(String pname) {
+		freeStatPoints.put(pname, 0);
+	}
+	
 }

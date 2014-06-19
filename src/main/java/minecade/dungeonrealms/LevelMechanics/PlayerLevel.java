@@ -24,14 +24,27 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerLevel {
 
-    Player p;
-    String p_name;
-    int level;
-    int xp;
-    Entity last_mob_gained_from;
+    private Player p;
+    private String p_name;
+    private int level;
+    private int xp;
+    private Entity last_mob_gained_from;
+    private int freePoints;
+    private int strPoints;
+    private int dexPoints;
+    private int vitPoints;
+    private int intPoints;
+    private int tempFreePoints; // free points left before player clicks confirm
+    public final static int POINTS_PER_LEVEL = 5; // points per level.  Change this to change the global value.
 
     public PlayerLevel(String p_name, boolean aSync) {
         this.p_name = p_name;
+        this.freePoints = 0;
+        this.tempFreePoints = 0;
+        this.strPoints = 0;
+        this.dexPoints = 0;
+        this.vitPoints = 0;
+        this.intPoints = 0;
         if (aSync) {
             new BukkitRunnable() {
                 public void run() {
@@ -110,11 +123,17 @@ public class PlayerLevel {
         }
         new BukkitRunnable() {
             public void run() {
-                try (PreparedStatement prest = ConnectionPool.getConnection().prepareStatement(
-                        "UPDATE player_database SET player_level = ?, player_xp = ? WHERE p_name = ?")) {
+				try (PreparedStatement prest = ConnectionPool
+						.getConnection()
+						.prepareStatement(
+								"UPDATE player_database SET player_level = ?, player_xp = ?, allocated_str = ?, allocated_dex = ?, allocated_int = ?, allocated_vit = ? WHERE p_name = ?")) {
                     prest.setInt(1, level);
                     prest.setInt(2, xp);
-                    prest.setString(3, name);
+                    prest.setInt(3, strPoints);
+                    prest.setInt(4, dexPoints);
+                    prest.setInt(5, intPoints);
+                    prest.setInt(6, vitPoints);
+                    prest.setString(7, name);
                     prest.executeUpdate();
                     prest.close();
                 } catch (Exception e) {
@@ -134,10 +153,11 @@ public class PlayerLevel {
             return;
         }
         setLevel(getLevel() + 1);
+        freePoints += POINTS_PER_LEVEL;
         updateScoreboardLevel();
         if(getLevel() == 100){
             CommunityMechanics.sendPacketCrossServer("@level100@" + p_name + ":", -1, true);
-            AchievementMechanics.addAchievement(p_name, "Over Acheiver");
+            AchievementMechanics.addAchievement(p_name, "Overachiever");
             Bukkit.broadcastMessage(ChatColor.AQUA.toString() + ChatColor.BOLD + p_name + ChatColor.WHITE + " has reached level 100!");
         }
         new LogModel(LogType.LEVEL_UP, p_name, new JsonBuilder("level", getLevel()).getJson());
@@ -152,6 +172,8 @@ public class PlayerLevel {
             p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "         " + " LEVEL UP! " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel() - 1)
                     + ChatColor.BOLD + " -> " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel()));
             p.playSound(p.getLocation(), Sound.LEVEL_UP, 0.5F, 1F);
+            p.sendMessage(ChatColor.GREEN + "You have " + ChatColor.BOLD + " free " + ChatColor.GREEN + " stat points!  Type /stats to allocate them.");
+            Main.getLevelMechanics().addPlayerWithFreeStatPoints(p_name);
         }
     }
 
@@ -167,8 +189,11 @@ public class PlayerLevel {
     }
 
     public void loadData() {
-        try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
-                "SELECT player_level, player_xp FROM player_database WHERE p_name = '" + p_name + "'")) {
+		try (PreparedStatement pst = ConnectionPool
+				.getConnection()
+				.prepareStatement(
+						"SELECT player_level, player_xp, allocated_str, allocated_dex, allocated_int, allocated_vit FROM player_database WHERE p_name = '"
+								+ p_name + "'")) {
             ResultSet rs = pst.executeQuery();
             if (!rs.first()) {
                 sendInsertUpdate();
@@ -180,6 +205,11 @@ public class PlayerLevel {
             } else {
                 setLevel(rs.getInt("player_level"));
                 setXP(rs.getInt("player_xp"));
+                setStrPoints(rs.getInt("allocated_str"));
+                setDexPoints(rs.getInt("allocated_dex"));
+                setIntPoints(rs.getInt("allocated_int"));
+                setVitPoints(rs.getInt("allocated_vit"));
+                setFreePoints(level * POINTS_PER_LEVEL - (strPoints + dexPoints + intPoints + vitPoints));
             }
             pst.close();
         } catch (SQLException e) {
@@ -189,9 +219,11 @@ public class PlayerLevel {
     }
 
     public void sendInsertUpdate() {
-        try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
-                "INSERT INTO player_database(p_name, player_level, player_xp) VALUES ('" + p_name + "', 1, 0) ON DUPLICATE KEY UPDATE p_name = '" + p_name
-                        + "'")) {
+		try (PreparedStatement pst = ConnectionPool
+				.getConnection()
+				.prepareStatement(
+						"INSERT INTO player_database(p_name, player_level, player_xp, allocated_str, allocated_dex, allocated_int, allocated_vit) VALUES ('"
+								+ p_name + "', 1, 0, 0, 0, 0, 0) ON DUPLICATE KEY UPDATE p_name = '" + p_name + "'")) {
             pst.executeUpdate();
             pst.close();
         } catch (SQLException e) {
@@ -199,8 +231,27 @@ public class PlayerLevel {
         }
     }
 
-    public void setLevel(int level) {
+    /**
+	 * @return The amount of free stat points the user currently has
+	 */
+	public int getFreePoints() {
+		return freePoints;
+	}
+
+	/**
+	 * @param Set the amount of free stat points for the user
+	 */
+	public void setFreePoints(int freePoints) {
+		this.freePoints = freePoints;
+	}
+
+	public void setLevel(int level) {
         this.level = level;
+        this.freePoints = level * POINTS_PER_LEVEL - (strPoints + dexPoints + intPoints + vitPoints);
+        if (freePoints > 0) {
+        	p.sendMessage(LevelMechanics.FREE_STAT_NOTICE);
+        	Main.getLevelMechanics().addPlayerWithFreeStatPoints(p_name);
+        }
         if (p != null) {
             ScoreboardMechanics.setPlayerLevel(getLevel(), p);
         }
@@ -220,4 +271,44 @@ public class PlayerLevel {
         return xp;
     }
 
+	public int getStrPoints() {
+		return strPoints;
+	}
+
+	public void setStrPoints(int strPoints) {
+		this.strPoints = strPoints;
+	}
+
+	public int getDexPoints() {
+		return dexPoints;
+	}
+
+	public void setDexPoints(int dexPoints) {
+		this.dexPoints = dexPoints;
+	}
+
+	public int getVitPoints() {
+		return vitPoints;
+	}
+
+	public void setVitPoints(int vitPoints) {
+		this.vitPoints = vitPoints;
+	}
+
+	public int getIntPoints() {
+		return intPoints;
+	}
+
+	public void setIntPoints(int intPoints) {
+		this.intPoints = intPoints;
+	}
+
+	public int getTempFreePoints() {
+		return tempFreePoints;
+	}
+
+	public void setTempFreePoints(int tempFreePoints) {
+		this.tempFreePoints = tempFreePoints;
+	}
+    
 }

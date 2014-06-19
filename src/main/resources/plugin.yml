@@ -349,6 +349,9 @@ commands:
   setlevel:
     description: Sets the player givens level.
     usage: /<command>
+  stats:
+    description: Opens the stat allocation GUI.
+    usage: /<command>
   addhearthstone:
     description: Adds a hearthstone spawn point.
     usage: /<command>
