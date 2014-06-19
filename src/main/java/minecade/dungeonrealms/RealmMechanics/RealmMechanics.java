@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -2264,7 +2265,12 @@ public class RealmMechanics implements Listener {
 		final Player p = event.getPlayer();
 
 		if (inRealm(p)) {
-			if (isRealmOwner(p) || build_list.containsKey(p.getWorld().getName()) && build_list.get(p.getWorld().getName()).contains(p.getName())) {
+			List<String> builds = build_list.get(p.getWorld().getName());
+			if (builds == null) 
+				builds = Collections.<String>emptyList();
+			else 
+				builds = new ArrayList<String>(builds);
+			if (isRealmOwner(p) || builds.contains(p.getName())) {
 				return;
 			}
 			Material mat = event.getClickedBlock().getType();
