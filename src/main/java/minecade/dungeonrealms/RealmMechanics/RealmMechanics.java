@@ -1388,20 +1388,6 @@ public class RealmMechanics implements Listener {
 		return false;
 	}
 
-	/**
-	 * Get all builders of the realm
-	 * 
-	 * @param realm_owner The owner of the realm
-	 * @return List<String> A list of builders or null
-	 */
-	public List<String> getRealmBuilders(String realm_owner) {
-		if (build_list.get(realm_owner) != null && build_list.get(realm_owner).size() > 0) {
-			List<String> builders = new ArrayList<String>(build_list.get(realm_owner));
-			return builders;
-		}
-		return Arrays.asList("null");
-	}
-
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
 	public void onBlockBreak(BlockBreakEvent e) {
@@ -2278,16 +2264,14 @@ public class RealmMechanics implements Listener {
 		final Player p = event.getPlayer();
 
 		if (inRealm(p)) {
-			if (safe_realms.containsKey(p.getWorld().getName())) {
-				if (isRealmOwner(p) || getRealmBuilders(p.getWorld().getName()).contains(p.getName())) {
-					return;
-				}
-				Material mat = event.getClickedBlock().getType();
-				if (mat ==  Material.CHEST || mat == Material.DROPPER || mat == Material.DISPENSER || mat == Material.HOPPER) {
-					event.setCancelled(true);
-					p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " interact with that item in a safe realm.");
-					return;
-				}
+			if (isRealmOwner(p) || build_list.containsKey(p.getWorld().getName()) && build_list.get(p.getWorld().getName()).contains(p.getName())) {
+				return;
+			}
+			Material mat = event.getClickedBlock().getType();
+			if (mat ==  Material.CHEST || mat == Material.DROPPER || mat == Material.DISPENSER || mat == Material.HOPPER) {
+				event.setCancelled(true);
+				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " interact with that item in somebody else's realm.");
+				return;
 			}
 		}
 	}
