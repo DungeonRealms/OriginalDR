@@ -2266,17 +2266,15 @@ public class RealmMechanics implements Listener {
 
 		if (inRealm(p)) {
 			List<String> builds = build_list.get(p.getWorld().getName());
-			if (builds == null) 
-				builds = Collections.<String>emptyList();
-			else 
-				builds = new ArrayList<String>(builds);
+			
 			if (isRealmOwner(p) || builds.contains(p.getName())) {
+				log.info("Utiliy Interact");
 				return;
 			}
 			Material mat = event.getClickedBlock().getType();
-			if (mat ==  Material.CHEST || mat == Material.DROPPER || mat == Material.DISPENSER || mat == Material.HOPPER) {
-				event.setCancelled(true);
+			if (mat == Material.CHEST || mat == Material.DROPPER || mat == Material.DISPENSER || mat == Material.HOPPER) {
 				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " interact with that item in somebody else's realm.");
+				event.setCancelled(true);
 				return;
 			}
 		}
