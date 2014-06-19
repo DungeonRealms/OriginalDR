@@ -2260,152 +2260,195 @@ public class RealmMechanics implements Listener {
 		}
 	}
 
-	@EventHandler
-	public void onPlayerUtilityItemInteract(PlayerInteractEvent event)  {
-		final Player p = event.getPlayer();
-
-		if (inRealm(p)) {
-			List<String> builds = build_list.get(p.getWorld().getName());
-			
-			if (isRealmOwner(p) || builds.contains(p.getName())) {
-				log.info("Utiliy Interact");
-				return;
-			}
-			Material mat = event.getClickedBlock().getType();
-			if (mat == Material.CHEST || mat == Material.DROPPER || mat == Material.DISPENSER || mat == Material.HOPPER) {
-				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " interact with that item in somebody else's realm.");
-				event.setCancelled(true);
-				return;
-			}
-		}
-		log.info("[RealmMechanics] UtilityInteract");
-	}
-
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent e) {
 		final Player p = e.getPlayer();
 
-		if (!(e.isCancelled()) && e.hasBlock() && e.getClickedBlock().getType() == Material.PORTAL && e.getAction() == Action.RIGHT_CLICK_BLOCK
-				&& (p.getWorld().getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName()) || InstanceMechanics.isInstance(p.getWorld().getName()))) {
-			Block portal = e.getClickedBlock();
-			String realm_owner = "";
-			for (Entry<Location, String> entry : portal_map.entrySet()) {
-				Location l = entry.getKey();
-				String owner_name = entry.getValue();
-
-				if (l.distanceSquared(portal.getLocation()) <= 4) {
-					realm_owner = owner_name;
-					// log.info(owner_name);
-					break;
+		if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !p.getWorld().getName().equalsIgnoreCase(main_world_name)) {
+			if (e.getClickedBlock().getType() == Material.CHEST || e.getClickedBlock().getType() == Material.DISPENSER || e.getClickedBlock().getType() == Material.DROPPER || e.getClickedBlock().getType() == Material.HOPPER) {
+				if (p.getWorld().getName().equalsIgnoreCase(p.getName()) || build_list.get(p.getWorld().getName()).contains(p.getName())) return;
+				else {
+					p.sendMessage(ChatColor.RED + "You can't interact with that in realms.");
+					e.setCancelled(true);
 				}
 			}
+		}
 
-			p.sendMessage(ChatColor.LIGHT_PURPLE + "This portal teleports to " + ChatColor.BOLD + ChatMechanics.getPlayerPrefix(realm_owner, true)
-					+ realm_owner + "'s" + ChatColor.LIGHT_PURPLE + " Realm");
+	if (!(e.isCancelled()) && e.hasBlock() && e.getClickedBlock().getType() == Material.PORTAL && e.getAction() == Action.RIGHT_CLICK_BLOCK
+			&& (p.getWorld().getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName()) || InstanceMechanics.isInstance(p.getWorld().getName()))) {
+		Block portal = e.getClickedBlock();
+		String realm_owner = "";
+		for (Entry<Location, String> entry : portal_map.entrySet()) {
+			Location l = entry.getKey();
+			String owner_name = entry.getValue();
 
-			if (safe_realms.containsKey(realm_owner)) {
+			if (l.distanceSquared(portal.getLocation()) <= 4) {
+				realm_owner = owner_name;
+				// log.info(owner_name);
+				break;
+			}
+		}
 
-				if (flying_realms.containsKey(realm_owner)) {
-					p.sendMessage(ChatColor.GRAY.toString() + "Realm Type: " + ChatColor.GREEN + "SAFE " + ChatColor.GRAY + "for "
-							+ getSecondsOfWildernessLeft(realm_owner) + "s │ " + ChatColor.GRAY + "Flying " + ChatColor.AQUA + "" + ChatColor.UNDERLINE
-							+ "ENABLED" + ChatColor.GRAY + " for " + getSecondsOfFlyingLeft(realm_owner) + "s");
-				} else {
-					p.sendMessage(ChatColor.GRAY.toString() + "Realm Type: " + ChatColor.GREEN + "SAFE " + ChatColor.GRAY + "for "
-							+ getSecondsOfWildernessLeft(realm_owner) + "s");
-				}
-				// getSecondsOfWildernessLeft
+		p.sendMessage(ChatColor.LIGHT_PURPLE + "This portal teleports to " + ChatColor.BOLD + ChatMechanics.getPlayerPrefix(realm_owner, true)
+				+ realm_owner + "'s" + ChatColor.LIGHT_PURPLE + " Realm");
+
+		if (safe_realms.containsKey(realm_owner)) {
+
+			if (flying_realms.containsKey(realm_owner)) {
+				p.sendMessage(ChatColor.GRAY.toString() + "Realm Type: " + ChatColor.GREEN + "SAFE " + ChatColor.GRAY + "for "
+						+ getSecondsOfWildernessLeft(realm_owner) + "s │ " + ChatColor.GRAY + "Flying " + ChatColor.AQUA + "" + ChatColor.UNDERLINE
+						+ "ENABLED" + ChatColor.GRAY + " for " + getSecondsOfFlyingLeft(realm_owner) + "s");
 			} else {
-				p.sendMessage(ChatColor.GRAY.toString() + "Realm Type: " + ChatColor.RED + "CHAOTIC ");
-
+				p.sendMessage(ChatColor.GRAY.toString() + "Realm Type: " + ChatColor.GREEN + "SAFE " + ChatColor.GRAY + "for "
+						+ getSecondsOfWildernessLeft(realm_owner) + "s");
 			}
+			// getSecondsOfWildernessLeft
+		} else {
+			p.sendMessage(ChatColor.GRAY.toString() + "Realm Type: " + ChatColor.RED + "CHAOTIC ");
 
-			if (Bukkit.getWorld(realm_owner) != null) {
-				p.sendMessage(ChatColor.GRAY + "Realm Population: " + Bukkit.getWorld(realm_owner).getPlayers().size() + " player(s)");
-			}
-			if (realm_title.containsKey(realm_owner) && !(realm_title.get(realm_owner) == null) && !realm_title.get(realm_owner).equalsIgnoreCase("null")) {
-				p.sendMessage(ChatColor.GRAY + realm_title.get(realm_owner));
-			} else {
-				p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "No description.");
-			}
+		}
 
-			// p.sendMessage(ChatColor.YELLOW + "Realm Status: " + locked);
+		if (Bukkit.getWorld(realm_owner) != null) {
+			p.sendMessage(ChatColor.GRAY + "Realm Population: " + Bukkit.getWorld(realm_owner).getPlayers().size() + " player(s)");
+		}
+		if (realm_title.containsKey(realm_owner) && !(realm_title.get(realm_owner) == null) && !realm_title.get(realm_owner).equalsIgnoreCase("null")) {
+			p.sendMessage(ChatColor.GRAY + realm_title.get(realm_owner));
+		} else {
+			p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "No description.");
+		}
 
+		// p.sendMessage(ChatColor.YELLOW + "Realm Status: " + locked);
+
+		return;
+	}
+
+	if (e.hasBlock() && e.getClickedBlock().getType() == Material.PORTAL && e.getAction() == Action.LEFT_CLICK_BLOCK) {
+		Block portal = e.getClickedBlock();
+		Location portal_l = inv_portal_map.get(p.getName());
+
+		/*
+		 * for(Entry<Location, String> data : portal_map.entrySet()){ Location loc = data.getKey(); if(loc.distanceSquared(portal_l) <= 4){
+		 *
+		 * } }
+		 */
+
+		if (portal_l == null || !portal.getWorld().getName().equalsIgnoreCase(portal_l.getWorld().getName())
+				|| portal.getLocation().distanceSquared(portal_l) > 4) {
+			Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(portal.getLocation().getX()), (int) Math.round(portal.getLocation()
+					.getY()), (int) Math.round(portal.getLocation().getZ()), 90, false);
+			((CraftServer) Main.plugin.getServer())
+			.getServer()
+			.getPlayerList()
+			.sendPacketNearby(portal.getLocation().getX(), portal.getLocation().getY(), portal.getLocation().getZ(), 24,
+					((CraftWorld) portal.getWorld()).getHandle().dimension, particles);
 			return;
 		}
 
-		if (e.hasBlock() && e.getClickedBlock().getType() == Material.PORTAL && e.getAction() == Action.LEFT_CLICK_BLOCK) {
-			Block portal = e.getClickedBlock();
-			Location portal_l = inv_portal_map.get(p.getName());
+		if (portal_l.getWorld().getName().equalsIgnoreCase(p.getWorld().getName()) && portal.getLocation().distanceSquared(portal_l) <= 4) {
+			Location l = portal_l;
 
-			/*
-			 * for(Entry<Location, String> data : portal_map.entrySet()){ Location loc = data.getKey(); if(loc.distanceSquared(portal_l) <= 4){
-			 *
-			 * } }
-			 */
+			has_portal.remove(p.getName());
+			portal_map_coords.remove(p.getName());
+			portal_map.remove(l);
+			inv_portal_map.remove(p.getName());
 
-			if (portal_l == null || !portal.getWorld().getName().equalsIgnoreCase(portal_l.getWorld().getName())
-					|| portal.getLocation().distanceSquared(portal_l) > 4) {
-				Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(portal.getLocation().getX()), (int) Math.round(portal.getLocation()
-						.getY()), (int) Math.round(portal.getLocation().getZ()), 90, false);
-				((CraftServer) Main.plugin.getServer())
-				.getServer()
-				.getPlayerList()
-				.sendPacketNearby(portal.getLocation().getX(), portal.getLocation().getY(), portal.getLocation().getZ(), 24,
-						((CraftWorld) portal.getWorld()).getHandle().dimension, particles);
-				return;
-			}
+			l.getBlock().setType(Material.AIR);
 
-			if (portal_l.getWorld().getName().equalsIgnoreCase(p.getWorld().getName()) && portal.getLocation().distanceSquared(portal_l) <= 4) {
-				Location l = portal_l;
-
-				has_portal.remove(p.getName());
-				portal_map_coords.remove(p.getName());
-				portal_map.remove(l);
-				inv_portal_map.remove(p.getName());
-
+			if (l.add(0, 1, 0).getBlock().getType() == Material.PORTAL) {
 				l.getBlock().setType(Material.AIR);
-
-				if (l.add(0, 1, 0).getBlock().getType() == Material.PORTAL) {
-					l.getBlock().setType(Material.AIR);
-				}
-
-				l.subtract(0, 1, 0);
-
-				if (l.subtract(0, 1, 0).getBlock().getType() == Material.PORTAL) {
-					l.getBlock().setType(Material.AIR);
-				}
-
-				p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 5F, 0.75F);
-
-				l.add(0, 1, 0);
-
-				holograms.get(l).destroy();
-				holograms.remove(l);
-
-				// p.sendMessage(ChatColor.RED + "Portal " + ChatColor.BOLD + "CLOSED");
-				return;
 			}
+
+			l.subtract(0, 1, 0);
+
+			if (l.subtract(0, 1, 0).getBlock().getType() == Material.PORTAL) {
+				l.getBlock().setType(Material.AIR);
+			}
+
+			p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 5F, 0.75F);
+
+			l.add(0, 1, 0);
+
+			holograms.get(l).destroy();
+			holograms.remove(l);
+
+			// p.sendMessage(ChatColor.RED + "Portal " + ChatColor.BOLD + "CLOSED");
+			return;
+		}
+		return;
+	}
+
+	if (!(e.hasItem())) {
+		return;
+	}
+
+	if (e.getItem().getType() == Material.NETHER_STAR) {
+		e.setCancelled(true);
+		p.updateInventory();
+	}
+
+	if (p.isSneaking() && e.getItem().getType() == Material.NETHER_STAR
+			&& (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)) {
+
+		String m = Bukkit.getMotd();
+		if(m.contains("US-100") || m.contains("US-101") || m.contains("US-102") || m.contains("US-103") || m.contains("US-104") || m.contains("US-105") || m.contains("US-106") || m.contains("US-107") || m.contains("US-108") || m.contains("US-108") || m.contains("US-109") || m.contains("US-110")){
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " do this on the " + ChatColor.UNDERLINE + "Beta Servers" + ChatColor.RED + "!");
 			return;
 		}
 
-		if (!(e.hasItem())) {
+		if (TutorialMechanics.onTutorialIsland(p)) {
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED
+					+ " open a portal to your realm until you have completed Tutorial Island.");
 			return;
 		}
 
-		if (e.getItem().getType() == Material.NETHER_STAR) {
+		if (!(isRealmOwner(p))) {
+			p.sendMessage(ChatColor.RED + "You must be inside your realm to upgrade it.");
+			return;
+		}
+
+		if (upgrading_realms.contains(p.getName())) {
+			p.sendMessage(ChatColor.RED + "Your realm is already upgrading.");
+			return;
+		}
+
+		int realm_tier = getRealmTier(p.getName());
+		int next_realm_tier = realm_tier + 1;
+		if (next_realm_tier > 7) {
+			p.sendMessage(ChatColor.RED + "Your realm is already at the largest possible size.");
+			return;
+		}
+		int upgrade_cost = getRealmUpgradeCost(next_realm_tier);
+		generateUpgradeAuthenticationCode(p, String.valueOf(next_realm_tier));
+
+		p.sendMessage("");
+		p.sendMessage(ChatColor.DARK_GRAY + "           *** " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "Realm Upgrade Confirmation"
+				+ ChatColor.DARK_GRAY + " ***");
+		p.sendMessage(ChatColor.DARK_GRAY + "FROM Tier " + ChatColor.LIGHT_PURPLE + realm_tier + ChatColor.DARK_GRAY + " TO " + ChatColor.LIGHT_PURPLE
+				+ next_realm_tier);
+		p.sendMessage(ChatColor.DARK_GRAY + "Upgrade Cost: " + ChatColor.LIGHT_PURPLE + "" + upgrade_cost + " Gem(s)");
+		p.sendMessage("");
+		p.sendMessage(ChatColor.LIGHT_PURPLE + "Enter the code " + ChatColor.BOLD + getUpgradeAuthenticationCode(p) + ChatColor.LIGHT_PURPLE
+				+ " to confirm your upgrade.");
+		p.sendMessage("");
+		p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "WARNING:" + ChatColor.RED + " Realm upgrades are " + ChatColor.BOLD + ChatColor.RED + "NOT"
+				+ ChatColor.RED + " reversible or refundable. Type 'cancel' to void this upgrade request.");
+		p.sendMessage("");
+		return;
+	}
+
+	if ((e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) && e.getItem().getType() == Material.NETHER_STAR) {
+		/*
+		 * if(!(p.isSneaking()) && p.getWorld().getName().equalsIgnoreCase(main_world_name)){ if(e.getAction() == Action.LEFT_CLICK_BLOCK){
+		 * p.sendMessage(ChatColor.RED + "You cannot open the realm shop outside of your realm."); } return; // They can open it anywhere but main world. }
+		 */
+		if (current_item_being_bought.containsKey(p.getName())) {
+			p.sendMessage(ChatColor.RED + "You have a " + ChatColor.UNDERLINE + "pending" + ChatColor.RED + " Realm Shop transaction, type '"
+					+ ChatColor.GRAY + "cancel" + ChatColor.RED + "' and try again.");
+			return;
+		}
+		if (p.isSneaking()) {
 			e.setCancelled(true);
-			p.updateInventory();
-		}
-
-		if (p.isSneaking() && e.getItem().getType() == Material.NETHER_STAR
-				&& (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)) {
-
-			String m = Bukkit.getMotd();
-			if(m.contains("US-100") || m.contains("US-101") || m.contains("US-102") || m.contains("US-103") || m.contains("US-104") || m.contains("US-105") || m.contains("US-106") || m.contains("US-107") || m.contains("US-108") || m.contains("US-108") || m.contains("US-109") || m.contains("US-110")){
-				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " do this on the " + ChatColor.UNDERLINE + "Beta Servers" + ChatColor.RED + "!");
-				return;
-			}
 
 			if (TutorialMechanics.onTutorialIsland(p)) {
 				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED
@@ -2413,1444 +2456,1622 @@ public class RealmMechanics implements Listener {
 				return;
 			}
 
-			if (!(isRealmOwner(p))) {
-				p.sendMessage(ChatColor.RED + "You must be inside your realm to upgrade it.");
+			Player target = getTarget(p);
+			if (target == null) {
+				p.sendMessage(ChatColor.RED + "To allow a player to build in your realm, you need to " + ChatColor.UNDERLINE + "SNEAK LEFT CLICK"
+						+ ChatColor.RED + " them with this Realm Portal Rune.");
+				p.sendMessage(ChatColor.GRAY
+						+ "Once enabled, they will be able to modify your realm for the rest of your current game session, or until you logout.");
 				return;
 			}
-
-			if (upgrading_realms.contains(p.getName())) {
-				p.sendMessage(ChatColor.RED + "Your realm is already upgrading.");
+			if (target.hasMetadata("NPC") || target.getPlayerListName().equalsIgnoreCase("")) {
 				return;
 			}
+			if (build_list.containsKey(p.getName()) && build_list.get(p.getName()).contains(target.getName())) {
+				// Remove.
+				List<String> lbuild_list = new ArrayList<String>();
+				if (build_list.containsKey(p.getName())) {
+					lbuild_list = build_list.get(p.getName());
+				}
+				lbuild_list.remove(target.getName());
+				build_list.put(p.getName(), lbuild_list);
 
-			int realm_tier = getRealmTier(p.getName());
-			int next_realm_tier = realm_tier + 1;
-			if (next_realm_tier > 7) {
-				p.sendMessage(ChatColor.RED + "Your realm is already at the largest possible size.");
+				p.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + "REMOVED " + ChatColor.RED + "" + ChatColor.BOLD + target.getName()
+						+ ChatColor.RED + " from your realm builder list.");
+				p.sendMessage(ChatColor.GRAY + target.getName() + " can no longer place/destroy blocks in your realm.");
+				target.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "REMOVED " + ChatColor.RED + "from " + p.getName() + "'s builder list.");
+				target.sendMessage(ChatColor.GRAY + "You can no longer place/destroy blocks in their realm.");
+				target.setAllowFlight(false);
 				return;
-			}
-			int upgrade_cost = getRealmUpgradeCost(next_realm_tier);
-			generateUpgradeAuthenticationCode(p, String.valueOf(next_realm_tier));
-
-			p.sendMessage("");
-			p.sendMessage(ChatColor.DARK_GRAY + "           *** " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "Realm Upgrade Confirmation"
-					+ ChatColor.DARK_GRAY + " ***");
-			p.sendMessage(ChatColor.DARK_GRAY + "FROM Tier " + ChatColor.LIGHT_PURPLE + realm_tier + ChatColor.DARK_GRAY + " TO " + ChatColor.LIGHT_PURPLE
-					+ next_realm_tier);
-			p.sendMessage(ChatColor.DARK_GRAY + "Upgrade Cost: " + ChatColor.LIGHT_PURPLE + "" + upgrade_cost + " Gem(s)");
-			p.sendMessage("");
-			p.sendMessage(ChatColor.LIGHT_PURPLE + "Enter the code " + ChatColor.BOLD + getUpgradeAuthenticationCode(p) + ChatColor.LIGHT_PURPLE
-					+ " to confirm your upgrade.");
-			p.sendMessage("");
-			p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "WARNING:" + ChatColor.RED + " Realm upgrades are " + ChatColor.BOLD + ChatColor.RED + "NOT"
-					+ ChatColor.RED + " reversible or refundable. Type 'cancel' to void this upgrade request.");
-			p.sendMessage("");
-			return;
-		}
-
-		if ((e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) && e.getItem().getType() == Material.NETHER_STAR) {
-			/*
-			 * if(!(p.isSneaking()) && p.getWorld().getName().equalsIgnoreCase(main_world_name)){ if(e.getAction() == Action.LEFT_CLICK_BLOCK){
-			 * p.sendMessage(ChatColor.RED + "You cannot open the realm shop outside of your realm."); } return; // They can open it anywhere but main world. }
-			 */
-			if (current_item_being_bought.containsKey(p.getName())) {
-				p.sendMessage(ChatColor.RED + "You have a " + ChatColor.UNDERLINE + "pending" + ChatColor.RED + " Realm Shop transaction, type '"
-						+ ChatColor.GRAY + "cancel" + ChatColor.RED + "' and try again.");
-				return;
-			}
-			if (p.isSneaking()) {
-				e.setCancelled(true);
-
-				if (TutorialMechanics.onTutorialIsland(p)) {
-					p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED
-							+ " open a portal to your realm until you have completed Tutorial Island.");
+			} else {
+				// Add.
+				if (!(CommunityMechanics.isPlayerOnBuddyList(p, target.getName()))) {
+					p.sendMessage(ChatColor.RED + "Cannot add a non-buddy to realm build list.");
+					p.sendMessage(ChatColor.GRAY + "Type '" + ChatColor.BOLD + "/add " + target.getName() + ChatColor.GRAY
+							+ "' to add them to your buddy list.");
 					return;
 				}
-
-				Player target = getTarget(p);
-				if (target == null) {
-					p.sendMessage(ChatColor.RED + "To allow a player to build in your realm, you need to " + ChatColor.UNDERLINE + "SNEAK LEFT CLICK"
-							+ ChatColor.RED + " them with this Realm Portal Rune.");
-					p.sendMessage(ChatColor.GRAY
-							+ "Once enabled, they will be able to modify your realm for the rest of your current game session, or until you logout.");
-					return;
+				List<String> lbuild_list = new ArrayList<String>();
+				if (build_list.containsKey(p.getName())) {
+					lbuild_list = build_list.get(p.getName());
 				}
-				if (target.hasMetadata("NPC") || target.getPlayerListName().equalsIgnoreCase("")) {
-					return;
-				}
-				if (build_list.containsKey(p.getName()) && build_list.get(p.getName()).contains(target.getName())) {
-					// Remove.
-					List<String> lbuild_list = new ArrayList<String>();
-					if (build_list.containsKey(p.getName())) {
-						lbuild_list = build_list.get(p.getName());
-					}
-					lbuild_list.remove(target.getName());
-					build_list.put(p.getName(), lbuild_list);
+				lbuild_list.add(target.getName());
+				build_list.put(p.getName(), lbuild_list);
+				p.sendMessage(ChatColor.GREEN + "" + ChatColor.UNDERLINE + "ADDED " + ChatColor.GREEN + "" + ChatColor.BOLD + target.getName()
+						+ ChatColor.GREEN + " to your realm builder list.");
+				p.sendMessage(ChatColor.GRAY + target.getName()
+						+ " can now place/destroy blocks in your realm until you logout of your current game session.");
+				target.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "ADDED" + ChatColor.GREEN + " to " + p.getName() + "'s build list.");
+				target.sendMessage(ChatColor.GRAY + "You can now place/destroy blocks in their realm until the end of their game session.");
 
-					p.sendMessage(ChatColor.RED + "" + ChatColor.UNDERLINE + "REMOVED " + ChatColor.RED + "" + ChatColor.BOLD + target.getName()
-							+ ChatColor.RED + " from your realm builder list.");
-					p.sendMessage(ChatColor.GRAY + target.getName() + " can no longer place/destroy blocks in your realm.");
-					target.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "REMOVED " + ChatColor.RED + "from " + p.getName() + "'s builder list.");
-					target.sendMessage(ChatColor.GRAY + "You can no longer place/destroy blocks in their realm.");
-					target.setAllowFlight(false);
-					return;
-				} else {
-					// Add.
-					if (!(CommunityMechanics.isPlayerOnBuddyList(p, target.getName()))) {
-						p.sendMessage(ChatColor.RED + "Cannot add a non-buddy to realm build list.");
-						p.sendMessage(ChatColor.GRAY + "Type '" + ChatColor.BOLD + "/add " + target.getName() + ChatColor.GRAY
-								+ "' to add them to your buddy list.");
-						return;
-					}
-					List<String> lbuild_list = new ArrayList<String>();
-					if (build_list.containsKey(p.getName())) {
-						lbuild_list = build_list.get(p.getName());
-					}
-					lbuild_list.add(target.getName());
-					build_list.put(p.getName(), lbuild_list);
-					p.sendMessage(ChatColor.GREEN + "" + ChatColor.UNDERLINE + "ADDED " + ChatColor.GREEN + "" + ChatColor.BOLD + target.getName()
-							+ ChatColor.GREEN + " to your realm builder list.");
-					p.sendMessage(ChatColor.GRAY + target.getName()
-							+ " can now place/destroy blocks in your realm until you logout of your current game session.");
-					target.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "ADDED" + ChatColor.GREEN + " to " + p.getName() + "'s build list.");
-					target.sendMessage(ChatColor.GRAY + "You can now place/destroy blocks in their realm until the end of their game session.");
+				AchievementMechanics.addAchievement(p.getName(), "Creative Companion");
 
-					AchievementMechanics.addAchievement(p.getName(), "Creative Companion");
-
-					if (flying_realms.containsKey(p.getWorld().getName()) && DuelMechanics.isDamageDisabled(p.getWorld().getSpawnLocation())
-							&& safe_realms.containsKey(p.getWorld().getName())) {
-						target.setAllowFlight(true);
-						target.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "FLYING ENABLED");
-					}
-
+				if (flying_realms.containsKey(p.getWorld().getName()) && DuelMechanics.isDamageDisabled(p.getWorld().getSpawnLocation())
+						&& safe_realms.containsKey(p.getWorld().getName())) {
+					target.setAllowFlight(true);
+					target.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "FLYING ENABLED");
 				}
 
-				return; // Damage event to add user to build list.
-			} else if (!(p.isSneaking())) {
-				if (HealthMechanics.in_combat.containsKey(p.getName())) {
-					p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " open the realm shop while in combat.");
-					p.sendMessage(ChatColor.GRAY + "Wait " + ChatColor.UNDERLINE + "a few seconds" + ChatColor.GRAY + " and try again.");
-					return;
-				}
-
-				Inventory i = Bukkit.createInventory(null, mat_shop_1.getSize(), "Realm Material Store");
-
-				for (int x = 0; x < mat_shop_1.getSize(); x++) {
-					i.setItem(x, mat_shop_1.getItem(x));
-				}
-
-				p.openInventory(i);
-			}
-		}
-
-		if (!(e.hasBlock())) {
-			return;
-		}
-		String block_world_name = e.getClickedBlock().getWorld().getName();
-		ItemStack i = e.getItem();
-		boolean new_realm = true;
-
-		if (e.getAction() == Action.RIGHT_CLICK_BLOCK && i.getType() == Material.NETHER_STAR) {
-			e.setCancelled(true);
-
-			String m = Bukkit.getMotd();
-			if(m.contains("US-100") || m.contains("US-101") || m.contains("US-102") || m.contains("US-103") || m.contains("US-104") || m.contains("US-105") || m.contains("US-106") || m.contains("US-107") || m.contains("US-108") || m.contains("US-108") || m.contains("US-109") || m.contains("US-110")){
-				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " do this on the " + ChatColor.UNDERLINE + "Beta Servers" + ChatColor.RED + "!");
-				return;
 			}
 
-			boolean loaded = false;
-			PreparedStatement pst;
-			try {
-				pst = ConnectionPool.getConnection().prepareStatement("SELECT realm_loaded FROM player_database WHERE p_name='" + p.getName() + "'");
-				pst.execute();
-				ResultSet rs = pst.getResultSet();
-				rs.next();
-				loaded = rs.getBoolean("realm_loaded");
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-
-			if (loaded) {
-				p.sendMessage(ChatColor.RED + "Your realm is still being uploaded from another shard.");
-				return;
-			}
-
-			if (TutorialMechanics.onTutorialIsland(p)) {
-				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED
-						+ " open a portal to your realm until you have completed Tutorial Island.");
-				return;
-			}
-
-			if (!(block_world_name.equalsIgnoreCase(main_world_name)) && !(block_world_name.equalsIgnoreCase(p.getName()))) {
-				if (InstanceMechanics.isInstance(block_world_name)) {
-					p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED
-							+ " open your realm portal while inside a dungeon instance.");
-				} else {
-					p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " open your realm portal inside another realm.");
-				}
-				return;
-			}
-
-			if (!(block_world_name.equalsIgnoreCase(p.getName()))
-					&& (isTherePortalLocationNear(e.getClickedBlock().getLocation().add(0, 1, 0), 5) || isThereAPortalNear(e.getClickedBlock().getLocation()
-							.add(0, 1, 0).getBlock(), 5))) {
-				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " open a realm portal so close to another."); // Too
-				// close
-				// to
-				// another
-				// portal.
-				p.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "REQ:" + ChatColor.GRAY + " >3 blocks away.");
-				return;
-			}
-
-			if (Hive.hive_ddos == true) {
-				p.sendMessage(ChatColor.RED + "The hive server is currently offline, and no cached version of your realm is available.");
-				p.sendMessage(ChatColor.GRAY + "You'll be able to access your realm again once the hive server is back online.");
-				return;
-			}
-
-			final Location portal_location = e.getClickedBlock().getLocation();
-
-			if (!(portal_location.add(0, 1, 0).getBlock().getType() == Material.AIR) || !(portal_location.add(0, 1, 0).getBlock().getType() == Material.AIR)
-					|| e.getClickedBlock().getLocation().getBlock().getType() == Material.CHEST
-					|| e.getClickedBlock().getLocation().getBlock().getType() == Material.ENDER_CHEST
-					|| e.getClickedBlock().getLocation().getBlock().getType() == Material.PORTAL
-					|| e.getClickedBlock().getLocation().getBlock().getType() == Material.ANVIL) {
-				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " open a realm portal here.");
-				return;
-			}
-
-			if (!(block_world_name.equalsIgnoreCase(p.getName())) && LootMechanics.loot_spawns.containsKey(e.getClickedBlock().getLocation().add(0, 1, 0))) {
-				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " open a realm portal here.");
-				return;
-			}
-
-			if (realm_loaded_status.containsKey(p.getName()) && realm_loaded_status.get(p.getName()) == true) {
-				p.sendMessage(ChatColor.RED + "Your realm is still LOADED on another server.");
-				p.sendMessage(ChatColor.GRAY + "Wait 2 minute(s) and try again, or rejoin the other server.");
-				async_realm_status.add(p.getName());
-
-				return;
-			}
-
+			return; // Damage event to add user to build list.
+		} else if (!(p.isSneaking())) {
 			if (HealthMechanics.in_combat.containsKey(p.getName())) {
-				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " place a realm portal while in combat.");
+				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " open the realm shop while in combat.");
 				p.sendMessage(ChatColor.GRAY + "Wait " + ChatColor.UNDERLINE + "a few seconds" + ChatColor.GRAY + " and try again.");
 				return;
 			}
 
-			if (!p.isOp()) {
-				if (!(block_world_name.equalsIgnoreCase(p.getName())) && TradeMechanics.getTarget(p) != null
-						|| MoneyMechanics.isThereABankChestNear(e.getClickedBlock(), 10)) {
-					p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " place your realm portal here.");
-					return;
-				}
+			Inventory i = Bukkit.createInventory(null, mat_shop_1.getSize(), "Realm Material Store");
+
+			for (int x = 0; x < mat_shop_1.getSize(); x++) {
+				i.setItem(x, mat_shop_1.getItem(x));
 			}
 
-			if (ShopMechanics.isThereALadderNear(e.getClickedBlock(), 2)) {
+			p.openInventory(i);
+		}
+	}
+
+	if (!(e.hasBlock())) {
+		return;
+	}
+	String block_world_name = e.getClickedBlock().getWorld().getName();
+	ItemStack i = e.getItem();
+	boolean new_realm = true;
+
+	if (e.getAction() == Action.RIGHT_CLICK_BLOCK && i.getType() == Material.NETHER_STAR) {
+		e.setCancelled(true);
+
+		String m = Bukkit.getMotd();
+		if(m.contains("US-100") || m.contains("US-101") || m.contains("US-102") || m.contains("US-103") || m.contains("US-104") || m.contains("US-105") || m.contains("US-106") || m.contains("US-107") || m.contains("US-108") || m.contains("US-108") || m.contains("US-109") || m.contains("US-110")){
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " do this on the " + ChatColor.UNDERLINE + "Beta Servers" + ChatColor.RED + "!");
+			return;
+		}
+
+		boolean loaded = false;
+		PreparedStatement pst;
+		try {
+			pst = ConnectionPool.getConnection().prepareStatement("SELECT realm_loaded FROM player_database WHERE p_name='" + p.getName() + "'");
+			pst.execute();
+			ResultSet rs = pst.getResultSet();
+			rs.next();
+			loaded = rs.getBoolean("realm_loaded");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+		if (loaded) {
+			p.sendMessage(ChatColor.RED + "Your realm is still being uploaded from another shard.");
+			return;
+		}
+
+		if (TutorialMechanics.onTutorialIsland(p)) {
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED
+					+ " open a portal to your realm until you have completed Tutorial Island.");
+			return;
+		}
+
+		if (!(block_world_name.equalsIgnoreCase(main_world_name)) && !(block_world_name.equalsIgnoreCase(p.getName()))) {
+			if (InstanceMechanics.isInstance(block_world_name)) {
+				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED
+						+ " open your realm portal while inside a dungeon instance.");
+			} else {
+				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " open your realm portal inside another realm.");
+			}
+			return;
+		}
+
+		if (!(block_world_name.equalsIgnoreCase(p.getName()))
+				&& (isTherePortalLocationNear(e.getClickedBlock().getLocation().add(0, 1, 0), 5) || isThereAPortalNear(e.getClickedBlock().getLocation()
+						.add(0, 1, 0).getBlock(), 5))) {
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " open a realm portal so close to another."); // Too
+			// close
+			// to
+			// another
+			// portal.
+			p.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "REQ:" + ChatColor.GRAY + " >3 blocks away.");
+			return;
+		}
+
+		if (Hive.hive_ddos == true) {
+			p.sendMessage(ChatColor.RED + "The hive server is currently offline, and no cached version of your realm is available.");
+			p.sendMessage(ChatColor.GRAY + "You'll be able to access your realm again once the hive server is back online.");
+			return;
+		}
+
+		final Location portal_location = e.getClickedBlock().getLocation();
+
+		if (!(portal_location.add(0, 1, 0).getBlock().getType() == Material.AIR) || !(portal_location.add(0, 1, 0).getBlock().getType() == Material.AIR)
+				|| e.getClickedBlock().getLocation().getBlock().getType() == Material.CHEST
+				|| e.getClickedBlock().getLocation().getBlock().getType() == Material.ENDER_CHEST
+				|| e.getClickedBlock().getLocation().getBlock().getType() == Material.PORTAL
+				|| e.getClickedBlock().getLocation().getBlock().getType() == Material.ANVIL) {
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " open a realm portal here.");
+			return;
+		}
+
+		if (!(block_world_name.equalsIgnoreCase(p.getName())) && LootMechanics.loot_spawns.containsKey(e.getClickedBlock().getLocation().add(0, 1, 0))) {
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " open a realm portal here.");
+			return;
+		}
+
+		if (realm_loaded_status.containsKey(p.getName()) && realm_loaded_status.get(p.getName()) == true) {
+			p.sendMessage(ChatColor.RED + "Your realm is still LOADED on another server.");
+			p.sendMessage(ChatColor.GRAY + "Wait 2 minute(s) and try again, or rejoin the other server.");
+			async_realm_status.add(p.getName());
+
+			return;
+		}
+
+		if (HealthMechanics.in_combat.containsKey(p.getName())) {
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " place a realm portal while in combat.");
+			p.sendMessage(ChatColor.GRAY + "Wait " + ChatColor.UNDERLINE + "a few seconds" + ChatColor.GRAY + " and try again.");
+			return;
+		}
+
+		if (!p.isOp()) {
+			if (!(block_world_name.equalsIgnoreCase(p.getName())) && TradeMechanics.getTarget(p) != null
+					|| MoneyMechanics.isThereABankChestNear(e.getClickedBlock(), 10)) {
 				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " place your realm portal here.");
 				return;
 			}
-
-			Location portal_loc = e.getClickedBlock().getLocation().add(0, 1.5, 0);
-			for (Player pl : portal_loc.getWorld().getPlayers()) {
-				if (pl.getName().equalsIgnoreCase(p.getName())) {
-					continue;
-				}
-				if (!(pl.getWorld().getName().equalsIgnoreCase(portal_loc.getWorld().getName()))) {
-					continue;
-				}
-				if (pl.getLocation().distanceSquared(portal_loc) <= 2) {
-					p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " place your realm portal here.");
-					return;
-				}
-			}
-
-			if (block_world_name.equalsIgnoreCase(p.getName())) {
-				if (upgrading_realms.contains(block_world_name)) {
-					e.setCancelled(true);
-					p.sendMessage(ChatColor.YELLOW + "Portal events are disabled while your realm upgrades.");
-					return;
-				}
-				Block b = e.getClickedBlock().getLocation().add(0, 1, 0).getBlock();
-				Location old_portal = Bukkit.getWorld(block_world_name).getSpawnLocation().subtract(0, 1, 0).clone();
-				Location new_portal = new Location(b.getWorld(), b.getX(), b.getY(), b.getZ());
-				old_portal.getBlock().setType(Material.AIR);
-				old_portal.add(0, 1, 0).getBlock().setType(Material.AIR);
-				if (holograms.get(old_portal) != null) {
-					holograms.get(old_portal).destroy();
-					holograms.remove(old_portal);
-				}
-				Bukkit.getWorld(block_world_name).setSpawnLocation(new_portal.getBlockX(), new_portal.getBlockY() + 1, new_portal.getBlockZ());
-				new_portal.getBlock().setType(Material.PORTAL);
-				new_portal.add(0, 1, 0).getBlock().setType(Material.PORTAL);
-				return;
-			}
-
-			if (has_portal.containsKey(p.getName()) && !(inv_portal_map.containsKey(p.getName()))) {
-				return; // Their realm is JUST loading.
-			}
-
-			// TODO: This probably causes unlinking
-			if (has_portal.containsKey(p.getName()) && inv_portal_map.containsKey(p.getName())) {
-				Location l = inv_portal_map.get(p.getName());
-				holograms.get(l).destroy();
-				holograms.remove(l);
-				l.getBlock().setType(Material.AIR);
-				l.subtract(0, 1, 0).getBlock().setType(Material.AIR);
-				portal_map_coords.remove(p.getName());
-				inv_portal_map.remove(p.getName());
-				l.add(0, 1, 0);
-				portal_map.remove(l);
-			}
-
-			p.getWorld().playEffect(portal_location, Effect.ENDER_SIGNAL, 10);
-			p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 5F, 1.25F);
-			has_portal.put(p.getName(), true);
-			p.setItemInHand(makeTeleportRune(p));
-			makePortal(p.getName(), portal_location.subtract(0, 2, 0), 60);
-			if (new_realm == true) { // We don't need to load the world if we're just moving the portal.
-				/*
-				 * Thread t = new Thread(new Runnable() { public void run() { realmHandler(p, p.getName()); } });
-				 *
-				 * t.start();
-				 */
-
-				Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-					public void run() {
-						realmHandler(p, p.getName());
-					}
-				}, 1L);
-			}
 		}
 
-	}
-
-	public Player getTarget(Player trader) {
-		List<Entity> nearbyE = trader.getNearbyEntities(4.0D, 4.0D, 4.0D);
-		ArrayList<Player> livingE = new ArrayList<Player>();
-
-		for (Entity e : nearbyE) {
-			if (e.getType() == EntityType.PLAYER) {
-				livingE.add((Player) e);
-			}
+		if (ShopMechanics.isThereALadderNear(e.getClickedBlock(), 2)) {
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " place your realm portal here.");
+			return;
 		}
 
-		Player target = null;
-		BlockIterator bItr = new BlockIterator(trader, 4);
-		Block block;
-		Location loc;
-		int bx, by, bz;
-		double ex, ey, ez;
-		// loop through player's line of sight
-		while (bItr.hasNext()) {
-			block = bItr.next();
-			bx = block.getX();
-			by = block.getY();
-			bz = block.getZ();
-			// check for entities near this block in the line of sight
-			for (LivingEntity e : livingE) {
-				loc = e.getLocation();
-				ex = loc.getX();
-				ey = loc.getY();
-				ez = loc.getZ();
-				if ((bx - .75 <= ex && ex <= bx + 1.75) && (bz - .75 <= ez && ez <= bz + 1.75) && (by - 1 <= ey && ey <= by + 2.5)) {
-					// entity is close enough, set target and stop
-					target = (Player) e;
-					break;
-				}
-			}
-		}
-
-		return target;
-	}
-
-	// Prevents flying players from flying out of realm bounds.
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerMove(PlayerMoveEvent e) {
-		Player p = e.getPlayer();
-
-		if (ModerationMechanics.vanish_list.contains(p.getName())) {
-			return; // Don't particle vanish'd mods.
-		}
-
-		if (p.isFlying() && p.getAllowFlight() == true && !p.getWorld().getName().equalsIgnoreCase(main_world_name)
-				&& !(InstanceMechanics.isInstance(p.getWorld().getName()))) {
-			// They can fly, they're in a realm where they're allowed to fly, don't let them fly into void plz.
-			Location to = e.getTo();
-			Location safe_loc = e.getFrom();
-
-			try {
-				ParticleEffect.sendToLocation(ParticleEffect.CLOUD, p.getLocation(), 0, 0, 0, 0.05F, 20);
-			} catch (Exception err) {
-				err.printStackTrace();
-			}
-			// p.getWorld().spawnParticle(p.getLocation(), Particle.CLOUD, 0.05F, 20);
-
-			if (!(p.isOp())) {
-				int realm_tier = getRealmTier(p.getWorld().getName());
-				int max_size = getRealmSizeDimensions(realm_tier) + 16; // Add 16, because the default chunk (0,0) is never used, and 16 is lowest you can be.
-
-				int max_y = 128; // + (max_size / 2)
-				Block b = to.getBlock();
-
-				if (!(b.getWorld().getName().equalsIgnoreCase(p.getWorld().getName()))) {
-					return; // no worries.
-				}
-
-				if (Math.round(b.getX() - 0.5) > max_size || Math.round(b.getX() - 0.5) < 16 || Math.round(b.getZ() - 0.5) > max_size
-						|| Math.round(b.getZ() - 0.5) < 16 || (b.getY() > (max_y + (max_size) + 1)) || (b.getY() < (max_y - (max_size) - 1))) {
-					e.setCancelled(true);
-					p.teleport(safe_loc);
-					return;
-				}
-			}
-		}
-	}
-
-	public static void generateUpgradeAuthenticationCode(Player p, String tier) {
-		StringBuffer sb = new StringBuffer(4);
-		for (int i = 0; i < 4; i++) {
-			int ndx = (int) (Math.random() * ALPHA_NUM.length());
-			sb.append(ALPHA_NUM.charAt(ndx));
-		}
-
-		realm_upgrade_codes.put(p, tier + sb.toString());
-	}
-
-	public static String getUpgradeAuthenticationCode(Player p) {
-		if (realm_upgrade_codes.containsKey(p)) {
-			return realm_upgrade_codes.get(p);
-		} else {
-			return null;
-		}
-	}
-
-	public static ItemStack genCustomItem(Material m, short meta_data, String name, String desc) {
-		return ItemMechanics.signCustomItem(m, meta_data, name, desc);
-	}
-
-	@SuppressWarnings("deprecation")
-	public void removePistonHeads(Player pl) {
-		for (ItemStack is : pl.getInventory().getContents()) {
-			if (is != null && is.getType() == Material.THIN_GLASS && is.hasItemMeta() && is.getItemMeta().hasDisplayName()
-					&& is.getItemMeta().getDisplayName().equalsIgnoreCase(" ")) {
-				pl.getInventory().removeItem(is);
-			}
-		}
-		pl.updateInventory();
-	}
-
-	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.MONITOR)
-	// After location is loaded.
-	public void onPlayerJoin(PlayerJoinEvent e) {
-		final Player p = e.getPlayer();
-		p.setAllowFlight(false);
-
-		removePistonHeads(p);
-
-		new File(rootDir + "/realms/up/" + p.getName() + ".zip").delete();
-		// Delete any old /up/ files on join.
-
-		if (doesWorldExistLocal(p.getName()) && !(isWorldLoaded(p.getName()))) {
-			File world_root = new File(p.getName());
-			deleteFolder(world_root);
-			log.info("[RealmMechanics] Found a realm that should't be on here. Deleting for player " + p.getName());
-		}
-
-		if (offline_player_realms.containsKey(p.getName())) {
-			for (Player pl : offline_player_realms.get(p.getName())) {
-				if (pl.getWorld().getName().equalsIgnoreCase(p.getName())) {
-					pl.sendMessage(ChatColor.GREEN + "The realm owner has REJOINED the server.");
-					pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Kick timeout cancelled.");
-				}
-			}
-			offline_player_realms.remove(p.getName());
-			uploading_realms.remove(p.getName());
-			// setRealmLoadStatusSQL(p.getName(), false);
-		}
-
-		if (p.getInventory().all(Material.NETHER_STAR).size() > 1) {
-			for (Entry<Integer, ? extends ItemStack> data : p.getInventory().all(Material.NETHER_STAR).entrySet()) {
-				p.getInventory().remove(data.getValue());
-				log.info("[RealmMechanics] Player " + p.getName() + " had more than one realm rune, removed all but 1!");
-			}
-		}
-
-		int slot = -1;
-		if (p.getInventory().contains(Material.NETHER_STAR)) {
-			slot = p.getInventory().first(Material.NETHER_STAR);
-		}
-
-		if (slot == -1) {
-			if (p.getInventory().getItem(7) == null || p.getInventory().getItem(7).getType() == Material.AIR) {
-				p.getInventory().setItem(7, makeTeleportRune(p));
-			} else {
-				if (p.getInventory().firstEmpty() != -1) {
-					p.getInventory().setItem(p.getInventory().firstEmpty(), makeTeleportRune(p));
-				}
-			}
-		}
-
-		p.updateInventory();
-
-		String w_name = p.getWorld().getName();
-		if (!w_name.equalsIgnoreCase(Bukkit.getWorlds().get(0).getName())) {
-			p.teleport(SpawnMechanics.getRandomSpawnPoint(p.getName()));
-		}
-
-	}
-
-	@EventHandler
-	public void onInventoryCloseEvent(InventoryCloseEvent e) {
-		Player p = (Player) e.getPlayer();
-
-		if (e.getInventory().getName().equalsIgnoreCase("container.chest") || e.getInventory().getName().equalsIgnoreCase("container.chestDouble")
-				|| e.getInventory().getName().equalsIgnoreCase("container.minecart") || e.getInventory().getName().equalsIgnoreCase("container.dispenser")
-				|| e.getInventory().getName().equalsIgnoreCase("container.dropper") || e.getInventory().getName().equalsIgnoreCase("container.hopper")) {
-
-			if (p.isOp()) {
-				return;
-			}
-
-			List<ItemStack> to_remove = new ArrayList<ItemStack>();
-			List<ItemStack> to_drop = new ArrayList<ItemStack>();
-			for (ItemStack is : e.getInventory().getContents()) {
-				if (is == null || is.getType() == Material.AIR) {
-					continue;
-				}
-				if (!(isItemTradeable(is)) || PetMechanics.isPermUntradeable(is) || ItemMechanics.isSoulbound(is) || CommunityMechanics.isSocialBook(is)
-						|| is.getType() == Material.NETHER_STAR) {
-					to_remove.add(is);
-				}
-				if (ItemMechanics.isArmor(is) || !ItemMechanics.getDamageData(is).equalsIgnoreCase("no") || is.getType() == Material.EMERALD
-						|| is.getType() == Material.PAPER || MoneyMechanics.isGemPouch(is)) {
-					to_drop.add(is);
-				}
-			}
-
-			for (ItemStack is : to_remove) {
-				e.getInventory().remove(is);
-			}
-
-			for (ItemStack is : to_drop) {
-				if (to_remove.contains(is)) {
-					continue;
-				}
-				e.getInventory().remove(is);
-				p.getWorld().dropItemNaturally(p.getLocation(), is);
-			}
-
-			if (to_remove.size() > 0) {
-				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " deposit weapons, armor, or gems in realm blocks.");
-				p.sendMessage(ChatColor.GRAY + "Deposit those items in your BANK CHEST.");
-			}
-		}
-	}
-
-	public static ItemStack makeTeleportRune(Player p) {
-		int tier = getRealmTier(p.getName());
-		int dimensions = getRealmSizeDimensions(tier);
-		if (dimensions == 0) {
-			dimensions = 16;
-			return genCustomItem(
-					Material.NETHER_STAR,
-					(short) 0,
-					ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "Realm Portal Rune",
-					ChatColor.GRAY.toString() + "Tier: " + tier + "/7 [" + dimensions + "x" + dimensions + "x" + dimensions + "],"
-							+ ChatColor.LIGHT_PURPLE.toString() + "Right-Click:" + ChatColor.GRAY.toString() + " Generate Realm" + ","
-							+ ChatColor.GRAY.toString() + "Walk through the portal you create to go to" + "," + ChatColor.GRAY.toString()
-							+ "your Player Owned Realm. Here you can build a" + "," + ChatColor.GRAY.toString() + "perfect haven for your character." + ","
-							+ ChatColor.GRAY.toString() + "Let your creativity go wild.");
-		} else {
-			return genCustomItem(
-					Material.NETHER_STAR,
-					(short) 0,
-					ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "Realm Portal Rune",
-					ChatColor.GRAY.toString() + "Tier: " + tier + "/7 [" + dimensions + "x" + dimensions + "x" + dimensions + "],"
-							+ ChatColor.LIGHT_PURPLE.toString() + "Right Click:" + ChatColor.GRAY.toString() + " Open Portal,"
-							+ ChatColor.LIGHT_PURPLE.toString() + "Left Click:" + ChatColor.GRAY.toString() + " Realm Shop,"
-							+ ChatColor.LIGHT_PURPLE.toString() + "Sneak-Right Click:" + ChatColor.GRAY.toString() + " Upgrade Realm,"
-							+ ChatColor.LIGHT_PURPLE.toString() + "Sneak-Left Click: " + ChatColor.GRAY + "Add Builder");
-		}
-	}
-
-	public static int getMoneyInInventory(Inventory i) {
-		int net_worth = 0;
-
-		HashMap<Integer, ? extends ItemStack> invItems = i.all(Material.EMERALD);
-		for (Map.Entry<Integer, ? extends ItemStack> entry : invItems.entrySet()) {
-			ItemStack item = entry.getValue();
-			int stackAmount = item.getAmount();
-
-			net_worth += stackAmount;
-		}
-
-		HashMap<Integer, ? extends ItemStack> gem_pouches = i.all(Material.INK_SACK);
-		for (Map.Entry<Integer, ? extends ItemStack> entry : gem_pouches.entrySet()) {
-			ItemStack item = entry.getValue();
-
-			if (!MoneyMechanics.isGemPouch(item)) {
+		Location portal_loc = e.getClickedBlock().getLocation().add(0, 1.5, 0);
+		for (Player pl : portal_loc.getWorld().getPlayers()) {
+			if (pl.getName().equalsIgnoreCase(p.getName())) {
 				continue;
 			}
-
-			int worth = MoneyMechanics.getGemPouchWorth(item);
-
-			net_worth += worth;
-		}
-
-		HashMap<Integer, ? extends ItemStack> bank_notes = i.all(Material.PAPER);
-		for (Map.Entry<Integer, ? extends ItemStack> entry : bank_notes.entrySet()) {
-			ItemStack item = entry.getValue();
-			int bank_note_val = MoneyMechanics.getBankNoteValue(item);
-
-			net_worth += bank_note_val;
-		}
-
-		return net_worth;
-	}
-
-	public static int getMoneyInInventory(Player p) {
-		Inventory i = p.getInventory();
-		int net_worth = 0;
-
-		HashMap<Integer, ? extends ItemStack> invItems = i.all(Material.EMERALD);
-		for (Map.Entry<Integer, ? extends ItemStack> entry : invItems.entrySet()) {
-			ItemStack item = entry.getValue();
-			int stackAmount = item.getAmount();
-
-			net_worth += stackAmount;
-		}
-
-		HashMap<Integer, ? extends ItemStack> gem_pouches = i.all(Material.INK_SACK);
-		for (Map.Entry<Integer, ? extends ItemStack> entry : gem_pouches.entrySet()) {
-			ItemStack item = entry.getValue();
-
-			if (!MoneyMechanics.isGemPouch(item)) {
+			if (!(pl.getWorld().getName().equalsIgnoreCase(portal_loc.getWorld().getName()))) {
 				continue;
 			}
-
-			int worth = MoneyMechanics.getGemPouchWorth(item);
-
-			net_worth += worth;
-		}
-
-		HashMap<Integer, ? extends ItemStack> bank_notes = i.all(Material.PAPER);
-		for (Map.Entry<Integer, ? extends ItemStack> entry : bank_notes.entrySet()) {
-			ItemStack item = entry.getValue();
-			int bank_note_val = MoneyMechanics.getBankNoteValue(item);
-
-			net_worth += bank_note_val;
-		}
-
-		return net_worth;
-	}
-
-	public static boolean doTheyHaveEnoughMoney(Player p, int amount) {
-		Inventory i = p.getInventory();
-		int paid_off = 0;
-
-		HashMap<Integer, ? extends ItemStack> invItems = i.all(Material.EMERALD);
-		for (Map.Entry<Integer, ? extends ItemStack> entry : invItems.entrySet()) {
-			ItemStack item = entry.getValue();
-			int stackAmount = item.getAmount();
-
-			if ((paid_off + stackAmount) <= amount) {
-				paid_off += stackAmount;
-			}
-
-			else {
-				int to_take = amount - paid_off;
-				paid_off += to_take;
-			}
-
-			if (paid_off >= amount) {
-				return true; // WE CAN AFFORD IT! WOO!
-			}
-
-		}
-
-		HashMap<Integer, ? extends ItemStack> gem_pouches = i.all(Material.INK_SACK);
-		for (Map.Entry<Integer, ? extends ItemStack> entry : gem_pouches.entrySet()) {
-			ItemStack item = entry.getValue();
-
-			if (!MoneyMechanics.isGemPouch(item)) {
-				continue;
-			}
-
-			int worth = MoneyMechanics.getGemPouchWorth(item);
-
-			if ((paid_off + worth) <= amount) {
-				paid_off += worth;
-			}
-
-			else {
-				int to_take = amount - paid_off;
-				paid_off += to_take;
-			}
-
-			if (paid_off >= amount) {
-				return true; // WE CAN AFFORD IT! WOO!
-			}
-
-		}
-
-		// If code reaches this point, it's still not all paid off.
-
-		HashMap<Integer, ? extends ItemStack> bank_notes = i.all(Material.PAPER);
-		for (Map.Entry<Integer, ? extends ItemStack> entry : bank_notes.entrySet()) {
-			ItemStack item = entry.getValue();
-			int bank_note_val = MoneyMechanics.getBankNoteValue(item);
-
-			if ((paid_off + bank_note_val) <= amount) {
-				paid_off += bank_note_val;
-			}
-
-			else {
-				int to_take = amount - paid_off;
-				paid_off += to_take;
-			}
-
-			if (paid_off >= amount) {
-				return true; // They can pay it! WOO!
-			}
-
-		}
-
-		return false;
-	}
-
-	@SuppressWarnings("deprecation")
-	public static void subtractMoney(Player p, int amount) {
-		Inventory i = p.getInventory();
-		int paid_off = 0;
-
-		if (amount <= 0) {
-			return; // It's free.
-		}
-
-		HashMap<Integer, ? extends ItemStack> invItems = i.all(Material.EMERALD);
-		for (Map.Entry<Integer, ? extends ItemStack> entry : invItems.entrySet()) {
-			int index = entry.getKey();
-			ItemStack item = entry.getValue();
-			int stackAmount = item.getAmount();
-
-			if ((paid_off + stackAmount) <= amount) {
-				p.getInventory().setItem(index, new ItemStack(Material.AIR));
-				paid_off += stackAmount;
-			}
-
-			else {
-				int to_take = amount - paid_off;
-				p.getInventory().setItem(index, MoneyMechanics.makeGems(stackAmount - to_take));
-				paid_off += to_take;
-			}
-
-			if (paid_off >= amount) {
-				p.updateInventory();
-				break;
-			}
-		}
-
-		HashMap<Integer, ? extends ItemStack> gem_pouches = i.all(Material.INK_SACK);
-		for (Map.Entry<Integer, ? extends ItemStack> entry : gem_pouches.entrySet()) {
-			ItemStack item = entry.getValue();
-
-			if (!MoneyMechanics.isGemPouch(item)) {
-				continue;
-			}
-
-			int worth = MoneyMechanics.getGemPouchWorth(item);
-
-			if ((paid_off + worth) <= amount) {
-				paid_off += worth;
-				MoneyMechanics.setPouchWorth(item, 0);
-			}
-
-			else {
-				int to_take = amount - paid_off;
-				paid_off += to_take;
-				MoneyMechanics.setPouchWorth(item, worth - to_take);
-			}
-
-			if (paid_off >= amount) {
-				p.updateInventory();
-				break;
-			}
-
-		}
-
-		// They still aren't paid off!
-
-		HashMap<Integer, ? extends ItemStack> bank_notes = i.all(Material.PAPER);
-		for (Map.Entry<Integer, ? extends ItemStack> entry : bank_notes.entrySet()) {
-			ItemStack item = entry.getValue();
-			int bank_note_val = MoneyMechanics.getBankNoteValue(item);
-			int index = entry.getKey();
-
-			if ((paid_off + bank_note_val) <= amount) {
-				p.getInventory().setItem(index, new ItemStack(Material.AIR));
-				paid_off += bank_note_val;
-			}
-
-			else {
-				int to_take = amount - paid_off;
-				paid_off += to_take;
-				MoneyMechanics.updateMoney(p, index, (bank_note_val - to_take));
-			}
-
-			if (paid_off >= amount) {
-				p.updateInventory();
-				break;
-			}
-
-		}
-	}
-
-	public static String getFormalMatName(Material m, short dur) {
-		String base_name = m.name();
-		if (base_name.equalsIgnoreCase("wool") && dur == 0) {
-			base_name = "white wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 1) {
-			base_name = "orange wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 2) {
-			base_name = "magenta wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 3) {
-			base_name = "light blue wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 4) {
-			base_name = "yellow wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 5) {
-			base_name = "lime wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 6) {
-			base_name = "pink wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 7) {
-			base_name = "gray wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 8) {
-			base_name = "light gray wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 9) {
-			base_name = "cyan wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 10) {
-			base_name = "purple wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 11) {
-			base_name = "blue wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 12) {
-			base_name = "brown wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 13) {
-			base_name = "green wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 14) {
-			base_name = "red wool";
-		}
-		if (base_name.equalsIgnoreCase("wool") && dur == 15) {
-			base_name = "black wool";
-		}
-
-		if (base_name.equalsIgnoreCase("log")) {
-			if (dur == 0)
-				base_name = "oak wood";
-
-			if (dur == 1)
-				base_name = "spruce wood";
-
-			if (dur == 2)
-				base_name = "birch wood";
-		}
-
-		if (base_name.equalsIgnoreCase("sandstone")) {
-			if (dur == 1)
-				base_name = "chiseled sandstone";
-
-			if (dur == 2)
-				base_name = "smooth sandstone";
-		}
-
-		if (base_name.equalsIgnoreCase("smooth_brick")) {
-			if (dur == 1)
-				base_name = "mossy stone brick";
-
-			if (dur == 2)
-				base_name = "cracked stone bricks";
-
-			if (dur == 2)
-				base_name = "chiseled stone bricks";
-		}
-
-		if (base_name.equalsIgnoreCase("long_grass")) {
-			base_name = "grass";
-		}
-
-		base_name = base_name.replaceAll("_", "");
-
-		String formal_name = base_name.substring(0, 1).toUpperCase() + base_name.substring(1, base_name.length()).toLowerCase();
-		return formal_name;
-	}
-
-	public static ItemStack makeUntradeable(ItemStack itemStack) {
-		ItemMeta im = itemStack.getItemMeta();
-
-		boolean rename = false;
-		String o_name = "";
-		try {
-			try {
-				o_name = im.getDisplayName();
-				rename = true;
-			} catch (NullPointerException npe) {
-				rename = false;
-			}
-		} catch (ClassCastException cce) {
-			rename = false;
-		}
-
-		if (rename == true && o_name != null && o_name.length() > 0) {
-			im.setDisplayName(o_name);
-		}
-
-		List<String> cur_lore = new ArrayList<String>();
-
-		if (im != null) {
-			cur_lore = im.getLore();
-		}
-		if (cur_lore == null) {
-			cur_lore = new ArrayList<String>();
-		}
-		cur_lore.add(ChatColor.GRAY.toString() + "Untradeable");
-		im.setLore(cur_lore);
-
-		itemStack.setItemMeta(im);
-		return itemStack;
-	}
-
-	public static boolean isItemTradeable(ItemStack i) {
-
-		if (i != null && i.hasItemMeta() && i.getItemMeta().hasLore()) {
-			List<String> lore = i.getItemMeta().getLore();
-			for (String s : lore) {
-				if (ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("untradeable")
-						|| ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("permanent untradeable")) {
-					return false;
-				}
-			}
-		}
-
-		return true;
-
-		/*
-		 * try{ if(i.hasItemMeta() && i.getItemMeta().hasLore()){ for(String s : i.getItemMeta().getLore()){
-		 * if(ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("untradeable") ||
-		 * ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("permanent untradeable")){ return false; } } }
-		 *
-		 * NBTTagList description = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getList("Lore", 0);
-		 *
-		 * if(description.get(description.size() - 1).toString().contains("Untradeable")){ return false; }
-		 *
-		 * } catch (Exception e) { return true; } return true;
-		 */
-	}
-
-	public static void disableAllEffects(Player player, final LivingEntity entity) {
-		CraftEntity ce = (CraftEntity) ((Entity) entity);
-
-		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R2.Entity) ce.getHandle());
-		dw.a(8, Byte.valueOf((byte) 0));
-		dw.watch(8, Byte.valueOf((byte) 0x00FF00));
-
-		PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata(entity.getEntityId(), dw, false);
-		((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-
-		DataWatcher dwReal = ((CraftLivingEntity) entity).getHandle().getDataWatcher();
-		dw.watch(8, dwReal.getByte(8));
-		packet = new PacketPlayOutEntityMetadata(entity.getEntityId(), dw, false);
-		((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-	}
-
-	public static void playPotionEffect(final Player player, final LivingEntity entity, int color, int duration) {
-		CraftEntity ce = (CraftEntity) ((Entity) entity);
-
-		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R2.Entity) ce.getHandle());
-		dw.a(8, Byte.valueOf((byte) 0));
-		dw.watch(8, Byte.valueOf((byte) color));
-
-		PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata(entity.getEntityId(), dw, false);
-		((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				DataWatcher dwReal = ((CraftLivingEntity) entity).getHandle().getDataWatcher();
-				dw.watch(8, dwReal.getByte(8));
-				PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata(entity.getEntityId(), dw, false);
-				((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-			}
-		}.runTaskLaterAsynchronously(Main.plugin, duration);
-	}
-
-	@SuppressWarnings("deprecation")
-	@EventHandler
-	public void onItemDropFromInv(InventoryClickEvent e) {
-		Player p = (Player) e.getWhoClicked();
-
-		Inventory top = p.getOpenInventory().getTopInventory();
-
-		if (!top.getName().contains("E-Cash Storage") && !top.getName().contains(" Merchant") && !top.getName().startsWith("Bank Chest")
-				&& !(top.getName().equalsIgnoreCase("Collection Bin")) && !(top.getName().equalsIgnoreCase("container.crafting"))) { // Some interaction
-			// occuring in the top
-			// inventory section.
-
-			ItemStack is = null;
-			if (e.isShiftClick()) {
-				is = e.getCurrentItem();
-				if (e.getRawSlot() >= top.getSize()) {
-					if (!(isItemTradeable(is)) && !(is.getType() == Material.PAPER) || ItemMechanics.isSoulbound(is)) {
-						e.setCancelled(true);
-						p.updateInventory();
-						p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " perform this action with an "
-								+ ChatColor.ITALIC + "untradeable" + ChatColor.RED + " item.");
-						// Prevent untradeable items from being put in other inventories.
-					}
-				}
-			} else if (!(e.isShiftClick())) {
-				is = e.getCursor();
-				if (e.getRawSlot() < top.getSize()) {
-					if (!(isItemTradeable(is)) && !(is.getType() == Material.PAPER) || ItemMechanics.isSoulbound(is)) {
-						e.setCancelled(true);
-						p.updateInventory();
-						p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " perform this action with an "
-								+ ChatColor.ITALIC + "untradeable" + ChatColor.RED + " item.");
-						// Prevent untradeable items from being put in other inventories.
-					}
-				}
-			}
-
-		}
-		if (e.getInventory().getType() == InventoryType.PLAYER) {
-			if (e.getCursor() != null && e.getCurrentItem() == null && e.getSlotType() == SlotType.OUTSIDE) {
-				ItemStack i = e.getCursor();
-				if (!PetMechanics.isPermUntradeable(i) && !(isItemTradeable(i)) && !(i.getType() == Material.PAPER)) {
-					e.setCursor(new ItemStack(Material.AIR));
-					p.updateInventory();
-					p.playSound(p.getLocation(), Sound.FIZZ, 1.0F, 0.2F);
-				}
-				if (PetMechanics.isPermUntradeable(i)) {
-					e.setCancelled(true);
-					p.updateInventory();
-				}
-			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-	public void onItemDropEvent(PlayerDropItemEvent e) {
-		Player p = e.getPlayer();
-		if (!p.getWorld().getName().equalsIgnoreCase(main_world_name) && !InstanceMechanics.isInstance(p.getWorld().getName())) {
-			Item it = e.getItemDrop();
-			dropped_item_ownership.put(it, p.getName());
-		}
-
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onPlayerDropAddOwner(PlayerDropItemEvent e) {
-		Player p = e.getPlayer();
-		dropped_item_owner.put(e.getItemDrop(), p.getName());
-		// Add a 5 second delay
-		dropped_item_timer.put(e.getItemDrop(), System.currentTimeMillis() + 5000);
-	}
-
-	@EventHandler
-	public void onPlayerLeaveClearDrops(PlayerQuitEvent e) {
-		if (dropped_item_owner.containsValue(e.getPlayer().getName())) {
-			for (Entry<Item, String> entries : dropped_item_owner.entrySet()) {
-				if (entries.getValue().equalsIgnoreCase(e.getPlayer().getName())) {
-
-				}
-			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onPlayerPickup(PlayerPickupItemEvent event) {
-		Player p = event.getPlayer();
-		Item i = event.getItem();
-		if (dropped_item_timer.containsKey(i) && dropped_item_timer.get(i) >= System.currentTimeMillis()) {
-			// The timer hasnt expired so check the player
-			if (dropped_item_owner.containsKey(i) && !dropped_item_owner.get(i).equalsIgnoreCase(p.getName())) {
-				event.setCancelled(true);
+			if (pl.getLocation().distanceSquared(portal_loc) <= 2) {
+				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " place your realm portal here.");
 				return;
 			}
 		}
-	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	// Should fire AFTER KarmaMechanic's processing Permenant Untradeables.
-	public void onPlayerDeathEvent(PlayerDeathEvent e) {
-		List<ItemStack> li = e.getDrops();
-		List<ItemStack> to_remove = new ArrayList<ItemStack>();
-		boolean equipped_armor = false;
-		int saved_armor = 0;
-
-		if (e.getDrops().isEmpty()) {
-			return;
-		}
-		Player pl = (Player) e.getEntity();
-
-		List<String> armor_names = new ArrayList<String>();
-
-		for (ItemStack is : pl.getInventory().getArmorContents()) {
-			if (is == null || !(is.hasItemMeta())) {
-				continue;
-			}
-			armor_names.add(is.getItemMeta().getDisplayName());
-		}
-
-		for (ItemStack i : li) {
-			equipped_armor = false;
-			if (i == null) {
-				continue;
-			}
-			if ((!PetMechanics.isPermUntradeable(i) && !isItemTradeable(i)) || i.getType() == Material.NETHER_STAR || CommunityMechanics.isSocialBook(i)) {
-				if (i.hasItemMeta() && i.getItemMeta() instanceof LeatherArmorMeta && saved_armor < 4) {
-					if (i.getItemMeta().getLore().contains("ARMOR") || i.getItemMeta().getLore().contains("DPS")) {
-						if (armor_names.contains(i.getItemMeta().getDisplayName())) {
-							saved_armor++;
-							equipped_armor = true;
-						}
-					}
-
-					if (equipped_armor == true) {
-						continue; // Don't delete dyed armor.
-					}
-				}
-				to_remove.add(i);
-			}
-		}
-
-		for (ItemStack i : to_remove) {
-			e.getDrops().remove(i);
-		}
-
-		Player p = e.getEntity();
-		if (isWorldLoaded(p.getName())) {
-			for (Entity ent : Bukkit.getWorld(p.getName()).getEntities()) {
-				if (ent instanceof Item) {
-					Item i = (Item) ent;
-					if (dropped_item_ownership.containsKey(i) && dropped_item_ownership.get(i).equalsIgnoreCase(p.getName())) {
-						ent.remove();
-						dropped_item_ownership.remove(i);
-					}
-				}
-			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerRespawn(PlayerRespawnEvent e) {
-		Player dead = e.getPlayer();
-
-		if (dead.getLocation().getWorld().getName().equalsIgnoreCase(e.getRespawnLocation().getWorld().getName())
-				&& dead.getLocation().distanceSquared(e.getRespawnLocation()) <= 2) {
-			// They're respawning on themselves, ignore.
-			// Non-legit death, they won't loose any items.
-			return;
-		}
-
-		int slot = -1;
-		if (dead.getInventory().contains(Material.NETHER_STAR)) {
-			slot = dead.getInventory().first(Material.NETHER_STAR);
-		}
-
-		if (slot != -1) {
-			return; // Do nothing they have their rune.
-			// dead.getInventory().setItem(slot, makeTeleportRune(dead));
-		}
-
-		if (slot == -1) {
-			if (dead.getInventory().getItem(7) == null || dead.getInventory().getItem(7).getType() == Material.AIR) {
-				dead.getInventory().setItem(7, makeTeleportRune(dead));
-			} else {
-				dead.getInventory().setItem(dead.getInventory().firstEmpty(), makeTeleportRune(dead));
-			}
-		}
-
-	}
-
-	@SuppressWarnings("deprecation")
-	@EventHandler
-	public void MaterialShopInventoryEvent(InventoryClickEvent e) {
-		if (!(e.getWhoClicked() instanceof Player)) {
-			return;
-		}
-		final Player p = (Player) e.getWhoClicked();
-
-		if (!(e.getInventory().getName().contains("Realm Material Store"))) {
-			return;
-		}
-		if (e.getCurrentItem() != null && MoneyMechanics.isDivider(e.getCurrentItem())) {
-			e.setCancelled(true); // Divider.
-			p.updateInventory();
-			return;
-		}
-
-		if (e.getRawSlot() <= 53) {
-			e.setCancelled(true);
-			if (e.getCurrentItem() != null) {
-				// Material m = e.getCurrentItem().getType();
-				// String format_name = getFormalMatName(m, e.getCurrentItem().getDurability());
-				double price = ShopMechanics.getPrice(e.getCurrentItem());
-				double ecash_price = Hive.getECASHPrice(e.getCurrentItem());
-
-				if (price == -1 || ecash_price == -1) {
-					return; // No price.
-				}
-
-				if (e.getCurrentItem().getType() == Material.AIR) {
-					return;
-				}
-
-				int page = 1;
-				if (e.getInventory().getItem(54).getType() != Material.GLASS) {
-					if (e.getInventory().getItem(54).getItemMeta().getLore() != null) {
-						if (e.getInventory().getItem(54).getItemMeta().getLore().size() > 0) {
-							if (e.getInventory().getItem(54).getItemMeta().getLore().get(0).contains("1/3")) {
-								page = 2;
-							} else {
-								page = 3;
-							}
-						}
-					}
-				}
-
-				current_item_being_bought.put(p.getName(), e.getRawSlot());
-				shop_page.put(p.getName(), page);
-
-				Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-					public void run() {
-						p.closeInventory();
-					}
-				}, 2L);
-
-				if (e.isLeftClick()) {
-					p.sendMessage(ChatColor.GREEN + "Enter the " + ChatColor.BOLD + "QUANTITY" + ChatColor.GREEN + " (1-64) you'd like to purchase.");
-					p.sendMessage(ChatColor.GRAY + "This material costs " + ChatColor.GREEN + price + "G/each.");
-					shop_currency.put(p.getName(), "gems");
-				}
-				if (e.isRightClick()) {
-					p.sendMessage(ChatColor.GREEN + "Enter the " + ChatColor.BOLD + "QUANTITY" + ChatColor.GREEN + " (1-64) you'd like to purchase.");
-					p.sendMessage(ChatColor.GRAY + "This material costs " + ChatColor.GOLD + ecash_price + "EC/each.");
-					double per_ecash = ecash_price;
-					if (ecash_price < 1) {
-						per_ecash = Math.round((1 / (ecash_price)));
-						p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "This means you will get " + per_ecash
-								+ "x blocks for each E-CASH you use. So a quantity of 1 = " + per_ecash + " blocks.");
-					}
-					shop_currency.put(p.getName(), "ecash");
-				}
-				return;
-
-			}
-		}
-		if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR)
-			return;
-
-		if (e.getCurrentItem().getItemMeta().getLore().get(0).contains("1/3")) {
-			e.setCancelled(true);
-			p.updateInventory();
-			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() {
-					// p.closeInventory();
-					if (p.getOpenInventory() == null) {
-						p.openInventory(mat_shop_1);
-						return;
-					}
-					for (int x = 0; x < mat_shop_1.getSize(); x++) {
-						p.getOpenInventory().getTopInventory().setItem(x, mat_shop_1.getItem(x));
-					}
-					p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
-				}
-			}, 2L);
-		} else if (e.getCurrentItem().getItemMeta().getLore().get(0).contains("2/3")) {
-			e.setCancelled(true);
-			p.updateInventory();
-			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() {
-					// p.closeInventory(); Doesnt need to close first just looks bad
-					if (p.getOpenInventory() == null) {
-						p.openInventory(mat_shop_2);
-						return;
-					}
-					for (int x = 0; x < mat_shop_2.getSize(); x++) {
-						p.getOpenInventory().getTopInventory().setItem(x, mat_shop_2.getItem(x));
-					}
-					p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
-				}
-			}, 2L);
-		} else if (e.getCurrentItem().getItemMeta().getLore().get(0).contains("3/3")) {
-			e.setCancelled(true);
-			p.updateInventory();
-			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() {
-					// p.closeInventory();
-					if (p.getOpenInventory() == null) {
-						p.openInventory(mat_shop_3);
-						return;
-					}
-					for (int x = 0; x < mat_shop_3.getSize(); x++) {
-						p.getOpenInventory().getTopInventory().setItem(x, mat_shop_3.getItem(x));
-					}
-					p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
-				}
-			}, 2L);
-		}
-	}
-
-	@EventHandler
-	public void onInventoryInteractEvent(InventoryClickEvent e) {
-		if (e.getSlotType() == SlotType.OUTSIDE && e.getCursor() == null) {
-			return;
-		}
-		Player p = (Player) e.getWhoClicked();
-		if (e.getCurrentItem() == null) {
-			return;
-		}
-
-		if (e.getCurrentItem().getType() == Material.NETHER_STAR && !p.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting")) {
-			e.setCancelled(true);
-		}
-		if (e.getCursor().getType() == Material.NETHER_STAR && !p.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting")) {
-			e.setCancelled(true);
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	@EventHandler
-	public void onInventoryClickEvent(InventoryClickEvent e) {
-		Player p = (Player) e.getWhoClicked();
-
-		if (!e.getInventory().getName().equalsIgnoreCase("container.chest") && !e.getInventory().getName().equalsIgnoreCase("container.chestDouble")
-				&& !(e.getInventory().getName().equalsIgnoreCase("container.minecart"))
-				&& !(e.getInventory().getName().equalsIgnoreCase("container.dispenser")) && !(e.getInventory().getName().equalsIgnoreCase("container.hopper"))
-				&& !(e.getInventory().getName().equalsIgnoreCase("container.dropper"))) {
-			return;
-		}
-
-		if (p.getWorld().getName().equalsIgnoreCase(main_world_name) || p.isOp()) {
-			return;
-		}
-
-		if (!(e.getInventory().getName().equalsIgnoreCase("container.hopper")) && e.getAction() == InventoryAction.PICKUP_ALL && p != null) {
-			// Trying to grab all items from a chest in a realm.
-			String realm_name = p.getWorld().getName();
-			if (!(realm_name.equalsIgnoreCase(p.getName()) || (build_list.containsKey(realm_name) && build_list.get(realm_name).contains(p.getName())))) {
+		if (block_world_name.equalsIgnoreCase(p.getName())) {
+			if (upgrading_realms.contains(block_world_name)) {
 				e.setCancelled(true);
-				e.setResult(Result.DENY);
+				p.sendMessage(ChatColor.YELLOW + "Portal events are disabled while your realm upgrades.");
+				return;
+			}
+			Block b = e.getClickedBlock().getLocation().add(0, 1, 0).getBlock();
+			Location old_portal = Bukkit.getWorld(block_world_name).getSpawnLocation().subtract(0, 1, 0).clone();
+			Location new_portal = new Location(b.getWorld(), b.getX(), b.getY(), b.getZ());
+			old_portal.getBlock().setType(Material.AIR);
+			old_portal.add(0, 1, 0).getBlock().setType(Material.AIR);
+			if (holograms.get(old_portal) != null) {
+				holograms.get(old_portal).destroy();
+				holograms.remove(old_portal);
+			}
+			Bukkit.getWorld(block_world_name).setSpawnLocation(new_portal.getBlockX(), new_portal.getBlockY() + 1, new_portal.getBlockZ());
+			new_portal.getBlock().setType(Material.PORTAL);
+			new_portal.add(0, 1, 0).getBlock().setType(Material.PORTAL);
+			return;
+		}
+
+		if (has_portal.containsKey(p.getName()) && !(inv_portal_map.containsKey(p.getName()))) {
+			return; // Their realm is JUST loading.
+		}
+
+		// TODO: This probably causes unlinking
+		if (has_portal.containsKey(p.getName()) && inv_portal_map.containsKey(p.getName())) {
+			Location l = inv_portal_map.get(p.getName());
+			holograms.get(l).destroy();
+			holograms.remove(l);
+			l.getBlock().setType(Material.AIR);
+			l.subtract(0, 1, 0).getBlock().setType(Material.AIR);
+			portal_map_coords.remove(p.getName());
+			inv_portal_map.remove(p.getName());
+			l.add(0, 1, 0);
+			portal_map.remove(l);
+		}
+
+		p.getWorld().playEffect(portal_location, Effect.ENDER_SIGNAL, 10);
+		p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 5F, 1.25F);
+		has_portal.put(p.getName(), true);
+		p.setItemInHand(makeTeleportRune(p));
+		makePortal(p.getName(), portal_location.subtract(0, 2, 0), 60);
+		if (new_realm == true) { // We don't need to load the world if we're just moving the portal.
+			/*
+			 * Thread t = new Thread(new Runnable() { public void run() { realmHandler(p, p.getName()); } });
+			 *
+			 * t.start();
+			 */
+
+			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+				public void run() {
+					realmHandler(p, p.getName());
+				}
+			}, 1L);
+		}
+	}
+
+}
+
+public Player getTarget(Player trader) {
+	List<Entity> nearbyE = trader.getNearbyEntities(4.0D, 4.0D, 4.0D);
+	ArrayList<Player> livingE = new ArrayList<Player>();
+
+	for (Entity e : nearbyE) {
+		if (e.getType() == EntityType.PLAYER) {
+			livingE.add((Player) e);
+		}
+	}
+
+	Player target = null;
+	BlockIterator bItr = new BlockIterator(trader, 4);
+	Block block;
+	Location loc;
+	int bx, by, bz;
+	double ex, ey, ez;
+	// loop through player's line of sight
+	while (bItr.hasNext()) {
+		block = bItr.next();
+		bx = block.getX();
+		by = block.getY();
+		bz = block.getZ();
+		// check for entities near this block in the line of sight
+		for (LivingEntity e : livingE) {
+			loc = e.getLocation();
+			ex = loc.getX();
+			ey = loc.getY();
+			ez = loc.getZ();
+			if ((bx - .75 <= ex && ex <= bx + 1.75) && (bz - .75 <= ez && ez <= bz + 1.75) && (by - 1 <= ey && ey <= by + 2.5)) {
+				// entity is close enough, set target and stop
+				target = (Player) e;
+				break;
+			}
+		}
+	}
+
+	return target;
+}
+
+// Prevents flying players from flying out of realm bounds.
+@EventHandler(priority = EventPriority.HIGH)
+public void onPlayerMove(PlayerMoveEvent e) {
+	Player p = e.getPlayer();
+
+	if (ModerationMechanics.vanish_list.contains(p.getName())) {
+		return; // Don't particle vanish'd mods.
+	}
+
+	if (p.isFlying() && p.getAllowFlight() == true && !p.getWorld().getName().equalsIgnoreCase(main_world_name)
+			&& !(InstanceMechanics.isInstance(p.getWorld().getName()))) {
+		// They can fly, they're in a realm where they're allowed to fly, don't let them fly into void plz.
+		Location to = e.getTo();
+		Location safe_loc = e.getFrom();
+
+		try {
+			ParticleEffect.sendToLocation(ParticleEffect.CLOUD, p.getLocation(), 0, 0, 0, 0.05F, 20);
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		// p.getWorld().spawnParticle(p.getLocation(), Particle.CLOUD, 0.05F, 20);
+
+		if (!(p.isOp())) {
+			int realm_tier = getRealmTier(p.getWorld().getName());
+			int max_size = getRealmSizeDimensions(realm_tier) + 16; // Add 16, because the default chunk (0,0) is never used, and 16 is lowest you can be.
+
+			int max_y = 128; // + (max_size / 2)
+			Block b = to.getBlock();
+
+			if (!(b.getWorld().getName().equalsIgnoreCase(p.getWorld().getName()))) {
+				return; // no worries.
+			}
+
+			if (Math.round(b.getX() - 0.5) > max_size || Math.round(b.getX() - 0.5) < 16 || Math.round(b.getZ() - 0.5) > max_size
+					|| Math.round(b.getZ() - 0.5) < 16 || (b.getY() > (max_y + (max_size) + 1)) || (b.getY() < (max_y - (max_size) - 1))) {
+				e.setCancelled(true);
+				p.teleport(safe_loc);
 				return;
 			}
 		}
+	}
+}
+
+public static void generateUpgradeAuthenticationCode(Player p, String tier) {
+	StringBuffer sb = new StringBuffer(4);
+	for (int i = 0; i < 4; i++) {
+		int ndx = (int) (Math.random() * ALPHA_NUM.length());
+		sb.append(ALPHA_NUM.charAt(ndx));
+	}
+
+	realm_upgrade_codes.put(p, tier + sb.toString());
+}
+
+public static String getUpgradeAuthenticationCode(Player p) {
+	if (realm_upgrade_codes.containsKey(p)) {
+		return realm_upgrade_codes.get(p);
+	} else {
+		return null;
+	}
+}
+
+public static ItemStack genCustomItem(Material m, short meta_data, String name, String desc) {
+	return ItemMechanics.signCustomItem(m, meta_data, name, desc);
+}
+
+@SuppressWarnings("deprecation")
+public void removePistonHeads(Player pl) {
+	for (ItemStack is : pl.getInventory().getContents()) {
+		if (is != null && is.getType() == Material.THIN_GLASS && is.hasItemMeta() && is.getItemMeta().hasDisplayName()
+				&& is.getItemMeta().getDisplayName().equalsIgnoreCase(" ")) {
+			pl.getInventory().removeItem(is);
+		}
+	}
+	pl.updateInventory();
+}
+
+@SuppressWarnings("deprecation")
+@EventHandler(priority = EventPriority.MONITOR)
+// After location is loaded.
+public void onPlayerJoin(PlayerJoinEvent e) {
+	final Player p = e.getPlayer();
+	p.setAllowFlight(false);
+
+	removePistonHeads(p);
+
+	new File(rootDir + "/realms/up/" + p.getName() + ".zip").delete();
+	// Delete any old /up/ files on join.
+
+	if (doesWorldExistLocal(p.getName()) && !(isWorldLoaded(p.getName()))) {
+		File world_root = new File(p.getName());
+		deleteFolder(world_root);
+		log.info("[RealmMechanics] Found a realm that should't be on here. Deleting for player " + p.getName());
+	}
+
+	if (offline_player_realms.containsKey(p.getName())) {
+		for (Player pl : offline_player_realms.get(p.getName())) {
+			if (pl.getWorld().getName().equalsIgnoreCase(p.getName())) {
+				pl.sendMessage(ChatColor.GREEN + "The realm owner has REJOINED the server.");
+				pl.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Kick timeout cancelled.");
+			}
+		}
+		offline_player_realms.remove(p.getName());
+		uploading_realms.remove(p.getName());
+		// setRealmLoadStatusSQL(p.getName(), false);
+	}
+
+	if (p.getInventory().all(Material.NETHER_STAR).size() > 1) {
+		for (Entry<Integer, ? extends ItemStack> data : p.getInventory().all(Material.NETHER_STAR).entrySet()) {
+			p.getInventory().remove(data.getValue());
+			log.info("[RealmMechanics] Player " + p.getName() + " had more than one realm rune, removed all but 1!");
+		}
+	}
+
+	int slot = -1;
+	if (p.getInventory().contains(Material.NETHER_STAR)) {
+		slot = p.getInventory().first(Material.NETHER_STAR);
+	}
+
+	if (slot == -1) {
+		if (p.getInventory().getItem(7) == null || p.getInventory().getItem(7).getType() == Material.AIR) {
+			p.getInventory().setItem(7, makeTeleportRune(p));
+		} else {
+			if (p.getInventory().firstEmpty() != -1) {
+				p.getInventory().setItem(p.getInventory().firstEmpty(), makeTeleportRune(p));
+			}
+		}
+	}
+
+	p.updateInventory();
+
+	String w_name = p.getWorld().getName();
+	if (!w_name.equalsIgnoreCase(Bukkit.getWorlds().get(0).getName())) {
+		p.teleport(SpawnMechanics.getRandomSpawnPoint(p.getName()));
+	}
+
+}
+
+@EventHandler
+public void onInventoryCloseEvent(InventoryCloseEvent e) {
+	Player p = (Player) e.getPlayer();
+
+	if (e.getInventory().getName().equalsIgnoreCase("container.chest") || e.getInventory().getName().equalsIgnoreCase("container.chestDouble")
+			|| e.getInventory().getName().equalsIgnoreCase("container.minecart") || e.getInventory().getName().equalsIgnoreCase("container.dispenser")
+			|| e.getInventory().getName().equalsIgnoreCase("container.dropper") || e.getInventory().getName().equalsIgnoreCase("container.hopper")) {
 
 		if (p.isOp()) {
 			return;
 		}
 
-		int slot_num = e.getRawSlot();
-		if (slot_num < e.getInventory().getSize()) {
-			// An item inside the chest is being clicked.
-			if (e.isShiftClick() || (e.getCursor() == null && e.getCurrentItem() != null)) {
-				return; // Don't care if they're moving stuff OUT of inventory.
+		List<ItemStack> to_remove = new ArrayList<ItemStack>();
+		List<ItemStack> to_drop = new ArrayList<ItemStack>();
+		for (ItemStack is : e.getInventory().getContents()) {
+			if (is == null || is.getType() == Material.AIR) {
+				continue;
 			}
+			if (!(isItemTradeable(is)) || PetMechanics.isPermUntradeable(is) || ItemMechanics.isSoulbound(is) || CommunityMechanics.isSocialBook(is)
+					|| is.getType() == Material.NETHER_STAR) {
+				to_remove.add(is);
+			}
+			if (ItemMechanics.isArmor(is) || !ItemMechanics.getDamageData(is).equalsIgnoreCase("no") || is.getType() == Material.EMERALD
+					|| is.getType() == Material.PAPER || MoneyMechanics.isGemPouch(is)) {
+				to_drop.add(is);
+			}
+		}
 
-			if (e.getCursor() != null) {
-				// They're placing an item into the chest.
-				ItemStack cursor = e.getCursor();
-				if (ItemMechanics.isArmor(cursor) || !ItemMechanics.getDamageData(cursor).equalsIgnoreCase("no") || cursor.getType() == Material.EMERALD
-						|| cursor.getType() == Material.PAPER || MoneyMechanics.isGemPouch(cursor)) {
-					e.setCancelled(true);
-					e.setCursor(cursor);
-					p.updateInventory();
-					p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " deposit weapons, armor, or gems in realm blocks.");
-					p.sendMessage(ChatColor.GRAY + "Deposit those items in your BANK CHEST.");
-				}
+		for (ItemStack is : to_remove) {
+			e.getInventory().remove(is);
+		}
+
+		for (ItemStack is : to_drop) {
+			if (to_remove.contains(is)) {
+				continue;
 			}
-		} else if (slot_num >= e.getInventory().getSize()) {
-			// Clicking in own inventory.
-			if (e.isShiftClick()) {
-				ItemStack in_slot = e.getCurrentItem();
-				if (ItemMechanics.isArmor(in_slot) || !ItemMechanics.getDamageData(in_slot).equalsIgnoreCase("no") || in_slot.getType() == Material.EMERALD
-						|| in_slot.getType() == Material.PAPER || MoneyMechanics.isGemPouch(in_slot)) {
-					e.setCancelled(true);
-					e.setCurrentItem(in_slot);
-					p.updateInventory();
-					p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " deposit weapons, armor, or gems in realm blocks.");
-					p.sendMessage(ChatColor.GRAY + "Deposit those items in your BANK CHEST.");
-				}
+			e.getInventory().remove(is);
+			p.getWorld().dropItemNaturally(p.getLocation(), is);
+		}
+
+		if (to_remove.size() > 0) {
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " deposit weapons, armor, or gems in realm blocks.");
+			p.sendMessage(ChatColor.GRAY + "Deposit those items in your BANK CHEST.");
+		}
+	}
+}
+
+public static ItemStack makeTeleportRune(Player p) {
+	int tier = getRealmTier(p.getName());
+	int dimensions = getRealmSizeDimensions(tier);
+	if (dimensions == 0) {
+		dimensions = 16;
+		return genCustomItem(
+				Material.NETHER_STAR,
+				(short) 0,
+				ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "Realm Portal Rune",
+				ChatColor.GRAY.toString() + "Tier: " + tier + "/7 [" + dimensions + "x" + dimensions + "x" + dimensions + "],"
+						+ ChatColor.LIGHT_PURPLE.toString() + "Right-Click:" + ChatColor.GRAY.toString() + " Generate Realm" + ","
+						+ ChatColor.GRAY.toString() + "Walk through the portal you create to go to" + "," + ChatColor.GRAY.toString()
+						+ "your Player Owned Realm. Here you can build a" + "," + ChatColor.GRAY.toString() + "perfect haven for your character." + ","
+						+ ChatColor.GRAY.toString() + "Let your creativity go wild.");
+	} else {
+		return genCustomItem(
+				Material.NETHER_STAR,
+				(short) 0,
+				ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD.toString() + "Realm Portal Rune",
+				ChatColor.GRAY.toString() + "Tier: " + tier + "/7 [" + dimensions + "x" + dimensions + "x" + dimensions + "],"
+						+ ChatColor.LIGHT_PURPLE.toString() + "Right Click:" + ChatColor.GRAY.toString() + " Open Portal,"
+						+ ChatColor.LIGHT_PURPLE.toString() + "Left Click:" + ChatColor.GRAY.toString() + " Realm Shop,"
+						+ ChatColor.LIGHT_PURPLE.toString() + "Sneak-Right Click:" + ChatColor.GRAY.toString() + " Upgrade Realm,"
+						+ ChatColor.LIGHT_PURPLE.toString() + "Sneak-Left Click: " + ChatColor.GRAY + "Add Builder");
+	}
+}
+
+public static int getMoneyInInventory(Inventory i) {
+	int net_worth = 0;
+
+	HashMap<Integer, ? extends ItemStack> invItems = i.all(Material.EMERALD);
+	for (Map.Entry<Integer, ? extends ItemStack> entry : invItems.entrySet()) {
+		ItemStack item = entry.getValue();
+		int stackAmount = item.getAmount();
+
+		net_worth += stackAmount;
+	}
+
+	HashMap<Integer, ? extends ItemStack> gem_pouches = i.all(Material.INK_SACK);
+	for (Map.Entry<Integer, ? extends ItemStack> entry : gem_pouches.entrySet()) {
+		ItemStack item = entry.getValue();
+
+		if (!MoneyMechanics.isGemPouch(item)) {
+			continue;
+		}
+
+		int worth = MoneyMechanics.getGemPouchWorth(item);
+
+		net_worth += worth;
+	}
+
+	HashMap<Integer, ? extends ItemStack> bank_notes = i.all(Material.PAPER);
+	for (Map.Entry<Integer, ? extends ItemStack> entry : bank_notes.entrySet()) {
+		ItemStack item = entry.getValue();
+		int bank_note_val = MoneyMechanics.getBankNoteValue(item);
+
+		net_worth += bank_note_val;
+	}
+
+	return net_worth;
+}
+
+public static int getMoneyInInventory(Player p) {
+	Inventory i = p.getInventory();
+	int net_worth = 0;
+
+	HashMap<Integer, ? extends ItemStack> invItems = i.all(Material.EMERALD);
+	for (Map.Entry<Integer, ? extends ItemStack> entry : invItems.entrySet()) {
+		ItemStack item = entry.getValue();
+		int stackAmount = item.getAmount();
+
+		net_worth += stackAmount;
+	}
+
+	HashMap<Integer, ? extends ItemStack> gem_pouches = i.all(Material.INK_SACK);
+	for (Map.Entry<Integer, ? extends ItemStack> entry : gem_pouches.entrySet()) {
+		ItemStack item = entry.getValue();
+
+		if (!MoneyMechanics.isGemPouch(item)) {
+			continue;
+		}
+
+		int worth = MoneyMechanics.getGemPouchWorth(item);
+
+		net_worth += worth;
+	}
+
+	HashMap<Integer, ? extends ItemStack> bank_notes = i.all(Material.PAPER);
+	for (Map.Entry<Integer, ? extends ItemStack> entry : bank_notes.entrySet()) {
+		ItemStack item = entry.getValue();
+		int bank_note_val = MoneyMechanics.getBankNoteValue(item);
+
+		net_worth += bank_note_val;
+	}
+
+	return net_worth;
+}
+
+public static boolean doTheyHaveEnoughMoney(Player p, int amount) {
+	Inventory i = p.getInventory();
+	int paid_off = 0;
+
+	HashMap<Integer, ? extends ItemStack> invItems = i.all(Material.EMERALD);
+	for (Map.Entry<Integer, ? extends ItemStack> entry : invItems.entrySet()) {
+		ItemStack item = entry.getValue();
+		int stackAmount = item.getAmount();
+
+		if ((paid_off + stackAmount) <= amount) {
+			paid_off += stackAmount;
+		}
+
+		else {
+			int to_take = amount - paid_off;
+			paid_off += to_take;
+		}
+
+		if (paid_off >= amount) {
+			return true; // WE CAN AFFORD IT! WOO!
+		}
+
+	}
+
+	HashMap<Integer, ? extends ItemStack> gem_pouches = i.all(Material.INK_SACK);
+	for (Map.Entry<Integer, ? extends ItemStack> entry : gem_pouches.entrySet()) {
+		ItemStack item = entry.getValue();
+
+		if (!MoneyMechanics.isGemPouch(item)) {
+			continue;
+		}
+
+		int worth = MoneyMechanics.getGemPouchWorth(item);
+
+		if ((paid_off + worth) <= amount) {
+			paid_off += worth;
+		}
+
+		else {
+			int to_take = amount - paid_off;
+			paid_off += to_take;
+		}
+
+		if (paid_off >= amount) {
+			return true; // WE CAN AFFORD IT! WOO!
+		}
+
+	}
+
+	// If code reaches this point, it's still not all paid off.
+
+	HashMap<Integer, ? extends ItemStack> bank_notes = i.all(Material.PAPER);
+	for (Map.Entry<Integer, ? extends ItemStack> entry : bank_notes.entrySet()) {
+		ItemStack item = entry.getValue();
+		int bank_note_val = MoneyMechanics.getBankNoteValue(item);
+
+		if ((paid_off + bank_note_val) <= amount) {
+			paid_off += bank_note_val;
+		}
+
+		else {
+			int to_take = amount - paid_off;
+			paid_off += to_take;
+		}
+
+		if (paid_off >= amount) {
+			return true; // They can pay it! WOO!
+		}
+
+	}
+
+	return false;
+}
+
+@SuppressWarnings("deprecation")
+public static void subtractMoney(Player p, int amount) {
+	Inventory i = p.getInventory();
+	int paid_off = 0;
+
+	if (amount <= 0) {
+		return; // It's free.
+	}
+
+	HashMap<Integer, ? extends ItemStack> invItems = i.all(Material.EMERALD);
+	for (Map.Entry<Integer, ? extends ItemStack> entry : invItems.entrySet()) {
+		int index = entry.getKey();
+		ItemStack item = entry.getValue();
+		int stackAmount = item.getAmount();
+
+		if ((paid_off + stackAmount) <= amount) {
+			p.getInventory().setItem(index, new ItemStack(Material.AIR));
+			paid_off += stackAmount;
+		}
+
+		else {
+			int to_take = amount - paid_off;
+			p.getInventory().setItem(index, MoneyMechanics.makeGems(stackAmount - to_take));
+			paid_off += to_take;
+		}
+
+		if (paid_off >= amount) {
+			p.updateInventory();
+			break;
+		}
+	}
+
+	HashMap<Integer, ? extends ItemStack> gem_pouches = i.all(Material.INK_SACK);
+	for (Map.Entry<Integer, ? extends ItemStack> entry : gem_pouches.entrySet()) {
+		ItemStack item = entry.getValue();
+
+		if (!MoneyMechanics.isGemPouch(item)) {
+			continue;
+		}
+
+		int worth = MoneyMechanics.getGemPouchWorth(item);
+
+		if ((paid_off + worth) <= amount) {
+			paid_off += worth;
+			MoneyMechanics.setPouchWorth(item, 0);
+		}
+
+		else {
+			int to_take = amount - paid_off;
+			paid_off += to_take;
+			MoneyMechanics.setPouchWorth(item, worth - to_take);
+		}
+
+		if (paid_off >= amount) {
+			p.updateInventory();
+			break;
+		}
+
+	}
+
+	// They still aren't paid off!
+
+	HashMap<Integer, ? extends ItemStack> bank_notes = i.all(Material.PAPER);
+	for (Map.Entry<Integer, ? extends ItemStack> entry : bank_notes.entrySet()) {
+		ItemStack item = entry.getValue();
+		int bank_note_val = MoneyMechanics.getBankNoteValue(item);
+		int index = entry.getKey();
+
+		if ((paid_off + bank_note_val) <= amount) {
+			p.getInventory().setItem(index, new ItemStack(Material.AIR));
+			paid_off += bank_note_val;
+		}
+
+		else {
+			int to_take = amount - paid_off;
+			paid_off += to_take;
+			MoneyMechanics.updateMoney(p, index, (bank_note_val - to_take));
+		}
+
+		if (paid_off >= amount) {
+			p.updateInventory();
+			break;
+		}
+
+	}
+}
+
+public static String getFormalMatName(Material m, short dur) {
+	String base_name = m.name();
+	if (base_name.equalsIgnoreCase("wool") && dur == 0) {
+		base_name = "white wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 1) {
+		base_name = "orange wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 2) {
+		base_name = "magenta wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 3) {
+		base_name = "light blue wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 4) {
+		base_name = "yellow wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 5) {
+		base_name = "lime wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 6) {
+		base_name = "pink wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 7) {
+		base_name = "gray wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 8) {
+		base_name = "light gray wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 9) {
+		base_name = "cyan wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 10) {
+		base_name = "purple wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 11) {
+		base_name = "blue wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 12) {
+		base_name = "brown wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 13) {
+		base_name = "green wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 14) {
+		base_name = "red wool";
+	}
+	if (base_name.equalsIgnoreCase("wool") && dur == 15) {
+		base_name = "black wool";
+	}
+
+	if (base_name.equalsIgnoreCase("log")) {
+		if (dur == 0)
+			base_name = "oak wood";
+
+		if (dur == 1)
+			base_name = "spruce wood";
+
+		if (dur == 2)
+			base_name = "birch wood";
+	}
+
+	if (base_name.equalsIgnoreCase("sandstone")) {
+		if (dur == 1)
+			base_name = "chiseled sandstone";
+
+		if (dur == 2)
+			base_name = "smooth sandstone";
+	}
+
+	if (base_name.equalsIgnoreCase("smooth_brick")) {
+		if (dur == 1)
+			base_name = "mossy stone brick";
+
+		if (dur == 2)
+			base_name = "cracked stone bricks";
+
+		if (dur == 2)
+			base_name = "chiseled stone bricks";
+	}
+
+	if (base_name.equalsIgnoreCase("long_grass")) {
+		base_name = "grass";
+	}
+
+	base_name = base_name.replaceAll("_", "");
+
+	String formal_name = base_name.substring(0, 1).toUpperCase() + base_name.substring(1, base_name.length()).toLowerCase();
+	return formal_name;
+}
+
+public static ItemStack makeUntradeable(ItemStack itemStack) {
+	ItemMeta im = itemStack.getItemMeta();
+
+	boolean rename = false;
+	String o_name = "";
+	try {
+		try {
+			o_name = im.getDisplayName();
+			rename = true;
+		} catch (NullPointerException npe) {
+			rename = false;
+		}
+	} catch (ClassCastException cce) {
+		rename = false;
+	}
+
+	if (rename == true && o_name != null && o_name.length() > 0) {
+		im.setDisplayName(o_name);
+	}
+
+	List<String> cur_lore = new ArrayList<String>();
+
+	if (im != null) {
+		cur_lore = im.getLore();
+	}
+	if (cur_lore == null) {
+		cur_lore = new ArrayList<String>();
+	}
+	cur_lore.add(ChatColor.GRAY.toString() + "Untradeable");
+	im.setLore(cur_lore);
+
+	itemStack.setItemMeta(im);
+	return itemStack;
+}
+
+public static boolean isItemTradeable(ItemStack i) {
+
+	if (i != null && i.hasItemMeta() && i.getItemMeta().hasLore()) {
+		List<String> lore = i.getItemMeta().getLore();
+		for (String s : lore) {
+			if (ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("untradeable")
+					|| ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("permanent untradeable")) {
+				return false;
 			}
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
-	public void onEntityDamageEvent(EntityDamageEvent e) {
-		Entity oent = e.getEntity();
-		Entity ent = e.getEntity();
-		// log.info(e.getCause().toString());
-		if (ent.getPassenger() != null) {
-			ent = ent.getPassenger();
+	return true;
+
+	/*
+	 * try{ if(i.hasItemMeta() && i.getItemMeta().hasLore()){ for(String s : i.getItemMeta().getLore()){
+	 * if(ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("untradeable") ||
+	 * ChatColor.stripColor(s).toLowerCase().equalsIgnoreCase("permanent untradeable")){ return false; } } }
+	 *
+	 * NBTTagList description = CraftItemStack.asNMSCopy(i).getTag().getCompound("display").getList("Lore", 0);
+	 *
+	 * if(description.get(description.size() - 1).toString().contains("Untradeable")){ return false; }
+	 *
+	 * } catch (Exception e) { return true; } return true;
+	 */
+}
+
+public static void disableAllEffects(Player player, final LivingEntity entity) {
+	CraftEntity ce = (CraftEntity) ((Entity) entity);
+
+	final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R2.Entity) ce.getHandle());
+	dw.a(8, Byte.valueOf((byte) 0));
+	dw.watch(8, Byte.valueOf((byte) 0x00FF00));
+
+	PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata(entity.getEntityId(), dw, false);
+	((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+
+	DataWatcher dwReal = ((CraftLivingEntity) entity).getHandle().getDataWatcher();
+	dw.watch(8, dwReal.getByte(8));
+	packet = new PacketPlayOutEntityMetadata(entity.getEntityId(), dw, false);
+	((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+}
+
+public static void playPotionEffect(final Player player, final LivingEntity entity, int color, int duration) {
+	CraftEntity ce = (CraftEntity) ((Entity) entity);
+
+	final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R2.Entity) ce.getHandle());
+	dw.a(8, Byte.valueOf((byte) 0));
+	dw.watch(8, Byte.valueOf((byte) color));
+
+	PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata(entity.getEntityId(), dw, false);
+	((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+
+	new BukkitRunnable() {
+		@Override
+		public void run() {
+			DataWatcher dwReal = ((CraftLivingEntity) entity).getHandle().getDataWatcher();
+			dw.watch(8, dwReal.getByte(8));
+			PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata(entity.getEntityId(), dw, false);
+			((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
 		}
-		if (!(ent instanceof Player)) {
+	}.runTaskLaterAsynchronously(Main.plugin, duration);
+}
+
+@SuppressWarnings("deprecation")
+@EventHandler
+public void onItemDropFromInv(InventoryClickEvent e) {
+	Player p = (Player) e.getWhoClicked();
+
+	Inventory top = p.getOpenInventory().getTopInventory();
+
+	if (!top.getName().contains("E-Cash Storage") && !top.getName().contains(" Merchant") && !top.getName().startsWith("Bank Chest")
+			&& !(top.getName().equalsIgnoreCase("Collection Bin")) && !(top.getName().equalsIgnoreCase("container.crafting"))) { // Some interaction
+		// occuring in the top
+		// inventory section.
+
+		ItemStack is = null;
+		if (e.isShiftClick()) {
+			is = e.getCurrentItem();
+			if (e.getRawSlot() >= top.getSize()) {
+				if (!(isItemTradeable(is)) && !(is.getType() == Material.PAPER) || ItemMechanics.isSoulbound(is)) {
+					e.setCancelled(true);
+					p.updateInventory();
+					p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " perform this action with an "
+							+ ChatColor.ITALIC + "untradeable" + ChatColor.RED + " item.");
+					// Prevent untradeable items from being put in other inventories.
+				}
+			}
+		} else if (!(e.isShiftClick())) {
+			is = e.getCursor();
+			if (e.getRawSlot() < top.getSize()) {
+				if (!(isItemTradeable(is)) && !(is.getType() == Material.PAPER) || ItemMechanics.isSoulbound(is)) {
+					e.setCancelled(true);
+					p.updateInventory();
+					p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " perform this action with an "
+							+ ChatColor.ITALIC + "untradeable" + ChatColor.RED + " item.");
+					// Prevent untradeable items from being put in other inventories.
+				}
+			}
+		}
+
+	}
+	if (e.getInventory().getType() == InventoryType.PLAYER) {
+		if (e.getCursor() != null && e.getCurrentItem() == null && e.getSlotType() == SlotType.OUTSIDE) {
+			ItemStack i = e.getCursor();
+			if (!PetMechanics.isPermUntradeable(i) && !(isItemTradeable(i)) && !(i.getType() == Material.PAPER)) {
+				e.setCursor(new ItemStack(Material.AIR));
+				p.updateInventory();
+				p.playSound(p.getLocation(), Sound.FIZZ, 1.0F, 0.2F);
+			}
+			if (PetMechanics.isPermUntradeable(i)) {
+				e.setCancelled(true);
+				p.updateInventory();
+			}
+		}
+	}
+}
+
+@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+public void onItemDropEvent(PlayerDropItemEvent e) {
+	Player p = e.getPlayer();
+	if (!p.getWorld().getName().equalsIgnoreCase(main_world_name) && !InstanceMechanics.isInstance(p.getWorld().getName())) {
+		Item it = e.getItemDrop();
+		dropped_item_ownership.put(it, p.getName());
+	}
+
+}
+
+@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+public void onPlayerDropAddOwner(PlayerDropItemEvent e) {
+	Player p = e.getPlayer();
+	dropped_item_owner.put(e.getItemDrop(), p.getName());
+	// Add a 5 second delay
+	dropped_item_timer.put(e.getItemDrop(), System.currentTimeMillis() + 5000);
+}
+
+@EventHandler
+public void onPlayerLeaveClearDrops(PlayerQuitEvent e) {
+	if (dropped_item_owner.containsValue(e.getPlayer().getName())) {
+		for (Entry<Item, String> entries : dropped_item_owner.entrySet()) {
+			if (entries.getValue().equalsIgnoreCase(e.getPlayer().getName())) {
+
+			}
+		}
+	}
+}
+
+@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+public void onPlayerPickup(PlayerPickupItemEvent event) {
+	Player p = event.getPlayer();
+	Item i = event.getItem();
+	if (dropped_item_timer.containsKey(i) && dropped_item_timer.get(i) >= System.currentTimeMillis()) {
+		// The timer hasnt expired so check the player
+		if (dropped_item_owner.containsKey(i) && !dropped_item_owner.get(i).equalsIgnoreCase(p.getName())) {
+			event.setCancelled(true);
 			return;
 		}
+	}
+}
 
-		final Player p = (Player) ent;
+@EventHandler(priority = EventPriority.HIGHEST)
+// Should fire AFTER KarmaMechanic's processing Permenant Untradeables.
+public void onPlayerDeathEvent(PlayerDeathEvent e) {
+	List<ItemStack> li = e.getDrops();
+	List<ItemStack> to_remove = new ArrayList<ItemStack>();
+	boolean equipped_armor = false;
+	int saved_armor = 0;
 
-		if (e.getCause() != DamageCause.VOID) {
-			return;
+	if (e.getDrops().isEmpty()) {
+		return;
+	}
+	Player pl = (Player) e.getEntity();
+
+	List<String> armor_names = new ArrayList<String>();
+
+	for (ItemStack is : pl.getInventory().getArmorContents()) {
+		if (is == null || !(is.hasItemMeta())) {
+			continue;
 		}
+		armor_names.add(is.getItemMeta().getDisplayName());
+	}
 
-		if (p.getWorld().getName().equalsIgnoreCase(main_world_name) || InstanceMechanics.isInstance(p.getWorld().getName())) {
-			return;
+	for (ItemStack i : li) {
+		equipped_armor = false;
+		if (i == null) {
+			continue;
 		}
-		String realm_name = p.getWorld().getName();
+		if ((!PetMechanics.isPermUntradeable(i) && !isItemTradeable(i)) || i.getType() == Material.NETHER_STAR || CommunityMechanics.isSocialBook(i)) {
+			if (i.hasItemMeta() && i.getItemMeta() instanceof LeatherArmorMeta && saved_armor < 4) {
+				if (i.getItemMeta().getLore().contains("ARMOR") || i.getItemMeta().getLore().contains("DPS")) {
+					if (armor_names.contains(i.getItemMeta().getDisplayName())) {
+						saved_armor++;
+						equipped_armor = true;
+					}
+				}
 
+				if (equipped_armor == true) {
+					continue; // Don't delete dyed armor.
+				}
+			}
+			to_remove.add(i);
+		}
+	}
+
+	for (ItemStack i : to_remove) {
+		e.getDrops().remove(i);
+	}
+
+	Player p = e.getEntity();
+	if (isWorldLoaded(p.getName())) {
+		for (Entity ent : Bukkit.getWorld(p.getName()).getEntities()) {
+			if (ent instanceof Item) {
+				Item i = (Item) ent;
+				if (dropped_item_ownership.containsKey(i) && dropped_item_ownership.get(i).equalsIgnoreCase(p.getName())) {
+					ent.remove();
+					dropped_item_ownership.remove(i);
+				}
+			}
+		}
+	}
+}
+
+@EventHandler(priority = EventPriority.NORMAL)
+public void onPlayerRespawn(PlayerRespawnEvent e) {
+	Player dead = e.getPlayer();
+
+	if (dead.getLocation().getWorld().getName().equalsIgnoreCase(e.getRespawnLocation().getWorld().getName())
+			&& dead.getLocation().distanceSquared(e.getRespawnLocation()) <= 2) {
+		// They're respawning on themselves, ignore.
+		// Non-legit death, they won't loose any items.
+		return;
+	}
+
+	int slot = -1;
+	if (dead.getInventory().contains(Material.NETHER_STAR)) {
+		slot = dead.getInventory().first(Material.NETHER_STAR);
+	}
+
+	if (slot != -1) {
+		return; // Do nothing they have their rune.
+		// dead.getInventory().setItem(slot, makeTeleportRune(dead));
+	}
+
+	if (slot == -1) {
+		if (dead.getInventory().getItem(7) == null || dead.getInventory().getItem(7).getType() == Material.AIR) {
+			dead.getInventory().setItem(7, makeTeleportRune(dead));
+		} else {
+			dead.getInventory().setItem(dead.getInventory().firstEmpty(), makeTeleportRune(dead));
+		}
+	}
+
+}
+
+@SuppressWarnings("deprecation")
+@EventHandler
+public void MaterialShopInventoryEvent(InventoryClickEvent e) {
+	if (!(e.getWhoClicked() instanceof Player)) {
+		return;
+	}
+	final Player p = (Player) e.getWhoClicked();
+
+	if (!(e.getInventory().getName().contains("Realm Material Store"))) {
+		return;
+	}
+	if (e.getCurrentItem() != null && MoneyMechanics.isDivider(e.getCurrentItem())) {
+		e.setCancelled(true); // Divider.
+		p.updateInventory();
+		return;
+	}
+
+	if (e.getRawSlot() <= 53) {
 		e.setCancelled(true);
-		e.setDamage(0);
+		if (e.getCurrentItem() != null) {
+			// Material m = e.getCurrentItem().getType();
+			// String format_name = getFormalMatName(m, e.getCurrentItem().getDurability());
+			double price = ShopMechanics.getPrice(e.getCurrentItem());
+			double ecash_price = Hive.getECASHPrice(e.getCurrentItem());
 
-		Location l = null;
-		if (saved_locations.containsKey(p.getName())) {
-			l = saved_locations.get(p.getName());
-		} else {
-			l = SpawnMechanics.getRandomSpawnPoint(p.getName());
-			p.sendMessage(ChatColor.RED
-					+ "Woops! Something has gone wrong in the teleportation matrix of this realm. Your saved location could not be loaded, so you have been safetly transported back to Cyrennica.");
+			if (price == -1 || ecash_price == -1) {
+				return; // No price.
+			}
+
+			if (e.getCurrentItem().getType() == Material.AIR) {
+				return;
+			}
+
+			int page = 1;
+			if (e.getInventory().getItem(54).getType() != Material.GLASS) {
+				if (e.getInventory().getItem(54).getItemMeta().getLore() != null) {
+					if (e.getInventory().getItem(54).getItemMeta().getLore().size() > 0) {
+						if (e.getInventory().getItem(54).getItemMeta().getLore().get(0).contains("1/3")) {
+							page = 2;
+						} else {
+							page = 3;
+						}
+					}
+				}
+			}
+
+			current_item_being_bought.put(p.getName(), e.getRawSlot());
+			shop_page.put(p.getName(), page);
+
+			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+				public void run() {
+					p.closeInventory();
+				}
+			}, 2L);
+
+			if (e.isLeftClick()) {
+				p.sendMessage(ChatColor.GREEN + "Enter the " + ChatColor.BOLD + "QUANTITY" + ChatColor.GREEN + " (1-64) you'd like to purchase.");
+				p.sendMessage(ChatColor.GRAY + "This material costs " + ChatColor.GREEN + price + "G/each.");
+				shop_currency.put(p.getName(), "gems");
+			}
+			if (e.isRightClick()) {
+				p.sendMessage(ChatColor.GREEN + "Enter the " + ChatColor.BOLD + "QUANTITY" + ChatColor.GREEN + " (1-64) you'd like to purchase.");
+				p.sendMessage(ChatColor.GRAY + "This material costs " + ChatColor.GOLD + ecash_price + "EC/each.");
+				double per_ecash = ecash_price;
+				if (ecash_price < 1) {
+					per_ecash = Math.round((1 / (ecash_price)));
+					p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "This means you will get " + per_ecash
+							+ "x blocks for each E-CASH you use. So a quantity of 1 = " + per_ecash + " blocks.");
+				}
+				shop_currency.put(p.getName(), "ecash");
+			}
+			return;
+
+		}
+	}
+	if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR)
+		return;
+
+	if (e.getCurrentItem().getItemMeta().getLore().get(0).contains("1/3")) {
+		e.setCancelled(true);
+		p.updateInventory();
+		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+			public void run() {
+				// p.closeInventory();
+				if (p.getOpenInventory() == null) {
+					p.openInventory(mat_shop_1);
+					return;
+				}
+				for (int x = 0; x < mat_shop_1.getSize(); x++) {
+					p.getOpenInventory().getTopInventory().setItem(x, mat_shop_1.getItem(x));
+				}
+				p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
+			}
+		}, 2L);
+	} else if (e.getCurrentItem().getItemMeta().getLore().get(0).contains("2/3")) {
+		e.setCancelled(true);
+		p.updateInventory();
+		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+			public void run() {
+				// p.closeInventory(); Doesnt need to close first just looks bad
+				if (p.getOpenInventory() == null) {
+					p.openInventory(mat_shop_2);
+					return;
+				}
+				for (int x = 0; x < mat_shop_2.getSize(); x++) {
+					p.getOpenInventory().getTopInventory().setItem(x, mat_shop_2.getItem(x));
+				}
+				p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
+			}
+		}, 2L);
+	} else if (e.getCurrentItem().getItemMeta().getLore().get(0).contains("3/3")) {
+		e.setCancelled(true);
+		p.updateInventory();
+		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+			public void run() {
+				// p.closeInventory();
+				if (p.getOpenInventory() == null) {
+					p.openInventory(mat_shop_3);
+					return;
+				}
+				for (int x = 0; x < mat_shop_3.getSize(); x++) {
+					p.getOpenInventory().getTopInventory().setItem(x, mat_shop_3.getItem(x));
+				}
+				p.playSound(p.getLocation(), Sound.BAT_TAKEOFF, 1F, 1.2F); // Page turn sound.
+			}
+		}, 2L);
+	}
+}
+
+@EventHandler
+public void onInventoryInteractEvent(InventoryClickEvent e) {
+	if (e.getSlotType() == SlotType.OUTSIDE && e.getCursor() == null) {
+		return;
+	}
+	Player p = (Player) e.getWhoClicked();
+	if (e.getCurrentItem() == null) {
+		return;
+	}
+
+	if (e.getCurrentItem().getType() == Material.NETHER_STAR && !p.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting")) {
+		e.setCancelled(true);
+	}
+	if (e.getCursor().getType() == Material.NETHER_STAR && !p.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting")) {
+		e.setCancelled(true);
+	}
+}
+
+@SuppressWarnings("deprecation")
+@EventHandler
+public void onInventoryClickEvent(InventoryClickEvent e) {
+	Player p = (Player) e.getWhoClicked();
+
+	if (!e.getInventory().getName().equalsIgnoreCase("container.chest") && !e.getInventory().getName().equalsIgnoreCase("container.chestDouble")
+			&& !(e.getInventory().getName().equalsIgnoreCase("container.minecart"))
+			&& !(e.getInventory().getName().equalsIgnoreCase("container.dispenser")) && !(e.getInventory().getName().equalsIgnoreCase("container.hopper"))
+			&& !(e.getInventory().getName().equalsIgnoreCase("container.dropper"))) {
+		return;
+	}
+
+	if (p.getWorld().getName().equalsIgnoreCase(main_world_name) || p.isOp()) {
+		return;
+	}
+
+	if (!(e.getInventory().getName().equalsIgnoreCase("container.hopper")) && e.getAction() == InventoryAction.PICKUP_ALL && p != null) {
+		// Trying to grab all items from a chest in a realm.
+		String realm_name = p.getWorld().getName();
+		if (!(realm_name.equalsIgnoreCase(p.getName()) || (build_list.containsKey(realm_name) && build_list.get(realm_name).contains(p.getName())))) {
+			e.setCancelled(true);
+			e.setResult(Result.DENY);
+			return;
+		}
+	}
+
+	if (p.isOp()) {
+		return;
+	}
+
+	int slot_num = e.getRawSlot();
+	if (slot_num < e.getInventory().getSize()) {
+		// An item inside the chest is being clicked.
+		if (e.isShiftClick() || (e.getCursor() == null && e.getCurrentItem() != null)) {
+			return; // Don't care if they're moving stuff OUT of inventory.
 		}
 
+		if (e.getCursor() != null) {
+			// They're placing an item into the chest.
+			ItemStack cursor = e.getCursor();
+			if (ItemMechanics.isArmor(cursor) || !ItemMechanics.getDamageData(cursor).equalsIgnoreCase("no") || cursor.getType() == Material.EMERALD
+					|| cursor.getType() == Material.PAPER || MoneyMechanics.isGemPouch(cursor)) {
+				e.setCancelled(true);
+				e.setCursor(cursor);
+				p.updateInventory();
+				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " deposit weapons, armor, or gems in realm blocks.");
+				p.sendMessage(ChatColor.GRAY + "Deposit those items in your BANK CHEST.");
+			}
+		}
+	} else if (slot_num >= e.getInventory().getSize()) {
+		// Clicking in own inventory.
+		if (e.isShiftClick()) {
+			ItemStack in_slot = e.getCurrentItem();
+			if (ItemMechanics.isArmor(in_slot) || !ItemMechanics.getDamageData(in_slot).equalsIgnoreCase("no") || in_slot.getType() == Material.EMERALD
+					|| in_slot.getType() == Material.PAPER || MoneyMechanics.isGemPouch(in_slot)) {
+				e.setCancelled(true);
+				e.setCurrentItem(in_slot);
+				p.updateInventory();
+				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " deposit weapons, armor, or gems in realm blocks.");
+				p.sendMessage(ChatColor.GRAY + "Deposit those items in your BANK CHEST.");
+			}
+		}
+	}
+}
+
+@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+public void onEntityDamageEvent(EntityDamageEvent e) {
+	Entity oent = e.getEntity();
+	Entity ent = e.getEntity();
+	// log.info(e.getCause().toString());
+	if (ent.getPassenger() != null) {
+		ent = ent.getPassenger();
+	}
+	if (!(ent instanceof Player)) {
+		return;
+	}
+
+	final Player p = (Player) ent;
+
+	if (e.getCause() != DamageCause.VOID) {
+		return;
+	}
+
+	if (p.getWorld().getName().equalsIgnoreCase(main_world_name) || InstanceMechanics.isInstance(p.getWorld().getName())) {
+		return;
+	}
+	String realm_name = p.getWorld().getName();
+
+	e.setCancelled(true);
+	e.setDamage(0);
+
+	Location l = null;
+	if (saved_locations.containsKey(p.getName())) {
+		l = saved_locations.get(p.getName());
+	} else {
+		l = SpawnMechanics.getRandomSpawnPoint(p.getName());
+		p.sendMessage(ChatColor.RED
+				+ "Woops! Something has gone wrong in the teleportation matrix of this realm. Your saved location could not be loaded, so you have been safetly transported back to Cyrennica.");
+	}
+
+	player_god_mode.put(p.getName(), System.currentTimeMillis());
+	p.setFallDistance(0.0F);
+	if (oent instanceof Player) {
+		p.teleport(l);
+		FatigueMechanics.sprinting.remove(p);
+		p.setSprinting(false);
+		p.setAllowFlight(false);
+	} else {
+		oent.teleport(l);
+	}
+
+	if (!(p.getName().equalsIgnoreCase(p.getWorld().getName()))) {
+		p.sendMessage(ChatColor.LIGHT_PURPLE + "You have left " + ChatColor.BOLD + realm_name + "'s" + ChatColor.LIGHT_PURPLE + " realm.");
+	} else {
+		p.sendMessage(ChatColor.LIGHT_PURPLE + "You have left " + ChatColor.BOLD + "YOUR" + ChatColor.LIGHT_PURPLE + " realm.");
+	}
+
+	new BukkitRunnable() {
+		@Override
+		public void run() {
+			p.closeInventory();
+		}
+	}.runTaskLaterAsynchronously(Main.plugin, 2L);
+	saved_locations.remove(p.getName());
+
+	Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+		public void run() {
+			player_god_mode.remove(p.getName());
+		}
+	}, 60L);
+
+}
+
+@EventHandler(priority = EventPriority.LOWEST)
+public void onPlayerPreChangeWorldEvent(PlayerChangedWorldEvent e) {
+	Player p = e.getPlayer();
+	int cur_hp = HealthMechanics.getPlayerHP(p.getName());
+	saved_levels.put(p.getName(), cur_hp);
+}
+
+@SuppressWarnings("deprecation")
+@EventHandler(priority = EventPriority.MONITOR)
+public void onPlayerChangedWorldEvent(PlayerChangedWorldEvent e) {
+	final World from = e.getFrom();
+	final Player p = e.getPlayer();
+	if (from.getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName()) && !(InstanceMechanics.isInstance(p.getWorld().getName()))) {
 		player_god_mode.put(p.getName(), System.currentTimeMillis());
-		p.setFallDistance(0.0F);
-		if (oent instanceof Player) {
-			p.teleport(l);
-			FatigueMechanics.sprinting.remove(p);
-			p.setSprinting(false);
-			p.setAllowFlight(false);
-		} else {
-			oent.teleport(l);
+
+		p.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "INVINCIBILITY (15s)");
+		p.sendMessage(ChatColor.GRAY + "You will " + ChatColor.UNDERLINE + "NOT" + ChatColor.GRAY.toString()
+				+ " be flagged as 'combat logged' while invincible.");
+
+		Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			public void run() {
+				if (!p.getWorld().getName().equalsIgnoreCase(main_world_name)
+						&& (p.getLocation().getBlock().getType() == Material.PORTAL || p.getLocation().add(0, 1, 0).getBlock().getType() == Material.PORTAL)) {
+					Location out = p.getLocation();
+					out.setY(-10);
+					p.teleport(out);
+					// TP them out immediatly.
+				}
+				p.setFireTicks(0);
+				p.setFallDistance(0.0F);
+				player_god_mode.remove(p.getName());
+			}
+		}, 10 * 20L);
+
+		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+			public void run() {
+				if (p.getWorld().getName().equalsIgnoreCase(main_world_name)) {
+					return;
+				}
+				if (!p.getWorld().getName().equalsIgnoreCase(main_world_name)
+						&& (p.getLocation().getBlock().getType() == Material.PORTAL || p.getLocation().add(0, 1, 0).getBlock().getType() == Material.PORTAL)) {
+					Location out = p.getLocation();
+					out.setY(-10);
+					p.teleport(out);
+					// TP them out immediatly.
+				}
+				p.setFireTicks(0);
+				p.setFallDistance(0.0F);
+				player_god_mode.remove(p.getName());
+			}
+		}, 17 * 20L);
+
+		Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			public void run() {
+				/*
+				 * if(saved_levels.containsKey(p.getName())){ p.setLevel(saved_levels.get(p.getName())); HealthMechanics.setPlayerHP(p.getName(),
+				 * saved_levels.get(p.getName())); }
+				 */
+
+				p.setExp(1F);
+				saved_levels.remove(p.getName());
+				playPotionEffect(p, p, 0x00FFFB, 300);
+				for (Player pl : p.getWorld().getPlayers()) {
+					playPotionEffect(pl, p, 0x00FFFB, 300);
+				}
+			}
+		}, 5L);
+	}
+
+	else if (!(from.getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName()))) {
+		Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
+			public void run() {
+				p.setFireTicks(0);
+				p.setFallDistance(0.0F);
+
+				/*
+				 * if(saved_levels.containsKey(p.getName())){ p.setLevel(saved_levels.get(p.getName())); }
+				 */
+
+				p.setExp(1F);
+				saved_levels.remove(p.getName());
+			}
+		}, 2L);
+	}
+}
+
+@EventHandler(priority = EventPriority.LOWEST)
+public void onEntityDamage(EntityDamageEvent e) {
+	if (e.getEntity() instanceof Player) {
+		Player p = (Player) e.getEntity();
+		if (player_god_mode.containsKey(p.getName())) {
+			e.setCancelled(true);
+			e.setDamage(0);
+		}
+	}
+}
+
+@EventHandler(priority = EventPriority.LOWEST)
+public void onEntityDamageEntityEvent(EntityDamageByEntityEvent e) {
+	if (e.getDamager() instanceof Player) {
+		Player p = (Player) e.getDamager();
+		if (player_god_mode.containsKey(p.getName())) {
+			e.setCancelled(true);
+			e.setDamage(0);
+		}
+	}
+}
+
+@EventHandler
+public void onPlayerMoveUpdate(PlayerMoveEvent e) {
+	Player p = e.getPlayer();
+	recent_movement.put(p.getName(), System.currentTimeMillis());
+}
+
+@EventHandler
+public void onPlayerPortalEvent(PlayerPortalEvent e) {
+	final Player p = e.getPlayer();
+
+	if (Hive.server_swap.containsKey(p.getName())) {
+		e.setCancelled(true);
+		return;
+	}
+
+	if (p.getWorld().getName().equalsIgnoreCase(main_world_name)) {
+		Location ploc = p.getLocation();
+		World to_realm = null;
+		Location port_loc = null;
+		String realm_name = "";
+		long last_time = recent_movement.get(p.getName());
+
+		if ((System.currentTimeMillis() - last_time) > 6000) {
+			e.setCancelled(true);
+			return; // They shouldn't be teleported, they haven't moved.
 		}
 
-		if (!(p.getName().equalsIgnoreCase(p.getWorld().getName()))) {
-			p.sendMessage(ChatColor.LIGHT_PURPLE + "You have left " + ChatColor.BOLD + realm_name + "'s" + ChatColor.LIGHT_PURPLE + " realm.");
-		} else {
-			p.sendMessage(ChatColor.LIGHT_PURPLE + "You have left " + ChatColor.BOLD + "YOUR" + ChatColor.LIGHT_PURPLE + " realm.");
+		if (MountMechanics.summon_mount.containsKey(p.getName())) {
+			e.setCancelled(true);
+			return;
 		}
+
+		for (Map.Entry<Location, String> entry : portal_map.entrySet()) {
+			Location portal_loc = entry.getKey();
+			realm_name = entry.getValue();
+
+			if (ploc.distanceSquared(portal_loc) <= 4) {
+				// TELEPORT BITCHES.
+				port_loc = portal_loc;
+				to_realm = Main.plugin.getServer().getWorld(realm_name);
+				break;
+			}
+		}
+
+
+		if (to_realm == null) {
+			e.setCancelled(true);
+			// TODO: Better error message here.
+			p.sendMessage(ChatColor.RED + "This realm portal is " + ChatColor.UNDERLINE + "not" + ChatColor.RED + " linked to a destination.");
+			p.sendMessage(ChatColor.GRAY + "If this is your portal, please try to replace it with your Realm Portal Rune.");
+			if (port_loc == null) {
+				port_loc = p.getLocation();
+			}
+			if (port_loc != null) {
+				portal_map_coords.remove(p.getName());
+				portal_map.remove(port_loc);
+				inv_portal_map.remove(realm_name);
+				if (port_loc.getBlock().getType() == Material.PORTAL) {
+					port_loc.getBlock().setType(Material.AIR);
+				}
+				if (port_loc.add(0, 1, 0).getBlock().getType() == Material.PORTAL) {
+					port_loc.getBlock().setType(Material.AIR);
+				}
+			}
+			return;
+		}
+
+		if (!(isWorldLoaded(to_realm.getName()))) {
+			e.setCancelled(true);
+			p.sendMessage(ChatColor.RED + "This realm is not loaded.");
+			return;
+		}
+
+		if (locked_realms.contains(to_realm.getName()) && !(to_realm.getName().equalsIgnoreCase(p.getName()))) {
+			e.setCancelled(true);
+			p.sendMessage(ChatColor.RED + "This realm is locked.");
+			return;
+		}
+
+		if (HealthMechanics.in_combat.containsKey(p.getName())) {
+			e.setCancelled(true);
+			p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " place a realm portal while in combat.");
+			p.sendMessage(ChatColor.GRAY + "Wait " + ChatColor.UNDERLINE + "a few seconds" + ChatColor.GRAY + " and try again.");
+			return;
+		}
+
+		if (realm_percent.containsKey(to_realm.getName())) {
+			e.setCancelled(true);
+			String percent_done = realm_percent.get(to_realm.getName());
+			p.sendMessage(ChatColor.RED + "This realm is currently UPGRADING. " + ChatColor.BOLD + percent_done + "% Complete.");
+			return;
+		}
+
+		if (KarmaMechanics.getRawAlignment(p.getName()).equalsIgnoreCase("evil") && safe_realms.containsKey(to_realm.getName())) {
+			p.sendMessage(ChatColor.RED + "Due to your CHAOTIC alignment, you " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " enter this realm.");
+			e.setCancelled(true);
+			return;
+		}
+
+		saved_locations.put(p.getName(), p.getLocation());
+		// Location in_realm = mvwm.getMVWorld(to_realm).getSpawnLocation();
+		Location in_realm = to_realm.getSpawnLocation();
+		e.setTo(in_realm);
+		to_realm.setTime(0);
+		in_realm.getBlock().setType(Material.PORTAL);
+		in_realm.subtract(0, 1, 0).getBlock().setType(Material.PORTAL);
+		in_realm.add(0, 1, 0);
 
 		new BukkitRunnable() {
 			@Override
@@ -3858,622 +4079,651 @@ public class RealmMechanics implements Listener {
 				p.closeInventory();
 			}
 		}.runTaskLaterAsynchronously(Main.plugin, 2L);
-		saved_locations.remove(p.getName());
 
-		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-			public void run() {
-				player_god_mode.remove(p.getName());
+		// final String f_realm_name = to_realm.getName();
+
+		if (!(p.getName().equalsIgnoreCase(to_realm.getName()))) {
+			p.sendMessage(ChatColor.LIGHT_PURPLE + "You have entered " + ChatColor.BOLD + ChatMechanics.getPlayerPrefix(to_realm.getName(), true)
+					+ to_realm.getName() + "'s" + ChatColor.LIGHT_PURPLE + " realm.");
+			if (realm_title.containsKey(to_realm.getName()) && realm_title.get(to_realm.getName()) != null) {
+				p.sendMessage(ChatColor.GRAY + realm_title.get(to_realm.getName()));
 			}
-		}, 60L);
-
-	}
-
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onPlayerPreChangeWorldEvent(PlayerChangedWorldEvent e) {
-		Player p = e.getPlayer();
-		int cur_hp = HealthMechanics.getPlayerHP(p.getName());
-		saved_levels.put(p.getName(), cur_hp);
-	}
-
-	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerChangedWorldEvent(PlayerChangedWorldEvent e) {
-		final World from = e.getFrom();
-		final Player p = e.getPlayer();
-		if (from.getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName()) && !(InstanceMechanics.isInstance(p.getWorld().getName()))) {
-			player_god_mode.put(p.getName(), System.currentTimeMillis());
-
-			p.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "INVINCIBILITY (15s)");
-			p.sendMessage(ChatColor.GRAY + "You will " + ChatColor.UNDERLINE + "NOT" + ChatColor.GRAY.toString()
-					+ " be flagged as 'combat logged' while invincible.");
-
-			Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() {
-					if (!p.getWorld().getName().equalsIgnoreCase(main_world_name)
-							&& (p.getLocation().getBlock().getType() == Material.PORTAL || p.getLocation().add(0, 1, 0).getBlock().getType() == Material.PORTAL)) {
-						Location out = p.getLocation();
-						out.setY(-10);
-						p.teleport(out);
-						// TP them out immediatly.
-					}
-					p.setFireTicks(0);
-					p.setFallDistance(0.0F);
-					player_god_mode.remove(p.getName());
-				}
-			}, 10 * 20L);
-
-			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() {
-					if (p.getWorld().getName().equalsIgnoreCase(main_world_name)) {
-						return;
-					}
-					if (!p.getWorld().getName().equalsIgnoreCase(main_world_name)
-							&& (p.getLocation().getBlock().getType() == Material.PORTAL || p.getLocation().add(0, 1, 0).getBlock().getType() == Material.PORTAL)) {
-						Location out = p.getLocation();
-						out.setY(-10);
-						p.teleport(out);
-						// TP them out immediatly.
-					}
-					p.setFireTicks(0);
-					p.setFallDistance(0.0F);
-					player_god_mode.remove(p.getName());
-				}
-			}, 17 * 20L);
-
-			Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() {
-					/*
-					 * if(saved_levels.containsKey(p.getName())){ p.setLevel(saved_levels.get(p.getName())); HealthMechanics.setPlayerHP(p.getName(),
-					 * saved_levels.get(p.getName())); }
-					 */
-
-					p.setExp(1F);
-					saved_levels.remove(p.getName());
-					playPotionEffect(p, p, 0x00FFFB, 300);
-					for (Player pl : p.getWorld().getPlayers()) {
-						playPotionEffect(pl, p, 0x00FFFB, 300);
-					}
-				}
-			}, 5L);
-		}
-
-		else if (!(from.getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName()))) {
-			Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() {
-					p.setFireTicks(0);
-					p.setFallDistance(0.0F);
-
-					/*
-					 * if(saved_levels.containsKey(p.getName())){ p.setLevel(saved_levels.get(p.getName())); }
-					 */
-
-					p.setExp(1F);
-					saved_levels.remove(p.getName());
-				}
-			}, 2L);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onEntityDamage(EntityDamageEvent e) {
-		if (e.getEntity() instanceof Player) {
-			Player p = (Player) e.getEntity();
-			if (player_god_mode.containsKey(p.getName())) {
-				e.setCancelled(true);
-				e.setDamage(0);
+		} else {
+			p.sendMessage(ChatColor.LIGHT_PURPLE + "You have returned to " + ChatColor.BOLD + "YOUR" + ChatColor.LIGHT_PURPLE + " realm.");
+			if (realm_title.containsKey(to_realm.getName()) && realm_title.get(to_realm.getName()) != null) {
+				p.sendMessage(ChatColor.GRAY + realm_title.get(to_realm.getName()));
 			}
 		}
-	}
 
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onEntityDamageEntityEvent(EntityDamageByEntityEvent e) {
-		if (e.getDamager() instanceof Player) {
-			Player p = (Player) e.getDamager();
-			if (player_god_mode.containsKey(p.getName())) {
-				e.setCancelled(true);
-				e.setDamage(0);
+		if (flying_realms.containsKey(to_realm.getName()) && safe_realms.containsKey(to_realm.getName())) {
+			if (p.getName().equalsIgnoreCase(to_realm.getName())
+					|| (build_list.containsKey(to_realm.getName()) && build_list.get(to_realm.getName()).contains(p.getName()))) {
+				p.setAllowFlight(true);
+				p.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "FLYING ENABLED");
+				// Builder or owner == they can fly.
 			}
 		}
+
 	}
 
-	@EventHandler
-	public void onPlayerMoveUpdate(PlayerMoveEvent e) {
-		Player p = e.getPlayer();
-		recent_movement.put(p.getName(), System.currentTimeMillis());
-	}
+	if (!(p.getWorld().getName().equalsIgnoreCase(main_world_name)) && !(InstanceMechanics.isInstance(p.getWorld().getName()))) {
+		// Bring them back home.
+		p.setAllowFlight(false);
 
-	@EventHandler
-	public void onPlayerPortalEvent(PlayerPortalEvent e) {
-		final Player p = e.getPlayer();
+		if (saved_locations.containsKey(p.getName())) {
+			final String realm_name = p.getWorld().getName();
+			final Location home = saved_locations.get(p.getName());
 
-		if (Hive.server_swap.containsKey(p.getName())) {
-			e.setCancelled(true);
-			return;
-		}
-
-		if (p.getWorld().getName().equalsIgnoreCase(main_world_name)) {
-			Location ploc = p.getLocation();
-			World to_realm = null;
-			Location port_loc = null;
-			String realm_name = "";
-			long last_time = recent_movement.get(p.getName());
-
-			if ((System.currentTimeMillis() - last_time) > 6000) {
-				e.setCancelled(true);
-				return; // They shouldn't be teleported, they haven't moved.
+			if (!(p.getName().equalsIgnoreCase(p.getWorld().getName()))) {
+				p.sendMessage(ChatColor.LIGHT_PURPLE + "You have left " + ChatColor.BOLD + ChatMechanics.getPlayerPrefix(realm_name, true) + realm_name
+						+ "'s" + ChatColor.LIGHT_PURPLE + " realm.");
+			} else {
+				p.sendMessage(ChatColor.LIGHT_PURPLE + "You have left " + ChatColor.BOLD + "YOUR" + ChatColor.LIGHT_PURPLE + " realm.");
 			}
 
-			if (MountMechanics.summon_mount.containsKey(p.getName())) {
-				e.setCancelled(true);
-				return;
-			}
-
-			for (Map.Entry<Location, String> entry : portal_map.entrySet()) {
-				Location portal_loc = entry.getKey();
-				realm_name = entry.getValue();
-
-				if (ploc.distanceSquared(portal_loc) <= 4) {
-					// TELEPORT BITCHES.
-					port_loc = portal_loc;
-					to_realm = Main.plugin.getServer().getWorld(realm_name);
-					break;
-				}
-			}
-
-
-			if (to_realm == null) {
-				e.setCancelled(true);
-				// TODO: Better error message here.
-				p.sendMessage(ChatColor.RED + "This realm portal is " + ChatColor.UNDERLINE + "not" + ChatColor.RED + " linked to a destination.");
-				p.sendMessage(ChatColor.GRAY + "If this is your portal, please try to replace it with your Realm Portal Rune.");
-				if (port_loc == null) {
-					port_loc = p.getLocation();
-				}
-				if (port_loc != null) {
-					portal_map_coords.remove(p.getName());
-					portal_map.remove(port_loc);
-					inv_portal_map.remove(realm_name);
-					if (port_loc.getBlock().getType() == Material.PORTAL) {
-						port_loc.getBlock().setType(Material.AIR);
-					}
-					if (port_loc.add(0, 1, 0).getBlock().getType() == Material.PORTAL) {
-						port_loc.getBlock().setType(Material.AIR);
-					}
-				}
-				return;
-			}
-
-			if (!(isWorldLoaded(to_realm.getName()))) {
-				e.setCancelled(true);
-				p.sendMessage(ChatColor.RED + "This realm is not loaded.");
-				return;
-			}
-
-			if (locked_realms.contains(to_realm.getName()) && !(to_realm.getName().equalsIgnoreCase(p.getName()))) {
-				e.setCancelled(true);
-				p.sendMessage(ChatColor.RED + "This realm is locked.");
-				return;
-			}
-
-			if (HealthMechanics.in_combat.containsKey(p.getName())) {
-				e.setCancelled(true);
-				p.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " place a realm portal while in combat.");
-				p.sendMessage(ChatColor.GRAY + "Wait " + ChatColor.UNDERLINE + "a few seconds" + ChatColor.GRAY + " and try again.");
-				return;
-			}
-
-			if (realm_percent.containsKey(to_realm.getName())) {
-				e.setCancelled(true);
-				String percent_done = realm_percent.get(to_realm.getName());
-				p.sendMessage(ChatColor.RED + "This realm is currently UPGRADING. " + ChatColor.BOLD + percent_done + "% Complete.");
-				return;
-			}
-
-			if (KarmaMechanics.getRawAlignment(p.getName()).equalsIgnoreCase("evil") && safe_realms.containsKey(to_realm.getName())) {
-				p.sendMessage(ChatColor.RED + "Due to your CHAOTIC alignment, you " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " enter this realm.");
-				e.setCancelled(true);
-				return;
-			}
-
-			saved_locations.put(p.getName(), p.getLocation());
-			// Location in_realm = mvwm.getMVWorld(to_realm).getSpawnLocation();
-			Location in_realm = to_realm.getSpawnLocation();
-			e.setTo(in_realm);
-			to_realm.setTime(0);
-			in_realm.getBlock().setType(Material.PORTAL);
-			in_realm.subtract(0, 1, 0).getBlock().setType(Material.PORTAL);
-			in_realm.add(0, 1, 0);
-
+			p.teleport(home);
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					p.closeInventory();
 				}
 			}.runTaskLaterAsynchronously(Main.plugin, 2L);
+			current_item_being_bought.remove(p.getName());
 
-			// final String f_realm_name = to_realm.getName();
+			e.setCancelled(true);
+		} else {
+			p.teleport(SpawnMechanics.getRandomSpawnPoint(p.getName()));
+			p.sendMessage(ChatColor.RED
+					+ "Woops! Something has gone wrong in the teleportation matrix of this realm. Your saved location could not be loaded, so you have been safetly transported back to Cyrennica.");
+		}
+	}
 
-			if (!(p.getName().equalsIgnoreCase(to_realm.getName()))) {
-				p.sendMessage(ChatColor.LIGHT_PURPLE + "You have entered " + ChatColor.BOLD + ChatMechanics.getPlayerPrefix(to_realm.getName(), true)
-						+ to_realm.getName() + "'s" + ChatColor.LIGHT_PURPLE + " realm.");
-				if (realm_title.containsKey(to_realm.getName()) && realm_title.get(to_realm.getName()) != null) {
-					p.sendMessage(ChatColor.GRAY + realm_title.get(to_realm.getName()));
-				}
+}
+
+@SuppressWarnings("deprecation")
+public static void makePortal(final String to_realm, final Location l, int for_time) {
+	l.add(0, 1, 0).getBlock().setType(Material.PORTAL);
+	l.add(0, 1, 0).getBlock().setType(Material.PORTAL);
+
+	portal_map.put(l, to_realm);
+	inv_portal_map.put(to_realm, l);
+	portal_map_coords.put(to_realm, l.getBlockX() + "," + l.getBlockY() + "," + l.getBlockZ());
+	double height = 1;
+	String owner = getOwner(l);
+	if (Bukkit.getOfflinePlayer(owner).isOp())
+		height = 2.5;
+	holograms.put(l, new Hologram(l.clone().add(0.5, height, 0.5), Arrays.asList(owner, ChatColor.RED + "Chaotic")));
+	holograms.get(l).show();
+}
+
+public static String getOwner(Location portal) {
+	String realm_owner = "";
+	for (Entry<Location, String> entry : portal_map.entrySet()) {
+		Location l = entry.getKey();
+		String owner_name = entry.getValue();
+
+		if (l.distanceSquared(portal) <= 4) {
+			realm_owner = owner_name;
+			// log.info(owner_name);
+			break;
+		}
+	}
+	return realm_owner;
+}
+
+public static void deleteFolder(File folder) {
+	File[] files = folder.listFiles();
+	if (files != null) { // some JVMs return null for empty dirs
+		for (File f : files) {
+			if (f.isDirectory()) {
+				deleteFolder(f);
 			} else {
-				p.sendMessage(ChatColor.LIGHT_PURPLE + "You have returned to " + ChatColor.BOLD + "YOUR" + ChatColor.LIGHT_PURPLE + " realm.");
-				if (realm_title.containsKey(to_realm.getName()) && realm_title.get(to_realm.getName()) != null) {
-					p.sendMessage(ChatColor.GRAY + realm_title.get(to_realm.getName()));
-				}
-			}
-
-			if (flying_realms.containsKey(to_realm.getName()) && safe_realms.containsKey(to_realm.getName())) {
-				if (p.getName().equalsIgnoreCase(to_realm.getName())
-						|| (build_list.containsKey(to_realm.getName()) && build_list.get(to_realm.getName()).contains(p.getName()))) {
-					p.setAllowFlight(true);
-					p.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "FLYING ENABLED");
-					// Builder or owner == they can fly.
-				}
-			}
-
-		}
-
-		if (!(p.getWorld().getName().equalsIgnoreCase(main_world_name)) && !(InstanceMechanics.isInstance(p.getWorld().getName()))) {
-			// Bring them back home.
-			p.setAllowFlight(false);
-
-			if (saved_locations.containsKey(p.getName())) {
-				final String realm_name = p.getWorld().getName();
-				final Location home = saved_locations.get(p.getName());
-
-				if (!(p.getName().equalsIgnoreCase(p.getWorld().getName()))) {
-					p.sendMessage(ChatColor.LIGHT_PURPLE + "You have left " + ChatColor.BOLD + ChatMechanics.getPlayerPrefix(realm_name, true) + realm_name
-							+ "'s" + ChatColor.LIGHT_PURPLE + " realm.");
-				} else {
-					p.sendMessage(ChatColor.LIGHT_PURPLE + "You have left " + ChatColor.BOLD + "YOUR" + ChatColor.LIGHT_PURPLE + " realm.");
-				}
-
-				p.teleport(home);
-				new BukkitRunnable() {
-					@Override
-					public void run() {
-						p.closeInventory();
-					}
-				}.runTaskLaterAsynchronously(Main.plugin, 2L);
-				current_item_being_bought.remove(p.getName());
-
-				e.setCancelled(true);
-			} else {
-				p.teleport(SpawnMechanics.getRandomSpawnPoint(p.getName()));
-				p.sendMessage(ChatColor.RED
-						+ "Woops! Something has gone wrong in the teleportation matrix of this realm. Your saved location could not be loaded, so you have been safetly transported back to Cyrennica.");
+				f.delete();
 			}
 		}
-
 	}
+	folder.delete();
+}
 
-	@SuppressWarnings("deprecation")
-	public static void makePortal(final String to_realm, final Location l, int for_time) {
-		l.add(0, 1, 0).getBlock().setType(Material.PORTAL);
-		l.add(0, 1, 0).getBlock().setType(Material.PORTAL);
+public void fixChunks(final World w) {
+	// int x = 0;
 
-		portal_map.put(l, to_realm);
-		inv_portal_map.put(to_realm, l);
-		portal_map_coords.put(to_realm, l.getBlockX() + "," + l.getBlockY() + "," + l.getBlockZ());
-		double height = 1;
-		String owner = getOwner(l);
-		if (Bukkit.getOfflinePlayer(owner).isOp())
-			height = 2.5;
-		holograms.put(l, new Hologram(l.clone().add(0.5, height, 0.5), Arrays.asList(owner, ChatColor.RED + "Chaotic")));
-		holograms.get(l).show();
+	if (w == null) {
+		return;
 	}
-
-	public static String getOwner(Location portal) {
-		String realm_owner = "";
-		for (Entry<Location, String> entry : portal_map.entrySet()) {
-			Location l = entry.getKey();
-			String owner_name = entry.getValue();
-
-			if (l.distanceSquared(portal) <= 4) {
-				realm_owner = owner_name;
-				// log.info(owner_name);
-				break;
-			}
-		}
-		return realm_owner;
-	}
-
-	public static void deleteFolder(File folder) {
-		File[] files = folder.listFiles();
-		if (files != null) { // some JVMs return null for empty dirs
-			for (File f : files) {
-				if (f.isDirectory()) {
-					deleteFolder(f);
-				} else {
-					f.delete();
-				}
-			}
-		}
-		folder.delete();
-	}
-
-	public void fixChunks(final World w) {
-		// int x = 0;
-
-		if (w == null) {
+	try {
+		if (w.getLoadedChunks().length <= 0) {
 			return;
 		}
+	} catch (NoSuchElementException nsee) {
+		nsee.printStackTrace();
+		return;
+	}
+
+	Chunk[] clist = w.getLoadedChunks().clone();
+
+	for (Chunk c : clist) {
 		try {
-			if (w.getLoadedChunks().length <= 0) {
+			// Chunk c = e.getChunk();
+			int xchunk = c.getX();
+			int zchunk = c.getZ();
+			int chunk_lim = 2;
+			int realm_level = getRealmTier(w.getName());
+			if (realm_level == 0) {
 				return;
 			}
-		} catch (NoSuchElementException nsee) {
-			nsee.printStackTrace();
-			return;
-		}
-
-		Chunk[] clist = w.getLoadedChunks().clone();
-
-		for (Chunk c : clist) {
-			try {
-				// Chunk c = e.getChunk();
-				int xchunk = c.getX();
-				int zchunk = c.getZ();
-				int chunk_lim = 2;
-				int realm_level = getRealmTier(w.getName());
-				if (realm_level == 0) {
-					return;
-				}
-				if (realm_level == 1) {
-					chunk_lim = 2;
-				}
-				if (realm_level == 2) {
-					chunk_lim = 3;
-				}
-				if (realm_level == 3) {
-					chunk_lim = 4;
-				}
-				if (realm_level == 4) {
-					chunk_lim = 5;
-				}
-				if (realm_level == 5) {
-					chunk_lim = 6;
-				}
-				if (realm_level == 6) {
-					chunk_lim = 7;
-				}
-				if (realm_level == 7) {
-					chunk_lim = 8;
-				}
-
-				chunk_lim++; // Fix for player not loading into realm after first person due to chunk errors.
-
-				if ((zchunk < -chunk_lim || zchunk > chunk_lim) || (xchunk < -chunk_lim || xchunk > chunk_lim)) {
-					if (c.isLoaded()) {
-						c.unload(true, true);
-					}
-				}
-			} catch (ConcurrentModificationException cme) {
-				cme.printStackTrace();
-				continue;
+			if (realm_level == 1) {
+				chunk_lim = 2;
 			}
+			if (realm_level == 2) {
+				chunk_lim = 3;
+			}
+			if (realm_level == 3) {
+				chunk_lim = 4;
+			}
+			if (realm_level == 4) {
+				chunk_lim = 5;
+			}
+			if (realm_level == 5) {
+				chunk_lim = 6;
+			}
+			if (realm_level == 6) {
+				chunk_lim = 7;
+			}
+			if (realm_level == 7) {
+				chunk_lim = 8;
+			}
+
+			chunk_lim++; // Fix for player not loading into realm after first person due to chunk errors.
+
+			if ((zchunk < -chunk_lim || zchunk > chunk_lim) || (xchunk < -chunk_lim || xchunk > chunk_lim)) {
+				if (c.isLoaded()) {
+					c.unload(true, true);
+				}
+			}
+		} catch (ConcurrentModificationException cme) {
+			cme.printStackTrace();
+			continue;
 		}
 	}
+}
 
-	public static boolean doesWorldExistLocal(String wname) {
-		if (new File(rootDir + "/" + wname).exists() && new File(rootDir + "/" + wname).isDirectory()) {
-			return true;
-		}
-		return false;
-	}
-
-	public static boolean doesWorldExistGlobal(String wname) {
-		try {
-			URL url = new URL("ftp://" + Config.ftp_user + ":" + Config.ftp_pass + "@" + Config.Hive_IP + Config.realmPath + wname + ".zip");
-			URLConnection urlc;
-			urlc = url.openConnection();
-			InputStream is = urlc.getInputStream();
-			is.close();
-		} catch (IOException first_login) {
-			log.info("[RealmMechanics -> Hive] Realm '" + wname + "' does not exist.");
-			return false;
-		}
+public static boolean doesWorldExistLocal(String wname) {
+	if (new File(rootDir + "/" + wname).exists() && new File(rootDir + "/" + wname).isDirectory()) {
 		return true;
 	}
+	return false;
+}
 
-	public static boolean isWorldLoaded(String wname) {
-		for (World w : Bukkit.getServer().getWorlds()) {
-			if (w.getName().equalsIgnoreCase(wname)) {
-				return true;
-			}
-		}
+public static boolean doesWorldExistGlobal(String wname) {
+	try {
+		URL url = new URL("ftp://" + Config.ftp_user + ":" + Config.ftp_pass + "@" + Config.Hive_IP + Config.realmPath + wname + ".zip");
+		URLConnection urlc;
+		urlc = url.openConnection();
+		InputStream is = urlc.getInputStream();
+		is.close();
+	} catch (IOException first_login) {
+		log.info("[RealmMechanics -> Hive] Realm '" + wname + "' does not exist.");
 		return false;
 	}
+	return true;
+}
 
-	public void upgradeRealm(Player p, int new_tier, boolean single_upgrade) {
-		if (!(isWorldLoaded(p.getName()))) {
-			p.sendMessage(ChatColor.RED + "Your realm must be loaded locally to modify its size.");
-			return;
+public static boolean isWorldLoaded(String wname) {
+	for (World w : Bukkit.getServer().getWorlds()) {
+		if (w.getName().equalsIgnoreCase(wname)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+public void upgradeRealm(Player p, int new_tier, boolean single_upgrade) {
+	if (!(isWorldLoaded(p.getName()))) {
+		p.sendMessage(ChatColor.RED + "Your realm must be loaded locally to modify its size.");
+		return;
+	}
+
+	if (!(p.getWorld().getName().equalsIgnoreCase(p.getName()))) {
+		p.sendMessage(ChatColor.RED + "You must be inside your realm to modify its size.");
+		return;
+	}
+
+	if (new_tier >= 2) {
+		AchievementMechanics.addAchievement(p.getName(), "Expanding I");
+		if (new_tier >= 4) {
+			AchievementMechanics.addAchievement(p.getName(), "Expanding II");
+			if (new_tier >= 6) {
+				AchievementMechanics.addAchievement(p.getName(), "Expanding III");
+				if (new_tier == 7) {
+					AchievementMechanics.addAchievement(p.getName(), "Expanding IV");
+				}
+			}
+		}
+	}
+
+	if (single_upgrade == true) {
+		int old_tier = getRealmTier(p.getName());
+		int next_tier = old_tier + 1;
+		setRealmTier(p, next_tier);
+		return;
+	}
+
+	if (single_upgrade == false) {
+		setRealmTier(p, new_tier);
+		return;
+	}
+
+}
+
+public int getRealmUpgradeCost(int new_tier) {
+	if (new_tier == 2) {
+		return 800;
+	}
+	if (new_tier == 3) {
+		return 1600;
+	}
+	if (new_tier == 4) {
+		return 8000;
+	}
+	if (new_tier == 5) {
+		return 15000;
+	}
+	if (new_tier == 6) {
+		return 35000;
+	}
+	if (new_tier == 7) {
+		return 70000;
+	}
+	return 0;
+}
+
+public static int getRealmSizeDimensions(int tier) {
+	if (tier == 0) {
+		return 16;
+	}
+	if (tier == 1) {
+		return 16;
+	}
+	if (tier == 2) {
+		return 22;
+	}
+	if (tier == 3) {
+		return 32;
+	}
+	if (tier == 4) {
+		return 45;
+	}
+	if (tier == 5) {
+		return 64;
+	}
+	if (tier == 6) {
+		return 82;
+	}
+	if (tier == 7) {
+		return 128;
+	}
+	return 0;
+}
+
+@SuppressWarnings("deprecation")
+public void setRealmTier(final Player p, final int new_tier) {
+	if (!(isWorldLoaded(p.getName()))) {
+		p.sendMessage(ChatColor.RED + "Your realm must be loaded locally to modify its size.");
+		return;
+	}
+
+	if (!(p.getWorld().getName().equalsIgnoreCase(p.getName()))) {
+		p.sendMessage(ChatColor.RED + "You must be inside your realm to modify its size.");
+		return;
+	}
+
+	int old_tier = getRealmTier(p.getName());
+	int old_bottom_y = 16;
+	int new_bottom_y = 16;
+
+	if (old_tier == 0) {
+		old_bottom_y = 16;
+		new_bottom_y = 22;
+	}
+	if (old_tier == 1) {
+		old_bottom_y = 16;
+		new_bottom_y = 22;
+	}
+	if (old_tier == 2) {
+		old_bottom_y = 22;
+		new_bottom_y = 32;
+	}
+	if (old_tier == 3) {
+		old_bottom_y = 32;
+		new_bottom_y = 45;
+	}
+	if (old_tier == 4) {
+		old_bottom_y = 45;
+		new_bottom_y = 64;
+	}
+	if (old_tier == 5) {
+		old_bottom_y = 64;
+		new_bottom_y = 82;
+	}
+	if (old_tier == 6) {
+		old_bottom_y = 82;
+		new_bottom_y = 128;
+	}
+	if (old_tier == 7) {
+		old_bottom_y = 128;
+		new_bottom_y = 256;
+	}
+	World old_world = p.getWorld();
+
+	log.info(old_tier + "," + new_tier);
+	realm_tier.put(p.getName(), new_tier);
+
+	for (Player pl : p.getWorld().getPlayers()) {
+		Location l = null;
+		if (saved_locations.containsKey(pl.getName())) {
+			l = saved_locations.get(pl.getName());
+		} else if (!(saved_locations.containsKey(pl.getName()))) {
+			l = SpawnMechanics.getRandomSpawnPoint(p.getName());
 		}
 
-		if (!(p.getWorld().getName().equalsIgnoreCase(p.getName()))) {
-			p.sendMessage(ChatColor.RED + "You must be inside your realm to modify its size.");
-			return;
+		pl.setNoDamageTicks(20);
+		pl.setFallDistance(0.0F);
+		pl.teleport(l);
+		if (!pl.getName().equalsIgnoreCase(p.getName())) { // Realm resident.
+			pl.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + p.getName() + ChatColor.LIGHT_PURPLE + "'s realm is currently UPGRADING to "
+					+ ChatColor.BOLD + new_bottom_y + "x" + new_bottom_y + ChatColor.LIGHT_PURPLE
+					+ ", you have been kicked out of the realm while the upgrade takes place.");
+		} else if (pl.getName().equalsIgnoreCase(p.getName())) { // Realm owner.
+			pl.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "YOUR" + ChatColor.LIGHT_PURPLE + " realm is currently UPGRADING to "
+					+ ChatColor.BOLD + new_bottom_y + "x" + new_bottom_y + ChatColor.LIGHT_PURPLE
+					+ ", you have been kicked out of the realm while the upgrade takes place.");
 		}
+		saved_locations.remove(pl.getName());
+	}
 
-		if (new_tier >= 2) {
-			AchievementMechanics.addAchievement(p.getName(), "Expanding I");
-			if (new_tier >= 4) {
-				AchievementMechanics.addAchievement(p.getName(), "Expanding II");
-				if (new_tier >= 6) {
-					AchievementMechanics.addAchievement(p.getName(), "Expanding III");
-					if (new_tier == 7) {
-						AchievementMechanics.addAchievement(p.getName(), "Expanding IV");
+	if (new_tier == 1) {
+		generateRealmBlocks(old_world, 22, 22, 22, old_bottom_y);
+	}
+	if (new_tier == 2) {
+		generateRealmBlocks(old_world, 22, 22, 22, old_bottom_y);
+	}
+	if (new_tier == 3) {
+		generateRealmBlocks(old_world, 32, 32, 32, old_bottom_y);
+	}
+	if (new_tier == 4) {
+		generateRealmBlocks(old_world, 45, 45, 45, old_bottom_y);
+	}
+	if (new_tier == 5) {
+		generateRealmBlocks(old_world, 64, 64, 64, old_bottom_y);
+	}
+	if (new_tier == 6) {
+		generateRealmBlocks(old_world, 82, 82, 82, old_bottom_y);
+	}
+	if (new_tier == 7) {
+		generateRealmBlocks(old_world, 128, 128, 128, old_bottom_y);
+	}
+
+	int slot = -1;
+	if (p.getInventory().contains(Material.NETHER_STAR)) {
+		slot = p.getInventory().first(Material.NETHER_STAR);
+	}
+
+	if (slot != -1) {
+		p.getInventory().setItem(slot, makeTeleportRune(p));
+	}
+
+	if (slot == -1) {
+		if (p.getInventory().getItem(7) == null || p.getInventory().getItem(7).getType() == Material.AIR) {
+			p.getInventory().setItem(7, makeTeleportRune(p));
+		} else {
+			p.getInventory().setItem(p.getInventory().firstEmpty(), makeTeleportRune(p));
+		}
+	}
+
+	p.updateInventory();
+}
+
+public static int getRealmTier(String p_name) {
+	if (!(realm_tier.containsKey(p_name))) {
+		// log.info(p_name);
+		return 1;
+	}
+	int tier = realm_tier.get(p_name);
+	if (tier <= 0) {
+		tier = 1;
+	}
+	return tier;
+}
+
+@SuppressWarnings("deprecation")
+public static boolean isThereAPortalNear(Block b, int maxradius) {
+	BlockFace[] faces = { BlockFace.UP, BlockFace.NORTH, BlockFace.EAST };
+	BlockFace[][] orth = { { BlockFace.NORTH, BlockFace.EAST }, { BlockFace.UP, BlockFace.EAST }, { BlockFace.NORTH, BlockFace.UP } };
+	for (int r = 0; r <= maxradius; r++) {
+		for (int s = 0; s < 6; s++) {
+			BlockFace f = faces[s % 3];
+			BlockFace[] o = orth[s % 3];
+			if (s >= 3)
+				f = f.getOppositeFace();
+			if (!(b.getRelative(f, r) == null)) {
+				Block c = b.getRelative(f, r);
+
+				for (int x = -r; x <= r; x++) {
+					for (int y = -r; y <= r; y++) {
+						Block a = c.getRelative(o[0], x).getRelative(o[1], y);
+						if (a.getTypeId() == 90)
+							return true;
 					}
 				}
 			}
 		}
-
-		if (single_upgrade == true) {
-			int old_tier = getRealmTier(p.getName());
-			int next_tier = old_tier + 1;
-			setRealmTier(p, next_tier);
-			return;
-		}
-
-		if (single_upgrade == false) {
-			setRealmTier(p, new_tier);
-			return;
-		}
-
 	}
+	return false;
+}
 
-	public int getRealmUpgradeCost(int new_tier) {
-		if (new_tier == 2) {
-			return 800;
-		}
-		if (new_tier == 3) {
-			return 1600;
-		}
-		if (new_tier == 4) {
-			return 8000;
-		}
-		if (new_tier == 5) {
-			return 15000;
-		}
-		if (new_tier == 6) {
-			return 35000;
-		}
-		if (new_tier == 7) {
-			return 70000;
-		}
-		return 0;
-	}
+public void generateRealmBlocks(final World w, final int o_limx, final int o_limy, final int o_limz, final int o_oldy) {
 
-	public static int getRealmSizeDimensions(int tier) {
-		if (tier == 0) {
-			return 16;
-		}
-		if (tier == 1) {
-			return 16;
-		}
-		if (tier == 2) {
-			return 22;
-		}
-		if (tier == 3) {
-			return 32;
-		}
-		if (tier == 4) {
-			return 45;
-		}
-		if (tier == 5) {
-			return 64;
-		}
-		if (tier == 6) {
-			return 82;
-		}
-		if (tier == 7) {
-			return 128;
-		}
-		return 0;
-	}
+	Thread t = new Thread(new Runnable() {
+		public void run() {
+			List<Location> update_locs = new ArrayList<Location>();
 
-	@SuppressWarnings("deprecation")
-	public void setRealmTier(final Player p, final int new_tier) {
-		if (!(isWorldLoaded(p.getName()))) {
-			p.sendMessage(ChatColor.RED + "Your realm must be loaded locally to modify its size.");
-			return;
-		}
+			int limx = o_limx + 16;
+			int limz = o_limz + 16; // To account for not using chunk 0.
 
-		if (!(p.getWorld().getName().equalsIgnoreCase(p.getName()))) {
-			p.sendMessage(ChatColor.RED + "You must be inside your realm to modify its size.");
-			return;
-		}
+			int x = 0, y = 128, z = 0;
+			int oldx = o_oldy;
+			int oldz = o_oldy;
+			int limy = (128 - o_limy);
+			int oldy = (128 - o_oldy) - 1; // Subtract an extra 1 for bedrock border area.
 
-		int old_tier = getRealmTier(p.getName());
-		int old_bottom_y = 16;
-		int new_bottom_y = 16;
-
-		if (old_tier == 0) {
-			old_bottom_y = 16;
-			new_bottom_y = 22;
-		}
-		if (old_tier == 1) {
-			old_bottom_y = 16;
-			new_bottom_y = 22;
-		}
-		if (old_tier == 2) {
-			old_bottom_y = 22;
-			new_bottom_y = 32;
-		}
-		if (old_tier == 3) {
-			old_bottom_y = 32;
-			new_bottom_y = 45;
-		}
-		if (old_tier == 4) {
-			old_bottom_y = 45;
-			new_bottom_y = 64;
-		}
-		if (old_tier == 5) {
-			old_bottom_y = 64;
-			new_bottom_y = 82;
-		}
-		if (old_tier == 6) {
-			old_bottom_y = 82;
-			new_bottom_y = 128;
-		}
-		if (old_tier == 7) {
-			old_bottom_y = 128;
-			new_bottom_y = 256;
-		}
-		World old_world = p.getWorld();
-
-		log.info(old_tier + "," + new_tier);
-		realm_tier.put(p.getName(), new_tier);
-
-		for (Player pl : p.getWorld().getPlayers()) {
-			Location l = null;
-			if (saved_locations.containsKey(pl.getName())) {
-				l = saved_locations.get(pl.getName());
-			} else if (!(saved_locations.containsKey(pl.getName()))) {
-				l = SpawnMechanics.getRandomSpawnPoint(p.getName());
+			// BEDROCK
+			for (x = 16; x < limx; x++) {
+				for (z = 16; z < limz; z++) {
+					update_locs.add(new Location(w, x, limy + 1, z));
+				}
 			}
 
-			pl.setNoDamageTicks(20);
-			pl.setFallDistance(0.0F);
-			pl.teleport(l);
-			if (!pl.getName().equalsIgnoreCase(p.getName())) { // Realm resident.
-				pl.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + p.getName() + ChatColor.LIGHT_PURPLE + "'s realm is currently UPGRADING to "
-						+ ChatColor.BOLD + new_bottom_y + "x" + new_bottom_y + ChatColor.LIGHT_PURPLE
-						+ ", you have been kicked out of the realm while the upgrade takes place.");
-			} else if (pl.getName().equalsIgnoreCase(p.getName())) { // Realm owner.
-				pl.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "YOUR" + ChatColor.LIGHT_PURPLE + " realm is currently UPGRADING to "
-						+ ChatColor.BOLD + new_bottom_y + "x" + new_bottom_y + ChatColor.LIGHT_PURPLE
-						+ ", you have been kicked out of the realm while the upgrade takes place.");
+			// DIRT
+			for (x = 16; x < limx; x++) {
+				for (y = 127; y > (limy + 1); y--) {
+					for (z = 16; z < limz; z++) {
+						Block b = w.getBlockAt(new Location(w, x, y, z));
+						if (b.getType() != Material.AIR && b.getType() != Material.BEDROCK) {
+							continue;
+						}
+						if (b.getType() == Material.BEDROCK || y - 1 <= oldy || x >= oldx || z >= oldz) {
+							update_locs.add(new Location(w, x, y, z));
+						}
+					}
+				}
 			}
-			saved_locations.remove(pl.getName());
+
+			y = 128;
+
+			// GRASS
+			for (x = 16; x < limx; x++) {
+				for (z = 16; z < limz; z++) {
+					update_locs.add(new Location(w, x, 128, z));
+				}
+			}
+
+			block_process_list.put(w.getName(), update_locs);
+
+		}
+	});
+
+	t.start();
+}
+
+@SuppressWarnings("deprecation")
+public static void realmHandler(final Player p, String realm_name) {
+	if (realm_name.contains("§")) {
+		String color_code_to_remove = realm_name.substring(0, realm_name.indexOf("�") + 2);
+		realm_name = realm_name.replaceAll(color_code_to_remove, "");
+	}
+	if (doesWorldExistLocal(realm_name) && !(isWorldLoaded(realm_name))) {
+		Bukkit.createWorld(new WorldCreator(realm_name));
+		p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "                   " + "* Realm Portal OPENED *");
+		if (realm_title.containsKey(p.getName()) && realm_title.get(p.getName()) != null && !(realm_title.get(p.getName()).equalsIgnoreCase("null"))) {
+			p.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Description: " + ChatColor.GRAY + realm_title.get(p.getName()));
+		} else {
+			p.sendMessage(ChatColor.GRAY + "Type /realm <TITLE> to set the description of your realm, it will be displayed to all visitors.");
+		}
+		final String safe_realm_name = realm_name;
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				ready_worlds.add(safe_realm_name);
+			}
+		}.runTaskLaterAsynchronously(Main.plugin, 100L);
+
+		return;
+	}
+	if (isWorldLoaded(realm_name)) {
+		p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "                   " + "* Realm Portal OPENED *");
+		if (realm_title.containsKey(p.getName()) && realm_title.get(p.getName()) != null && !(realm_title.get(p.getName()).equalsIgnoreCase("null"))) {
+			p.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Description: " + ChatColor.GRAY + realm_title.get(p.getName()));
+		} else {
+			p.sendMessage(ChatColor.GRAY + "Type /realm <TITLE> to set the description of your realm, it will be displayed to all visitors.");
 		}
 
-		if (new_tier == 1) {
-			generateRealmBlocks(old_world, 22, 22, 22, old_bottom_y);
+		return;
+	}
+
+	if (doesWorldExistGlobal(realm_name)) {
+		// Download it.
+		safe_realms.remove(realm_name); // Remove old safe data.
+		// p.sendMessage(ChatColor.GRAY + "DOWNLOADING your realm data from hive, please wait...");
+		downloadRealm(realm_name, p); // Downloads, Makes World File, Extracts.
+
+		WorldCreator wc = new WorldCreator(p.getName());
+		wc.type(WorldType.FLAT);
+		wc.generateStructures(false);
+		World w = Bukkit.createWorld(wc);
+
+		if (w.getBlockAt(new Location(w, w.getSpawnLocation().getX(), 0, w.getSpawnLocation().getZ())).getType() == Material.BEDROCK) {
+			// Glitched realm.
+			if (!(corrupt_world.contains(p.getName()))) {
+				p.sendMessage(ChatColor.RED + "Your realm did NOT load.");
+				p.sendMessage(ChatColor.GRAY + "Retrying download, please wait...");
+				corrupt_world.add(p.getName());
+				Bukkit.unloadWorld(w, false);
+				File world_root = new File(rootDir + "/" + p.getName());
+				deleteFolder(world_root);
+				realmHandler(p, realm_name);
+			} else if (corrupt_world.contains(p.getName())) {
+				// World is corrupt on the HIVE.
+				p.performCommand("resetrealm");
+				p.sendMessage(ChatColor.RED + "The system has been forced to RESET your realm due to corruption.");
+				p.sendMessage(ChatColor.GRAY + "Please /report this issue.");
+			}
+			return;
+			// p.performCommand("resetrealm");
 		}
-		if (new_tier == 2) {
-			generateRealmBlocks(old_world, 22, 22, 22, old_bottom_y);
+
+		int p_realm_tier = realm_tier.get(p.getName());
+		if (p_realm_tier == 0 || p_realm_tier == 1) { // p_realm_tier == 1 ||
+			// Possibly fucked up realm index.
+			boolean set = false;
+			if (w.getBlockAt(new Location(w, 36, 120, 36)).getType() != Material.AIR) {
+				if (w.getBlockAt(new Location(w, 46, 120, 46)).getType() != Material.AIR) {
+					if (w.getBlockAt(new Location(w, 60, 120, 60)).getType() != Material.AIR) {
+						if (w.getBlockAt(new Location(w, 78, 120, 78)).getType() != Material.AIR) {
+							if (w.getBlockAt(new Location(w, 96, 120, 96)).getType() != Material.AIR) {
+								if (w.getBlockAt(new Location(w, 142, 120, 142)).getType() != Material.AIR) {
+									realm_tier.put(p.getName(), 7);
+									set = true;
+								}
+								if (set == false) {
+									realm_tier.put(p.getName(), 6);
+									set = true;
+								}
+							}
+							if (set == false) {
+								realm_tier.put(p.getName(), 5);
+								set = true;
+							}
+						}
+						if (set == false) {
+							realm_tier.put(p.getName(), 4);
+							set = true;
+						}
+					}
+					if (set == false) {
+						realm_tier.put(p.getName(), 3);
+						set = true;
+					}
+				}
+				if (set == false) {
+					realm_tier.put(p.getName(), 2);
+					set = true;
+				}
+			}
 		}
-		if (new_tier == 3) {
-			generateRealmBlocks(old_world, 32, 32, 32, old_bottom_y);
+
+		p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "                   " + "* Realm Portal OPENED *");
+		if (realm_title.containsKey(p.getName()) && realm_title.get(p.getName()) != null && !(realm_title.get(p.getName()).equalsIgnoreCase("null"))) {
+			p.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Description: " + ChatColor.GRAY + realm_title.get(p.getName()));
+		} else {
+			p.sendMessage(ChatColor.GRAY + "Type /realm <TITLE> to set the description of your realm, it will be displayed to all visitors.");
 		}
-		if (new_tier == 4) {
-			generateRealmBlocks(old_world, 45, 45, 45, old_bottom_y);
+
+		final String safe_realm_name = p.getName();
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				ready_worlds.add(safe_realm_name);
+			}
+		}.runTaskLaterAsynchronously(Main.plugin, 100L);
+
+		return;
+	}
+
+	if (!(doesWorldExistGlobal(realm_name))) {
+		// Make it. (first time realm.)
+		generateBlankRealm(p, realm_name);
+		p.sendMessage(ChatColor.GRAY + "Generating blank realm...");
+		p.sendMessage("");
+		p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "                " + "* REALM CREATED *");
+		if (realm_title.containsKey(p.getName()) && realm_title.get(p.getName()) != null && !(realm_title.get(p.getName()).equalsIgnoreCase("null"))) {
+			p.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Description: " + ChatColor.GRAY + realm_title.get(p.getName()));
+		} else {
+			p.sendMessage(ChatColor.GRAY + "Type /realm <TITLE> to set the description of your realm, it will be displayed to all visitors.");
 		}
-		if (new_tier == 5) {
-			generateRealmBlocks(old_world, 64, 64, 64, old_bottom_y);
-		}
-		if (new_tier == 6) {
-			generateRealmBlocks(old_world, 82, 82, 82, old_bottom_y);
-		}
-		if (new_tier == 7) {
-			generateRealmBlocks(old_world, 128, 128, 128, old_bottom_y);
-		}
+
+		final String safe_realm_name = realm_name;
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				ready_worlds.add(safe_realm_name);
+			}
+		}.runTaskLaterAsynchronously(Main.plugin, 100L);
+
+		realm_tier.put(p.getName(), 1);
 
 		int slot = -1;
 		if (p.getInventory().contains(Material.NETHER_STAR)) {
@@ -4493,499 +4743,238 @@ public class RealmMechanics implements Listener {
 		}
 
 		p.updateInventory();
+
 	}
+}
 
-	public static int getRealmTier(String p_name) {
-		if (!(realm_tier.containsKey(p_name))) {
-			// log.info(p_name);
-			return 1;
-		}
-		int tier = realm_tier.get(p_name);
-		if (tier <= 0) {
-			tier = 1;
-		}
-		return tier;
-	}
-
-	@SuppressWarnings("deprecation")
-	public static boolean isThereAPortalNear(Block b, int maxradius) {
-		BlockFace[] faces = { BlockFace.UP, BlockFace.NORTH, BlockFace.EAST };
-		BlockFace[][] orth = { { BlockFace.NORTH, BlockFace.EAST }, { BlockFace.UP, BlockFace.EAST }, { BlockFace.NORTH, BlockFace.UP } };
-		for (int r = 0; r <= maxradius; r++) {
-			for (int s = 0; s < 6; s++) {
-				BlockFace f = faces[s % 3];
-				BlockFace[] o = orth[s % 3];
-				if (s >= 3)
-					f = f.getOppositeFace();
-				if (!(b.getRelative(f, r) == null)) {
-					Block c = b.getRelative(f, r);
-
-					for (int x = -r; x <= r; x++) {
-						for (int y = -r; y <= r; y++) {
-							Block a = c.getRelative(o[0], x).getRelative(o[1], y);
-							if (a.getTypeId() == 90)
-								return true;
-						}
-					}
-				}
-			}
-		}
+public static boolean isHiveOnline() {
+	try {
+		Socket ServerSok = new Socket(Config.Hive_IP, Config.FTP_port);
+		ServerSok.close();
+		return true;
+	} catch (Exception e) {
 		return false;
 	}
+}
 
-	public void generateRealmBlocks(final World w, final int o_limx, final int o_limy, final int o_limz, final int o_oldy) {
+public static void downloadRealm(String realm_name, Player p) {
+	new File(rootDir + "/realms/down/" + p.getName() + ".zip").delete();
+	try {
+		URL url = new URL("ftp://" + Config.ftp_user + ":" + Config.ftp_pass + "@" + Config.Hive_IP + Config.realmPath + realm_name + ".zip");
+		URLConnection urlc;
 
-		Thread t = new Thread(new Runnable() {
-			public void run() {
-				List<Location> update_locs = new ArrayList<Location>();
+		urlc = url.openConnection();
 
-				int limx = o_limx + 16;
-				int limz = o_limz + 16; // To account for not using chunk 0.
+		InputStream is = urlc.getInputStream();
+		OutputStream out = new FileOutputStream(rootDir + "/realms/down/" + realm_name + ".zip");
 
-				int x = 0, y = 128, z = 0;
-				int oldx = o_oldy;
-				int oldz = o_oldy;
-				int limy = (128 - o_limy);
-				int oldy = (128 - o_oldy) - 1; // Subtract an extra 1 for bedrock border area.
+		byte buf[] = new byte[1024];
+		int len;
 
-				// BEDROCK
-				for (x = 16; x < limx; x++) {
-					for (z = 16; z < limz; z++) {
-						update_locs.add(new Location(w, x, limy + 1, z));
-					}
-				}
+		while ((len = is.read(buf)) > 0) {
+			out.write(buf, 0, len);
+		}
 
-				// DIRT
-				for (x = 16; x < limx; x++) {
-					for (y = 127; y > (limy + 1); y--) {
-						for (z = 16; z < limz; z++) {
-							Block b = w.getBlockAt(new Location(w, x, y, z));
-							if (b.getType() != Material.AIR && b.getType() != Material.BEDROCK) {
-								continue;
-							}
-							if (b.getType() == Material.BEDROCK || y - 1 <= oldy || x >= oldx || z >= oldz) {
-								update_locs.add(new Location(w, x, y, z));
-							}
-						}
-					}
-				}
+		out.close();
+		is.close();
 
-				y = 128;
-
-				// GRASS
-				for (x = 16; x < limx; x++) {
-					for (z = 16; z < limz; z++) {
-						update_locs.add(new Location(w, x, 128, z));
-					}
-				}
-
-				block_process_list.put(w.getName(), update_locs);
-
-			}
-		});
-
-		t.start();
+	} catch (IOException first_login) {
+		log.info("[RealmMechanics] Fatal error occured, realm " + realm_name + " does not exist when it said it did!");
+		return;
 	}
 
-	@SuppressWarnings("deprecation")
-	public static void realmHandler(final Player p, String realm_name) {
-		if (realm_name.contains("§")) {
-			String color_code_to_remove = realm_name.substring(0, realm_name.indexOf("�") + 2);
-			realm_name = realm_name.replaceAll(color_code_to_remove, "");
-		}
-		if (doesWorldExistLocal(realm_name) && !(isWorldLoaded(realm_name))) {
-			Bukkit.createWorld(new WorldCreator(realm_name));
-			p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "                   " + "* Realm Portal OPENED *");
-			if (realm_title.containsKey(p.getName()) && realm_title.get(p.getName()) != null && !(realm_title.get(p.getName()).equalsIgnoreCase("null"))) {
-				p.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Description: " + ChatColor.GRAY + realm_title.get(p.getName()));
-			} else {
-				p.sendMessage(ChatColor.GRAY + "Type /realm <TITLE> to set the description of your realm, it will be displayed to all visitors.");
-			}
-			final String safe_realm_name = realm_name;
+	File world_root = new File(rootDir + "/" + p.getName());
+	deleteFolder(world_root);
+	unzipArchive(new File(rootDir + "/realms/down/" + realm_name + ".zip"), world_root);
 
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					ready_worlds.add(safe_realm_name);
-				}
-			}.runTaskLaterAsynchronously(Main.plugin, 100L);
+	log.info("[RealmMechanics] Downloaded realm from HIVE and extracted, attempting to load...");
+}
 
-			return;
-		}
-		if (isWorldLoaded(realm_name)) {
-			p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "                   " + "* Realm Portal OPENED *");
-			if (realm_title.containsKey(p.getName()) && realm_title.get(p.getName()) != null && !(realm_title.get(p.getName()).equalsIgnoreCase("null"))) {
-				p.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Description: " + ChatColor.GRAY + realm_title.get(p.getName()));
-			} else {
-				p.sendMessage(ChatColor.GRAY + "Type /realm <TITLE> to set the description of your realm, it will be displayed to all visitors.");
-			}
+/**
+ * Is the user the current realms owner? 
+ * 
+ * @param p The player to check
+ * @return boolean Is the player the current realms owner
+ */
+public boolean isRealmOwner(Player p) {
+	if (p.getWorld().getName().equalsIgnoreCase(p.getName())) {
+		return true;
+	}
+	return false;
+}
 
-			return;
-		}
+public static void generateBlankRealm(Player owner, String realm_name) {
+	downloadRealm("realm_template", owner);
 
-		if (doesWorldExistGlobal(realm_name)) {
-			// Download it.
-			safe_realms.remove(realm_name); // Remove old safe data.
-			// p.sendMessage(ChatColor.GRAY + "DOWNLOADING your realm data from hive, please wait...");
-			downloadRealm(realm_name, p); // Downloads, Makes World File, Extracts.
+	WorldCreator wc = new WorldCreator(realm_name);
+	wc.type(WorldType.FLAT);
+	wc.generateStructures(false);
+	wc.generator(new VoidGeneratorGenerator());
+	World w = Bukkit.createWorld(wc);
+	// w.setAnimalSpawnLimit(0);
+	// w.setAutoSave(true);
+	// w.setKeepSpawnInMemory(false);
+	w.setSpawnLocation(24, 130, 24);
 
-			WorldCreator wc = new WorldCreator(p.getName());
-			wc.type(WorldType.FLAT);
-			wc.generateStructures(false);
-			World w = Bukkit.createWorld(wc);
+	// fixchunks(w);
+	// w.save();
 
-			if (w.getBlockAt(new Location(w, w.getSpawnLocation().getX(), 0, w.getSpawnLocation().getZ())).getType() == Material.BEDROCK) {
-				// Glitched realm.
-				if (!(corrupt_world.contains(p.getName()))) {
-					p.sendMessage(ChatColor.RED + "Your realm did NOT load.");
-					p.sendMessage(ChatColor.GRAY + "Retrying download, please wait...");
-					corrupt_world.add(p.getName());
-					Bukkit.unloadWorld(w, false);
-					File world_root = new File(rootDir + "/" + p.getName());
-					deleteFolder(world_root);
-					realmHandler(p, realm_name);
-				} else if (corrupt_world.contains(p.getName())) {
-					// World is corrupt on the HIVE.
-					p.performCommand("resetrealm");
-					p.sendMessage(ChatColor.RED + "The system has been forced to RESET your realm due to corruption.");
-					p.sendMessage(ChatColor.GRAY + "Please /report this issue.");
-				}
-				return;
-				// p.performCommand("resetrealm");
-			}
+	// setRealmTierSQL(owner, 1);
+	// owner.getInventory().setItem(7, makeTeleportRune(owner));
+	// owner.updateInventory();
 
-			int p_realm_tier = realm_tier.get(p.getName());
-			if (p_realm_tier == 0 || p_realm_tier == 1) { // p_realm_tier == 1 ||
-				// Possibly fucked up realm index.
-				boolean set = false;
-				if (w.getBlockAt(new Location(w, 36, 120, 36)).getType() != Material.AIR) {
-					if (w.getBlockAt(new Location(w, 46, 120, 46)).getType() != Material.AIR) {
-						if (w.getBlockAt(new Location(w, 60, 120, 60)).getType() != Material.AIR) {
-							if (w.getBlockAt(new Location(w, 78, 120, 78)).getType() != Material.AIR) {
-								if (w.getBlockAt(new Location(w, 96, 120, 96)).getType() != Material.AIR) {
-									if (w.getBlockAt(new Location(w, 142, 120, 142)).getType() != Material.AIR) {
-										realm_tier.put(p.getName(), 7);
-										set = true;
-									}
-									if (set == false) {
-										realm_tier.put(p.getName(), 6);
-										set = true;
-									}
-								}
-								if (set == false) {
-									realm_tier.put(p.getName(), 5);
-									set = true;
-								}
-							}
-							if (set == false) {
-								realm_tier.put(p.getName(), 4);
-								set = true;
-							}
-						}
-						if (set == false) {
-							realm_tier.put(p.getName(), 3);
-							set = true;
-						}
-					}
-					if (set == false) {
-						realm_tier.put(p.getName(), 2);
-						set = true;
-					}
-				}
-			}
+	log.info("[RealmMechanics] Blank realm " + realm_name + " created.");
+	// Void generator makes that.
+	w.getBlockAt(0, 64, 0).setType(Material.AIR);
+	int x = 0, y = 128, z = 0;
+	Vector s = new Vector(16, 128, 16);
 
-			p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "                   " + "* Realm Portal OPENED *");
-			if (realm_title.containsKey(p.getName()) && realm_title.get(p.getName()) != null && !(realm_title.get(p.getName()).equalsIgnoreCase("null"))) {
-				p.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Description: " + ChatColor.GRAY + realm_title.get(p.getName()));
-			} else {
-				p.sendMessage(ChatColor.GRAY + "Type /realm <TITLE> to set the description of your realm, it will be displayed to all visitors.");
-			}
+	log.info("d1");
 
-			final String safe_realm_name = p.getName();
-
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					ready_worlds.add(safe_realm_name);
-				}
-			}.runTaskLaterAsynchronously(Main.plugin, 100L);
-
-			return;
-		}
-
-		if (!(doesWorldExistGlobal(realm_name))) {
-			// Make it. (first time realm.)
-			generateBlankRealm(p, realm_name);
-			p.sendMessage(ChatColor.GRAY + "Generating blank realm...");
-			p.sendMessage("");
-			p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "                " + "* REALM CREATED *");
-			if (realm_title.containsKey(p.getName()) && realm_title.get(p.getName()) != null && !(realm_title.get(p.getName()).equalsIgnoreCase("null"))) {
-				p.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "Description: " + ChatColor.GRAY + realm_title.get(p.getName()));
-			} else {
-				p.sendMessage(ChatColor.GRAY + "Type /realm <TITLE> to set the description of your realm, it will be displayed to all visitors.");
-			}
-
-			final String safe_realm_name = realm_name;
-
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					ready_worlds.add(safe_realm_name);
-				}
-			}.runTaskLaterAsynchronously(Main.plugin, 100L);
-
-			realm_tier.put(p.getName(), 1);
-
-			int slot = -1;
-			if (p.getInventory().contains(Material.NETHER_STAR)) {
-				slot = p.getInventory().first(Material.NETHER_STAR);
-			}
-
-			if (slot != -1) {
-				p.getInventory().setItem(slot, makeTeleportRune(p));
-			}
-
-			if (slot == -1) {
-				if (p.getInventory().getItem(7) == null || p.getInventory().getItem(7).getType() == Material.AIR) {
-					p.getInventory().setItem(7, makeTeleportRune(p));
-				} else {
-					p.getInventory().setItem(p.getInventory().firstEmpty(), makeTeleportRune(p));
-				}
-			}
-
-			p.updateInventory();
-
+	// GRASS
+	for (x = s.getBlockX(); x < 32; x++) {
+		for (z = s.getBlockZ(); z < 32; z++) {
+			w.getBlockAt(new Location(w, x, y, z)).setType(Material.GRASS);
 		}
 	}
 
-	public static boolean isHiveOnline() {
-		try {
-			Socket ServerSok = new Socket(Config.Hive_IP, Config.FTP_port);
-			ServerSok.close();
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	public static void downloadRealm(String realm_name, Player p) {
-		new File(rootDir + "/realms/down/" + p.getName() + ".zip").delete();
-		try {
-			URL url = new URL("ftp://" + Config.ftp_user + ":" + Config.ftp_pass + "@" + Config.Hive_IP + Config.realmPath + realm_name + ".zip");
-			URLConnection urlc;
-
-			urlc = url.openConnection();
-
-			InputStream is = urlc.getInputStream();
-			OutputStream out = new FileOutputStream(rootDir + "/realms/down/" + realm_name + ".zip");
-
-			byte buf[] = new byte[1024];
-			int len;
-
-			while ((len = is.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-
-			out.close();
-			is.close();
-
-		} catch (IOException first_login) {
-			log.info("[RealmMechanics] Fatal error occured, realm " + realm_name + " does not exist when it said it did!");
-			return;
-		}
-
-		File world_root = new File(rootDir + "/" + p.getName());
-		deleteFolder(world_root);
-		unzipArchive(new File(rootDir + "/realms/down/" + realm_name + ".zip"), world_root);
-
-		log.info("[RealmMechanics] Downloaded realm from HIVE and extracted, attempting to load...");
-	}
-
-	/**
-	 * Is the user the current realms owner? 
-	 * 
-	 * @param p The player to check
-	 * @return boolean Is the player the current realms owner
-	 */
-	public boolean isRealmOwner(Player p) {
-		if (p.getWorld().getName().equalsIgnoreCase(p.getName())) {
-			return true;
-		}
-		return false;
-	}
-
-	public static void generateBlankRealm(Player owner, String realm_name) {
-		downloadRealm("realm_template", owner);
-
-		WorldCreator wc = new WorldCreator(realm_name);
-		wc.type(WorldType.FLAT);
-		wc.generateStructures(false);
-		wc.generator(new VoidGeneratorGenerator());
-		World w = Bukkit.createWorld(wc);
-		// w.setAnimalSpawnLimit(0);
-		// w.setAutoSave(true);
-		// w.setKeepSpawnInMemory(false);
-		w.setSpawnLocation(24, 130, 24);
-
-		// fixchunks(w);
-		// w.save();
-
-		// setRealmTierSQL(owner, 1);
-		// owner.getInventory().setItem(7, makeTeleportRune(owner));
-		// owner.updateInventory();
-
-		log.info("[RealmMechanics] Blank realm " + realm_name + " created.");
-		// Void generator makes that.
-		w.getBlockAt(0, 64, 0).setType(Material.AIR);
-		int x = 0, y = 128, z = 0;
-		Vector s = new Vector(16, 128, 16);
-
-		log.info("d1");
-
-		// GRASS
-		for (x = s.getBlockX(); x < 32; x++) {
+	// DIRT
+	for (x = s.getBlockX(); x < 32; x++) {
+		for (y = 127; y >= 112; y--) {
 			for (z = s.getBlockZ(); z < 32; z++) {
-				w.getBlockAt(new Location(w, x, y, z)).setType(Material.GRASS);
-			}
-		}
-
-		// DIRT
-		for (x = s.getBlockX(); x < 32; x++) {
-			for (y = 127; y >= 112; y--) {
-				for (z = s.getBlockZ(); z < 32; z++) {
-					w.getBlockAt(new Location(w, x, y, z)).setType(Material.DIRT);
-				}
-			}
-		}
-
-		// BEDROCK
-		for (x = s.getBlockX(); x < 32; x++) {
-			for (z = s.getBlockZ(); z < 32; z++) {
-				w.getBlockAt(new Location(w, x, y, z)).setType(Material.BEDROCK);
-			}
-		}
-
-		log.info("d2");
-
-		// Grass @ y:128
-		// Dirt @ y:127 - y:112
-		// Bedrock @ y:111
-
-		// 16x16 editable area, woot!
-
-		// [START] Grass Trim Task.
-		// [END] Grass Trim Task
-
-	}
-
-	public static void resetRealm(Player p) {
-		if (inv_portal_map.containsKey(p.getName())) {
-			Location l = inv_portal_map.get(p.getName());
-			l.getBlock().setType(Material.AIR);
-			l.add(0, 1, 0).getBlock().setType(Material.AIR);
-			portal_map_coords.remove(p.getName());
-			inv_portal_map.remove(p.getName());
-			has_portal.remove(p.getName());
-			l.subtract(0, 1, 0);
-			portal_map.remove(l);
-		}
-		if (Bukkit.getWorld(p.getName()) != null) {
-			World realm = Bukkit.getWorld(p.getName());
-			for (Player pl : realm.getPlayers()) {
-				pl.teleport(saved_locations.get(pl.getName()));
-				pl.sendMessage(ChatColor.RED + "You have been kicked out of the realm as it is resetting.");
-			}
-			Main.plugin.getServer().unloadWorld(p.getName(), true);
-		}
-		File world_root = new File(p.getName());
-		deleteFolder(world_root);
-		// Deleted messed up realm. Now generating a new one.
-		generateBlankRealm(p, p.getName());
-		// getServer().unloadWorld(p.getName(), true);
-		p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "REALM RESET RUNNING..." + ChatColor.RED + " 100%");
-
-	}
-
-	public static final void zipDirectory(File directory, File zip) throws IOException {
-		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zip));
-		zip(directory, directory, zos);
-		zos.close();
-	}
-
-	private static final void zip(File directory, File base, ZipOutputStream zos) throws IOException {
-		File[] files = directory.listFiles();
-		byte[] buffer = new byte[8192];
-		int read = 0;
-		for (int i = 0, n = files.length; i < n; i++) {
-			if (files[i].isDirectory()) {
-				zip(files[i], base, zos);
-			} else {
-				FileInputStream in = new FileInputStream(files[i]);
-				ZipEntry entry = new ZipEntry(files[i].getPath().substring(base.getPath().length() + 1));
-				zos.putNextEntry(entry);
-				while (-1 != (read = in.read(buffer))) {
-					zos.write(buffer, 0, read);
-				}
-				in.close();
+				w.getBlockAt(new Location(w, x, y, z)).setType(Material.DIRT);
 			}
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
-	public static void unzipArchive(File archive, File outputDir) {
-		try {
-			ZipFile zipfile = new ZipFile(archive);
-			for (Enumeration e = zipfile.entries(); e.hasMoreElements();) {
-				ZipEntry entry = (ZipEntry) e.nextElement();
-				unzipEntry(zipfile, entry, outputDir);
-			}
-			zipfile.close();
-		} catch (Exception e) {
-			log.info("Error while extracting file " + archive);
+	// BEDROCK
+	for (x = s.getBlockX(); x < 32; x++) {
+		for (z = s.getBlockZ(); z < 32; z++) {
+			w.getBlockAt(new Location(w, x, y, z)).setType(Material.BEDROCK);
 		}
 	}
 
-	private static void unzipEntry(ZipFile zipfile, ZipEntry entry, File outputDir) throws IOException {
-		if (entry.isDirectory()) {
-			createDir(new File(outputDir, entry.getName()));
-			return;
+	log.info("d2");
+
+	// Grass @ y:128
+	// Dirt @ y:127 - y:112
+	// Bedrock @ y:111
+
+	// 16x16 editable area, woot!
+
+	// [START] Grass Trim Task.
+	// [END] Grass Trim Task
+
+}
+
+public static void resetRealm(Player p) {
+	if (inv_portal_map.containsKey(p.getName())) {
+		Location l = inv_portal_map.get(p.getName());
+		l.getBlock().setType(Material.AIR);
+		l.add(0, 1, 0).getBlock().setType(Material.AIR);
+		portal_map_coords.remove(p.getName());
+		inv_portal_map.remove(p.getName());
+		has_portal.remove(p.getName());
+		l.subtract(0, 1, 0);
+		portal_map.remove(l);
+	}
+	if (Bukkit.getWorld(p.getName()) != null) {
+		World realm = Bukkit.getWorld(p.getName());
+		for (Player pl : realm.getPlayers()) {
+			pl.teleport(saved_locations.get(pl.getName()));
+			pl.sendMessage(ChatColor.RED + "You have been kicked out of the realm as it is resetting.");
 		}
+		Main.plugin.getServer().unloadWorld(p.getName(), true);
+	}
+	File world_root = new File(p.getName());
+	deleteFolder(world_root);
+	// Deleted messed up realm. Now generating a new one.
+	generateBlankRealm(p, p.getName());
+	// getServer().unloadWorld(p.getName(), true);
+	p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "REALM RESET RUNNING..." + ChatColor.RED + " 100%");
 
-		File outputFile = new File(outputDir, entry.getName());
-		if (!outputFile.getParentFile().exists()) {
-			createDir(outputFile.getParentFile());
-		}
+}
 
-		// log.info("Extracting: " + entry);
-		InputStream inputStream = zipfile.getInputStream(entry);
-		FileOutputStream outputStream = new FileOutputStream(outputFile);
+public static final void zipDirectory(File directory, File zip) throws IOException {
+	ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zip));
+	zip(directory, directory, zos);
+	zos.close();
+}
 
-		try {
-			byte[] buf = new byte[2048];
-			int r = inputStream.read(buf);
-			while (r != -1) {
-				outputStream.write(buf, 0, r);
-				r = inputStream.read(buf);
+private static final void zip(File directory, File base, ZipOutputStream zos) throws IOException {
+	File[] files = directory.listFiles();
+	byte[] buffer = new byte[8192];
+	int read = 0;
+	for (int i = 0, n = files.length; i < n; i++) {
+		if (files[i].isDirectory()) {
+			zip(files[i], base, zos);
+		} else {
+			FileInputStream in = new FileInputStream(files[i]);
+			ZipEntry entry = new ZipEntry(files[i].getPath().substring(base.getPath().length() + 1));
+			zos.putNextEntry(entry);
+			while (-1 != (read = in.read(buffer))) {
+				zos.write(buffer, 0, read);
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (outputStream != null) {
-				try {
-					outputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			in.close();
+		}
+	}
+}
+
+@SuppressWarnings("rawtypes")
+public static void unzipArchive(File archive, File outputDir) {
+	try {
+		ZipFile zipfile = new ZipFile(archive);
+		for (Enumeration e = zipfile.entries(); e.hasMoreElements();) {
+			ZipEntry entry = (ZipEntry) e.nextElement();
+			unzipEntry(zipfile, entry, outputDir);
+		}
+		zipfile.close();
+	} catch (Exception e) {
+		log.info("Error while extracting file " + archive);
+	}
+}
+
+private static void unzipEntry(ZipFile zipfile, ZipEntry entry, File outputDir) throws IOException {
+	if (entry.isDirectory()) {
+		createDir(new File(outputDir, entry.getName()));
+		return;
+	}
+
+	File outputFile = new File(outputDir, entry.getName());
+	if (!outputFile.getParentFile().exists()) {
+		createDir(outputFile.getParentFile());
+	}
+
+	// log.info("Extracting: " + entry);
+	InputStream inputStream = zipfile.getInputStream(entry);
+	FileOutputStream outputStream = new FileOutputStream(outputFile);
+
+	try {
+		byte[] buf = new byte[2048];
+		int r = inputStream.read(buf);
+		while (r != -1) {
+			outputStream.write(buf, 0, r);
+			r = inputStream.read(buf);
+		}
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	} finally {
+		if (outputStream != null) {
+			try {
+				outputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
+}
 
-	private static void createDir(File dir) {
-		log.info("Creating dir " + dir.getName());
-		if (!dir.mkdirs())
-			throw new RuntimeException("Can not create dir " + dir);
-	}
+private static void createDir(File dir) {
+	log.info("Creating dir " + dir.getName());
+	if (!dir.mkdirs())
+		throw new RuntimeException("Can not create dir " + dir);
+}
 
 }
