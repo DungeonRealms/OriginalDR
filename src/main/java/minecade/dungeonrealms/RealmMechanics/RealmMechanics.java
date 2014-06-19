@@ -637,7 +637,7 @@ public class RealmMechanics implements Listener {
 		}, 1 * 20L, 4 * 20L);
 
 		Main.plugin.getServer().getScheduler().runTaskTimer(Main.plugin, new Runnable() {
-			
+
 			public void run() {
 				if (Bukkit.getOnlinePlayers().length <= 0) return;
 				for (Player pl : Bukkit.getOnlinePlayers()) {
@@ -1392,11 +1392,14 @@ public class RealmMechanics implements Listener {
 	 * Get all builders of the realm
 	 * 
 	 * @param realm_owner The owner of the realm
-	 * @return List<String> A list of builders
+	 * @return List<String> A list of builders or null
 	 */
 	public List<String> getRealmBuilders(String realm_owner) {
-		List<String> builders = new ArrayList<String>(build_list.get(realm_owner));
-		return builders;
+		if (build_list.containsKey(realm_owner)) {
+			List<String> builders = new ArrayList<String>(build_list.get(realm_owner));
+			return builders;
+		}
+		return Arrays.asList("null");
 	}
 
 
@@ -4028,7 +4031,7 @@ public class RealmMechanics implements Listener {
 				}
 			}
 
-			
+
 			if (to_realm == null) {
 				e.setCancelled(true);
 				// TODO: Better error message here.
