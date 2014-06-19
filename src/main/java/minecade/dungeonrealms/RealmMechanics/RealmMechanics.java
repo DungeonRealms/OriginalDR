@@ -1383,10 +1383,10 @@ public class RealmMechanics implements Listener {
 	 * @return boolean True/False in realm
 	 */
 	public static boolean inRealm(Player pl) {
-		if (!(pl.getWorld().getName().equalsIgnoreCase(main_world_name))) {
-			return true;
+		if (pl.getWorld().getName().equals(main_world_name)) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 
@@ -2260,7 +2260,7 @@ public class RealmMechanics implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+	@EventHandler
 	public void onPlayerUtilityItemInteract(PlayerInteractEvent event)  {
 		final Player p = event.getPlayer();
 
@@ -2278,6 +2278,7 @@ public class RealmMechanics implements Listener {
 				return;
 			}
 		}
+		log.info("[RealmMechanics] UtilityInteract");
 	}
 
 	@SuppressWarnings("deprecation")
