@@ -2209,7 +2209,9 @@ public class Hive implements Listener {
 		if (time == 10) {
 			Bukkit.getServer().broadcastMessage(
 					ChatColor.RED + "" + ChatColor.BOLD + ">>" + ChatColor.RED + " The server will be " + ChatColor.UNDERLINE + "REBOOTING" + ChatColor.RED
-					+ " in " + ChatColor.BOLD + time + "s... Removing all open shops and saving to Collection-Bin...");
+					+ " in " + ChatColor.BOLD + time + "s...");
+			Bukkit.getServer().broadcastMessage(
+					ChatColor.RED + "" + ChatColor.BOLD + ">>" + ChatColor.RED + " Removing all open shops and saving to Collection-Bin...");
 		} else {
 			Bukkit.getServer().broadcastMessage(
 					ChatColor.RED + "" + ChatColor.BOLD + ">>" + ChatColor.RED + " The server will be " + ChatColor.UNDERLINE + "REBOOTING" + ChatColor.RED
