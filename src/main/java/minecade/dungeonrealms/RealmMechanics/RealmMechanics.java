@@ -1395,7 +1395,7 @@ public class RealmMechanics implements Listener {
 	 * @return List<String> A list of builders or null
 	 */
 	public List<String> getRealmBuilders(String realm_owner) {
-		if (!build_list.isEmpty() && build_list.containsKey(realm_owner) && build_list.get(realm_owner) != null) {
+		if (build_list.get(realm_owner) != null && build_list.get(realm_owner).size() > 0) {
 			List<String> builders = new ArrayList<String>(build_list.get(realm_owner));
 			return builders;
 		}
