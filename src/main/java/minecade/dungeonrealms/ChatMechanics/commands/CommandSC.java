@@ -26,7 +26,7 @@ public class CommandSC implements CommandExecutor {
 		}
 
 		if (args.length == 0) {
-			if (ChatMechanics.staff_only.contains(pl.getName())) {
+			if (!ChatMechanics.staff_only.contains(pl.getName())) {
 				if (PartyMechanics.party_only.contains(pl.getName())) PartyMechanics.party_only.remove(pl.getName());
 				if (GuildMechanics.guild_only.contains(pl.getName())) GuildMechanics.guild_only.remove(pl.getName());
 				if (PlayerManager.getPlayerModel(pl).getToggleList().contains("globalchat")) PlayerManager.getPlayerModel(pl).getToggleList().remove("globalchat");
