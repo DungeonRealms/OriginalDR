@@ -242,6 +242,9 @@ public class RealmMechanics implements Listener {
 	public static List<String> corrupt_world = new ArrayList<String>();
 	// Ensures a realm can attempt to DL/Load at least twice before being condemned as corrupt.
 
+	public static List<Material> containers = Arrays.asList(Material.CHEST, Material.FURNACE, Material.DISPENSER, Material.DROPPER, Material.HOPPER);
+	// A list of items to be blocked from opening in other people's realms
+	
 	public static HashMap<String, Long> player_god_mode = new HashMap<String, Long>();
 	// The player is in god mode, the time they were set to godmode.
 
@@ -2135,6 +2138,24 @@ public class RealmMechanics implements Listener {
 			e.setCancelled(true);
 		}
 	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+	public void onContainerInteract(PlayerInteractEvent e) {
+		Player pl = e.getPlayer();
+		
+		if (pl.getWorld().getName().equalsIgnoreCase(main_world_name)) 
+			return;
+	
+		if (pl.getWorld().getName().equalsIgnoreCase(pl.getName()) 
+				|| build_list.get(pl.getWorld().getName()).contains(pl.getName())) 
+			return;
+		
+		if (e.hasBlock() && !e.isCancelled() && containers.contains(e.getClickedBlock().getType())) {
+			e.setCancelled(true);
+			pl.sendMessage(ChatColor.RED + "That container is locked.");
+			return;
+		}
+ 	}
 
 	@SuppressWarnings("deprecation")
 	@EventHandler
@@ -2145,7 +2166,7 @@ public class RealmMechanics implements Listener {
 			e.setCancelled(true);
 			e.setUseItemInHand(Result.DENY);
 			if (!pl.getWorld().getName().equalsIgnoreCase(pl.getName())) {
-				// Trying to use in a realm that isn't theres'.
+				// Trying to use in a realm that isn't theirs.
 				pl.sendMessage(ChatColor.RED + "You may only use an " + ChatColor.UNDERLINE + "Orb of Flight" + ChatColor.RED + " in your OWN realm.");
 				pl.updateInventory();
 				return;
@@ -2263,17 +2284,6 @@ public class RealmMechanics implements Listener {
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent e) {
 		final Player p = e.getPlayer();
-
-		if (!e.isCancelled() && e.hasBlock() && e.getAction() == Action.RIGHT_CLICK_BLOCK 
-				&& !(p.getWorld().getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName()) || InstanceMechanics.isInstance(p.getWorld().getName()))) {
-			if (e.getClickedBlock().getType() == Material.CHEST || e.getClickedBlock().getType() == Material.DISPENSER || e.getClickedBlock().getType() == Material.DROPPER || e.getClickedBlock().getType() == Material.HOPPER) {
-				if (p.getWorld().getName().equalsIgnoreCase(p.getName()) || build_list.get(p.getWorld().getName()).contains(p.getName())) return;
-				else {
-					p.sendMessage(ChatColor.RED + "You can't interact with that in others' realms.");
-					e.setCancelled(true);
-				}
-			}
-		}
 
 		if (!(e.isCancelled()) && e.hasBlock() && e.getClickedBlock().getType() == Material.PORTAL && e.getAction() == Action.RIGHT_CLICK_BLOCK
 				&& (p.getWorld().getName().equalsIgnoreCase(Bukkit.getWorlds().get(0).getName()) || InstanceMechanics.isInstance(p.getWorld().getName()))) {
