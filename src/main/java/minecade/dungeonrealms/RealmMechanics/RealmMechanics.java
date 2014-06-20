@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -2141,13 +2142,16 @@ public class RealmMechanics implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
 	public void onContainerInteract(PlayerInteractEvent e) {
-		Player pl = e.getPlayer();
+		final Player pl = e.getPlayer();
 		
 		if (pl.getWorld().getName().equalsIgnoreCase(main_world_name)) 
 			return;
-	
-		if (pl.getWorld().getName().equalsIgnoreCase(pl.getName()) 
-				|| (build_list.containsKey(pl.getWorld().getName()) && build_list.get(pl.getWorld().getName()).contains(pl.getName()))) 
+		
+		List<String> builders = new ArrayList<String>(build_list.get(pl.getWorld().getName()));
+		if (builders.isEmpty()) builders = Collections.<String>emptyList();
+		
+		if (pl.getWorld().getName().equalsIgnoreCase(pl.getName())
+				|| builders.contains(pl.getName()))
 			return;
 		
 		if (e.hasBlock() && !e.isCancelled() && containers.contains(e.getClickedBlock().getType())) {
