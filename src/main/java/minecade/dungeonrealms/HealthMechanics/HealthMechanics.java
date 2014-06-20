@@ -14,6 +14,7 @@ import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.FatigueMechanics.FatigueMechanics;
+import minecade.dungeonrealms.HealthMechanics.commands.CommandSetHealth;
 import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
@@ -131,6 +132,7 @@ public class HealthMechanics implements Listener {
 	public static HealthMechanics plugin = null;
 
 	public void onEnable() {
+		Main.plugin.getCommand("sethealth").setExecutor(new CommandSetHealth());
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
 		plugin = this;
