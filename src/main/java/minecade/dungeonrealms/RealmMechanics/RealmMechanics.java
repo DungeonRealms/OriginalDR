@@ -2147,8 +2147,7 @@ public class RealmMechanics implements Listener {
 		if (pl.getWorld().getName().equalsIgnoreCase(main_world_name)) 
 			return;
 		
-		List<String> builders = new ArrayList<String>(build_list.get(pl.getWorld().getName()));
-		if (builders.isEmpty()) builders = Collections.<String>emptyList();
+		List<String> builders = build_list.get(pl.getWorld().getName() != null ? new ArrayList<String>(build_list.get(pl.getWorld().getName())) : Collections.<String>emptyList());
 		
 		if (pl.getWorld().getName().equalsIgnoreCase(pl.getName())
 				|| builders.contains(pl.getName()))
