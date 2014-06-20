@@ -2147,7 +2147,7 @@ public class RealmMechanics implements Listener {
 			return;
 	
 		if (pl.getWorld().getName().equalsIgnoreCase(pl.getName()) 
-				|| build_list.get(pl.getWorld().getName()).contains(pl.getName())) 
+				|| (build_list.containsKey(pl.getWorld().getName()) && build_list.get(pl.getWorld().getName()).contains(pl.getName()))) 
 			return;
 		
 		if (e.hasBlock() && !e.isCancelled() && containers.contains(e.getClickedBlock().getType())) {
