@@ -50,6 +50,7 @@ import minecade.dungeonrealms.LootMechanics.LootMechanics;
 import minecade.dungeonrealms.ModerationMechanics.ModerationMechanics;
 import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
 import minecade.dungeonrealms.MountMechanics.MountMechanics;
+import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.PetMechanics.PetMechanics;
 import minecade.dungeonrealms.RealmMechanics.commands.CommandRealm;
 import minecade.dungeonrealms.RealmMechanics.commands.CommandResetRealm;
@@ -2148,7 +2149,7 @@ public class RealmMechanics implements Listener {
 		if (r_name.equalsIgnoreCase(main_world_name)) 
 			return;
 		
-		if (r_name.equalsIgnoreCase(pl_name))
+		if (r_name.equalsIgnoreCase(pl_name) || PermissionMechanics.isGM(pl_name) || pl.isOp())
 			return;
 		
 		if (build_list.containsKey(r_name) && !build_list.get(r_name).isEmpty() && build_list.get(r_name).contains(pl_name))
