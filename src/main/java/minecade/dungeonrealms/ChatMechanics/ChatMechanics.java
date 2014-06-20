@@ -68,7 +68,8 @@ public class ChatMechanics implements Listener {
     public static ConcurrentHashMap<String, Long> hologram_chat = new ConcurrentHashMap<String, Long>();
     // public static CopyOnWriteArrayList<String> sending_message = new CopyOnWriteArrayList<String>();
     public static List<String> recent_death = new ArrayList<String>();
-
+    public static List<String> staff_only = new ArrayList<String>();
+    
     public static int GChat_Delay = 2;
 
     public static List<String> bad_words = new ArrayList<String>(Arrays.asList("shit", "fuck", "cunt", "bitch", "whore", "slut", "wank", "asshole", "cock",
@@ -895,6 +896,11 @@ public class ChatMechanics implements Listener {
             return;
         }
 
+        if (ChatMechanics.staff_only.contains(p.getName())) {
+        	p.performCommand("sc " + msg);
+        	return;
+        }
+        
         List<Player> to_send = new ArrayList<Player>();
         List<Player> secret_send = new ArrayList<Player>();
 
