@@ -2,6 +2,7 @@ package minecade.dungeonrealms;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.vilsol.betanpc.BetaNPC;
@@ -105,12 +106,16 @@ public class Main extends JavaPlugin implements Listener {
 
     private static BetaNPC betaNPC;
 
+    /**
+     * Holds the <code>JavaPlugin</code> instance of the DungeonRealms plugin once enabled.
+     */
     public static Main plugin;
     public static Logger log;
 
-    private static List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine", "Azubuso", "EtherealTemplar");
-    private static List<String> masters = Arrays.asList("Bradez1571", "felipepcjr");
+    private static final List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine", "Azubuso", "EtherealTemplar", "Mysteryem");
+    private static final List<String> masters = Arrays.asList("Bradez1571", "felipepcjr");
 
+    @Override
     public void onEnable() {
         plugin = this;
         log = this.getLogger();
@@ -235,6 +240,7 @@ public class Main extends JavaPlugin implements Listener {
         }.runTaskTimer(this, 20L * 5, 20L * 5);
     }
 
+    @Override
     public void onDisable() {
         ConnectionPool.refresh = false;
         shopMechanics.onDisable();
@@ -301,11 +307,7 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     public static void d(Object o, CC color) {
-        if (o == null) {
-            Main.plugin.getLogger().info(color + "null" + CC.DEFAULT);
-            return;
-        }
-        Main.plugin.getLogger().info(color + o.toString() + CC.DEFAULT);
+        Main.plugin.getLogger().log(Level.INFO, "{0}{1}{2}", new Object[]{color, o, CC.DEFAULT});
     }
 
     public static void dl(Object o) {
@@ -313,19 +315,26 @@ public class Main extends JavaPlugin implements Listener {
         String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
         String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
         int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
-        Main.plugin.getLogger().info(CC.MAGENTA + className + "." + methodName + "():" + lineNumber + " - " + CC.CYAN + o + CC.DEFAULT);
+        Main.plugin.getLogger().log(Level.INFO, "{0}{1}.{2}():{3} - {4}{5}{6}",
+                new Object[]{CC.MAGENTA, className, methodName, lineNumber, CC.CYAN, o, CC.DEFAULT});
     }
 
+    /**
+     * Checks if a player is a developer based on their name.
+     * @param s the Minecraft username of the player to check.
+     * @return true if the player is a developer, otherwise, false.
+     */
     public static boolean isDev(String s) {
         return devs.contains(s);
     }
 
+    /**
+     * Checks if a player is a game master (GM), based on their name.
+     * @param s the Minecraft username of the player to check.
+     * @return true if the player is a game master or developer, otherwise, false.
+     */
     public static boolean isMaster(String s) {
-        if (devs.contains(s))
-            return true;
-        if (masters.contains(s))
-            return true;
-        return false;
+        return devs.contains(s) || masters.contains(s);
     }
 
 }
