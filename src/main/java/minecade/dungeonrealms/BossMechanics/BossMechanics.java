@@ -52,36 +52,36 @@ public class BossMechanics implements Listener {
     /*
      * Bosses: UNHOLY_PRIEST
      */
-    Logger log = Logger.getLogger("Minecraft");
+    static final Logger log = Logger.getLogger("Minecraft");
 
-    public static ConcurrentHashMap<Entity, String> boss_map = new ConcurrentHashMap<Entity, String>();
+    public static ConcurrentHashMap<Entity, String> boss_map = new ConcurrentHashMap<>();
     // Entity, Boss Type
 
-    public static ConcurrentHashMap<Entity, Double> minion_count = new ConcurrentHashMap<Entity, Double>();
+    public static ConcurrentHashMap<Entity, Double> minion_count = new ConcurrentHashMap<>();
     // (Unholy Priest) Entity, Amount of Minion Waves spawned. 9=max, 1=90% hp
     // left
 
-    public static ConcurrentHashMap<Entity, List<Entity>> minion_map = new ConcurrentHashMap<Entity, List<Entity>>();
+    public static ConcurrentHashMap<Entity, List<Entity>> minion_map = new ConcurrentHashMap<>();
     // (Unholy Priest) Entity, Current Active Wave of Entities
     // Also used for bandit_leader's mates.
 
-    public static ConcurrentHashMap<Entity, Integer> boss_heals = new ConcurrentHashMap<Entity, Integer>();
+    public static ConcurrentHashMap<Entity, Integer> boss_heals = new ConcurrentHashMap<>();
     // (Unholy Priest) Entity, # of times the boss has healed.
 
-    public static HashMap<Entity, Location> boss_saved_location = new HashMap<Entity, Location>();
+    public static HashMap<Entity, Location> boss_saved_location = new HashMap<>();
     // Used to make sure boss doesn't move from this spot.
 
-    public static HashMap<Entity, String> boss_event_log = new HashMap<Entity, String>();
+    public static HashMap<Entity, String> boss_event_log = new HashMap<>();
     // Contains events the boss has already gone through.
-    public static HashSet<Entity> is_jumping = new HashSet<Entity>();
-    public static HashMap<Entity, Long> last_jump = new HashMap<Entity, Long>();
-    public static HashSet<Entity> invincible_mob = new HashSet<Entity>();
-    public static HashMap<Entity, List<Entity>> aceron_minions = new HashMap<Entity, List<Entity>>();
+    public static HashSet<Entity> is_jumping = new HashSet<>();
+    public static HashMap<Entity, Long> last_jump = new HashMap<>();
+    public static HashSet<Entity> invincible_mob = new HashSet<>();
+    public static HashMap<Entity, List<Entity>> aceron_minions = new HashMap<>();
     /*
      * public static ConcurrentHashMap<Entity, Entity> boss_link = new ConcurrentHashMap<Entity, Entity>(); // (Unholy Priest) Entity, The Blaze Entity
      */
 
-    public static List<Entity> enraged_boss = new ArrayList<Entity>();
+    public static List<Entity> enraged_boss = new ArrayList<>();
 
     /*- he should heal himself three times before dying at 20-30% HP
     - He should have an AoE move with his axe (whirlwind)
@@ -113,6 +113,7 @@ public class BossMechanics implements Listener {
         }.runTaskTimerAsynchronously(Main.plugin, 10L * 20L, 10L);
         // Aceron
         new BukkitRunnable() {
+            @Override
             public void run() {
                 for (Entry<Entity, Long> e : last_jump.entrySet()) {
                     long time = e.getValue();
@@ -131,7 +132,7 @@ public class BossMechanics implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                List<Entity> remove = new ArrayList<Entity>();
+                List<Entity> remove = new ArrayList<>();
                 for (Entry<Entity, List<Entity>> data : minion_map.entrySet()) {
                     final Entity boss = data.getKey();
                     if (!(boss_saved_location.containsKey(boss))) {
@@ -162,6 +163,7 @@ public class BossMechanics implements Listener {
                         if (le.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                             new BukkitRunnable() {
 
+                                @Override
                                 public void run() {
                                     try {
                                         ParticleEffect.sendToLocation(ParticleEffect.PORTAL, boss.getLocation().add(0, 1, 0), new Random().nextFloat(),
@@ -185,6 +187,7 @@ public class BossMechanics implements Listener {
         }.runTaskTimerAsynchronously(Main.plugin, 10L * 20L, 20L);
 
         new BukkitRunnable() {
+            @Override
             public void run() {
                 // This will only be for aceron
                 for (final Entity boss : last_jump.keySet()) {
@@ -195,6 +198,7 @@ public class BossMechanics implements Listener {
                         if ((percent_hp <= 60) && !invincible_mob.contains(boss) && !is_jumping.contains(boss)) {
                             new BukkitRunnable() {
 
+                                @Override
                                 public void run() {
                                     Item i = boss
                                             .getLocation()
@@ -219,20 +223,20 @@ public class BossMechanics implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                List<Entity> remove = new ArrayList<Entity>();
+                List<Entity> remove = new ArrayList<>();
                 for (Entry<Entity, List<Entity>> data : minion_map.entrySet()) {
                     Entity boss = data.getKey();
                     LivingEntity le = (LivingEntity) boss;
                     if (le == null || le.isDead()) {
                         remove.add(boss);
                     }
-                    if (le.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                    else if (le.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                         if (boss_saved_location.containsKey(boss) && (boss.getLocation().distanceSquared(boss_saved_location.get(boss)) > 64)) {
                             le.teleport(boss_saved_location.get(boss));
                         }
                     }
                     List<Entity> minions = minion_map.get(boss);
-                    List<Entity> to_remove = new ArrayList<Entity>();
+                    List<Entity> to_remove = new ArrayList<>();
                     for (Entity minion : minions) {
                         // Check for the minions
                         if (minion == null || minion.isDead()) {
@@ -251,6 +255,7 @@ public class BossMechanics implements Listener {
         }.runTaskTimerAsynchronously(Main.plugin, 10L * 20L, 2L);
 
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
+            @Override
             public void run() {
                 for (Entity boss : boss_map.keySet()) {
                     String boss_type = boss.getMetadata("boss_type").get(0).asString();
@@ -278,7 +283,7 @@ public class BossMechanics implements Listener {
     }
 
     public static List<Block> getNearbyBlocks(Location loc, int maxradius) {
-        List<Block> return_list = new ArrayList<Block>();
+        List<Block> return_list = new ArrayList<>();
         BlockFace[] faces = { BlockFace.UP, BlockFace.NORTH, BlockFace.EAST };
         BlockFace[][] orth = { { BlockFace.NORTH, BlockFace.EAST }, { BlockFace.UP, BlockFace.EAST }, { BlockFace.NORTH, BlockFace.UP } };
         for (int r = 0; r <= maxradius; r++) {
@@ -306,6 +311,7 @@ public class BossMechanics implements Listener {
         boss.setVelocity(new Vector(0, 1.3, 0));
         is_jumping.add(boss);
         new BukkitRunnable() {
+            @Override
             public void run() {
                 // Died mid air?
                 if (boss != null && !boss.isDead()) {
@@ -318,6 +324,7 @@ public class BossMechanics implements Listener {
                         }
                         new BukkitRunnable() {
 
+                            @Override
                             public void run() {
                                 try {
                                     ParticleEffect.sendToLocation(ParticleEffect.HUGE_EXPLOSION, boss.getLocation(), 0F, 0F, 0F, .3F, 15);
@@ -403,7 +410,7 @@ public class BossMechanics implements Listener {
                 LivingEntity le = (LivingEntity) ent;
                 int do_i_drop_gear = new Random().nextInt(100);
                 if (do_i_drop_gear < 80) { // 80% chance!
-                    List<ItemStack> possible_drops = new ArrayList<ItemStack>();
+                    List<ItemStack> possible_drops = new ArrayList<>();
                     for (ItemStack is : le.getEquipment().getArmorContents()) {
                         if (is == null || is.getType() == Material.AIR || is.getTypeId() == 144 || is.getTypeId() == 397) { // Monster
                                                                                                                             // heads
@@ -482,7 +489,7 @@ public class BossMechanics implements Listener {
                 LivingEntity le = (LivingEntity) ent;
                 int do_i_drop_gear = new Random().nextInt(100);
                 if (do_i_drop_gear < 80) { // 80% chance!
-                    List<ItemStack> possible_drops = new ArrayList<ItemStack>();
+                    List<ItemStack> possible_drops = new ArrayList<>();
                     for (ItemStack is : le.getEquipment().getArmorContents()) {
                         if (is == null || is.getType() == Material.AIR || is.getTypeId() == 144 || is.getTypeId() == 397) { // Monster
                                                                                                                             // heads
@@ -593,6 +600,7 @@ public class BossMechanics implements Listener {
                 final String f_server_message = server_message;
 
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                    @Override
                     public void run() {
                         try {
                             ParticleEffect.sendToLocation(ParticleEffect.FIREWORKS_SPARK, ent.getLocation().add(0, 2, 0), new Random().nextFloat(),
@@ -604,7 +612,7 @@ public class BossMechanics implements Listener {
                         LivingEntity le = (LivingEntity) ent;
                         int do_i_drop_gear = new Random().nextInt(100);
                         if (do_i_drop_gear < 80) { // 80% chance!
-                            List<ItemStack> possible_drops = new ArrayList<ItemStack>();
+                            List<ItemStack> possible_drops = new ArrayList<>();
                             for (ItemStack is : le.getEquipment().getArmorContents()) {
                                 if (is == null || is.getType() == Material.AIR || is.getTypeId() == 144 || is.getTypeId() == 397) { // Monster
                                                                                                                                     // heads
@@ -714,7 +722,7 @@ public class BossMechanics implements Listener {
                 LivingEntity le = (LivingEntity) ent;
                 int do_i_drop_gear = new Random().nextInt(100);
                 if (do_i_drop_gear < 100) { // 100% chance!
-                    List<ItemStack> possible_drops = new ArrayList<ItemStack>();
+                    List<ItemStack> possible_drops = new ArrayList<>();
                     for (ItemStack is : le.getEquipment().getArmorContents()) {
                         if (is == null || is.getType() == Material.AIR || is.getTypeId() == 144 || is.getTypeId() == 397) { // Monster
                                                                                                                             // heads
@@ -789,6 +797,7 @@ public class BossMechanics implements Listener {
                 final Location explosion = ent.getLocation();
 
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                    @Override
                     public void run() {
                         try {
                             ParticleEffect.sendToLocation(ParticleEffect.HUGE_EXPLOSION, ent.getLocation().add(0, 1.5, 0), new Random().nextFloat(),
