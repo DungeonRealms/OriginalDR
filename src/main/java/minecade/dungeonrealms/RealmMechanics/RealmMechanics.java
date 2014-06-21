@@ -2146,7 +2146,7 @@ public class RealmMechanics implements Listener {
 		String pl_name = pl.getName();
 		String r_name = pl.getWorld().getName();
 		
-		if (r_name.equalsIgnoreCase(main_world_name)) 
+		if (r_name.equalsIgnoreCase(main_world_name) || r_name.contains("Dungeon")) 
 			return;
 		
 		if (r_name.equalsIgnoreCase(pl_name) || PermissionMechanics.isGM(pl_name) || pl.isOp())
