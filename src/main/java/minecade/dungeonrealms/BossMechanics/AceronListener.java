@@ -31,9 +31,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class AceronListener implements Listener {
 
-    public ConcurrentHashMap<Entity, Entity> aceron_wolf = new ConcurrentHashMap<Entity, Entity>();
-    public HashSet<Entity> spawned_wolf = new HashSet<Entity>();
-    public ConcurrentHashMap<String, Long> players_greedy = new ConcurrentHashMap<String, Long>();
+    public ConcurrentHashMap<Entity, Entity> aceron_wolf = new ConcurrentHashMap<>();
+    public HashSet<Entity> spawned_wolf = new HashSet<>();
+    public ConcurrentHashMap<String, Long> players_greedy = new ConcurrentHashMap<>();
 
     @EventHandler
     public void minionDeath(EntityDeathEvent e) {
@@ -62,7 +62,7 @@ public class AceronListener implements Listener {
             for (Entry<Entity, List<Entity>> minions : BossMechanics.aceron_minions.entrySet()) {
                 Entity boss = minions.getKey();
                 List<Entity> ents = minions.getValue();
-                List<Entity> to_remove = new ArrayList<Entity>();
+                List<Entity> to_remove = new ArrayList<>();
                 if (!ents.contains(e.getEntity()))
                     continue;
                 ents.remove(e.getEntity());
@@ -122,7 +122,6 @@ public class AceronListener implements Listener {
     public void onPlayerLeaveResetGreed(PlayerQuitEvent e) {
         if (players_greedy.containsKey(e.getPlayer().getName())) {
             players_greedy.remove(e.getPlayer().getName());
-            return;
         }
     }
 
@@ -134,15 +133,11 @@ public class AceronListener implements Listener {
             e.getItem().remove();
             p.sendMessage(ChatColor.RED + "You have been overcome with greed for 5 seconds.");
             players_greedy.put(p.getName(), System.currentTimeMillis() + (5 * 1000));
-            return;
         }
     }
 
     public boolean areLocationsEqual(Location first, Location second) {
-        if ((first.getBlockX() == second.getBlockX()) && (first.getBlockY() == second.getBlockY()) && (first.getBlockZ() == second.getBlockZ())) {
-            return true;
-        }
-        return false;
+        return (first.getBlockX() == second.getBlockX()) && (first.getBlockY() == second.getBlockY()) && (first.getBlockZ() == second.getBlockZ());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -199,15 +194,12 @@ public class AceronListener implements Listener {
 
     @EventHandler
     public void onPlayerDamageWithGreed(EntityDamageByEntityEvent e) {
-        if (!(e.getDamager() instanceof Player)) {
-            return;
-
-        }
-        Player p = (Player) e.getDamager();
-        if (players_greedy.containsKey(p.getName())) {
-            e.setCancelled(true);
-            e.setDamage(0);
-            return;
+        if (e.getDamager() instanceof Player) {
+            Player p = (Player) e.getDamager();
+            if (players_greedy.containsKey(p.getName())) {
+                e.setCancelled(true);
+                e.setDamage(0);
+            }
         }
     }
 
@@ -239,7 +231,7 @@ public class AceronListener implements Listener {
                 int should_i_retreat = new Random().nextInt(100);
                 if (should_i_retreat <= 5 && !BossMechanics.is_jumping.contains(boss) && percent_hp > .5) { // 5% chance of that
                     BossMechanics.boss_saved_location.put(boss, boss.getLocation());
-                    List<Entity> ents = new ArrayList<Entity>();
+                    List<Entity> ents = new ArrayList<>();
                     int amount_to_spawn = new Random().nextInt(2) + 3;
                     for (int i = 0; i < amount_to_spawn; i++) {
                         ents.add(MonsterMechanics.spawnTierMob(boss.getLocation(), Math.random() >= .5D ? EntityType.SKELETON : EntityType.ZOMBIE, 4, -1,
