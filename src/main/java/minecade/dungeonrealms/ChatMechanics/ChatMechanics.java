@@ -1041,30 +1041,7 @@ public class ChatMechanics implements Listener {
             filter.addText(censorMessage(before) + "");
             filter.addItem(e.getPlayer().getItemInHand(), ChatColor.BOLD + "SHOW", ChatColor.UNDERLINE);
             filter.addText(censorMessage(after));
-        } else if (message.contains("@p@") && e.getPlayer() != null) {
-        	String[] split = message.split("@p@");
-        	String after = "";
-        	String before = "";
-        	if (split.length > 0)
-        		before = split[0];
-        	if (split.length > 1)
-        		after = split[1];
-        	
-        	ItemStack fake_item = new ItemStack(Material.TNT);
-        	ItemMeta fake_item_meta = fake_item.getItemMeta();
-        	fake_item_meta.setDisplayName(getPlayerPrefix(p.getName(), true) + p.getName());
-        	fake_item_meta.setLore(Arrays.asList(ChatColor.GREEN + "Max. HP: " + HealthMechanics.health_data.get(p.getName()),
-        										ChatColor.LIGHT_PURPLE + "Level: " + LevelMechanics.getPlayerLevel(p),
-        										ChatColor.LIGHT_PURPLE + "XP: " + LevelMechanics.getPlayerData(p).getXP() + "/" + LevelMechanics.getPlayerData(p).getEXPNeeded(LevelMechanics.getPlayerLevel(p) + 1),
-        										ChatColor.RED + "Rank: " + StringUtils.capitalise(PermissionMechanics.getRank(p.getName())),
-        										ChatColor.DARK_AQUA + "Guild: " + GuildMechanics.getGuild(p.getName()))
-        							);
-        	fake_item.setItemMeta(fake_item_meta);
-        	normal = new JSONMessage(prefix + ChatColor.WHITE + aprefix, ChatColor.WHITE);
-        	normal.addText(before + "");
-        	normal.addItem(fake_item, ChatColor.BOLD + "PROFILE", ChatColor.UNDERLINE);
-        	normal.addText(after);
-        }
+        } 
 
         // Normal message sending starts here.
         if (to_send.size() <= 0) {
