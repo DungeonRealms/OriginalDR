@@ -20,6 +20,7 @@ import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.EcashMechanics.EcashMechanics;
 import minecade.dungeonrealms.GuildMechanics.GuildMechanics;
+import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
 import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
 import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
@@ -34,6 +35,7 @@ import minecade.dungeonrealms.jsonlib.JSONMessage;
 import minecade.dungeonrealms.managers.PlayerManager;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -59,6 +61,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 @SuppressWarnings("deprecation")
 public class ChatMechanics implements Listener {
@@ -1038,6 +1041,29 @@ public class ChatMechanics implements Listener {
             filter.addText(censorMessage(before) + "");
             filter.addItem(e.getPlayer().getItemInHand(), ChatColor.BOLD + "SHOW", ChatColor.UNDERLINE);
             filter.addText(censorMessage(after));
+        } else if (message.contains("@p@") && e.getPlayer() != null) {
+        	String[] split = message.split("@p@");
+        	String after = "";
+        	String before = "";
+        	if (split.length > 0)
+        		before = split[0];
+        	if (split.length > 1)
+        		after = split[1];
+        	
+        	ItemStack fake_item = new ItemStack(Material.AIR);
+        	ItemMeta fake_item_meta = fake_item.getItemMeta();
+        	fake_item_meta.setDisplayName(prefix + p.getName());
+        	fake_item_meta.setLore(Arrays.asList(ChatColor.GREEN + "Max. HP: " + HealthMechanics.health_data.get(p.getName()),
+        										ChatColor.LIGHT_PURPLE + "Level: " + LevelMechanics.getPlayerLevel(p),
+        										ChatColor.LIGHT_PURPLE + "XP: " + LevelMechanics.getPlayerData(p).getXP() + "/" + LevelMechanics.getPlayerData(p).getEXPNeeded(LevelMechanics.getPlayerLevel(p) + 1),
+        										ChatColor.RED + "Rank: " + StringUtils.capitalise(PermissionMechanics.getRank(p.getName())),
+        										ChatColor.DARK_AQUA + "Guild: " + GuildMechanics.getGuild(p.getName()))
+        							);
+        	fake_item.setItemMeta(fake_item_meta);
+        	normal = new JSONMessage(prefix + ChatColor.WHITE + aprefix, ChatColor.WHITE);
+        	normal.addText(before + "");
+        	normal.addItem(fake_item, ChatColor.BOLD + "PROFILE", ChatColor.UNDERLINE);
+        	normal.addText(after);
         }
 
         // Normal message sending starts here.
