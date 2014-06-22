@@ -35,9 +35,14 @@ public class PlayerLevel {
     private int vitPoints;
     private int intPoints;
     private int tempFreePoints; // free points left before player clicks confirm
+    private int tmrSecs; // timer for when to notify player of free points
     public final static int POINTS_PER_LEVEL = 5; // points per level.  Change this to change the global value.
+	public final static String FREE_STAT_NOTICE = ChatColor.GREEN + "***You have" + ChatColor.BOLD + " free "
+			+ ChatColor.GREEN + "stat points!  Click here "
+			+ ChatColor.GREEN + "or type /stats to allocate them.***";
 
-    public PlayerLevel(String p_name, boolean aSync) {
+    @SuppressWarnings("deprecation")
+	public PlayerLevel(String p_name, boolean aSync) {
         this.p_name = p_name;
         this.freePoints = 0;
         this.tempFreePoints = 0;
@@ -45,6 +50,8 @@ public class PlayerLevel {
         this.dexPoints = 0;
         this.vitPoints = 0;
         this.intPoints = 0;
+        this.tmrSecs = 0;
+        this.p = Bukkit.getPlayer(p_name);
         if (aSync) {
             new BukkitRunnable() {
                 public void run() {
@@ -172,9 +179,18 @@ public class PlayerLevel {
             p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "         " + " LEVEL UP! " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel() - 1)
                     + ChatColor.BOLD + " -> " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel()));
             p.playSound(p.getLocation(), Sound.LEVEL_UP, 0.5F, 1F);
-            p.sendMessage(ChatColor.GREEN + "You have " + ChatColor.BOLD + " free " + ChatColor.GREEN + " stat points!  Type /stats to allocate them.");
-            Main.getLevelMechanics().addPlayerWithFreeStatPoints(p_name);
+            sendStatNoticeToPlayer(p);
         }
+    }
+    
+    public void sendStatNoticeToPlayer() {
+    	if (p != null) {
+        	Main.getLevelMechanics().getFreePointsNotice().sendToPlayer(p);
+    	}
+    }
+    
+    public void sendStatNoticeToPlayer(Player p) {
+        Main.getLevelMechanics().getFreePointsNotice().sendToPlayer(p);
     }
 
     public void updateScoreboardLevel() {
@@ -210,6 +226,9 @@ public class PlayerLevel {
                 setIntPoints(rs.getInt("allocated_int"));
                 setVitPoints(rs.getInt("allocated_vit"));
                 setFreePoints(level * POINTS_PER_LEVEL - (strPoints + dexPoints + intPoints + vitPoints));
+                if (freePoints > 0) {
+                	setTmrSecs(180);
+                }
             }
             pst.close();
         } catch (SQLException e) {
@@ -248,12 +267,19 @@ public class PlayerLevel {
 	public void setLevel(int level) {
         this.level = level;
         this.freePoints = level * POINTS_PER_LEVEL - (strPoints + dexPoints + intPoints + vitPoints);
-        if (freePoints > 0) {
-        	p.sendMessage(LevelMechanics.FREE_STAT_NOTICE);
-        	Main.getLevelMechanics().addPlayerWithFreeStatPoints(p_name);
-        }
         if (p != null) {
             ScoreboardMechanics.setPlayerLevel(getLevel(), p);
+            if (freePoints > 0) {
+            	sendStatNoticeToPlayer(p);
+            }
+            else if (freePoints < 0) {
+            	strPoints = 0;
+            	dexPoints = 0;
+            	intPoints = 0;
+            	vitPoints = 0;
+            	freePoints = level * POINTS_PER_LEVEL;
+            	p.sendMessage(ChatColor.RED + "Your level was decreased, so your stats have been reset.");
+            }
         }
     }
 
@@ -309,6 +335,18 @@ public class PlayerLevel {
 
 	public void setTempFreePoints(int tempFreePoints) {
 		this.tempFreePoints = tempFreePoints;
+	}
+
+	public int getTmrSecs() {
+		return tmrSecs;
+	}
+
+	public void setTmrSecs(int tmrSecs) {
+		this.tmrSecs = tmrSecs;
+	}
+	
+	public void tickTmr() {
+		this.tmrSecs--;
 	}
     
 }

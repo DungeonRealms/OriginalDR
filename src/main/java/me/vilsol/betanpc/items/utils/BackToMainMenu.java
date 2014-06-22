@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import me.vilsol.betanpc.menus.MainMenu;
 import me.vilsol.menuengine.engine.MenuItem;
 import me.vilsol.menuengine.engine.MenuModel;
-import me.vilsol.menuengine.enums.ClickType;
+import org.bukkit.event.inventory.ClickType;
 import me.vilsol.menuengine.utils.Builder;
 
 public class BackToMainMenu implements MenuItem {

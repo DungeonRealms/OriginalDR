@@ -7,7 +7,7 @@ import me.vilsol.menuengine.engine.BonusItem;
 import me.vilsol.menuengine.engine.DynamicMenu;
 import me.vilsol.menuengine.engine.DynamicMenuModel;
 import me.vilsol.menuengine.engine.MenuItem;
-import me.vilsol.menuengine.enums.ClickType;
+import org.bukkit.event.inventory.ClickType;
 import me.vilsol.menuengine.utils.Builder;
 import minecade.dungeonrealms.LevelMechanics.PlayerLevel;
 import minecade.dungeonrealms.models.PlayerModel;
@@ -51,10 +51,10 @@ public class ConfirmItem implements MenuItem, BonusItem {
 						- pLevel.getDexPoints()));
 				pLevel.setDexPoints(((DexterityItem) entry.getValue()).getPoints());
 			}
-			else if (entry.getValue() instanceof IntelligenceItem) {
-				drPlayer.setIntelligence(drPlayer.getIntelligence() + (((IntelligenceItem) entry.getValue()).getPoints()
+			else if (entry.getValue() instanceof IntellectItem) {
+				drPlayer.setIntelligence(drPlayer.getIntelligence() + (((IntellectItem) entry.getValue()).getPoints()
 						- pLevel.getIntPoints()));
-				pLevel.setIntPoints(((IntelligenceItem) entry.getValue()).getPoints());
+				pLevel.setIntPoints(((IntellectItem) entry.getValue()).getPoints());
 			}
 			else if (entry.getValue() instanceof VitalityItem) {
 				drPlayer.setVitality(drPlayer.getVitality() + (((VitalityItem) entry.getValue()).getPoints()
@@ -70,17 +70,17 @@ public class ConfirmItem implements MenuItem, BonusItem {
 	public ItemStack getItem() {
 		return new Builder(Material.INK_SACK)
 				.setDurability((short) 10)
-				.setName(ChatColor.AQUA + "Confirm")
+				.setName(ChatColor.GREEN + "Confirm")
 				.setLore(
-						Arrays.asList(ChatColor.GREEN + "Click to confirm your stat ", ChatColor.GREEN
-								+ "point allocation.  If you ", ChatColor.GREEN + "want to undo your changes, ", ChatColor.GREEN + "press escape.")).getItem();
+						Arrays.asList(ChatColor.DARK_AQUA + "Click to confirm your stat ", ChatColor.DARK_AQUA
+								+ "point allocation.  If you want ", ChatColor.DARK_AQUA + "to undo your changes, press ", ChatColor.DARK_AQUA + "escape.")).getItem();
 	}
 
 	@Override
 	public void setBonusData(Object player) {
 		drPlayer = (PlayerModel) player;
 		DynamicMenuModel.getMenu(((PlayerModel) player).getPlayer()).setName(
-				ChatColor.GREEN.toString() + ChatColor.BOLD + "Allocate Stat Points");
+				ChatColor.GOLD + "Allocate Stat Points");
 	}
 
 }

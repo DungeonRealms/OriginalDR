@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import me.vilsol.menuengine.engine.BonusItem;
 import me.vilsol.menuengine.engine.DynamicMenuModel;
 import me.vilsol.menuengine.engine.MenuItem;
-import me.vilsol.menuengine.enums.ClickType;
+import org.bukkit.event.inventory.ClickType;
 import me.vilsol.menuengine.utils.Builder;
 import minecade.dungeonrealms.LevelMechanics.PlayerLevel;
 import minecade.dungeonrealms.models.PlayerModel;
@@ -41,21 +41,32 @@ public class StrengthItem implements MenuItem, BonusItem {
 				}
 			}
 		}
-		if (click.equals(ClickType.LEFT) && pLevel.getTempFreePoints() > 0) {
-			allocatePoints(1, plr);
-		}
-		else if (pLevel.getTempFreePoints() >= PlayerLevel.POINTS_PER_LEVEL) { // middle, right, or shift click
-			allocatePoints(PlayerLevel.POINTS_PER_LEVEL, plr);
+		if (pLevel.getTempFreePoints() > 0) {
+		    if (click.equals(ClickType.LEFT)) {
+	            allocatePoints(1, plr);
+	        }
+		    else if (click.equals(ClickType.SHIFT_RIGHT)) {
+		        allocatePoints(-PlayerLevel.POINTS_PER_LEVEL, plr);
+		    }
+		    else if (click.equals(ClickType.SHIFT_LEFT) && pLevel.getTempFreePoints() >= PlayerLevel.POINTS_PER_LEVEL) {
+		        allocatePoints(PlayerLevel.POINTS_PER_LEVEL, plr);
+		    }
+	        else if (click.equals(ClickType.RIGHT)) {
+	            allocatePoints(-1, plr);
+	        }
+	        else if (click.equals(ClickType.MIDDLE) || click.equals(ClickType.DOUBLE_CLICK)) {
+	        }
 		}
 	}
 
 	@Override
 	public ItemStack getItem() {
-		return new Builder(Material.PAPER)
+		return new Builder(Material.MAP)
 				.setName(ChatColor.DARK_PURPLE + "Strength")
+				.setDurability((short) 2)
 				.setLore(
-						Arrays.asList(ChatColor.GRAY + "Adds armor, block chance, and ", ChatColor.GRAY
-								+ "axe and polearm damage.", ChatColor.GREEN + "Allocated Points: " + points, ChatColor.RED + "Free Points: " + pLevel.getTempFreePoints())).getItem();
+						Arrays.asList(ChatColor.GRAY + "Adds armor, block chance, axe ", ChatColor.GRAY
+								+ "damage, and polearm damage.", ChatColor.GREEN + "Allocated Points: " + points, ChatColor.RED + "Free Points: " + pLevel.getTempFreePoints())).getItem();
 	}
 
 	@Override
@@ -67,18 +78,20 @@ public class StrengthItem implements MenuItem, BonusItem {
 	}
 
 	private void allocatePoints(int points, Player plr) {
-		ItemMeta im = getItem().getItemMeta();
-		List<String> lore = new ArrayList<String>(im.getLore());
-		this.points += points;
-		lore.set(lore.size() - 2, lore.get(lore.size() - 2).split(":")[0] + " " + points);
-		pLevel.setTempFreePoints(pLevel.getTempFreePoints() - points);
-		lore.set(lore.size() - 1, lore.get(lore.size() - 1).split(":")[0] + " " + pLevel.getTempFreePoints());
-		im.setLore(lore);
-		getItem().setItemMeta(im);
-		plr.playSound(plr.getLocation(), Sound.SHEEP_SHEAR, 1.0F, 1.3F);
-		for (Entry<Integer, MenuItem> entry : DynamicMenuModel.getMenu(plr).getDynamicItems().entrySet()) {
-			DynamicMenuModel.getMenu(plr).getInventory().setItem(entry.getKey(), entry.getValue().getItem());
-		}
+	    if (points > 0 || (points < 0 && (this.points - pLevel.getStrPoints()) > 0)) {
+	        ItemMeta im = getItem().getItemMeta();
+	        List<String> lore = new ArrayList<String>(im.getLore());
+	        this.points += points;
+	        lore.set(lore.size() - 2, lore.get(lore.size() - 2).split(":")[0] + " " + points);
+	        pLevel.setTempFreePoints(pLevel.getTempFreePoints() - points);
+	        lore.set(lore.size() - 1, lore.get(lore.size() - 1).split(":")[0] + " " + pLevel.getTempFreePoints());
+	        im.setLore(lore);
+	        getItem().setItemMeta(im);
+	        plr.playSound(plr.getLocation(), Sound.SHEEP_SHEAR, 1.0F, 1.3F);
+	        for (Entry<Integer, MenuItem> entry : DynamicMenuModel.getMenu(plr).getDynamicItems().entrySet()) {
+	            DynamicMenuModel.getMenu(plr).getInventory().setItem(entry.getKey(), entry.getValue().getItem());
+	        }
+	    }
 	}
 
 	public int getPoints() {

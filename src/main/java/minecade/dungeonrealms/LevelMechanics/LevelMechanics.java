@@ -1,26 +1,32 @@
 package minecade.dungeonrealms.LevelMechanics;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
 import minecade.dungeonrealms.LevelMechanics.StatsGUI.ConfirmItem;
 import minecade.dungeonrealms.LevelMechanics.StatsGUI.DexterityItem;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.DexterityStatsItem;
 import minecade.dungeonrealms.LevelMechanics.StatsGUI.EmptySlot;
-import minecade.dungeonrealms.LevelMechanics.StatsGUI.IntelligenceItem;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.IntellectItem;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.IntellectStatsItem;
 import minecade.dungeonrealms.LevelMechanics.StatsGUI.StatsGUI;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.StatsInfoItem;
 import minecade.dungeonrealms.LevelMechanics.StatsGUI.StrengthItem;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.StrengthStatsItem;
 import minecade.dungeonrealms.LevelMechanics.StatsGUI.VitalityItem;
+import minecade.dungeonrealms.LevelMechanics.StatsGUI.VitalityStatsItem;
 import minecade.dungeonrealms.LevelMechanics.commands.CommandAddXP;
+import minecade.dungeonrealms.LevelMechanics.commands.CommandNotice;
 import minecade.dungeonrealms.LevelMechanics.commands.CommandStats;
 import minecade.dungeonrealms.MonsterMechanics.Hologram;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
 import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
+import minecade.dungeonrealms.jsonlib.JSONMessage;
 import minecade.dungeonrealms.managers.PlayerManager;
+import minecade.dungeonrealms.models.PlayerModel;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -41,9 +47,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class LevelMechanics implements Listener {
 	
-	private HashMap<String, Integer> freeStatPoints = new HashMap<String, Integer>();
-	public final static String FREE_STAT_NOTICE = ChatColor.GREEN + "You have " + ChatColor.BOLD + " free " + ChatColor.GREEN
-			+ " stat points!  Type /stats to allocate them.";
+    private JSONMessage freePointsNotice;
 
     // Player name, PlayerLevel data
     public LevelMechanics(){
@@ -55,38 +59,47 @@ public class LevelMechanics implements Listener {
             }
         }.runTaskTimer(Main.plugin, 100, 10 * 20);
         new BukkitRunnable() {
-        	@SuppressWarnings("deprecation")
 			public void run() {
-        		for (Entry<String, Integer> entry : freeStatPoints.entrySet()) {
-        			String pName = entry.getKey();
-        			Player player = Bukkit.getPlayer(pName);
-        			
-        			if (player != null) {
-        				entry.setValue(entry.getValue() + 1);
-        				if (entry.getValue() == 180) {
-        					player.sendMessage(FREE_STAT_NOTICE);
-        				}
-        			}
-        			else {
-        				continue;
-        			}
-        			
+        		for (PlayerModel p : PlayerManager.getPlayerModels()) {
+        			PlayerLevel pLevel = p.getPlayerLevel();
+					if (pLevel != null && pLevel.getFreePoints() > 0) {
+						if (pLevel.getTmrSecs() > 0) {
+							pLevel.tickTmr();
+						}
+						else if (!p.getPlayer().getOpenInventory().getTitle().equalsIgnoreCase("Allocate Stat points")) {
+							pLevel.sendStatNoticeToPlayer(p.getPlayer());
+							pLevel.setTmrSecs(180);
+						}
+					}
         		}
         	}
         }.runTaskTimer(Main.plugin, 0, 1 * 20);
+        String before = PlayerLevel.FREE_STAT_NOTICE.split("Click here")[0];
+        String after = PlayerLevel.FREE_STAT_NOTICE.split("Click here")[1];
+        freePointsNotice = new JSONMessage("", ChatColor.GRAY);
+        freePointsNotice.addText(before);
+		freePointsNotice.addRunCommand("Click " + ChatColor.UNDERLINE.toString() + ChatColor.BOLD + "HERE", ChatColor.GREEN,
+				"/stats");
+        freePointsNotice.addText(after, ChatColor.GREEN);
     }
 
     public void onEnable(){
         Main.plugin.getCommand("addxp").setExecutor(new CommandAddXP());
         Main.plugin.getCommand("stats").setExecutor(new CommandStats());
+        Main.plugin.getCommand("statsnotice").setExecutor(new CommandNotice());
         
         // register items for stats GUI
         new StrengthItem().registerItem();
         new DexterityItem().registerItem();
-        new IntelligenceItem().registerItem();
+        new IntellectItem().registerItem();
         new VitalityItem().registerItem();
         new ConfirmItem().registerItem();
         new EmptySlot().registerItem();
+        new StrengthStatsItem().registerItem();
+        new DexterityStatsItem().registerItem();
+        new IntellectStatsItem().registerItem();
+        new VitalityStatsItem().registerItem();
+        new StatsInfoItem().registerItem();
         
         // register menu for stats GUI
         new StatsGUI();
@@ -219,13 +232,21 @@ public class LevelMechanics implements Listener {
     
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent e) {
-        PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().setPlayer(e.getPlayer());
+    	final PlayerLevel PLAYER_LEVEL = PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel();
+        PLAYER_LEVEL.setPlayer(e.getPlayer());
         new BukkitRunnable() {
             public void run() {
             	if(e == null || e.getPlayer() == null) return;
-                PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().updateScoreboardLevel();
+                PLAYER_LEVEL.updateScoreboardLevel();
             }
         }.runTaskLater(Main.plugin, 20 * 1);
+        Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+			public void run() {
+				if (PLAYER_LEVEL.getFreePoints() > 0) {
+					PLAYER_LEVEL.sendStatNoticeToPlayer(e.getPlayer());
+				}
+			}
+        }, 15L); // 15 ticks so the notice comes after motd, sub days, etc.
     }
     
     @EventHandler
@@ -313,16 +334,22 @@ public class LevelMechanics implements Listener {
     /**
      * Returns a list of the players with free stat points on this shard.
      */
-	public List<String> getPlayersWithFreeStatPoints() {
-		return new ArrayList<String>(freeStatPoints.keySet());
+	public static List<String> getPlayersWithFreeStatPoints() {
+		List<String> players = new ArrayList<String>();
+		for (PlayerModel p : PlayerManager.getPlayerModels()) {
+			if (p.getPlayerLevel().getFreePoints() > 0) {
+				players.add(p.getPlayer().getName());
+			}
+		}
+		return players;
 	}
 
-	/**
-	 * Add a player with free stats to the map so they will be notified every three minutes.
-	 * @param pname - the player's name
-	 */
-	public void addPlayerWithFreeStatPoints(String pname) {
-		freeStatPoints.put(pname, 0);
+	public JSONMessage getFreePointsNotice() {
+		return freePointsNotice;
+	}
+
+	public void setFreePointsNotice(JSONMessage freePointsNotice) {
+		this.freePointsNotice = freePointsNotice;
 	}
 	
 }

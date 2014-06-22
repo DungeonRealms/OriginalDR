@@ -1659,6 +1659,8 @@ public class ItemMechanics implements Listener {
         if (getStrVal(p.getItemInHand()) != 0) {
             total_str_val += getStrVal(p.getItemInHand());
         }
+        
+        total_str_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getStrPoints();
 
         return total_str_val;
     }
@@ -1676,6 +1678,8 @@ public class ItemMechanics implements Listener {
         if (getDexVal(p.getItemInHand()) != 0) {
             total_dex_val += getDexVal(p.getItemInHand());
         }
+        
+        total_dex_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getDexPoints();
 
         return total_dex_val;
     }
@@ -1694,6 +1698,8 @@ public class ItemMechanics implements Listener {
             total_vit_val += getVitVal(p.getItemInHand());
         }
 
+        total_vit_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getVitPoints();
+        
         return total_vit_val;
     }
 
@@ -1710,6 +1716,8 @@ public class ItemMechanics implements Listener {
         if (getIntVal(p.getItemInHand()) != 0) {
             total_int_val += getIntVal(p.getItemInHand());
         }
+        
+        total_int_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getIntPoints();
 
         return total_int_val;
     }

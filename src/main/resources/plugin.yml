@@ -352,6 +352,9 @@ commands:
   stats:
     description: Opens the stat allocation GUI.
     usage: /<command>
+  statsnotice:
+    description: Sends the JSON stat notice message.
+    usage: /<command>
   addhearthstone:
     description: Adds a hearthstone spawn point.
     usage: /<command>

@@ -1,6 +1,8 @@
 package minecade.dungeonrealms.managers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import minecade.dungeonrealms.models.PlayerModel;
 
@@ -17,6 +19,10 @@ public class PlayerManager {
 
 	public static PlayerModel getPlayerModel(Player plr){
 		return getPlayerModel(plr.getName());
+	}
+	
+	public static List<PlayerModel> getPlayerModels() {
+		return new ArrayList<PlayerModel>(models.values());
 	}
 
 }

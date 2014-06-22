@@ -1,7 +1,7 @@
 package minecade.dungeonrealms.LevelMechanics.StatsGUI;
 
 import me.vilsol.menuengine.engine.MenuItem;
-import me.vilsol.menuengine.enums.ClickType;
+import org.bukkit.event.inventory.ClickType;
 import me.vilsol.menuengine.utils.Builder;
 
 import org.bukkit.Material;
@@ -22,7 +22,7 @@ public class EmptySlot implements MenuItem {
 
 	@Override
 	public ItemStack getItem() {
-		return new Builder(Material.PISTON_EXTENSION).setName(" ").getItem();
+		return new Builder(Material.THIN_GLASS).setName(" ").getItem();
 	}
 
 }

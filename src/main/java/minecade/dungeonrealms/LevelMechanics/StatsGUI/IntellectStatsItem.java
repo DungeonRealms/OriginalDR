@@ -17,11 +17,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class StrengthStatsItem implements MenuItem, BonusItem {
+public class IntellectStatsItem implements MenuItem, BonusItem {
 
 	private PlayerModel drPlayer;
 	private PlayerLevel pLevel;
-	private StrengthItem item;
+	private IntellectItem item;
 	private int points = 0;
 	private int slot = -1;
 	private DecimalFormat df = new DecimalFormat("##.###");
@@ -44,21 +44,21 @@ public class StrengthStatsItem implements MenuItem, BonusItem {
 
 	@Override
 	public ItemStack getItem() {
-		int str = pLevel.getStrPoints();
-		int aPoints = item.getPoints() - str; // allocated points
+		int in = pLevel.getIntPoints();
+		int aPoints = item.getPoints() - in; // allocated points
 		boolean spent = (aPoints > 0) ? true : false;
 		return new Builder(Material.TRIPWIRE_HOOK)
 				.setName(
-						ChatColor.RED + "Strength Bonuses: " + str
+						ChatColor.RED + "Intellect Bonuses: " + in
 								+ (spent ? ChatColor.GREEN + " [+" + aPoints + "]" : ""))
 				.setLore(
-						Arrays.asList(ChatColor.GOLD + "ARMOR: " + ChatColor.AQUA + df.format(str * 0.03) + "%"
-								+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.03) + "%]" : ""),
-								ChatColor.GOLD + "BLOCK: " + ChatColor.AQUA + df.format(str * 0.017)
-										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.017) + "%]" : ""),
-								ChatColor.GOLD + "AXE DMG: " + ChatColor.AQUA + df.format(str * 0.015) + "%"
-										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.015) + "%]" : ""),
-								ChatColor.GOLD + "POLEARM DMG: " + ChatColor.AQUA + df.format(str * 0.02) + "%"
+						Arrays.asList(ChatColor.GOLD + "ENERGY REGEN: " + ChatColor.AQUA + df.format(in * 0.015) + "%"
+								+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.015) + "%]" : ""),
+								ChatColor.GOLD + "ELE DMG: " + ChatColor.AQUA + df.format(in * 0.05)
+										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.05) + "%]" : ""),
+								ChatColor.GOLD + "CRIT CHANCE: " + ChatColor.AQUA + df.format(in * 0.025) + "%"
+										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.025) + "%]" : ""),
+								ChatColor.GOLD + "STAFF DMG: " + ChatColor.AQUA + df.format(in * 0.02) + "%"
 										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.02) + "%]" : "")))
 				.getItem();
 	}
@@ -67,11 +67,11 @@ public class StrengthStatsItem implements MenuItem, BonusItem {
 	public void setBonusData(Object player) {
 		drPlayer = (PlayerModel) player;
 		pLevel = drPlayer.getPlayerLevel();
-		points = pLevel.getStrPoints();
+		points = pLevel.getIntPoints();
 		pLevel.setTempFreePoints(pLevel.getFreePoints());
 		for (Entry<Integer, MenuItem> entry : DynamicMenuModel.getMenu(drPlayer.getPlayer()).getDynamicItems().entrySet()) {
-			if (entry.getValue() instanceof StrengthItem) {
-				item = (StrengthItem) entry.getValue();
+			if (entry.getValue() instanceof IntellectItem) {
+				item = (IntellectItem) entry.getValue();
 				points = item.getPoints();
 			}
 		}

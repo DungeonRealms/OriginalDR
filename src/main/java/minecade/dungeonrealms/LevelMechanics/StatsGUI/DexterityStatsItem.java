@@ -17,11 +17,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class StrengthStatsItem implements MenuItem, BonusItem {
+public class DexterityStatsItem implements MenuItem, BonusItem {
 
 	private PlayerModel drPlayer;
 	private PlayerLevel pLevel;
-	private StrengthItem item;
+	private DexterityItem item;
 	private int points = 0;
 	private int slot = -1;
 	private DecimalFormat df = new DecimalFormat("##.###");
@@ -44,34 +44,33 @@ public class StrengthStatsItem implements MenuItem, BonusItem {
 
 	@Override
 	public ItemStack getItem() {
-		int str = pLevel.getStrPoints();
-		int aPoints = item.getPoints() - str; // allocated points
+		int dex = pLevel.getDexPoints();
+		int aPoints = item.getPoints() - dex; // allocated points
 		boolean spent = (aPoints > 0) ? true : false;
 		return new Builder(Material.TRIPWIRE_HOOK)
 				.setName(
-						ChatColor.RED + "Strength Bonuses: " + str
+						ChatColor.RED + "Dexterity Bonuses: " + dex
 								+ (spent ? ChatColor.GREEN + " [+" + aPoints + "]" : ""))
 				.setLore(
-						Arrays.asList(ChatColor.GOLD + "ARMOR: " + ChatColor.AQUA + df.format(str * 0.03) + "%"
-								+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.03) + "%]" : ""),
-								ChatColor.GOLD + "BLOCK: " + ChatColor.AQUA + df.format(str * 0.017)
-										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.017) + "%]" : ""),
-								ChatColor.GOLD + "AXE DMG: " + ChatColor.AQUA + df.format(str * 0.015) + "%"
-										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.015) + "%]" : ""),
-								ChatColor.GOLD + "POLEARM DMG: " + ChatColor.AQUA + df.format(str * 0.02) + "%"
-										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.02) + "%]" : "")))
-				.getItem();
+						Arrays.asList(ChatColor.GOLD + "DPS: " + ChatColor.AQUA + df.format(dex * 0.03) + "%"
+								+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.03) + "%]" : ""), ChatColor.GOLD
+								+ "DODGE: " + ChatColor.AQUA + df.format(dex * 0.017) + "%"
+								+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.017) + "%]" : ""), ChatColor.GOLD
+								+ "ARMOR PEN: " + ChatColor.AQUA + df.format(dex * 0.02) + "%"
+								+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.02) + "%]" : ""), ChatColor.GOLD
+								+ "BOW DMG: " + ChatColor.AQUA + df.format(dex * 0.015) + "%"
+								+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.015) + "%]" : ""))).getItem();
 	}
 
 	@Override
 	public void setBonusData(Object player) {
 		drPlayer = (PlayerModel) player;
 		pLevel = drPlayer.getPlayerLevel();
-		points = pLevel.getStrPoints();
+		points = pLevel.getDexPoints();
 		pLevel.setTempFreePoints(pLevel.getFreePoints());
 		for (Entry<Integer, MenuItem> entry : DynamicMenuModel.getMenu(drPlayer.getPlayer()).getDynamicItems().entrySet()) {
-			if (entry.getValue() instanceof StrengthItem) {
-				item = (StrengthItem) entry.getValue();
+			if (entry.getValue() instanceof DexterityItem) {
+				item = (DexterityItem) entry.getValue();
 				points = item.getPoints();
 			}
 		}

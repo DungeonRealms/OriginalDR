@@ -45,7 +45,7 @@ public class Halloween implements Listener {
 			ItemStack armor = e.getCurrentItem();
 			
 			double dur_percent = RepairMechanics.getPercentForDurabilityValue(armor, "armor");
-			ItemMechanics.log.info("dur_percent=" + dur_percent);
+//			ItemMechanics.log.info("dur_percent=" + dur_percent); right click is used for stat allocation.  too much spam
 			
 			if(armor.getType() == Material.JACK_O_LANTERN && ItemMechanics.isArmor(armor)) {
 				// Remove the mask.

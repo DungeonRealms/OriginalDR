@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import me.vilsol.menuengine.engine.BonusItem;
 import me.vilsol.menuengine.engine.DynamicMenuModel;
 import me.vilsol.menuengine.engine.MenuItem;
-import me.vilsol.menuengine.enums.ClickType;
+import org.bukkit.event.inventory.ClickType;
 import me.vilsol.menuengine.utils.Builder;
 import minecade.dungeonrealms.LevelMechanics.PlayerLevel;
 import minecade.dungeonrealms.models.PlayerModel;
@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class IntelligenceItem implements MenuItem, BonusItem {
+public class IntellectItem implements MenuItem, BonusItem {
 
 	private PlayerModel drPlayer;
 	private PlayerLevel pLevel;
@@ -51,8 +51,8 @@ public class IntelligenceItem implements MenuItem, BonusItem {
 
 	@Override
 	public ItemStack getItem() {
-		return new Builder(Material.PAPER)
-				.setName(ChatColor.DARK_PURPLE + "Intelligence")
+		return new Builder(Material.MAP)
+				.setName(ChatColor.DARK_PURPLE + "Intellect")
 				.setLore(
 						Arrays.asList(ChatColor.GRAY + "Adds energy regeneration, ", ChatColor.GRAY
 								+ "elemental damage, critical ", ChatColor.GRAY + "hit chance, and staff damage.",

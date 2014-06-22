@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import me.vilsol.menuengine.engine.BonusItem;
 import me.vilsol.menuengine.engine.DynamicMenuModel;
 import me.vilsol.menuengine.engine.MenuItem;
-import me.vilsol.menuengine.enums.ClickType;
+import org.bukkit.event.inventory.ClickType;
 import me.vilsol.menuengine.utils.Builder;
 import minecade.dungeonrealms.LevelMechanics.PlayerLevel;
 import minecade.dungeonrealms.models.PlayerModel;
@@ -51,7 +51,7 @@ public class VitalityItem implements MenuItem, BonusItem {
 
 	@Override
 	public ItemStack getItem() {
-		return new Builder(Material.PAPER)
+		return new Builder(Material.MAP)
 				.setName(ChatColor.DARK_PURPLE + "Vitality")
 				.setLore(
 						Arrays.asList(ChatColor.GRAY + "Adds health, hp regen, ", ChatColor.GRAY
