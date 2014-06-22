@@ -707,13 +707,12 @@ public class FatigueMechanics implements Listener {
 		
 		boolean dmg_disabled = DuelMechanics.isDamageDisabled(p.getLocation());
 		
-		if(p.getExp() <= 0.0F && (!dmg_disabled || TutorialMechanics.onIsland.contains(p))) { //fatigue_effect.containsKey(p)
+		if(p.getExp() <= 0.0F && (!dmg_disabled || TutorialMechanics.onIsland.contains(p.getName()))) { //fatigue_effect.containsKey(p)
 			disableSprint(p);
 			sprinting.remove(p);
-			return;
 		} else if(e.isSprinting()) {
 			sprinting.add(p);
-			if(!dmg_disabled || TutorialMechanics.onIsland.contains(p)) {
+			if(!dmg_disabled || TutorialMechanics.onIsland.contains(p.getName())) {
 				removeEnergy(p, 0.15F);
 			}
 		} else {
