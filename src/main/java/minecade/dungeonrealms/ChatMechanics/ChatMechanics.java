@@ -1050,9 +1050,9 @@ public class ChatMechanics implements Listener {
         	if (split.length > 1)
         		after = split[1];
         	
-        	ItemStack fake_item = new ItemStack(Material.AIR);
+        	ItemStack fake_item = new ItemStack(Material.TNT);
         	ItemMeta fake_item_meta = fake_item.getItemMeta();
-        	fake_item_meta.setDisplayName(prefix + p.getName());
+        	fake_item_meta.setDisplayName(getPlayerPrefix(p.getName(), true) + p.getName());
         	fake_item_meta.setLore(Arrays.asList(ChatColor.GREEN + "Max. HP: " + HealthMechanics.health_data.get(p.getName()),
         										ChatColor.LIGHT_PURPLE + "Level: " + LevelMechanics.getPlayerLevel(p),
         										ChatColor.LIGHT_PURPLE + "XP: " + LevelMechanics.getPlayerData(p).getXP() + "/" + LevelMechanics.getPlayerData(p).getEXPNeeded(LevelMechanics.getPlayerLevel(p) + 1),
