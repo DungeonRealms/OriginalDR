@@ -50,7 +50,7 @@ public class CommandSendPacket implements CommandExecutor {
         	
         	Main.log.info(data);
             CommunityMechanics.sendPacketCrossServer(data, Integer.valueOf(args[0]), Boolean.valueOf(args[1]));
-            if (Boolean.valueOf(args[1])) {
+            if (!Boolean.valueOf(args[1])) { // Only if all_servers = false
             	CommunityMechanics.sendPacketCrossServer(data, CommunityMechanics.server_list.get(servernum));
             }
             if (sender instanceof Player) {
