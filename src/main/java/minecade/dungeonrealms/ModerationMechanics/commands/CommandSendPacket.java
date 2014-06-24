@@ -34,7 +34,7 @@ public class CommandSendPacket implements CommandExecutor {
         	StringBuilder sb = new StringBuilder("");
         	String data = "";
         	
-        	for (int i = 3; i < args.length; i++) {
+        	for (int i = 2; i < args.length; i++) {
         		sb.append(args[i]).append(" ");
         	}
         	
