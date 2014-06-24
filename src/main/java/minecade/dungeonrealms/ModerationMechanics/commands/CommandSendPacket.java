@@ -36,6 +36,7 @@ public class CommandSendPacket implements CommandExecutor {
         try {
         	StringBuilder sb = new StringBuilder("");
         	String data = "";
+        	int myServerId = Hive.getServerNumFromPrefix(Bukkit.getMotd());
         	
         	for (int i = 2; i < args.length; i++) {
         		sb.append(args[i]).append(" ");
@@ -48,8 +49,10 @@ public class CommandSendPacket implements CommandExecutor {
         	}
         	
         	Main.log.info(data);
-            CommunityMechanics.sendPacketCrossServer(data, Integer.valueOf(args[0]), Boolean.valueOf(args[1])); // This does not send to local, even if all servers = true
-            CommunityMechanics.sendPacketCrossServer(data, Bukkit.getIp()); 
+            CommunityMechanics.sendPacketCrossServer(data, Integer.parseInt(args[0]), Boolean.parseBoolean(args[1]));
+            if (Integer.parseInt(args[0]) == myServerId || Boolean.parseBoolean(args[1])) {
+				CommunityMechanics.sendPacketCrossServer(data, myServerId, false);
+			}
      
             if (sender instanceof Player) {
             	p.sendMessage(ChatColor.GRAY + "Packet sent!");
