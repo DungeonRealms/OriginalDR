@@ -1,6 +1,7 @@
 package minecade.dungeonrealms.ModerationMechanics.commands;
 
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
+import minecade.dungeonrealms.Main;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
