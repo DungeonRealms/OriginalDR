@@ -12,15 +12,12 @@ public class CommandSendPacket implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command arg1, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            return true;
-        }
         Player p = (Player) sender;
-        if (!p.isOp()) {
+        
+        if (!Main.isMaster(p.getName()) || !(sender instanceof ConsoleSender)) {
             return true;
         }
-
-        // if(!p.getName().equalsIgnoreCase("iFamasssxD")) { return true; }
+        
         if (args.length != 3) {
             p.sendMessage(ChatColor.RED + "Invalid Syntax: /sendpacket [data] [servernumber] [allservers]");
             return true;
