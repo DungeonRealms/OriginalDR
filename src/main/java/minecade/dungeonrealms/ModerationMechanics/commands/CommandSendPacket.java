@@ -1,9 +1,12 @@
 package minecade.dungeonrealms.ModerationMechanics.commands;
 
-import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
-import minecade.dungeonrealms.Hive.Hive;
-import minecade.dungeonrealms.HiveServer.HiveServer;
+import java.util.ArrayList;
+import java.util.List;
+
 import minecade.dungeonrealms.Main;
+import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
+import minecade.dungeonrealms.GuildMechanics.GuildMechanics;
+import minecade.dungeonrealms.Hive.Hive;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -50,9 +53,6 @@ public class CommandSendPacket implements CommandExecutor {
         	
         	Main.log.info(data);
             CommunityMechanics.sendPacketCrossServer(data, Integer.parseInt(args[0]), Boolean.parseBoolean(args[1]));
-            if (Integer.parseInt(args[0]) == myServerId || Boolean.parseBoolean(args[1])) {
-				CommunityMechanics.sendPacketCrossServer(data, myServerId, false);
-			}
      
             if (sender instanceof Player) {
             	p.sendMessage(ChatColor.GRAY + "Packet sent!");
