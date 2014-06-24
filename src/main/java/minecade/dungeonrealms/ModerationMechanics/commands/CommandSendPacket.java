@@ -23,25 +23,35 @@ public class CommandSendPacket implements CommandExecutor {
         	return true;
         }
         
-        if (args.length != 3) {
-            p.sendMessage(ChatColor.RED + "Invalid Syntax: /sendpacket [servernumber] [allservers] [data]");
+        if (args.length < 3) {
+        	if (p != null) 
+        		p.sendMessage(ChatColor.RED + "Invalid Syntax: /sendpacket [servernumber] [allservers] [data]");
+        	else 
+        		System.out.println("Invalid Syntax: /sendpacket [servernumber] [allservers] [data]");
             return true;
         }
         try {
         	StringBuilder sb = new StringBuilder("");
+        	String data = "";
         	
         	for (int i = 2; i < args.length; i++)
         		sb.append(args[i]).append(" ");
         	
-        	String data = sb.toString();
-        	
+        	data = sb.toString();
         	if (data.endsWith(" ")) 
-        		data = data.substring(0, data.length() -1);
+        		data = data.substring(0, data.length() - 1);
         	
             CommunityMechanics.sendPacketCrossServer(data, Integer.valueOf(args[0]), Boolean.valueOf(args[1]));
-            p.sendMessage(ChatColor.GRAY + "Packet sent!");
+            if (p != null) 
+            	p.sendMessage(ChatColor.GRAY + "Packet sent!");
+            else 
+            	System.out.println("Packet sent!");
+            
         } catch (Exception e) {
-            p.sendMessage(ChatColor.RED + "Invalid Syntax");
+        	if (p != null) 
+        		p.sendMessage(ChatColor.RED + "Invalid Syntax");
+        	else 
+        		System.out.println("Invalid Syntax");
         }
         return false;
     }
