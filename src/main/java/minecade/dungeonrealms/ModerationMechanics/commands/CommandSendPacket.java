@@ -26,7 +26,7 @@ public class CommandSendPacket implements CommandExecutor {
         	if (sender instanceof Player) {
         		p.sendMessage(ChatColor.RED + "Invalid Syntax: /sendpacket [servernumber] [allservers] [data]");
         	} else  {
-        		System.out.println("Invalid Syntax: /sendpacket [servernumber] [allservers] [data]");
+        		Main.log.warning("Invalid Syntax: /sendpacket [servernumber] [allservers] [data]");
         	}
             return true;
         }
@@ -50,13 +50,13 @@ public class CommandSendPacket implements CommandExecutor {
             if (sender instanceof Player) {
             	p.sendMessage(ChatColor.GRAY + "Packet sent!");
             } else {
-            	System.out.println("Packet sent!");
+            	Main.log.warning("Packet sent!");
             }
         } catch (Exception e) {
         	if (sender instanceof Player) {
         		p.sendMessage(ChatColor.RED + "Invalid Syntax");
         	} else {
-        		System.out.println("Invalid Syntax");
+        		Main.log.warning("Invalid Syntax");
         	}
         }
         return true;
