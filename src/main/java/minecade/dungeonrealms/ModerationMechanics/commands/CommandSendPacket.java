@@ -24,7 +24,7 @@ public class CommandSendPacket implements CommandExecutor {
         }
         
         if (args.length < 3) {
-        	if (p != null) 
+        	if (sender instanceof Player)  
         		p.sendMessage(ChatColor.RED + "Invalid Syntax: /sendpacket [servernumber] [allservers] [data]");
         	else 
         		System.out.println("Invalid Syntax: /sendpacket [servernumber] [allservers] [data]");
@@ -42,13 +42,13 @@ public class CommandSendPacket implements CommandExecutor {
         		data = data.substring(0, data.length() - 1);
         	
             CommunityMechanics.sendPacketCrossServer(data, Integer.valueOf(args[0]), Boolean.valueOf(args[1]));
-            if (p != null) 
+            if (sender instanceof Player) 
             	p.sendMessage(ChatColor.GRAY + "Packet sent!");
             else 
             	System.out.println("Packet sent!");
             
         } catch (Exception e) {
-        	if (p != null) 
+        	if (sender instanceof Player) 
         		p.sendMessage(ChatColor.RED + "Invalid Syntax");
         	else 
         		System.out.println("Invalid Syntax");
