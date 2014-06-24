@@ -48,10 +48,9 @@ public class CommandSendPacket implements CommandExecutor {
         	}
         	
         	Main.log.info(data);
-            CommunityMechanics.sendPacketCrossServer(data, Integer.valueOf(args[0]), Boolean.valueOf(args[1]));
-            if (!Boolean.valueOf(args[1])) { // Only if all_servers = false
-            	CommunityMechanics.sendPacketCrossServer(data, Bukkit.getIp());
-            }
+            CommunityMechanics.sendPacketCrossServer(data, Integer.valueOf(args[0]), Boolean.valueOf(args[1])); // This does not send to local, even if all servers = true
+            CommunityMechanics.sendPacketCrossServer(data, Bukkit.getIp()); 
+     
             if (sender instanceof Player) {
             	p.sendMessage(ChatColor.GRAY + "Packet sent!");
             } else {
