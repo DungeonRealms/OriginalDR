@@ -14,18 +14,31 @@ public class CommandSendPacket implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command arg1, String label, String[] args) {
-        Player p = (Player) sender;
+    	Player p = null;
+        if (!(sender instanceof ConsoleCommandSender)) {
+        	p = (Player) sender;
+        }
         
-        if (!Main.isMaster(p.getName()) || !(sender instanceof ConsoleCommandSender)) {
-            return true;
+        if (p != null && !Main.isMaster(p.getName())) {
+        	return true;
         }
         
         if (args.length != 3) {
-            p.sendMessage(ChatColor.RED + "Invalid Syntax: /sendpacket [data] [servernumber] [allservers]");
+            p.sendMessage(ChatColor.RED + "Invalid Syntax: /sendpacket [servernumber] [allservers] [data]");
             return true;
         }
         try {
-            CommunityMechanics.sendPacketCrossServer(args[0], Integer.valueOf(args[1]), Boolean.valueOf(args[2]));
+        	StringBuilder sb = new StringBuilder("");
+        	
+        	for (int i = 2; i < args.length; i++)
+        		sb.append(args[i]).append(" ");
+        	
+        	String data = sb.toString();
+        	
+        	if (data.endsWith(" ")) 
+        		data = data.substring(0, data.length() -1);
+        	
+            CommunityMechanics.sendPacketCrossServer(data, Integer.valueOf(args[0]), Boolean.valueOf(args[1]));
             p.sendMessage(ChatColor.GRAY + "Packet sent!");
         } catch (Exception e) {
             p.sendMessage(ChatColor.RED + "Invalid Syntax");
