@@ -7,7 +7,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandSendPacket implements CommandExecutor {
@@ -15,7 +14,7 @@ public class CommandSendPacket implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command arg1, String label, String[] args) {
     	Player p = null;
-        if (!(sender instanceof ConsoleCommandSender)) {
+        if (sender instanceof Player) {
         	p = (Player) sender;
         }
         
@@ -34,13 +33,14 @@ public class CommandSendPacket implements CommandExecutor {
         	StringBuilder sb = new StringBuilder("");
         	String data = "";
         	
-        	for (int i = 2; i < args.length; i++)
+        	for (int i = 3; i < args.length; i++)
         		sb.append(args[i]).append(" ");
         	
         	data = sb.toString();
         	if (data.endsWith(" ")) 
         		data = data.substring(0, data.length() - 1);
         	
+        	System.out.println(data);
             CommunityMechanics.sendPacketCrossServer(data, Integer.valueOf(args[0]), Boolean.valueOf(args[1]));
             if (sender instanceof Player) 
             	p.sendMessage(ChatColor.GRAY + "Packet sent!");
@@ -53,6 +53,6 @@ public class CommandSendPacket implements CommandExecutor {
         	else 
         		System.out.println("Invalid Syntax");
         }
-        return false;
+        return true;
     }
 }
