@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandSendPacket implements CommandExecutor {
@@ -15,7 +16,7 @@ public class CommandSendPacket implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command arg1, String label, String[] args) {
         Player p = (Player) sender;
         
-        if (!Main.isMaster(p.getName()) || !(sender instanceof ConsoleSender)) {
+        if (!Main.isMaster(p.getName()) || !(sender instanceof ConsoleCommandSender)) {
             return true;
         }
         
