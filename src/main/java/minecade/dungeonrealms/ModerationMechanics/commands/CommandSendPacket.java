@@ -36,6 +36,7 @@ public class CommandSendPacket implements CommandExecutor {
         try {
         	StringBuilder sb = new StringBuilder("");
         	String data = "";
+        	int servernum =  Integer.parseInt(Bukkit.getMotd().substring(3, Bukkit.getMotd().indexOf("-") + 2));
         	
         	for (int i = 2; i < args.length; i++) {
         		sb.append(args[i]).append(" ");
@@ -49,8 +50,9 @@ public class CommandSendPacket implements CommandExecutor {
         	
         	Main.log.info(data);
             CommunityMechanics.sendPacketCrossServer(data, Integer.valueOf(args[0]), Boolean.valueOf(args[1]));
-            CommunityMechanics.sendPacketCrossServer(data, Integer.parseInt(Bukkit.getMotd().substring(3, Bukkit.getMotd().indexOf("-") + 2)), false);
-            
+            if (Boolean.valueOf(args[1])) {
+            	CommunityMechanics.sendPacketCrossServer(data, CommunityMechanics.server_list.get(servernum));
+            }
             if (sender instanceof Player) {
             	p.sendMessage(ChatColor.GRAY + "Packet sent!");
             } else {
