@@ -23,35 +23,41 @@ public class CommandSendPacket implements CommandExecutor {
         }
         
         if (args.length < 3) {
-        	if (sender instanceof Player)  
+        	if (sender instanceof Player) {
         		p.sendMessage(ChatColor.RED + "Invalid Syntax: /sendpacket [servernumber] [allservers] [data]");
-        	else 
+        	} else  {
         		System.out.println("Invalid Syntax: /sendpacket [servernumber] [allservers] [data]");
+        	}
             return true;
         }
         try {
         	StringBuilder sb = new StringBuilder("");
         	String data = "";
         	
-        	for (int i = 3; i < args.length; i++)
+        	for (int i = 3; i < args.length; i++) {
         		sb.append(args[i]).append(" ");
+        	}
         	
         	data = sb.toString();
-        	if (data.endsWith(" ")) 
-        		data = data.substring(0, data.length() - 1);
         	
-        	System.out.println(data);
+        	if (data.endsWith(" ")) {
+        		data = data.substring(0, data.length() - 1);
+        	}
+        	
+        	Main.log.info(data);
             CommunityMechanics.sendPacketCrossServer(data, Integer.valueOf(args[0]), Boolean.valueOf(args[1]));
-            if (sender instanceof Player) 
-            	p.sendMessage(ChatColor.GRAY + "Packet sent!");
-            else 
-            	System.out.println("Packet sent!");
             
+            if (sender instanceof Player) {
+            	p.sendMessage(ChatColor.GRAY + "Packet sent!");
+            } else {
+            	System.out.println("Packet sent!");
+            }
         } catch (Exception e) {
-        	if (sender instanceof Player) 
+        	if (sender instanceof Player) {
         		p.sendMessage(ChatColor.RED + "Invalid Syntax");
-        	else 
+        	} else {
         		System.out.println("Invalid Syntax");
+        	}
         }
         return true;
     }
