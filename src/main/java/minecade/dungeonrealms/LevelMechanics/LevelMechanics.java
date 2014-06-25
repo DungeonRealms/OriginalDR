@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import me.vilsol.menuengine.engine.DynamicMenuModel;
+import me.vilsol.menuengine.engine.MenuItem;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
 import minecade.dungeonrealms.LevelMechanics.StatsGUI.ConfirmItem;
@@ -28,6 +30,7 @@ import minecade.dungeonrealms.jsonlib.JSONMessage;
 import minecade.dungeonrealms.managers.PlayerManager;
 import minecade.dungeonrealms.models.PlayerModel;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -39,7 +42,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -60,15 +66,23 @@ public class LevelMechanics implements Listener {
         }.runTaskTimer(Main.plugin, 100, 10 * 20);
         new BukkitRunnable() {
 			public void run() {
-        		for (PlayerModel p : PlayerManager.getPlayerModels()) {
-        			PlayerLevel pLevel = p.getPlayerLevel();
-					if (pLevel != null && pLevel.getFreePoints() > 0) {
+        		for (Player p : Bukkit.getOnlinePlayers()) {
+        		    if (p == null || PlayerManager.getPlayerModel(p) == null)
+        		        continue;
+        			PlayerLevel pLevel = PlayerManager.getPlayerModel(p).getPlayerLevel();
+        			if (pLevel == null)
+        			    continue;
+					if (pLevel.getFreePoints() > 0) {
 						if (pLevel.getTmrSecs() > 0) {
 							pLevel.tickTmr();
 						}
-						else if (!p.getPlayer().getOpenInventory().getTitle().equalsIgnoreCase("Allocate Stat points")) {
+						else if ((p.getOpenInventory() == null || !ChatColor.stripColor(p.getPlayer().getOpenInventory().getTitle()).equalsIgnoreCase("Stat Points")) && pLevel.getNumWarnings() < 5) {
 							pLevel.sendStatNoticeToPlayer(p.getPlayer());
 							pLevel.setTmrSecs(180);
+							pLevel.setNumWarnings(pLevel.getNumWarnings() + 1);
+						}
+						else if (ChatColor.stripColor(p.getPlayer().getOpenInventory().getTitle()).equalsIgnoreCase("Stat Points")) {
+						    pLevel.setTmrSecs(180);
 						}
 					}
         		}
@@ -109,7 +123,176 @@ public class LevelMechanics implements Listener {
     public void onAsyncLogin(AsyncPlayerPreLoginEvent e) {
         new PlayerLevel(e.getName(), false);
     }
-
+    
+    @EventHandler (priority = EventPriority.LOWEST)
+    public void onPlayerResetStatRespond(AsyncPlayerChatEvent e) {
+        if (!( PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().isResetting())) return;
+        
+        Player p = e.getPlayer();
+        PlayerLevel pLevel = PlayerManager.getPlayerModel(p).getPlayerLevel();
+        String msg = e.getMessage();
+        
+        e.setCancelled(true);
+        
+        if (msg.equals(pLevel.getResetCode())) {
+            pLevel.resetStatPoints();
+            p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "           *** STAT POINTS RESET ***");
+        }
+        else if (msg.equalsIgnoreCase("cancel")) {
+            p.sendMessage(ChatColor.RED + "Stat Reset - " + ChatColor.BOLD + "CANCELLED");
+        }
+        else {
+            p.sendMessage(ChatColor.RED + "Invalid code entered.  Stat Reset " + ChatColor.BOLD + "CANCELLED");
+        }
+        
+        pLevel.setResetting(false);
+    }
+    
+    @EventHandler (priority = EventPriority.LOWEST)
+    public void onPlayerSpecifyStatPoints(AsyncPlayerChatEvent e) {
+        if (PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel().getAllocateSlot() != -1) {
+            Player p = e.getPlayer();
+            String msg = e.getMessage();
+            e.setCancelled(true);
+            if (NumberUtils.isNumber(msg) && !msg.equals("0")) {
+                int points = Integer.parseInt(msg);
+                MenuItem item = null;
+                PlayerLevel pLevel = PlayerManager.getPlayerModel(p).getPlayerLevel();
+                
+                if (DynamicMenuModel.getLastMenuObject(p) != null) {
+                    item = DynamicMenuModel.getLastMenuObject(p).getDynamicItems()
+                            .get(PlayerManager.getPlayerModel(p).getPlayerLevel().getAllocateSlot());
+                }
+                if (item == null) {
+                    return;
+                }
+                
+                if (points < 0) {
+                    if (item instanceof StrengthItem) {
+                        if (Math.abs(points) <= ((StrengthItem) item).getPoints() - pLevel.getStrPoints()) {
+                            ((StrengthItem) item).setPoints(((StrengthItem) item).getPoints() + points);
+                        }
+                        else {
+                            p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
+                                    + " have enough allocated points to do this.");
+                            DynamicMenuModel.openLastMenuObject(p);
+                            PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
+                            return;
+                        }
+                    }
+                    else if (item instanceof DexterityItem) {
+                        if (Math.abs(points) <= ((DexterityItem) item).getPoints() - pLevel.getDexPoints()) {
+                            ((DexterityItem) item).setPoints(((DexterityItem) item).getPoints() + points);
+                        }
+                        else {
+                            p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
+                                    + " have enough allocated points to do this.");
+                            DynamicMenuModel.openLastMenuObject(p);
+                            PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
+                            return;
+                        }
+                    }
+                    else if (item instanceof IntellectItem) {
+                        if (Math.abs(points) <= ((IntellectItem) item).getPoints() - pLevel.getIntPoints()) {
+                            ((IntellectItem) item).setPoints(((IntellectItem) item).getPoints() + points);
+                        }
+                        else {
+                            p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
+                                    + " have enough allocated points to do this.");
+                            DynamicMenuModel.openLastMenuObject(p);
+                            PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
+                            return;
+                        }
+                    }
+                    else if (item instanceof VitalityItem) {
+                        if (Math.abs(points) <= ((VitalityItem) item).getPoints() - pLevel.getVitPoints()) {
+                            ((VitalityItem) item).setPoints(((VitalityItem) item).getPoints() + points);
+                        }
+                        else {
+                            p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
+                                    + " have enough allocated points to do this.");
+                            DynamicMenuModel.openLastMenuObject(p);
+                            PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
+                            return;
+                        }
+                    }
+                    
+                    p.sendMessage(ChatColor.RED + "Unallocated " + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + Math.abs(points)
+                            + ChatColor.RED + (points > 1 ? " points " : " point ") + "from "
+                            + ChatColor.stripColor(item.getItem().getItemMeta().getDisplayName()).toUpperCase() + ".");
+                    pLevel.setFreePoints(pLevel.getFreePoints() + Math.abs(points));
+                    DynamicMenuModel.openLastMenuObject(p);
+                }
+                else {
+                    if (pLevel.getTempFreePoints() >= points) {
+                        pLevel.setTempFreePoints(pLevel.getFreePoints() - points);
+                    }
+                    else {
+                        p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
+                                + " have enough points to do this.");
+                        PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
+                        DynamicMenuModel.openLastMenuObject(p);
+                        return;
+                    }
+                    
+                    if (item instanceof StrengthItem) {
+                        ((StrengthItem) item).setPoints(((StrengthItem) item).getPoints() + points);
+                    }
+                    else if (item instanceof DexterityItem) {
+                        ((DexterityItem) item).setPoints(((DexterityItem) item).getPoints() + points);
+                    }
+                    else if (item instanceof IntellectItem) {
+                        ((IntellectItem) item).setPoints(((IntellectItem) item).getPoints() + points);
+                    }
+                    else if (item instanceof VitalityItem) {
+                        ((VitalityItem) item).setPoints(((VitalityItem) item).getPoints() + points);
+                    }
+                    
+                    p.sendMessage(ChatColor.GREEN + "Allocated " + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + msg
+                            + ChatColor.GREEN + (points > 1 ? " points " : " point ") + "to "
+                            + ChatColor.stripColor(item.getItem().getItemMeta().getDisplayName()).toUpperCase() + ".");
+                    DynamicMenuModel.openLastMenuObject(p);
+                }
+                
+            }
+            else if (msg.equalsIgnoreCase("cancel") || msg.equals("0")) {
+                p.sendMessage(ChatColor.RED + "Stat Allocation - " + ChatColor.BOLD + "CANCELLED");
+                DynamicMenuModel.openLastMenuObject(p);
+            }
+            else {
+                p.sendMessage(ChatColor.RED + "Invalid input.  Please specify a number or type cancel.");
+                return;
+            }
+            // reset this so player can chat
+            PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
+        }
+    }
+    
+    @EventHandler
+    public void onLevelResetNPCInteract(PlayerInteractEntityEvent e) {
+        if (!(e.getRightClicked() instanceof Player)) return;
+        Player trader = (Player) e.getRightClicked();
+        if (!(trader.hasMetadata("NPC"))) return;
+        if (!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Wizard"))) return;
+        e.setCancelled(true);
+        Player p = e.getPlayer(); 
+        PlayerLevel pLevel = PlayerManager.getPlayerModel(p).getPlayerLevel();
+        if (pLevel.isResetting()) return;
+        pLevel.setResetCode(pLevel.generateResetAuthenticationCode(p, String.valueOf(pLevel.getNumResets() + 1)));
+        p.sendMessage("");
+        p.sendMessage(ChatColor.DARK_GRAY + "           *** " + ChatColor.GREEN + ChatColor.BOLD + "Stat Reset Confirmation" + ChatColor.DARK_GRAY + " ***");
+        p.sendMessage(ChatColor.DARK_GRAY + "           TOTAL Points: " + ChatColor.GREEN + pLevel.getLevel() * PlayerLevel.POINTS_PER_LEVEL + ChatColor.DARK_GRAY + "          SPENT Points: " + ChatColor.GREEN + (pLevel.getLevel() * PlayerLevel.POINTS_PER_LEVEL - pLevel.getFreePoints()));
+        // p.sendMessage(ChatColor.DARK_GRAY + "FROM Tier " + ChatColor.GREEN + bank_tier + ChatColor.DARK_GRAY + " TO " + ChatColor.GREEN +
+        // next_bank_tier);
+        p.sendMessage(ChatColor.DARK_GRAY + "                  Reset Cost: " + ChatColor.GREEN + "" + Math.round(1000. * Math.pow(1.8, (pLevel.getNumResets() + 1)) / 1000.) + " Gem(s)");
+        p.sendMessage("");
+        p.sendMessage(ChatColor.GREEN + "Enter the code '" + ChatColor.BOLD + pLevel.getResetCode() + ChatColor.GREEN + "' to confirm your reset.");
+        p.sendMessage("");
+        p.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "WARNING:" + ChatColor.RED + " Stat resets are " + ChatColor.BOLD + ChatColor.RED + "NOT" + ChatColor.RED + " reversible or refundable. Each time you reset your stats the price will increase for the next reset. Type 'cancel' to void this request.");
+        p.sendMessage("");
+        pLevel.setResetting(true);
+    }
+    
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDeathEvent(EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Player)
@@ -151,6 +334,15 @@ public class LevelMechanics implements Listener {
             addKillXP(killer, (LivingEntity) e.getEntity(), mob_level, true);
         }
 
+    }
+    
+    @EventHandler
+    public void onStatsWindowClose(InventoryCloseEvent e) {
+        if (ChatColor.stripColor(e.getInventory().getTitle()).equalsIgnoreCase("Stat Points")) {
+            if (PlayerManager.getPlayerModel((Player) e.getPlayer()).getPlayerLevel().getFreePoints() > 0) {
+                PlayerManager.getPlayerModel((Player) e.getPlayer()).getPlayerLevel().setTmrSecs(180);
+            }
+        }
     }
 
     @SuppressWarnings("deprecation")

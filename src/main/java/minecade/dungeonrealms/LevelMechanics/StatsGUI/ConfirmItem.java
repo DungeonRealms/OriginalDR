@@ -68,19 +68,20 @@ public class ConfirmItem implements MenuItem, BonusItem {
 
 	@Override
 	public ItemStack getItem() {
-		return new Builder(Material.INK_SACK)
-				.setDurability((short) 10)
-				.setName(ChatColor.GREEN + "Confirm")
-				.setLore(
-						Arrays.asList(ChatColor.DARK_AQUA + "Click to confirm your stat ", ChatColor.DARK_AQUA
-								+ "point allocation.  If you want ", ChatColor.DARK_AQUA + "to undo your changes, press ", ChatColor.DARK_AQUA + "escape.")).getItem();
-	}
+        return new Builder(Material.INK_SACK)
+                .setDurability((short) 10)
+                .setName(ChatColor.GREEN + "Confirm")
+                .setLore(
+                        Arrays.asList(ChatColor.GRAY + "Click to confirm your stat ", ChatColor.GRAY
+                                + "point allocation.  If you ", ChatColor.GRAY + "want to undo your changes, ",
+                                ChatColor.GRAY + "press escape.")).getItem();
+    }
 
 	@Override
 	public void setBonusData(Object player) {
 		drPlayer = (PlayerModel) player;
 		DynamicMenuModel.getMenu(((PlayerModel) player).getPlayer()).setName(
-				ChatColor.GOLD + "Allocate Stat Points");
+				ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + "Stat Points");
 	}
 
 }

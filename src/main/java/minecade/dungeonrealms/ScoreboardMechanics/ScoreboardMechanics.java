@@ -131,7 +131,7 @@ public class ScoreboardMechanics implements Listener {
 		cloneScoreboard(e.getPlayer());
 	}
 	
-	public static void setOverheadHP(Player pl, int hp) {
+    public static void setOverheadHP(Player pl, int hp) {
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.BELOW_NAME).getScore(pl).setScore(hp);
 		}
@@ -139,7 +139,7 @@ public class ScoreboardMechanics implements Listener {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private static Team getTeam(Scoreboard sb, OfflinePlayer target){
+    private static Team getTeam(Scoreboard sb, OfflinePlayer target){
 		if(sb.getTeam(target.getName()) == null) return sb.registerNewTeam(target.getName());
 		return sb.getTeam(target.getName());
 	}

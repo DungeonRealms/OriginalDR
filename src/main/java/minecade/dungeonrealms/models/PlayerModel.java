@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import minecade.dungeonrealms.HearthstoneMechanics.Hearthstone;
+import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.ItemMechanics.PlayerArrowReplace;
 import minecade.dungeonrealms.LevelMechanics.PlayerLevel;
 import minecade.dungeonrealms.PartyMechanics.Party;
@@ -2338,6 +2339,14 @@ public class PlayerModel {
 
 	public void setLastLocalLogin(long lastLocalLogin) {
 		this.lastLocalLogin = lastLocalLogin;
+	}
+	
+	public void updateStats() {
+	    Player p = getPlayer();
+	    ItemMechanics.str_data.put(name, ItemMechanics.generateTotalStrVal(p));
+	    ItemMechanics.dex_data.put(name, ItemMechanics.generateTotalDexVal(p));
+	    ItemMechanics.int_data.put(name, ItemMechanics.generateTotalIntVal(p));
+	    ItemMechanics.vit_data.put(name, ItemMechanics.generateTotalVitVal(p));
 	}
 	
 }

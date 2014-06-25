@@ -36,10 +36,16 @@ public class PlayerLevel {
     private int intPoints;
     private int tempFreePoints; // free points left before player clicks confirm
     private int tmrSecs; // timer for when to notify player of free points
+    private int numWarnings; // number of free stat point warnings sent so far to prevent spam
+    private int allocateSlot; // when a player is allocating a custom amount of points to a stat
+    private int numResets; // number of stat resets the player has already had
+    private boolean isResetting; // flag for if the player has talked to the reset NPC
+    private String resetCode; // code for stat reset
     public final static int POINTS_PER_LEVEL = 5; // points per level.  Change this to change the global value.
 	public final static String FREE_STAT_NOTICE = ChatColor.GREEN + "***You have" + ChatColor.BOLD + " free "
 			+ ChatColor.GREEN + "stat points!  Click here "
 			+ ChatColor.GREEN + "or type /stats to allocate them.***";
+	private static final String ALPHA_NUM = "123456789";
 
     @SuppressWarnings("deprecation")
 	public PlayerLevel(String p_name, boolean aSync) {
@@ -51,6 +57,10 @@ public class PlayerLevel {
         this.vitPoints = 0;
         this.intPoints = 0;
         this.tmrSecs = 0;
+        this.numWarnings = 0;
+        this.allocateSlot = -1;
+        this.isResetting = false;
+        this.resetCode = "";
         this.p = Bukkit.getPlayer(p_name);
         if (aSync) {
             new BukkitRunnable() {
@@ -249,6 +259,25 @@ public class PlayerLevel {
             e.printStackTrace();
         }
     }
+    
+    public String generateResetAuthenticationCode(Player p, String resets) {
+        StringBuffer sb = new StringBuffer(4);
+        for(int i = 0; i < 4; i++) {
+            int ndx = (int) (Math.random() * ALPHA_NUM.length());
+            sb.append(ALPHA_NUM.charAt(ndx));
+        }
+
+        return resets + sb.toString();
+    }
+    
+    public void resetStatPoints() {
+        this.strPoints = 0;
+        this.dexPoints = 0;
+        this.intPoints = 0;
+        this.vitPoints = 0;
+        this.freePoints = this.level * POINTS_PER_LEVEL;
+        saveData(false);
+    }
 
     /**
 	 * @return The amount of free stat points the user currently has
@@ -348,5 +377,45 @@ public class PlayerLevel {
 	public void tickTmr() {
 		this.tmrSecs--;
 	}
+
+    public boolean isResetting() {
+        return isResetting;
+    }
+
+    public void setResetting(boolean isResetting) {
+        this.isResetting = isResetting;
+    }
+
+    public int getAllocateSlot() {
+        return allocateSlot;
+    }
+
+    public void setAllocateSlot(int allocateSlot) {
+        this.allocateSlot = allocateSlot;
+    }
+
+    public int getNumWarnings() {
+        return numWarnings;
+    }
+
+    public void setNumWarnings(int numWarnings) {
+        this.numWarnings = numWarnings;
+    }
+
+    public int getNumResets() {
+        return numResets;
+    }
+
+    public void setNumResets(int numResets) {
+        this.numResets = numResets;
+    }
+
+    public String getResetCode() {
+        return resetCode;
+    }
+
+    public void setResetCode(String resetCode) {
+        this.resetCode = resetCode;
+    }
     
 }

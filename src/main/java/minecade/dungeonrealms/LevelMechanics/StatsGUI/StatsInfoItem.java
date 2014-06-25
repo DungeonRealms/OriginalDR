@@ -39,23 +39,29 @@ public class StatsInfoItem implements MenuItem, BonusItem {
 	}
 
 	@Override
-	public ItemStack getItem() {
-		return new Builder(Material.EXP_BOTTLE)
-				.setName(ChatColor.YELLOW.toString() + ChatColor.ITALIC + "Stat Point Info")
-				.setLore(
-						Arrays.asList(ChatColor.GREEN + "Points to Allocate: " + pLevel.getTempFreePoints(),
-								ChatColor.GRAY + "LCLICK to allocate " + ChatColor.UNDERLINE + "1" + ChatColor.GRAY
-										+ " point", ChatColor.GRAY + "RCLICK or SCLICK to allocate ",
-								ChatColor.GRAY.toString() + ChatColor.UNDERLINE + "5" + ChatColor.GRAY + " points."))
-				.getItem();
-	}
+    public ItemStack getItem() {
+        return new Builder(Material.EXP_BOTTLE)
+                .setName(ChatColor.YELLOW + "Stat Point Info")
+                .setLore(
+                        Arrays.asList(
+                                ChatColor.LIGHT_PURPLE + "Points to Allocate: " + pLevel.getTempFreePoints(),
+                                ChatColor.AQUA + "LCLICK" + ChatColor.GRAY + " to allocate "
+                                        + ChatColor.AQUA.toString() + ChatColor.UNDERLINE + "1" + ChatColor.GRAY
+                                        + " point", ChatColor.AQUA + "RCLICK" + ChatColor.GRAY + " to unallocate "
+                                        + ChatColor.AQUA.toString() + ChatColor.UNDERLINE + "1" + ChatColor.GRAY
+                                        + " point", ChatColor.AQUA + "S-LCLICK" + ChatColor.GRAY + " to allocate "
+                                        + ChatColor.AQUA.toString() + ChatColor.UNDERLINE + "5" + ChatColor.GRAY
+                                        + " points", ChatColor.AQUA + "S-RCLICK" + ChatColor.GRAY + " to unallocate "
+                                        + ChatColor.AQUA.toString() + ChatColor.UNDERLINE + "5" + ChatColor.GRAY
+                                        + " points", ChatColor.AQUA + "MCLICK" + ChatColor.GRAY + " for a "
+                                        + ChatColor.AQUA.toString() + ChatColor.UNDERLINE + "custom" + ChatColor.GRAY
+                                        + " amount")).getItem();
+    }
 
 	@Override
 	public void setBonusData(Object player) {
 		drPlayer = (PlayerModel) player;
 		pLevel = drPlayer.getPlayerLevel();
-		DynamicMenuModel.getMenu(((PlayerModel) player).getPlayer()).setName(
-				ChatColor.RED.toString() + ChatColor.BOLD + "Allocate Stat Points");
 	}
 
 }

@@ -1656,11 +1656,15 @@ public class ItemMechanics implements Listener {
             total_str_val += getStrVal(i);
         }
 
+        /* As of patch 1.9, weapon str, dex, int, and vit no longer count on weapons
         if (getStrVal(p.getItemInHand()) != 0) {
             total_str_val += getStrVal(p.getItemInHand());
         }
+        */
         
         total_str_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getStrPoints();
+        
+        PlayerManager.getPlayerModel(p).setStrength(total_str_val);
 
         return total_str_val;
     }
@@ -1675,11 +1679,15 @@ public class ItemMechanics implements Listener {
             total_dex_val += getDexVal(i);
         }
 
+        /* As of patch 1.9, weapon str, dex, int, and vit no longer count on weapons
         if (getDexVal(p.getItemInHand()) != 0) {
             total_dex_val += getDexVal(p.getItemInHand());
         }
+        */
         
         total_dex_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getDexPoints();
+        
+        PlayerManager.getPlayerModel(p).setStrength(total_dex_val);
 
         return total_dex_val;
     }
@@ -1694,11 +1702,15 @@ public class ItemMechanics implements Listener {
             total_vit_val += getVitVal(i);
         }
 
+        /* As of patch 1.9, weapon str, dex, int, and vit no longer count on weapons
         if (getVitVal(p.getItemInHand()) != 0) {
             total_vit_val += getVitVal(p.getItemInHand());
         }
+        */
 
         total_vit_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getVitPoints();
+        
+        PlayerManager.getPlayerModel(p).setStrength(total_vit_val);
         
         return total_vit_val;
     }
@@ -1713,11 +1725,15 @@ public class ItemMechanics implements Listener {
             total_int_val += getIntVal(i);
         }
 
+        /* As of patch 1.9, weapon str, dex, int, and vit no longer count on weapons
         if (getIntVal(p.getItemInHand()) != 0) {
             total_int_val += getIntVal(p.getItemInHand());
         }
+        */
         
         total_int_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getIntPoints();
+        
+        PlayerManager.getPlayerModel(p).setStrength(total_int_val);
 
         return total_int_val;
     }
