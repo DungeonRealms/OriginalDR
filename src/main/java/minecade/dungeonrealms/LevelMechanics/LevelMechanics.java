@@ -284,7 +284,7 @@ public class LevelMechanics implements Listener {
         p.sendMessage(ChatColor.DARK_GRAY + "           TOTAL Points: " + ChatColor.GREEN + pLevel.getLevel() * PlayerLevel.POINTS_PER_LEVEL + ChatColor.DARK_GRAY + "          SPENT Points: " + ChatColor.GREEN + (pLevel.getLevel() * PlayerLevel.POINTS_PER_LEVEL - pLevel.getFreePoints()));
         // p.sendMessage(ChatColor.DARK_GRAY + "FROM Tier " + ChatColor.GREEN + bank_tier + ChatColor.DARK_GRAY + " TO " + ChatColor.GREEN +
         // next_bank_tier);
-        p.sendMessage(ChatColor.DARK_GRAY + "                  Reset Cost: " + ChatColor.GREEN + "" + Math.round(1000. * Math.pow(1.8, (pLevel.getNumResets() + 1)) / 1000.) + " Gem(s)");
+        p.sendMessage(ChatColor.DARK_GRAY + "                  Reset Cost: " + ChatColor.GREEN + "" + (1000. * Math.pow(1.8, (pLevel.getNumResets() + 1))) + 500 / 1000 * 1000 + " Gem(s)");
         p.sendMessage("");
         p.sendMessage(ChatColor.GREEN + "Enter the code '" + ChatColor.BOLD + pLevel.getResetCode() + ChatColor.GREEN + "' to confirm your reset.");
         p.sendMessage("");
