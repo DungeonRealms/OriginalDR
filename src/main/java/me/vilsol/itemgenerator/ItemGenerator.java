@@ -171,8 +171,10 @@ public class ItemGenerator {
 		am.new Dodge();
 		am.new EnergyRegen();
 		am.new GemFind();
-		am.new HP();
+//		am.new HP();
 		am.new ChestplateHP();
+		am.new LeggingsHP();
+		am.new OtherHP();
 		am.new HPRegen();
 		am.new ItemFind();
 		am.new MainArmor();
