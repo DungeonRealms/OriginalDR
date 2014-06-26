@@ -172,6 +172,7 @@ public class ItemGenerator {
 		am.new EnergyRegen();
 		am.new GemFind();
 		am.new HP();
+		am.new ChestplateHP();
 		am.new HPRegen();
 		am.new ItemFind();
 		am.new MainArmor();

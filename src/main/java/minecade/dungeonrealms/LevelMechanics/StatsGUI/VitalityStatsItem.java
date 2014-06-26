@@ -58,8 +58,8 @@ public class VitalityStatsItem implements MenuItem, BonusItem {
 										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.03) + "%]" : ""),
 								ChatColor.GOLD + "ELE RESIST: " + ChatColor.AQUA + df.format(vit * 0.04) + "%"
 										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.04) + "%]" : ""),
-								ChatColor.GOLD + "SWORD DMG: " + ChatColor.AQUA + df.format(vit * 0.015) + "%"
-										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.015) + "%]" : "")))
+								ChatColor.GOLD + "SWORD DMG: " + ChatColor.AQUA + df.format(vit * 0.01) + "%"
+										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.01) + "%]" : "")))
 				.getItem();
 	}
 

@@ -137,6 +137,7 @@ public class LevelMechanics implements Listener {
         if (msg.equals(pLevel.getResetCode())) {
             pLevel.resetStatPoints();
             p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "           *** STAT POINTS RESET ***");
+            pLevel.setNumResets(pLevel.getNumResets() + 1);
         }
         else if (msg.equalsIgnoreCase("cancel")) {
             p.sendMessage(ChatColor.RED + "Stat Reset - " + ChatColor.BOLD + "CANCELLED");
@@ -172,7 +173,7 @@ public class LevelMechanics implements Listener {
                         if (Math.abs(points) <= ((StrengthItem) item).getPoints() - pLevel.getStrPoints()) {
                             ((StrengthItem) item).setPoints(((StrengthItem) item).getPoints() + points);
                         }
-                        else {
+                        else if (Math.abs(points) > ((StrengthItem) item).getPoints() - pLevel.getStrPoints()) {
                             p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
                                     + " have enough allocated points to do this.");
                             DynamicMenuModel.openLastMenuObject(p);
@@ -225,7 +226,7 @@ public class LevelMechanics implements Listener {
                 }
                 else {
                     if (pLevel.getTempFreePoints() >= points) {
-                        pLevel.setTempFreePoints(pLevel.getFreePoints() - points);
+                        pLevel.setTempFreePoints(pLevel.getTempFreePoints() - points);
                     }
                     else {
                         p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
@@ -236,16 +237,40 @@ public class LevelMechanics implements Listener {
                     }
                     
                     if (item instanceof StrengthItem) {
-                        ((StrengthItem) item).setPoints(((StrengthItem) item).getPoints() + points);
+                        if (((StrengthItem) item).getPoints() + points <= 300) {
+                            ((StrengthItem) item).setPoints(((StrengthItem) item).getPoints() + points);
+                        }
+                        else {
+                            p.sendMessage(ChatColor.RED + "Allocating" + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
+                            return;
+                        }
                     }
                     else if (item instanceof DexterityItem) {
-                        ((DexterityItem) item).setPoints(((DexterityItem) item).getPoints() + points);
+                        if (((DexterityItem) item).getPoints() + points <= 300) {
+                            ((DexterityItem) item).setPoints(((DexterityItem) item).getPoints() + points);
+                        }
+                        else {
+                            p.sendMessage(ChatColor.RED + "Allocating" + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
+                            return;
+                        }
                     }
                     else if (item instanceof IntellectItem) {
-                        ((IntellectItem) item).setPoints(((IntellectItem) item).getPoints() + points);
+                        if (((IntellectItem) item).getPoints() + points <= 300) {
+                            ((IntellectItem) item).setPoints(((IntellectItem) item).getPoints() + points);
+                        }
+                        else {
+                            p.sendMessage(ChatColor.RED + "Allocating" + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
+                            return;
+                        }
                     }
                     else if (item instanceof VitalityItem) {
-                        ((VitalityItem) item).setPoints(((VitalityItem) item).getPoints() + points);
+                        if (((VitalityItem) item).getPoints() + points <= 300) {
+                            ((VitalityItem) item).setPoints(((VitalityItem) item).getPoints() + points);
+                        }
+                        else {
+                            p.sendMessage(ChatColor.RED + "Allocating" + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
+                            return;
+                        }
                     }
                     
                     p.sendMessage(ChatColor.GREEN + "Allocated " + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + msg
