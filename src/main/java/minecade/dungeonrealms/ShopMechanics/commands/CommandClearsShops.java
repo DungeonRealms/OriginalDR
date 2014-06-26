@@ -1,7 +1,6 @@
 package minecade.dungeonrealms.ShopMechanics.commands;
 
 import minecade.dungeonrealms.Main;
-import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
 
 import org.bukkit.Bukkit;
@@ -19,7 +18,7 @@ public class CommandClearsShops implements CommandExecutor {
 		Player pl = (Player)sender;
 		if (pl == null) return true;
 
-		if (!pl.isOp() || !PermissionMechanics.isGM(pl.getName())) {
+		if (!pl.isOp() || !Main.isMaster(pl.getName())) {
 			pl.sendMessage(ChatColor.RED + "You don't have the required permission for this command.");
 			return true;
 		}
