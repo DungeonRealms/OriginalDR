@@ -106,9 +106,23 @@ public class ItemGenerator {
 			if(!mc.canApply(conditions.keySet())){
 				conditions.remove(mc);
 			}else{
-				order.add(mc);
+			    ItemModifier im = conditions.get(mc);
+	            
+	            int belowChance = (mc.getChance() < 0) ? im.getChance() : mc.getChance();
+
+	            if (r.nextInt(100) < belowChance) {
+	                order.add(mc);
+	            }
 			}
 		}
+		
+		for (ItemModifier modifier : conditions.values()) {
+		    for (ModifierCondition mc : order) {
+		        if (!(mc.checkCantContain(modifier.getClass()))) {
+		            order.remove(mc);
+		        }
+		    }
+        }
 		
 		Collections.sort(order, new Comparator<ModifierCondition>() {
 
@@ -119,14 +133,19 @@ public class ItemGenerator {
 			
 		});
 		
-		for(ModifierCondition mc : order){
-			ItemModifier im = conditions.get(mc);
-			
-			int belowChance = (mc.getChance() < 0) ? im.getChance() : mc.getChance();
-
-			if(r.nextInt(100) < belowChance){
-				meta = im.applyModifier(mc, meta);
-			}
+//		for(ModifierCondition mc : order){
+//			ItemModifier im = conditions.get(mc);
+//			
+//			int belowChance = (mc.getChance() < 0) ? im.getChance() : mc.getChance();
+//
+//			if(r.nextInt(100) < belowChance){
+//				meta = im.applyModifier(mc, meta);
+//			}
+//		}
+		
+		for (ModifierCondition mc: order) {
+		    ItemModifier im = conditions.get(mc);
+		    meta = im.applyModifier(mc, meta);
 		}
 		
 		List<String> lore = meta.getLore();

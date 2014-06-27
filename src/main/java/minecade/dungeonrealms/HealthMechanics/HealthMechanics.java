@@ -322,7 +322,12 @@ public class HealthMechanics implements Listener {
 		ScoreboardMechanics.setOverheadHP(pl, hp);
 		if(!pl.hasMetadata("NPC") && !pl.getPlayerListName().equalsIgnoreCase("")) {
 			double max_hp = HealthMechanics.getMaxHealthValue(pl.getName());
-			double health_percent = (hp / max_hp);
+			double health_percent = ((double) hp / (double) max_hp);
+			
+			if (health_percent > 1.0) {
+			    health_percent = 1;
+			}
+			
 			PlayerLevel lvl = LevelMechanics.getPlayerData(pl);
 			if(lvl != null){
 				String levelData = ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "LVL " + ChatColor.AQUA.toString() + lvl.getLevel();
