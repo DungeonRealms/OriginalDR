@@ -115,7 +115,6 @@ public class RestrictionMechanics implements Listener {
 
     // A list of players who have a pending 'tp' anti-block glitch to prevent double dipping / teleporting up.
 
-    @SuppressWarnings("deprecation")
     public void onEnable() {
         instance = this;
         Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);

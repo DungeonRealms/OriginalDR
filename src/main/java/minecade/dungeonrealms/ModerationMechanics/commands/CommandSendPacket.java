@@ -1,11 +1,7 @@
 package minecade.dungeonrealms.ModerationMechanics.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
-import minecade.dungeonrealms.GuildMechanics.GuildMechanics;
 import minecade.dungeonrealms.Hive.Hive;
 
 import org.bukkit.Bukkit;
@@ -39,7 +35,8 @@ public class CommandSendPacket implements CommandExecutor {
         try {
         	StringBuilder sb = new StringBuilder("");
         	String data = "";
-        	int myServerId = Hive.getServerNumFromPrefix(Bukkit.getMotd());
+        	@SuppressWarnings("unused")
+            int myServerId = Hive.getServerNumFromPrefix(Bukkit.getMotd());
         	
         	for (int i = 2; i < args.length; i++) {
         		sb.append(args[i]).append(" ");

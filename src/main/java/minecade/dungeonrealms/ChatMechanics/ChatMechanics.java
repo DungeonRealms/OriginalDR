@@ -20,7 +20,6 @@ import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.EcashMechanics.EcashMechanics;
 import minecade.dungeonrealms.GuildMechanics.GuildMechanics;
-import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
 import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
 import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
@@ -35,7 +34,6 @@ import minecade.dungeonrealms.jsonlib.JSONMessage;
 import minecade.dungeonrealms.managers.PlayerManager;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -61,7 +59,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 @SuppressWarnings("deprecation")
 public class ChatMechanics implements Listener {
