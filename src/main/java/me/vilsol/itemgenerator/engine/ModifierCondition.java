@@ -98,6 +98,10 @@ public class ModifierCondition {
 	public List<Class<? extends ItemModifier>> getReplacement(){
 		return replacement;
 	}
+	
+	public List<Class<? extends ItemModifier>> getCantContain() {
+	    return cantContain;
+	}
 
 	public boolean canApply(Set<ModifierCondition> conditions) {
 		for(ModifierCondition mc : conditions){

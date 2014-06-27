@@ -175,6 +175,8 @@ public class ItemGenerator {
 		am.new ChestplateHP();
 		am.new LeggingsHP();
 		am.new OtherHP();
+		am.new MainDPS();
+		am.new OtherDPS();
 		am.new HPRegen();
 		am.new ItemFind();
 		am.new MainArmor();
