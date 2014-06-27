@@ -29,6 +29,8 @@ public class PlayerLevel {
     private int level;
     private int xp;
     private Entity last_mob_gained_from;
+    
+    // stat point stuff
     private int freePoints;
     private int strPoints;
     private int dexPoints;
@@ -41,6 +43,7 @@ public class PlayerLevel {
     private int numResets; // number of stat resets the player has already had
     private boolean isResetting; // flag for if the player has talked to the reset NPC
     private String resetCode; // code for stat reset
+    private int resetCost; // cost to reset stats for player
     public final static int POINTS_PER_LEVEL = 5; // points per level.  Change this to change the global value.
 	public final static String FREE_STAT_NOTICE = ChatColor.GREEN + "***You have" + ChatColor.BOLD + " free "
 			+ ChatColor.GREEN + "stat points!  Click here "
@@ -61,6 +64,7 @@ public class PlayerLevel {
         this.allocateSlot = -1;
         this.isResetting = false;
         this.resetCode = "";
+        this.resetCost = 0;
         this.p = Bukkit.getPlayer(p_name);
         if (aSync) {
             new BukkitRunnable() {
@@ -143,14 +147,15 @@ public class PlayerLevel {
 				try (PreparedStatement prest = ConnectionPool
 						.getConnection()
 						.prepareStatement(
-								"UPDATE player_database SET player_level = ?, player_xp = ?, allocated_str = ?, allocated_dex = ?, allocated_int = ?, allocated_vit = ? WHERE p_name = ?")) {
+								"UPDATE player_database SET player_level = ?, player_xp = ?, allocated_str = ?, allocated_dex = ?, allocated_int = ?, allocated_vit = ?, resets = ? WHERE p_name = ?")) {
                     prest.setInt(1, level);
                     prest.setInt(2, xp);
                     prest.setInt(3, strPoints);
                     prest.setInt(4, dexPoints);
                     prest.setInt(5, intPoints);
                     prest.setInt(6, vitPoints);
-                    prest.setString(7, name);
+                    prest.setInt(7, numResets);
+                    prest.setString(8, name);
                     prest.executeUpdate();
                     prest.close();
                 } catch (Exception e) {
@@ -218,7 +223,7 @@ public class PlayerLevel {
 		try (PreparedStatement pst = ConnectionPool
 				.getConnection()
 				.prepareStatement(
-						"SELECT player_level, player_xp, allocated_str, allocated_dex, allocated_int, allocated_vit FROM player_database WHERE p_name = '"
+						"SELECT player_level, player_xp, allocated_str, allocated_dex, allocated_int, allocated_vit, resets FROM player_database WHERE p_name = '"
 								+ p_name + "'")) {
             ResultSet rs = pst.executeQuery();
             if (!rs.first()) {
@@ -235,6 +240,7 @@ public class PlayerLevel {
                 setDexPoints(rs.getInt("allocated_dex"));
                 setIntPoints(rs.getInt("allocated_int"));
                 setVitPoints(rs.getInt("allocated_vit"));
+                setNumResets(rs.getInt("resets"));
                 setFreePoints(level * POINTS_PER_LEVEL - (strPoints + dexPoints + intPoints + vitPoints));
                 if (freePoints > 0) {
                 	setTmrSecs(180);
@@ -416,6 +422,14 @@ public class PlayerLevel {
 
     public void setResetCode(String resetCode) {
         this.resetCode = resetCode;
+    }
+
+    public int getResetCost() {
+        return resetCost;
+    }
+
+    public void setResetCost(int resetCost) {
+        this.resetCost = resetCost;
     }
     
 }
