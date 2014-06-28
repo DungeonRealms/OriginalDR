@@ -14,6 +14,7 @@ import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.FatigueMechanics.FatigueMechanics;
+import minecade.dungeonrealms.HealthMechanics.commands.CommandSetHealth;
 import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
@@ -131,6 +132,7 @@ public class HealthMechanics implements Listener {
 	public static HealthMechanics plugin = null;
 
 	public void onEnable() {
+		Main.plugin.getCommand("sethealth").setExecutor(new CommandSetHealth());
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
 		plugin = this;
@@ -323,11 +325,9 @@ public class HealthMechanics implements Listener {
 		if(!pl.hasMetadata("NPC") && !pl.getPlayerListName().equalsIgnoreCase("")) {
 			double max_hp = HealthMechanics.getMaxHealthValue(pl.getName());
 			double health_percent = ((double) hp / (double) max_hp);
-			
 			if (health_percent > 1.0) {
-			    health_percent = 1;
+			    health_percent = 1.0;
 			}
-			
 			PlayerLevel lvl = LevelMechanics.getPlayerData(pl);
 			if(lvl != null){
 				String levelData = ChatColor.AQUA.toString() + ChatColor.BOLD.toString() + "LVL " + ChatColor.AQUA.toString() + lvl.getLevel();

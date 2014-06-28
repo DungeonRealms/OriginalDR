@@ -750,7 +750,8 @@ public class ShopMechanics implements Listener {
 		}
 	}
 
-	public static void saveOpenShopsToCollBin() {
+	@SuppressWarnings("unchecked")
+    public static void saveOpenShopsToCollBin() {
 		int shop_count = 0;
 		Iterator<Map.Entry<String, Block>> iter = new HashMap<String, Block>(inverse_shop_owners).entrySet().iterator(); // Probably not the best way to do this, but w/e.
 		Map.Entry<String, Block> entry;
@@ -783,6 +784,15 @@ public class ShopMechanics implements Listener {
 							s_owner.sendMessage(ChatColor.GREEN + "Your shop was saved and can now be found in your Collection Bin.");
 						}
 					}
+					
+					// concurrency man... ridiculous
+					for (HumanEntity e : (List<HumanEntity>) ((ArrayList<HumanEntity>) shop_stock.get(p).getViewers()).clone()) {
+					    if (e instanceof Player) {
+					        ((Player) e).playSound(e.getLocation(), Sound.CHEST_CLOSE, 1F, 1F);
+					    }
+					    e.closeInventory();
+					}
+					
 				}
 
 				final String shop_owner_n = p;

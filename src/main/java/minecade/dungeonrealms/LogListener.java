@@ -57,6 +57,7 @@ public class LogListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerCommandPreProcess(PlayerCommandPreprocessEvent e){
 		if(e.isCancelled()) return;
+		if (e.getMessage().startsWith("sendpacket") || e.getMessage().startsWith("/sendpacket")) return;
 		new LogModel(LogType.COMMAND, e.getPlayer().getName(), new JsonBuilder("command", e.getMessage()).getJson());
 	}
 	

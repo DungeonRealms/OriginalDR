@@ -564,3 +564,6 @@ commands:
   isunomadyet:
     description: Shhh don't tell anyone about this.
     usage: /<command>
+  sethealth:
+    description: Set a users health
+    usage: /<command>

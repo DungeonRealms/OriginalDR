@@ -18,6 +18,7 @@ import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
 import minecade.dungeonrealms.MountMechanics.MountMechanics;
+import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.PetMechanics.PetMechanics;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
@@ -679,7 +680,7 @@ public class RestrictionMechanics implements Listener {
         try {
             Player pl = e.getPlayer();
 
-            if (pl.getTargetBlock(null, 6).getType() == Material.ITEM_FRAME) {
+            if (pl.getTargetBlock(null, 6).getType() == Material.ITEM_FRAME && !pl.isOp() && !PermissionMechanics.isStaff(pl)) {
                 e.setCancelled(true);
             }
         } catch (Exception err) {
@@ -846,13 +847,15 @@ public class RestrictionMechanics implements Listener {
         Player p = e.getPlayer();
         try {
             if ((e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
-                    && p.getTargetBlock(ProfessionMechanics.transparent, 8).getType() == Material.ITEM_FRAME) {
+                    && p.getTargetBlock(ProfessionMechanics.transparent, 8).getType() == Material.ITEM_FRAME
+                    && !p.isOp() && !PermissionMechanics.isStaff(p)) {
                 e.setCancelled(true);
                 e.setUseInteractedBlock(Result.DENY);
                 e.setUseItemInHand(Result.DENY);
             }
         } catch (IllegalStateException ise) {
-            e.setCancelled(true); // Assuume it shouldn't happen.
+            if (!p.isOp() && !PermissionMechanics.isStaff(p))
+                e.setCancelled(true); // Assuume it shouldn't happen.
         }
     }
 
