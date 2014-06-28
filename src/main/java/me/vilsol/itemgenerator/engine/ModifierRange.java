@@ -26,7 +26,7 @@ public class ModifierRange {
 		String random = "";
 		Random r = new Random();
 		
-		int first = r.nextInt(high - low) + low;
+		int first = (high - low > 0 ? r.nextInt(high - low) + low : low);
 		int second = high;
 		
 		if(type == ModifierType.RANGE){

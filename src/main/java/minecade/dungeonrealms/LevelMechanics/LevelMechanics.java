@@ -225,10 +225,8 @@ public class LevelMechanics implements Listener {
                     DynamicMenuModel.openLastMenuObject(p);
                 }
                 else {
-                    if (pLevel.getTempFreePoints() >= points) {
-                        pLevel.setTempFreePoints(pLevel.getTempFreePoints() - points);
-                    }
-                    else {
+                    
+                    if (!(pLevel.getTempFreePoints() >= points)) {
                         p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
                                 + " have enough points to do this.");
                         PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
@@ -241,7 +239,7 @@ public class LevelMechanics implements Listener {
                             ((StrengthItem) item).setPoints(((StrengthItem) item).getPoints() + points);
                         }
                         else {
-                            p.sendMessage(ChatColor.RED + "Allocating" + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
+                            p.sendMessage(ChatColor.RED + "Allocating " + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
                             return;
                         }
                     }
@@ -250,7 +248,7 @@ public class LevelMechanics implements Listener {
                             ((DexterityItem) item).setPoints(((DexterityItem) item).getPoints() + points);
                         }
                         else {
-                            p.sendMessage(ChatColor.RED + "Allocating" + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
+                            p.sendMessage(ChatColor.RED + "Allocating " + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
                             return;
                         }
                     }
@@ -259,7 +257,7 @@ public class LevelMechanics implements Listener {
                             ((IntellectItem) item).setPoints(((IntellectItem) item).getPoints() + points);
                         }
                         else {
-                            p.sendMessage(ChatColor.RED + "Allocating" + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
+                            p.sendMessage(ChatColor.RED + "Allocating " + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
                             return;
                         }
                     }
@@ -268,7 +266,7 @@ public class LevelMechanics implements Listener {
                             ((VitalityItem) item).setPoints(((VitalityItem) item).getPoints() + points);
                         }
                         else {
-                            p.sendMessage(ChatColor.RED + "Allocating" + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
+                            p.sendMessage(ChatColor.RED + "Allocating " + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
                             return;
                         }
                     }
@@ -276,6 +274,7 @@ public class LevelMechanics implements Listener {
                     p.sendMessage(ChatColor.GREEN + "Allocated " + ChatColor.BOLD.toString() + ChatColor.UNDERLINE + msg
                             + ChatColor.GREEN + (points > 1 ? " points " : " point ") + "to "
                             + ChatColor.stripColor(item.getItem().getItemMeta().getDisplayName()).toUpperCase() + ".");
+                    pLevel.setTempFreePoints(pLevel.getTempFreePoints() - points);
                     DynamicMenuModel.openLastMenuObject(p);
                 }
                 
