@@ -53,7 +53,8 @@ public class ItemGenerator {
 		return this;
 	}
 	
-	public ItemGenerator generateItem(){
+	@SuppressWarnings("unchecked")
+    public ItemGenerator generateItem(){
 		ItemTier tier = this.tier;
 		ItemType type = this.type;
 		ItemRarity rarity = this.rarity;
@@ -113,11 +114,14 @@ public class ItemGenerator {
 	            if (r.nextInt(100) < belowChance) {
 	                order.add(mc);
 	            }
+	            else {
+	                conditions.remove(mc);
+	            }
 			}
 		}
 		
 		for (ItemModifier modifier : conditions.values()) {
-		    for (ModifierCondition mc : order) {
+		    for (ModifierCondition mc : (List<ModifierCondition>) ((ArrayList<ModifierCondition>) order).clone()) {
 		        if (!(mc.checkCantContain(modifier.getClass()))) {
 		            order.remove(mc);
 		        }
@@ -143,9 +147,181 @@ public class ItemGenerator {
 //			}
 //		}
 		
-		for (ModifierCondition mc: order) {
+		String modName = "";
+        String name = tier.getTierColor().toString();
+        String[] bonuses = new String[24];
+        Arrays.fill(bonuses, "");
+        
+		for (ModifierCondition mc : order) {
 		    ItemModifier im = conditions.get(mc);
 		    meta = im.applyModifier(mc, meta);
+		    modName = ChatColor.stripColor(im.getPrefix(meta).substring(0, im.getPrefix(meta).indexOf(":")));
+		    
+            // apply the prefixes/suffixes to priority array
+            switch (modName) {
+            // ARMOR PREFIXES
+            case "DODGE":
+                bonuses[0] = "DODGE";
+                break;
+            case "REFLECTION":
+                bonuses[1] = "REFLECTION";
+                break;
+            case "HP REGEN":
+                bonuses[2] = "HP REGEN";
+                break;
+            case "BLOCK":
+                bonuses[3] = "BLOCK";
+                break;
+            // WEAPON PREFIXES
+            case "PURE DMG":
+                bonuses[4] = "PURE DMG";
+                break;
+            case "ACCURACY":
+                bonuses[5] = "ACCURACY";
+                break;
+            case "KNOCKBACK":
+                bonuses[6] = "KNOCKBACK";
+                break;
+            case "SLOW":
+                bonuses[7] = "SLOW";
+                break;
+            case "LIFE STEAL":
+                bonuses[8] = "LIFE STEAL";
+                break;
+            case "CRITICAL HIT":
+                bonuses[9] = "CRITICAL HIT";
+                break;
+            case "ARMOR PENETRATION":
+                bonuses[10] = "ARMOR PENETRATION";
+                break;
+            // ARMOR SUFFIXES
+            case "ENERGY REGEN":
+                bonuses[11] = "ENERGY REGEN";
+                break;
+            case "FIRE RESISTANCE":
+                bonuses[12] = "FIRE RESISTANCE";
+                break;
+            case "ICE RESISTANCE":
+                bonuses[13] = "ICE RESISTANCE";
+                break;
+            case "POISON RESISTANCE":
+                bonuses[14] = "POISON RESISTANCE";
+                break;
+            case "GEM FIND":
+                bonuses[15] = "GEM FIND";
+                break;
+            case "ITEM FIND":
+                bonuses[16] = "ITEM FIND";
+                break;
+            case "THORNS":
+                bonuses[17] = "THORNS";
+                break;
+            // WEAPON SUFFIXES
+            case "BLIND":
+                bonuses[18] = "BLIND";
+                break;
+            case "vs. MONSTERS":
+                bonuses[19] = "vs. MONSTERS";
+                break;
+            case "vs. PLAYERS":
+                bonuses[20] = "vs. PLAYERS";
+                break;
+            case "FIRE DMG":
+                bonuses[21] = "FIRE DMG";
+                break;
+            case "ICE DMG":
+                bonuses[22] = "ICE DMG";
+                break;
+            case "POISON DMG":
+                bonuses[23] = "POISON DMG";
+                break;
+            default:
+                break;
+            }
+		}
+		
+		for (int i = 0; i < bonuses.length; i++) {
+            // apply the prefixes/suffixes to item name
+            switch (bonuses[i]) {
+            // ARMOR PREFIXES
+            case "DODGE":
+                name += "Agile ";
+                break;
+            case "REFLECTION":
+                name += "Reflective ";
+                break;
+            case "HP REGEN":
+                name += "Mending ";
+                break;
+            case "BLOCK":
+                name += "Protective ";
+                break;
+            // WEAPON PREFIXES
+            case "PURE DMG":
+                name += "Pure ";
+                break;
+            case "ACCURACY":
+                name += "Accurate ";
+                break;
+            case "KNOCKBACK":
+                name += "Brute ";
+                break;
+            case "SLOW":
+                name += "Snaring ";
+                break;
+            case "LIFE STEAL":
+                name += "Vampyric";
+                break;
+            case "CRITICAL HIT":
+                name += "Deadly ";
+                break;
+            case "ARMOR PENETRATION":
+                name += "Penetrating ";
+                break;
+            // ARMOR SUFFIXES
+            case "ENERGY REGEN":
+                name += (name.contains(type.getTierName(tier)) ? " of Fortitude" : type.getTierName(tier) + " of Fortitude");
+                break;
+            case "FIRE RESISTANCE":
+                name += (name.contains(type.getTierName(tier)) ? " and Fire Resist" : type.getTierName(tier) + " of Fire Resist");
+                break;
+            case "ICE RESISTANCE":
+                name += (name.contains(type.getTierName(tier)) ? " and Ice Resist" : type.getTierName(tier) + " of Ice Resist");
+                break;
+            case "POISON RESISTANCE":
+                name += (name.contains(type.getTierName(tier)) ? " and Poison Resist" : type.getTierName(tier) + " of Poison Resist");
+                break;
+            case "GEM FIND":
+                name += (name.contains(type.getTierName(tier)) ? " Golden" : type.getTierName(tier) + " of Pickpocketing");
+                break;
+            case "ITEM FIND":
+                name += (name.contains(type.getTierName(tier)) ? " Treasure" : type.getTierName(tier) + " of Treasure");
+                break;
+            case "THORNS":
+                name += (name.contains(type.getTierName(tier)) ? " Spikes" : type.getTierName(tier) + " of Thorns");
+                break;
+            // WEAPON SUFFIXES
+            case "BLIND":
+                name += type.getTierName(tier) + " of Blindness";
+                break;
+            case "vs. MONSTERS":
+                name += (name.contains(type.getTierName(tier)) ? " Slaying" : type.getTierName(tier) + " of Slaying");
+                break;
+            case "vs. PLAYERS":
+                name += (name.contains(type.getTierName(tier)) ? " Slaughter" : type.getTierName(tier) + " of Slaughter");
+                break;
+            case "FIRE DMG":
+                name += (name.contains(type.getTierName(tier)) ? " Fire" : type.getTierName(tier) + " of Fire");
+                break;
+            case "ICE DMG":
+                name += (name.contains(type.getTierName(tier)) ? " Ice" : type.getTierName(tier) + " of Ice");
+                break;
+            case "POISON DMG":
+                name += (name.contains(type.getTierName(tier)) ? " Poison" : type.getTierName(tier) + " of Poison");
+                break;
+            default:
+                break;
+            }
 		}
 		
 		List<String> lore = meta.getLore();
@@ -155,7 +331,10 @@ public class ItemGenerator {
 		if(rarity == ItemRarity.UNIQUE) lore.add(ChatColor.YELLOW.toString() + ChatColor.ITALIC.toString() + "Unique");
 		
 		meta.setLore(lore);
-		meta.setDisplayName(tier.getTierColor() + type.getTierName(tier));
+		
+		if (!(name.contains(type.getTierName(tier)))) name += type.getTierName(tier);
+		    
+		meta.setDisplayName(name);
 		
 		item.setItemMeta(meta);
 		

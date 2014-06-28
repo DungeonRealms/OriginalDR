@@ -25,11 +25,11 @@ public class ArmorModifiers {
 
 		public HPRegen() {
 			super(armor, 100, r + "HP REGEN: +", " HP/s");
-			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.RANGE, 5, 15)).setCantContain(ArmorModifiers.EnergyRegen.class));
-			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.RANGE, 10, 25)).setCantContain(ArmorModifiers.EnergyRegen.class));
-			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.RANGE, 35, 55)).setCantContain(ArmorModifiers.EnergyRegen.class));
-			addCondition(new ModifierCondition(ItemTier.T4, null, new ModifierRange(ModifierType.RANGE, 60, 75)).setCantContain(ArmorModifiers.EnergyRegen.class));
-			addCondition(new ModifierCondition(ItemTier.T5, null, new ModifierRange(ModifierType.RANGE, 80, 120)).setCantContain(ArmorModifiers.EnergyRegen.class));
+			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 5, 15)).setCantContain(ArmorModifiers.EnergyRegen.class));
+			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 10, 25)).setCantContain(ArmorModifiers.EnergyRegen.class));
+			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 35, 55)).setCantContain(ArmorModifiers.EnergyRegen.class));
+			addCondition(new ModifierCondition(ItemTier.T4, null, new ModifierRange(ModifierType.STATIC, 60, 75)).setCantContain(ArmorModifiers.EnergyRegen.class));
+			addCondition(new ModifierCondition(ItemTier.T5, null, new ModifierRange(ModifierType.STATIC, 80, 120)).setCantContain(ArmorModifiers.EnergyRegen.class));
 			
 			setOrderPriority(5);
 		}
@@ -176,40 +176,6 @@ public class ArmorModifiers {
         
     }
 	
-//	public class HP extends ItemModifier {
-//
-//		public HP() {
-//			super(armor, 100, r + "HP: +", null);
-//
-//			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.COMMON, new ModifierRange(ModifierType.STATIC, 10, 20)));
-//			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.STATIC, 20, 50)));
-//			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.RARE, new ModifierRange(ModifierType.STATIC, 80, 120)));
-//			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.UNIQUE, new ModifierRange(ModifierType.STATIC, 88, 132)));
-//
-//			addCondition(new ModifierCondition(ItemTier.T2, ItemRarity.COMMON, new ModifierRange(ModifierType.STATIC, 60, 80)));
-//			addCondition(new ModifierCondition(ItemTier.T2, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.STATIC, 100, 250)));
-//			addCondition(new ModifierCondition(ItemTier.T2, ItemRarity.RARE, new ModifierRange(ModifierType.STATIC, 250, 350)));
-//			addCondition(new ModifierCondition(ItemTier.T2, ItemRarity.UNIQUE, new ModifierRange(ModifierType.STATIC, 275, 385)));
-//
-//			addCondition(new ModifierCondition(ItemTier.T3, ItemRarity.COMMON, new ModifierRange(ModifierType.STATIC, 200, 350)));
-//			addCondition(new ModifierCondition(ItemTier.T3, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.STATIC, 350, 600)));
-//			addCondition(new ModifierCondition(ItemTier.T3, ItemRarity.RARE, new ModifierRange(ModifierType.STATIC, 600, 800)));
-//			addCondition(new ModifierCondition(ItemTier.T3, ItemRarity.UNIQUE, new ModifierRange(ModifierType.STATIC, 660, 880)));
-//
-//			addCondition(new ModifierCondition(ItemTier.T4, ItemRarity.COMMON, new ModifierRange(ModifierType.STATIC, 600, 800)));
-//			addCondition(new ModifierCondition(ItemTier.T4, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.STATIC, 800, 1300)));
-//			addCondition(new ModifierCondition(ItemTier.T4, ItemRarity.RARE, new ModifierRange(ModifierType.STATIC, 1300, 2400)));
-//			addCondition(new ModifierCondition(ItemTier.T4, ItemRarity.UNIQUE, new ModifierRange(ModifierType.STATIC, 1430, 2640)));
-//
-//			addCondition(new ModifierCondition(ItemTier.T5, ItemRarity.COMMON, new ModifierRange(ModifierType.STATIC, 1500, 2500)));
-//			addCondition(new ModifierCondition(ItemTier.T5, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.STATIC, 2500, 3600)));
-//			addCondition(new ModifierCondition(ItemTier.T5, ItemRarity.RARE, new ModifierRange(ModifierType.STATIC, 3600, 5400)));
-//			addCondition(new ModifierCondition(ItemTier.T5, ItemRarity.UNIQUE, new ModifierRange(ModifierType.STATIC, 3960, 5940)));
-//			
-//		}
-//		
-//	}
-	
 	public class ChestplateHP extends ItemModifier {
 
         public ChestplateHP() {
@@ -339,11 +305,11 @@ public class ArmorModifiers {
 
 		public EnergyRegen() {
 			super(armor, 50, r + "ENERGY REGEN: +", "%");
-			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.RANGE, 1, 5)));
-			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.RANGE, 3, 7)));
-			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.RANGE, 5, 9)));
-			addCondition(new ModifierCondition(ItemTier.T4, null, new ModifierRange(ModifierType.RANGE, 7, 12)));
-			addCondition(new ModifierCondition(ItemTier.T5, null, new ModifierRange(ModifierType.RANGE, 7, 12)));
+			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 5)));
+			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 3, 7)));
+			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 5, 9)));
+			addCondition(new ModifierCondition(ItemTier.T4, null, new ModifierRange(ModifierType.STATIC, 7, 12)));
+			addCondition(new ModifierCondition(ItemTier.T5, null, new ModifierRange(ModifierType.STATIC, 7, 12)));
 			
 			setOrderPriority(4);
 		}
@@ -402,7 +368,7 @@ public class ArmorModifiers {
 		
 		@Override
 		public String getPrefix(ItemMeta meta){
-			return r + elements.get(new Random().nextInt(elements.size())) + " RESISTANCE:";
+			return r + elements.get(new Random().nextInt(elements.size())) + " RESISTANCE: ";
 		}
 		
 	}
