@@ -5088,6 +5088,11 @@ public class MonsterMechanics implements Listener {
             }
             return; // Not a custom monster, no one cares.
         }
+        
+        if (Bukkit.getMotd().contains("US-0")) {
+            e.getDrops().clear();
+            return;
+        }
 
         if (RecordMechanics.mob_kills.containsKey(p_name)) {
             int lmob_kills = RecordMechanics.mob_kills.get(p_name);
