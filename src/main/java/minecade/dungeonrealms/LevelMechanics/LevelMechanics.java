@@ -2,7 +2,6 @@ package minecade.dungeonrealms.LevelMechanics;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import me.vilsol.menuengine.engine.DynamicMenuModel;
 import me.vilsol.menuengine.engine.MenuItem;
@@ -419,7 +418,9 @@ public class LevelMechanics implements Listener {
     }
 
     public static int calculateXP(Player player, LivingEntity kill, int mob_level) {
-    	int xp = (int) Math.round((6.5 * Math.pow(mob_level,1.35)) + 40 + new Random().nextInt(50));
+//    	int xp = (int) Math.round((6.5 * Math.pow(mob_level,1.35)) + 40 + new Random().nextInt(50)); old exp formula
+    	int pLevel = PlayerManager.getPlayerModel(player).getPlayerLevel().getLevel();
+    	int xp = (int) (((pLevel * 5) + 45) * (1 + 0.05 * pLevel + mob_level)); // patch 1.9 exp formula
         //int xp = mob_level * 15 + new Random().nextInt(50) + 5;
         //int level = getPlayerLevel(player);
         ItemStack weapon = kill.getEquipment().getItemInHand();

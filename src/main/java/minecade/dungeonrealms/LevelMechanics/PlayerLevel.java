@@ -129,7 +129,21 @@ public class PlayerLevel {
         if (level >= 101) {
             return 0;
         }
-        return (int) (100 * Math.pow(level, 2.24));
+        double difficulty = 1;
+        if (level >= LevelMechanics.getLevelToUse(1) && level < LevelMechanics.getLevelToUse(3)) {
+            difficulty = 1.3;
+        }
+        else if (level >= LevelMechanics.getLevelToUse(3) && level < LevelMechanics.getLevelToUse(4)) {
+            difficulty = 1.6;
+        }
+        else if (level >= LevelMechanics.getLevelToUse(4) && level < LevelMechanics.getLevelToUse(5)) {
+            difficulty = 2.2;
+        }
+        else if (level >= LevelMechanics.getLevelToUse(5)) {
+            difficulty = 2.6;
+        }
+//        return (int) (100 * Math.pow(level, 2.24)); old level exp formula
+        return (int) ((100 * Math.pow(level, 2)) * difficulty); // patch 1.9 exp formula
     }
 
     public void saveData(boolean remove) {
