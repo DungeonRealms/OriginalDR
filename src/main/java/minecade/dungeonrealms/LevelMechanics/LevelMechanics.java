@@ -393,6 +393,7 @@ public class LevelMechanics implements Listener {
             }
         }
 
+        /* disabled as of patch 1.9
         if (mob_level > (level + 10)) {
             if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("debug")) {
                 player.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "lower" + ChatColor.RED
@@ -400,14 +401,22 @@ public class LevelMechanics implements Listener {
             }
             return;
         } else if (mob_level < (level - 8)) {
-            /*if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("debug")) {
+            if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("debug")) {
                 player.sendMessage(ChatColor.RED + "Your level was " + ChatColor.UNDERLINE + "greater" + ChatColor.RED
                         + " than 8 levels of this mob. No EXP granted.");
             }
-            return; Disabled by Mayley's request */
+            return; Disabled by Mayley's request
         }
-
-        int xp = calculateXP(player, kill, mob_level);
+        */
+        
+        int xp = 0; // if mob level is 10 levels below give 0 xp.
+        
+        if (mob_level > level + 10) {  // limit mob xp calculation to 10 levels above player level
+            xp = calculateXP(player, kill, level + 10);
+        }
+        else if (mob_level >= level - 10) {  // mob level is within range of 10 levels below/10 levels above, normal calculation
+            xp = calculateXP(player, kill, mob_level);
+        }
 
         if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("indicator")) {
             Hologram xp_hologram = new Hologram(Main.plugin, ChatColor.GREEN.toString() + "+" + ChatColor.BOLD + xp + " XP");
