@@ -1,14 +1,13 @@
 package me.vilsol.betanpc.menus;
 
-import org.bukkit.ChatColor;
-
 import me.vilsol.betanpc.items.tiermenu.TierFive;
 import me.vilsol.betanpc.items.tiermenu.TierFour;
 import me.vilsol.betanpc.items.tiermenu.TierOne;
 import me.vilsol.betanpc.items.tiermenu.TierThree;
 import me.vilsol.betanpc.items.tiermenu.TierTwo;
-import me.vilsol.betanpc.items.utils.BackToMainMenu;
 import me.vilsol.menuengine.engine.MenuModel;
+
+import org.bukkit.ChatColor;
 
 /**
  * Same as TierMenu except functions as main menu for /addweaponnewnew's GUI
@@ -24,8 +23,6 @@ public class TierCommandMenu extends MenuModel {
 		getMenu().addItem(TierThree.class, 2);
 		getMenu().addItem(TierFour.class, 3);
 		getMenu().addItem(TierFive.class, 4);
-		
-		getMenu().addItem(BackToMainMenu.class, 8, true);
 	}
 	
 }
