@@ -12,6 +12,7 @@ import me.vilsol.itemgenerator.engine.ItemModifier;
 import me.vilsol.itemgenerator.engine.ModifierCondition;
 import me.vilsol.itemgenerator.modifiers.ArmorModifiers;
 import me.vilsol.itemgenerator.modifiers.WeaponModifiers;
+import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.enums.ItemRarity;
 import minecade.dungeonrealms.enums.ItemTier;
 import minecade.dungeonrealms.enums.ItemType;
@@ -155,7 +156,7 @@ public class ItemGenerator {
 		for (ModifierCondition mc : order) {
 		    ItemModifier im = conditions.get(mc);
 		    meta = im.applyModifier(mc, meta);
-		    modName = ChatColor.stripColor(im.getPrefix(meta).substring(0, im.getPrefix(meta).indexOf(":")));
+		    modName = ChatColor.stripColor(mc.getChosenPrefix().substring(0, mc.getChosenPrefix().indexOf(":")));
 		    
             // apply the prefixes/suffixes to priority array
             switch (modName) {
