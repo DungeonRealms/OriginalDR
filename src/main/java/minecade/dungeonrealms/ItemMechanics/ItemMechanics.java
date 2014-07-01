@@ -3126,6 +3126,7 @@ public class ItemMechanics implements Listener {
 
             ItemStack in_slot_c = CraftItemStack.asCraftCopy(in_slot);
 
+            // TODO: hook item rerolling in with new item generation engine
             if (in_slot_c.getType().name().toLowerCase().contains("axe")) {
                 e.setCurrentItem(ItemGenerators.AxeGenorator(in_slot_c.getType(), true, in_slot_c));
             } else if (in_slot_c.getType().name().toLowerCase().contains("sword")) {
