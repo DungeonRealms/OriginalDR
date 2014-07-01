@@ -63,7 +63,7 @@ public class ItemSpawnCommandMenu extends DynamicMenuModel {
 			i.addItemDynamic(BackToMainMenu.class, 8, true);
 		}
 		
-		i.addItem(BackToMainMenu.class, 8);
+		i.addItem(BackToMainMenu.class, 8, true);
 	}
 
 	@Override

@@ -12,7 +12,6 @@ import me.vilsol.itemgenerator.engine.ItemModifier;
 import me.vilsol.itemgenerator.engine.ModifierCondition;
 import me.vilsol.itemgenerator.modifiers.ArmorModifiers;
 import me.vilsol.itemgenerator.modifiers.WeaponModifiers;
-import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.enums.ItemRarity;
 import minecade.dungeonrealms.enums.ItemTier;
 import minecade.dungeonrealms.enums.ItemType;
@@ -31,6 +30,7 @@ public class ItemGenerator {
 	private ItemRarity rarity;
 	
 	private int mobTier = -1;
+	private boolean isReroll;
 	
 	private ItemStack item;
 	
@@ -137,16 +137,6 @@ public class ItemGenerator {
 			}
 			
 		});
-		
-//		for(ModifierCondition mc : order){
-//			ItemModifier im = conditions.get(mc);
-//			
-//			int belowChance = (mc.getChance() < 0) ? im.getChance() : mc.getChance();
-//
-//			if(r.nextInt(100) < belowChance){
-//				meta = im.applyModifier(mc, meta);
-//			}
-//		}
 		
 		String modName = "";
         String name = tier.getTierColor().toString();
@@ -354,14 +344,18 @@ public class ItemGenerator {
 		wm.new ArmorPenetration();
 		wm.new Blind();
 		wm.new Critical();
-		wm.new Damage();
+		wm.new SwordDamage();
+		wm.new AxeDamage();
+		wm.new StaffDamage();
+		wm.new PolearmDamage();
+		wm.new BowDamage();
 		wm.new Elemental();
 		wm.new ElementalBow();
 		wm.new Knockback();
 		wm.new LifeSteal();
 		wm.new Pure();
 		wm.new Slow();
-		wm.new StrDexVitInt();
+//		wm.new StrDexVitInt(); disabled as of patch 1.9 by Mayley's request
 		wm.new SwordDamage();
 		wm.new Versus();
 		

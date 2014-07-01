@@ -25,6 +25,7 @@ import minecade.dungeonrealms.LevelMechanics.commands.CommandStats;
 import minecade.dungeonrealms.MonsterMechanics.Hologram;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
 import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
+import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
 import minecade.dungeonrealms.jsonlib.JSONMessage;
 import minecade.dungeonrealms.managers.PlayerManager;
 import minecade.dungeonrealms.models.PlayerModel;
@@ -133,10 +134,14 @@ public class LevelMechanics implements Listener {
         
         e.setCancelled(true);
         
-        if (msg.equals(pLevel.getResetCode())) {
+        if (msg.equals(pLevel.getResetCode()) && RealmMechanics.doTheyHaveEnoughMoney(p, pLevel.getResetCost())) {
             pLevel.resetStatPoints();
             p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "           *** STAT POINTS RESET ***");
             pLevel.setNumResets(pLevel.getNumResets() + 1);
+        }
+        else if (msg.equals(pLevel.getResetCode())) {
+            p.sendMessage(ChatColor.RED + "You do not have enough gems to reset your stats. Reset cancelled.");
+            p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "COST: " + ChatColor.RED + pLevel.getResetCost() + ChatColor.BOLD + "G");
         }
         else if (msg.equalsIgnoreCase("cancel")) {
             p.sendMessage(ChatColor.RED + "Stat Reset - " + ChatColor.BOLD + "CANCELLED");
@@ -429,7 +434,7 @@ public class LevelMechanics implements Listener {
     public static int calculateXP(Player player, LivingEntity kill, int mob_level) {
 //    	int xp = (int) Math.round((6.5 * Math.pow(mob_level,1.35)) + 40 + new Random().nextInt(50)); old exp formula
     	int pLevel = PlayerManager.getPlayerModel(player).getPlayerLevel().getLevel();
-    	int xp = (int) (((pLevel * 5) + 45) * (1 + 0.05 * pLevel + mob_level)); // patch 1.9 exp formula
+    	int xp = (int) (((pLevel * 5) + 45) * (1 + 0.05 * (pLevel + mob_level))); // patch 1.9 exp formula
         //int xp = mob_level * 15 + new Random().nextInt(50) + 5;
         //int level = getPlayerLevel(player);
         ItemStack weapon = kill.getEquipment().getItemInHand();

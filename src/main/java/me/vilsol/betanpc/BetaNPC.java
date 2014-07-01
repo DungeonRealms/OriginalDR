@@ -59,6 +59,7 @@ import me.vilsol.betanpc.items.tiermenu.TierThree;
 import me.vilsol.betanpc.items.tiermenu.TierTwo;
 import me.vilsol.betanpc.items.utils.BackToMainMenu;
 import me.vilsol.betanpc.menus.ArrowMenu;
+import me.vilsol.betanpc.menus.ItemSpawnCommandMenu;
 import me.vilsol.betanpc.menus.ItemSpawnMenu;
 import me.vilsol.betanpc.menus.MainMenu;
 import me.vilsol.betanpc.menus.MiscItemMenu;
@@ -155,6 +156,7 @@ public class BetaNPC implements Listener {
 		new TierMenu();
 		new TierCommandMenu();
 		new ItemSpawnMenu();
+		new ItemSpawnCommandMenu();
 		
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 	}

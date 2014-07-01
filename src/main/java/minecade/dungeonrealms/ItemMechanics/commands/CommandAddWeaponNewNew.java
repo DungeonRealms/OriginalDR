@@ -1,6 +1,6 @@
 package minecade.dungeonrealms.ItemMechanics.commands;
 
-import me.vilsol.betanpc.menus.TierMenu;
+import me.vilsol.betanpc.menus.TierCommandMenu;
 import me.vilsol.itemgenerator.ItemGenerator;
 import me.vilsol.menuengine.engine.MenuModel;
 import minecade.dungeonrealms.enums.ItemRarity;
@@ -25,7 +25,7 @@ public class CommandAddWeaponNewNew implements CommandExecutor {
 		
 		// show GUI
 		if(args.length == 0) {
-		    MenuModel.menus.get(TierMenu.class).getMenu().showToPlayer(p);
+		    MenuModel.menus.get(TierCommandMenu.class).getMenu().showToPlayer(p);
 		    return true;
 		}
 
