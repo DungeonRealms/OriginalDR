@@ -89,7 +89,7 @@ public class VitalityItem implements MenuItem, BonusItem {
 
 	private void allocatePoints(int points, Player plr) {
         if ((points > 0 && pLevel.getTempFreePoints() >= points
-                || (points < 0 && (this.points - pLevel.getVitPoints()) >= Math.abs(points))) && points <= 300) {
+                || (points < 0 && (this.points - pLevel.getVitPoints()) >= Math.abs(points))) && this.points + points <= 300) {
 	        this.points += points;
 	        pLevel.setTempFreePoints(pLevel.getTempFreePoints() - points);
 	        plr.playSound(plr.getLocation(), Sound.SHEEP_SHEAR, 1.0F, 1.3F);
