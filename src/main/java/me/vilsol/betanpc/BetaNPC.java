@@ -66,6 +66,7 @@ import me.vilsol.betanpc.menus.PotionMenu;
 import me.vilsol.betanpc.menus.ProfessionMenu;
 import me.vilsol.betanpc.menus.ScrollMenu;
 import me.vilsol.betanpc.menus.TeleportMenu;
+import me.vilsol.betanpc.menus.TierCommandMenu;
 import me.vilsol.betanpc.menus.TierMenu;
 import me.vilsol.menuengine.engine.MenuModel;
 import minecade.dungeonrealms.Main;
@@ -152,6 +153,7 @@ public class BetaNPC implements Listener {
 		new ScrollMenu();
 		new PotionMenu();
 		new TierMenu();
+		new TierCommandMenu();
 		new ItemSpawnMenu();
 		
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
