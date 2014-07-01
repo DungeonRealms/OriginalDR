@@ -23,4 +23,20 @@ public enum ItemTier {
 		return null;
 	}
 	
+	public static ItemTier getTierFromInt(int tier) {
+        switch (tier) {
+        case 1:
+            return T1;
+        case 2:
+            return T2;
+        case 3:
+            return T3;
+        case 4:
+            return T4;
+        case 5:
+            return T5;
+        }
+        return null;
+    }
+	
 }
