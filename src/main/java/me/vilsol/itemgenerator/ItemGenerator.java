@@ -12,6 +12,7 @@ import me.vilsol.itemgenerator.engine.ItemModifier;
 import me.vilsol.itemgenerator.engine.ModifierCondition;
 import me.vilsol.itemgenerator.modifiers.ArmorModifiers;
 import me.vilsol.itemgenerator.modifiers.WeaponModifiers;
+import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.enums.ItemRarity;
 import minecade.dungeonrealms.enums.ItemTier;
 import minecade.dungeonrealms.enums.ItemType;
@@ -30,9 +31,10 @@ public class ItemGenerator {
 	private ItemRarity rarity;
 	
 	private int mobTier = -1;
-	private boolean isReroll;
+	private boolean isReroll = false;
 	
 	private ItemStack item;
+	private ItemStack origItem; // for rerolling
 	
 	public ItemGenerator setType(ItemType type){
 		this.type = type;
@@ -54,11 +56,27 @@ public class ItemGenerator {
 		return this;
 	}
 	
+	public ItemGenerator setReroll(boolean reroll) {
+	    this.isReroll = reroll;
+	    return this;
+	}
+	
+	public ItemGenerator setOrigItem(ItemStack origItem) {
+        this.origItem = origItem;
+        return this;
+    }
+	
 	@SuppressWarnings("unchecked")
     public ItemGenerator generateItem(){
-		ItemTier tier = this.tier;
-		ItemType type = this.type;
-		ItemRarity rarity = this.rarity;
+	    ItemTier tier = this.tier;
+        ItemType type = this.type;
+        ItemRarity rarity = this.rarity;
+        
+	    if (isReroll && origItem != null && (ItemMechanics.isArmor(origItem) || ItemMechanics.isWeapon(origItem))) {
+    		tier = ItemTier.getTierFromMaterial(origItem.getType());
+    		type = ItemType.getTypeFromMaterial(origItem.getType());
+    		rarity = ItemRarity.getRarityFromItem(origItem);
+	    }
 		
 		Random r = new Random();
 
@@ -76,6 +94,7 @@ public class ItemGenerator {
 		
 		for(ItemModifier modifier : modifierObjects){
 			if(modifier.canApply(type)){
+			    if (isReroll && !modifier.isIncludeOnReroll()) continue;
 				ModifierCondition mc = modifier.tryModifier(meta, tier, rarity, type, mobTier);
 				if(mc != null){
 					conditions.put(mc, modifier);

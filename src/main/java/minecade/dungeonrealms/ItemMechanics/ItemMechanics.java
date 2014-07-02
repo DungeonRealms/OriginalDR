@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import javax.swing.text.Utilities;
 
+import me.vilsol.itemgenerator.ItemGenerator;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
@@ -896,10 +897,10 @@ public class ItemMechanics implements Listener {
         int wep_type = new Random().nextInt(2);
         if (wep_type == 0) {
             return removeAttributes(signCustomItem(Material.WOOD_SWORD, (short) 0, ChatColor.WHITE.toString() + "Training Sword", ChatColor.RED.toString()
-                    + "DMG: 3 - 4"));
+                    + "DMG: 6 - 9"));
         }
         return removeAttributes(signCustomItem(Material.WOOD_AXE, (short) 0, ChatColor.WHITE.toString() + "Training Hatchet", ChatColor.RED.toString()
-                + "DMG: 2 - 5"));
+                + "DMG: 5 - 11"));
     }
 
     public static List<ItemStack> generateNoobArmor() {
@@ -3126,27 +3127,7 @@ public class ItemMechanics implements Listener {
 
             ItemStack in_slot_c = CraftItemStack.asCraftCopy(in_slot);
 
-            // TODO: hook item rerolling in with new item generation engine
-            if (in_slot_c.getType().name().toLowerCase().contains("axe")) {
-                e.setCurrentItem(ItemGenerators.AxeGenorator(in_slot_c.getType(), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("sword")) {
-                e.setCurrentItem(ItemGenerators.SwordGenorator(in_slot_c.getType(), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("spade")) {
-                e.setCurrentItem(ItemGenerators.PolearmGenorator(in_slot_c.getType(), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("hoe")) {
-                e.setCurrentItem(ItemGenerators.StaffGenorator(in_slot_c.getType(), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("bow")) {
-                e.setCurrentItem(ItemGenerators.BowGenorator(getItemTier(in_slot_c), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("helmet")) {
-                e.setCurrentItem(ItemGenerators.HelmetGenerator(getItemTier(in_slot_c), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("chest")) {
-                e.setCurrentItem(ItemGenerators.ChestPlateGenerator(getItemTier(in_slot_c), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("leg")) {
-                // log.info("[IM] Leg generator launched.");
-                e.setCurrentItem(ItemGenerators.LeggingsGenerator(getItemTier(in_slot_c), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("boot")) {
-                e.setCurrentItem(ItemGenerators.BootGenerator(getItemTier(in_slot_c), true, in_slot_c));
-            }
+            e.setCurrentItem(new ItemGenerator().setReroll(true).setOrigItem(in_slot_c).generateItem().getItem());
 
             ItemStack new_in_slot = e.getCurrentItem();
 

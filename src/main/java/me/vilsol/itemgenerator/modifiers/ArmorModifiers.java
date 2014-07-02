@@ -24,7 +24,7 @@ public class ArmorModifiers {
 	public class HPRegen extends ItemModifier {
 
 		public HPRegen() {
-			super(armor, 100, r + "HP REGEN: +", " HP/s");
+			super(armor, 100, r + "HP REGEN: +", " HP/s", false);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 5, 15)).setCantContain(ArmorModifiers.EnergyRegen.class));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 10, 25)).setCantContain(ArmorModifiers.EnergyRegen.class));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 35, 55)).setCantContain(ArmorModifiers.EnergyRegen.class));
@@ -39,7 +39,7 @@ public class ArmorModifiers {
 	public class MainArmor extends ItemModifier {
 
 		public MainArmor() {
-			super(Arrays.asList(ItemType.CHESTPLATE, ItemType.LEGGINGS), 100, r + "ARMOR: ", "%"); // 50% chance for DPS, 50% for armor
+			super(Arrays.asList(ItemType.CHESTPLATE, ItemType.LEGGINGS), 100, r + "ARMOR: ", "%", false); // 50% chance for DPS, 50% for armor
 			
 			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.COMMON, new ModifierRange(ModifierType.TRIPLE, 1, 1, 1)).setCantContain(MainDPS.class));
 			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.TRIPLE, 1, 2, 3)).setCantContain(MainDPS.class));
@@ -74,7 +74,7 @@ public class ArmorModifiers {
 	public class OtherArmor extends ItemModifier {
 
 		public OtherArmor() {
-			super(Arrays.asList(ItemType.HELMET, ItemType.BOOTS), 100, r + "ARMOR: ", "%"); // 50% chance for DPS, 50% for armor
+			super(Arrays.asList(ItemType.HELMET, ItemType.BOOTS), 100, r + "ARMOR: ", "%", false); // 50% chance for DPS, 50% for armor
 			
 			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.COMMON, new ModifierRange(ModifierType.TRIPLE, 1, 1, 1)).setCantContain(OtherDPS.class));
 			addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.TRIPLE, 1, 1, 2)).setCantContain(OtherDPS.class));
@@ -109,7 +109,7 @@ public class ArmorModifiers {
 	public class MainDPS extends ItemModifier {
 
         public MainDPS() {
-            super(Arrays.asList(ItemType.CHESTPLATE, ItemType.LEGGINGS), 50, r + "DPS: ", "%"); // 50% chance for DPS, 50% for armor
+            super(Arrays.asList(ItemType.CHESTPLATE, ItemType.LEGGINGS), 50, r + "DPS: ", "%", false); // 50% chance for DPS, 50% for armor
             
             addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.COMMON, new ModifierRange(ModifierType.TRIPLE, 1, 1, 1)));
             addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.TRIPLE, 1, 2, 3)));
@@ -144,7 +144,7 @@ public class ArmorModifiers {
 	public class OtherDPS extends ItemModifier {
 
         public OtherDPS() {
-            super(Arrays.asList(ItemType.HELMET, ItemType.BOOTS), 50, r + "DPS: ", "%"); // 50% chance for DPS, 50% for armor
+            super(Arrays.asList(ItemType.HELMET, ItemType.BOOTS), 50, r + "DPS: ", "%", false); // 50% chance for DPS, 50% for armor
             
             addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.COMMON, new ModifierRange(ModifierType.TRIPLE, 1, 1, 1)));
             addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.TRIPLE, 1, 1, 2)));
@@ -179,7 +179,7 @@ public class ArmorModifiers {
 	public class ChestplateHP extends ItemModifier {
 
         public ChestplateHP() {
-            super(Arrays.asList(ItemType.CHESTPLATE), 100, r + "HP: +", null);
+            super(Arrays.asList(ItemType.CHESTPLATE), 100, r + "HP: +", null, false);
 
             addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.COMMON, new ModifierRange(ModifierType.STATIC, 10, 90)));
             addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.STATIC, 90, 150)));
@@ -214,7 +214,7 @@ public class ArmorModifiers {
 	public class LeggingsHP extends ItemModifier {
 
         public LeggingsHP() {
-            super(Arrays.asList(ItemType.LEGGINGS), 100, r + "HP: +", null);
+            super(Arrays.asList(ItemType.LEGGINGS), 100, r + "HP: +", null, false);
 
             addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.COMMON, new ModifierRange(ModifierType.STATIC, 10, 90)));
             addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.STATIC, 90, 150)));
@@ -250,7 +250,7 @@ public class ArmorModifiers {
 	public class OtherHP extends ItemModifier {
 
         public OtherHP() {
-            super(Arrays.asList(ItemType.HELMET, ItemType.BOOTS), 100, r + "HP: +", null);
+            super(Arrays.asList(ItemType.HELMET, ItemType.BOOTS), 100, r + "HP: +", null, false);
 
             addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.COMMON, new ModifierRange(ModifierType.STATIC, 6, 54)));
             addCondition(new ModifierCondition(ItemTier.T1, ItemRarity.UNCOMMON, new ModifierRange(ModifierType.STATIC, 54, 90)));
@@ -304,7 +304,7 @@ public class ArmorModifiers {
 	public class EnergyRegen extends ItemModifier {
 
 		public EnergyRegen() {
-			super(armor, 50, r + "ENERGY REGEN: +", "%");
+			super(armor, 50, r + "ENERGY REGEN: +", "%", false);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 5, true)));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 3, 7, true)));
 			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 5, 9, true)));

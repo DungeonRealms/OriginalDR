@@ -1,6 +1,7 @@
 package minecade.dungeonrealms.enums;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 public enum ItemTier {
 	
@@ -34,6 +35,31 @@ public enum ItemTier {
         case 4:
             return T4;
         case 5:
+            return T5;
+        }
+        return null;
+    }
+	
+	/**
+	 * Gets the ItemTier of a material.  DOES NOT CHECK IF ITEM IS ARMOR OR WEAPON!
+	 * @param m
+	 * @return
+	 */
+	public static ItemTier getTierFromMaterial(Material m) { // TODO: make this check if item is armor or weapon, am too lazy atm
+	    String name = m.toString().toLowerCase();
+        if (name.startsWith("leather") || name.startsWith("wood")) {
+            return T1;
+        }
+        else if (name.startsWith("chainmail") || name.startsWith("stone")) {
+            return T2;
+        }
+        else if (name.startsWith("iron")) {
+            return T3;
+        }
+        else if (name.startsWith("diamond")) {
+            return T4;
+        }
+        else if (name.startsWith("gold")) {
             return T5;
         }
         return null;
