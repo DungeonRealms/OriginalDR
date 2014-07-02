@@ -12,6 +12,7 @@ import me.vilsol.itemgenerator.engine.ItemModifier;
 import me.vilsol.itemgenerator.engine.ModifierCondition;
 import me.vilsol.itemgenerator.modifiers.ArmorModifiers;
 import me.vilsol.itemgenerator.modifiers.WeaponModifiers;
+import minecade.dungeonrealms.EnchantMechanics.EnchantMechanics;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.enums.ItemRarity;
 import minecade.dungeonrealms.enums.ItemTier;
@@ -84,9 +85,17 @@ public class ItemGenerator {
 		if(type == null) type = ItemType.values()[r.nextInt(ItemType.values().length - 1)];
 		if(rarity == null) rarity = ItemRarity.values()[r.nextInt(ItemRarity.values().length - 1)];
 		
-		ItemStack item = new ItemStack(type.getTier(tier));
-		ItemMeta meta = item.getItemMeta();
-		meta.setLore(new ArrayList<String>());
+		ItemStack item = isReroll && origItem != null && (ItemMechanics.isArmor(origItem) || ItemMechanics.isWeapon(origItem)) ? origItem : new ItemStack(type.getTier(tier));
+		ItemMeta meta = item.getItemMeta().clone();
+		
+		if (!isReroll)
+		    meta.setLore(new ArrayList<String>());
+		else {
+		    if (ItemMechanics.isWeapon(origItem))
+		        meta.setLore(meta.getLore().subList(0, 1)); // strips everything except for dmg
+		    else if (ItemMechanics.isArmor(origItem))
+		        meta.setLore(meta.getLore().subList(0, 3)); // strips everything except for dps/armor, hp, and energy/hp regen
+		}
 		
 		final HashMap<ModifierCondition, ItemModifier> conditions = new HashMap<ModifierCondition, ItemModifier>();
 		
@@ -161,6 +170,24 @@ public class ItemGenerator {
         String name = tier.getTierColor().toString();
         String[] bonuses = new String[24];
         Arrays.fill(bonuses, "");
+        
+        // name armor with energy or hp/s being rerolled correctly
+        if (isReroll && origItem != null && origItem.hasItemMeta() && origItem.getItemMeta().hasLore() && ItemMechanics.isArmor(origItem)) {
+            
+            for (String line : origItem.getItemMeta().getLore()) {
+
+                if (!line.contains(":")) continue;
+                
+                if (ChatColor.stripColor(line.substring(0, line.indexOf(":"))).equals("ENERGY REGEN")) {
+                    bonuses[11] = "ENERGY REGEN";
+                }
+                else if (ChatColor.stripColor(line.substring(0, line.indexOf(":"))).equals("HP REGEN")) {
+                    bonuses[2] = "HP REGEN";
+                }
+                
+            }
+            
+        }
         
 		for (ModifierCondition mc : order) {
 		    ItemModifier im = conditions.get(mc);
@@ -340,14 +367,19 @@ public class ItemGenerator {
 		if(rarity == ItemRarity.RARE) lore.add(ChatColor.AQUA.toString() + ChatColor.ITALIC.toString() + "Rare");
 		if(rarity == ItemRarity.UNIQUE) lore.add(ChatColor.YELLOW.toString() + ChatColor.ITALIC.toString() + "Unique");
 		
+		if (isReroll && EnchantMechanics.hasProtection(origItem)) lore.add(ChatColor.GREEN.toString() + ChatColor.BOLD + "PROTECTED");
+		
 		meta.setLore(lore);
 		
 		if (!(name.contains(type.getTierName(tier)))) name += type.getTierName(tier);
+		
+		int oldEnchantCount = EnchantMechanics.getEnchantCount(origItem);
+		if (isReroll && oldEnchantCount > 0) {
+		    name = ChatColor.RED + "[+" + oldEnchantCount + "] " + ChatColor.RESET + name;
+		}
 		    
 		meta.setDisplayName(name);
-		
 		item.setItemMeta(meta);
-		
 		this.item = item;
 		
 		return this;

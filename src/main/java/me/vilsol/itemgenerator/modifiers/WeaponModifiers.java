@@ -29,7 +29,7 @@ public class WeaponModifiers {
 	public class SwordDamage extends ItemModifier {
 
 		public SwordDamage() {
-			super(Arrays.asList(ItemType.SWORD), 100, r + "DMG: ", null);
+			super(Arrays.asList(ItemType.SWORD), 100, r + "DMG: ", null, false);
 			
 			setOrderPriority(0);
 			
@@ -64,7 +64,7 @@ public class WeaponModifiers {
 	public class AxeDamage extends ItemModifier {
 
         public AxeDamage() {
-            super(Arrays.asList(ItemType.AXE), 100, r + "DMG: ", null);
+            super(Arrays.asList(ItemType.AXE), 100, r + "DMG: ", null, false);
             
             setOrderPriority(0);
             
@@ -99,7 +99,7 @@ public class WeaponModifiers {
 	public class StaffDamage extends ItemModifier {
 
         public StaffDamage() {
-            super(Arrays.asList(ItemType.STAFF), 100, r + "DMG: ", null);
+            super(Arrays.asList(ItemType.STAFF), 100, r + "DMG: ", null, false);
             
             setOrderPriority(0);
             
@@ -134,7 +134,7 @@ public class WeaponModifiers {
 	public class PolearmDamage extends ItemModifier {
 
 	    public PolearmDamage() {
-	        super(Arrays.asList(ItemType.POLEARM), 100, r + "DMG: ", null);
+	        super(Arrays.asList(ItemType.POLEARM), 100, r + "DMG: ", null, false);
 
 	        setOrderPriority(0);
 
@@ -169,7 +169,7 @@ public class WeaponModifiers {
 	public class BowDamage extends ItemModifier {
 
 	    public BowDamage() {
-	        super(Arrays.asList(ItemType.BOW), 100, r + "DMG: ", null);
+	        super(Arrays.asList(ItemType.BOW), 100, r + "DMG: ", null, false);
 
 	        setOrderPriority(0);
 

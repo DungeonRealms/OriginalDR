@@ -54,8 +54,8 @@ public class VitalityStatsItem implements MenuItem, BonusItem {
 				.setLore(
 						Arrays.asList(ChatColor.GOLD + "HP: " + ChatColor.AQUA + df.format(vit * 0.034) + "%"
 								+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.034) + "%]" : ""),
-								ChatColor.GOLD + "HP REGEN: " + ChatColor.AQUA + df.format(vit * 0.03)
-										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.03) + "%]" : ""),
+								ChatColor.GOLD + "HP REGEN: " + ChatColor.AQUA + df.format(vit * 0.03) + " HP/s"
+										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.03) + " HP/s]" : ""),
 								ChatColor.GOLD + "ELE RESIST: " + ChatColor.AQUA + df.format(vit * 0.04) + "%"
 										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.04) + "%]" : ""),
 								ChatColor.GOLD + "SWORD DMG: " + ChatColor.AQUA + df.format(vit * 0.01) + "%"

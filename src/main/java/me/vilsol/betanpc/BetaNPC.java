@@ -162,12 +162,12 @@ public class BetaNPC implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerClickNPC(PlayerInteractEntityEvent e){
+	public void onPlayerClickNPC(PlayerInteractEntityEvent e) {
 		if (!(e.getRightClicked() instanceof Player)) return;
 		Player trader = (Player) e.getRightClicked();
 		if (!(trader.hasMetadata("NPC"))) return;
 		if (!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Beta Vendor"))) return;
-		if(Utils.isBeta()){
+		if(Utils.isBeta() || Bukkit.getMotd().contains("US-99")){
 			e.setCancelled(true);
 			MenuModel.menus.get(MainMenu.class).getMenu().showToPlayer(e.getPlayer());
 		}else{
