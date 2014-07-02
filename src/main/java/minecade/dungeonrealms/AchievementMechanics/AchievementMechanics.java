@@ -107,7 +107,7 @@ public class AchievementMechanics implements Listener {
                         continue;
                     }
                     if (region.equalsIgnoreCase("Cheifs")) {
-                        addAchievement(pl.getName(), "Explorer: Cheif's Glory");
+                        addAchievement(pl.getName(), "Explorer: Cheif\'s Glory");
                         continue;
                     }
                     if (region.equalsIgnoreCase("Dead_Peaks")) {
