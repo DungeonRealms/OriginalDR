@@ -1044,6 +1044,12 @@ public class MountMechanics implements Listener {
                     AchievementMechanics.addAchievement(pl.getName(), "Saddle Up!");
                     pl.sendMessage(ChatColor.GRAY + "You are now the proud owner of a mount -- " + ChatColor.UNDERLINE
                             + "to summon your new mount, simply right click with the saddle in your player's hand.");
+                    Hive.sql_query.add("UPDATE statistics SET hasHorse = 1 WHERE pname = '" + pl.getName() +"'");
+                }
+                else if (isMule(product)) {
+                    pl.sendMessage(ChatColor.GRAY + "You are now the proud owner of a mule -- " + ChatColor.UNDERLINE
+                            + "to summon your new mule, simply right click with the harness in your player's hand.");
+                    Hive.sql_query.add("UPDATE statistics SET hasMule = 1 WHERE pname = '" + pl.getName() +"'");
                 }
                 mount_being_bought.remove(pl.getName());
             } else {
