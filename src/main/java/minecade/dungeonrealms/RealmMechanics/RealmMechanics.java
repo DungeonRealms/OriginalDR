@@ -4167,7 +4167,7 @@ public class RealmMechanics implements Listener {
 		String owner = getOwner(l);
 		if (Bukkit.getOfflinePlayer(owner).isOp())
 			height = 2.5;
-		holograms.put(l, new Hologram(l.clone().add(0.5, height, 0.5), Arrays.asList(owner, ChatColor.RED + "Chaotic")));
+		holograms.put(l, new Hologram(l.clone().add(0.5, height, 0.5), Arrays.asList(owner, safe_realms.contains(owner) ? ChatColor.GREEN + "Peaceful" : ChatColor.RED + "Chaotic")));
 		holograms.get(l).show();
 	}
 
