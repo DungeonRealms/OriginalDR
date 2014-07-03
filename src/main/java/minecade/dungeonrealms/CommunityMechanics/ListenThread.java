@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.config.Config;
 
 import org.bukkit.Bukkit;
@@ -18,7 +19,10 @@ public class ListenThread extends Thread {
 		try {
 			
 			lAddress = InetAddress.getByName(Bukkit.getIp());
-			ss = new ServerSocket(Config.transfer_port, 200, lAddress);
+            ss = new ServerSocket(
+                    CommunityMechanics.server_list.get(Main.getCommunityMechanics().getServerNum()).contains(":") ? Integer.parseInt(CommunityMechanics.server_list
+                            .get(Main.getCommunityMechanics().getServerNum()).split(":")[1])
+                            : Config.transfer_port, 200, lAddress);
 			CommunityMechanics.log.info("[CommunityMechanics] LISTENING on port " + Config.transfer_port + " @ " + Bukkit.getIp() + " ...");
 			
 			while(true) {
