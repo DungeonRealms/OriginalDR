@@ -103,7 +103,6 @@ public class LogListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onTrade(InventoryOpenEvent e) {
-        if (e.isCancelled()) return;
         Player trader = (Player)e.getPlayer();
         Player tradie = TradeMechanics.trade_map.get(trader);
 
