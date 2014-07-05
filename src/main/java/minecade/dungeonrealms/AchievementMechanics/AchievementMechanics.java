@@ -107,7 +107,7 @@ public class AchievementMechanics implements Listener {
                         continue;
                     }
                     if (region.equalsIgnoreCase("Cheifs")) {
-                        addAchievement(pl.getName(), "Explorer: Cheif's Glory");
+                        addAchievement(pl.getName(), "Explorer: Cheif\'s Glory");
                         continue;
                     }
                     if (region.equalsIgnoreCase("Dead_Peaks")) {
@@ -215,15 +215,15 @@ public class AchievementMechanics implements Listener {
 
         int achievement_count = o_a.split(",").length;
         if (achievement_count >= 10) {
-            addAchievement(p_name, "Dungeon Realm Novice");
+            addAchievement(p_name, "Dungeon Realms Novice");
             if (achievement_count >= 25) {
-                addAchievement(p_name, "Dungeon Realm Apprentice");
+                addAchievement(p_name, "Dungeon Realms Apprentice");
                 if (achievement_count >= 50) {
-                    addAchievement(p_name, "Dungeon Realm Adept");
+                    addAchievement(p_name, "Dungeon Realms Adept");
                     if (achievement_count >= 100) {
-                        addAchievement(p_name, "Dungeon Realm Expert");
+                        addAchievement(p_name, "Dungeon Realms Expert");
                         if (achievement_count >= 200) {
-                            addAchievement(p_name, "Dungeon Realm Master");
+                            addAchievement(p_name, "Dungeon Realms Master");
                         }
                     }
                 }

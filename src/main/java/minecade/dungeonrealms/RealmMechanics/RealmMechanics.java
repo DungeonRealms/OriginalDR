@@ -4037,10 +4037,10 @@ public class RealmMechanics implements Listener {
 					portal_map_coords.remove(p.getName());
 					portal_map.remove(port_loc);
 					inv_portal_map.remove(realm_name);
-					if (port_loc.getBlock().getType() == Material.PORTAL) {
+					if (port_loc.getBlock().getType() == Material.PORTAL && port_loc.getBlock().getRelative(BlockFace.EAST).getType() != Material.PORTAL && port_loc.getBlock().getRelative(BlockFace.WEST).getType() != Material.PORTAL) {
 						port_loc.getBlock().setType(Material.AIR);
 					}
-					if (port_loc.add(0, 1, 0).getBlock().getType() == Material.PORTAL) {
+					if (port_loc.add(0, 1, 0).getBlock().getType() == Material.PORTAL && port_loc.getBlock().getRelative(BlockFace.EAST).getType() != Material.PORTAL && port_loc.getBlock().getRelative(BlockFace.WEST).getType() != Material.PORTAL) {
 						port_loc.getBlock().setType(Material.AIR);
 					}
 				}
@@ -4167,7 +4167,7 @@ public class RealmMechanics implements Listener {
 		String owner = getOwner(l);
 		if (Bukkit.getOfflinePlayer(owner).isOp())
 			height = 2.5;
-		holograms.put(l, new Hologram(l.clone().add(0.5, height, 0.5), Arrays.asList(owner, ChatColor.RED + "Chaotic")));
+		holograms.put(l, new Hologram(l.clone().add(0.5, height, 0.5), Arrays.asList(owner, safe_realms.contains(owner) ? ChatColor.GREEN + "Peaceful" : ChatColor.RED + "Chaotic")));
 		holograms.get(l).show();
 	}
 

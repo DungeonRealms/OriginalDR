@@ -4013,13 +4013,13 @@ public class Hive implements Listener {
 		server_num = server_num + 2000;
 	}
 
-	if (server_num == 9 || server_num == 10) {
+	if (server_num == 5) {
 		vip_server = true;
 	}
 
-	if (server_num == 11) {
-		rp_server = true;
-	}
+//	if (server_num == 11) {
+//		rp_server = true;
+//	}
 	if (server_num >= 100 && server_num <= 110) {
 		beta_server = true;
 	}
@@ -4117,11 +4117,11 @@ public class Hive implements Listener {
 		}
 
 		// index = 9; // Move to next row for BR servers.
-
-		for (String s : Config.br_servers) {
+		// br servers are no longer used
+/*		for (String s : Config.br_servers) {
 			shard_menu.setItem(index, generateShardItem(s));
 			index++;
-		}
+		}*/
 
 		// index = 18;
 

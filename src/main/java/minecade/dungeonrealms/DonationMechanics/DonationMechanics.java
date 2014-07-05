@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import minecade.dungeonrealms.Main;
+import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandAddEC;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandAddPet;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandAddSubDaysToAll;
@@ -27,6 +28,8 @@ import minecade.dungeonrealms.DonationMechanics.commands.CommandGiveSubPlus;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandRemoveSub;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandRemoveSubPlus;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandRewardSubLife;
+import minecade.dungeonrealms.config.Config;
+import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -71,20 +74,14 @@ public class DonationMechanics implements Listener {
 		RankThread = new RankThread();
 		RankThread.start();
 		
-		server_list.put(0, "72.8.157.66");
-		server_list.put(1, "72.20.38.165"); // 74..63.245.13 US-1
-		server_list.put(2, "72.20.38.166"); // 74..63.245.14 US-2
-		server_list.put(3, "72.8.134.149"); // US-3
-		server_list.put(4, "72.8.134.150"); // US-4
-		/*server_list.put(5, "72.8.157.57"); // US-5
-		server_list.put(6, "72.8.157.58"); // US-6
-		server_list.put(7, "69.197.61.57"); // US-7
-		server_list.put(8, "69.197.61.58"); // US-8*/
-		server_list.put(9, "72.20.33.81"); // US-9 (VIP)
-		server_list.put(10, "72.20.33.82"); // US-10 (VIP)
-		server_list.put(11, "72.20.42.197"); // US-11 (RP)
+		server_list.put(0, "72.8.157.66:32777");
+		server_list.put(1, "72.20.37.210:10001");
+		server_list.put(2, "72.20.37.210:10002");
+		server_list.put(3, "72.20.37.210:10003");
+		server_list.put(4, "72.20.37.210:10004"); 
+		server_list.put(5, "72.20.37.210:10005");
+		server_list.put(100, "72.20.55.80:25151");
 		
-		server_list.put(2001, "72.20.42.198"); // BR-1
 		log.info("" + Bukkit.getOnlinePlayers().length);
 		
 		/* Do NOT uncomment!  The timer is now handled by a separate donation-dedicated server!
@@ -496,7 +493,11 @@ public class DonationMechanics implements Listener {
 		
 		if(all_servers) {
 			for(int sn : server_list.keySet()) {
-				String server_ip = server_list.get(sn);
+			    String ipAndPort = CommunityMechanics.server_list.get(sn);
+                String ipNoPort = ipAndPort.contains(":") ? CommunityMechanics.server_list.get(sn).split(":")[0]
+                        : ipAndPort;
+                int port = ipAndPort.contains(":") && StringUtils.isNumeric(ipAndPort.split(":")[1]) ? Integer.parseInt(ipAndPort
+                        .split(":")[1]) : Config.transfer_port;
 				// Send it anyway, fix for not getting insta-ecash.
 				/*if(server_ip.equalsIgnoreCase(local_ip)){
 					continue; // Don't send to same server.
@@ -504,7 +505,7 @@ public class DonationMechanics implements Listener {
 				try {
 					kkSocket = new Socket();
 					//kkSocket.bind(new InetSocketAddress(local_IP, transfer_port+1));
-					kkSocket.connect(new InetSocketAddress(server_ip, transfer_port), 250);
+					kkSocket.connect(new InetSocketAddress(ipNoPort, port), 250);
 					out = new PrintWriter(kkSocket.getOutputStream(), true);
 					
 					out.println(packet_data);
@@ -522,11 +523,15 @@ public class DonationMechanics implements Listener {
 			}
 		} else if(!all_servers) {
 			try {
-				String server_ip = server_list.get(server_num);
+			    String ipAndPort = CommunityMechanics.server_list.get(server_num);
+                String ipNoPort = ipAndPort.contains(":") ? CommunityMechanics.server_list.get(server_num).split(":")[0]
+                        : ipAndPort;
+                int port = ipAndPort.contains(":") && StringUtils.isNumeric(ipAndPort.split(":")[1]) ? Integer.parseInt(ipAndPort
+                        .split(":")[1]) : Config.transfer_port;
 				
 				kkSocket = new Socket();
 				//kkSocket.bind(new InetSocketAddress(local_IP, transfer_port+1));
-				kkSocket.connect(new InetSocketAddress(server_ip, transfer_port), 250);
+				kkSocket.connect(new InetSocketAddress(ipNoPort, port), 250);
 				out = new PrintWriter(kkSocket.getOutputStream(), true);
 				
 				out.println(packet_data);

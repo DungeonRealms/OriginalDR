@@ -28,6 +28,7 @@ import minecade.dungeonrealms.enums.CC;
 import minecade.dungeonrealms.enums.LogType;
 import minecade.dungeonrealms.jsonlib.JsonBuilder;
 import minecade.dungeonrealms.managers.PlayerManager;
+import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 
 import minecade.dungeonrealms.models.LogModel;
 import org.bukkit.Bukkit;
@@ -57,8 +58,12 @@ public class ConnectProtocol implements Runnable {
 				kkSocket = CommunityMechanics.getSocket(server_num);
 				out = new PrintWriter(kkSocket.getOutputStream(), true);
 			} catch (Exception err) {
+                String ipAndPort = server_ip;
+                String ipNoPort = ipAndPort.contains(":") ? server_ip.split(":")[0] : ipAndPort;
+                int port = ipAndPort.contains(":") && StringUtils.isNumeric(ipAndPort.split(":")[1]) ? Integer.parseInt(ipAndPort
+                        .split(":")[1]) : Config.transfer_port;
 				kkSocket = new Socket();
-				kkSocket.connect(new InetSocketAddress(server_ip, Config.transfer_port), 150);
+				kkSocket.connect(new InetSocketAddress(ipNoPort, port), 150);
 				out = new PrintWriter(kkSocket.getOutputStream(), true);
 			}
 

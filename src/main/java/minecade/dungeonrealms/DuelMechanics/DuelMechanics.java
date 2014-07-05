@@ -1733,8 +1733,8 @@ public class DuelMechanics implements Listener {
     }
 
     public static void setPvPOn(World w) {
-        if (wg.getGlobalRegionManager().get(w).hasRegion("realm")) {
-            wg.getGlobalRegionManager().get(w).removeRegion("realm");
+        if (wg.getGlobalRegionManager().get(w).hasRegion(w.getName() + "-realm")) {
+            wg.getGlobalRegionManager().get(w).removeRegion(w.getName() + "-realm");
         }
     }
 

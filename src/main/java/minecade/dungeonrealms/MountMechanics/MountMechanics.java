@@ -138,17 +138,17 @@ public class MountMechanics implements Listener {
     public static ItemStack t3_horse_armor = ItemMechanics.signCustomItem(Material.getMaterial(417), (short) 1, ChatColor.AQUA.toString() + "Iron Horse Armor",
             ChatColor.RED.toString() + "Speed: 140%" + "," + ChatColor.RED.toString() + "Jump: 105%" + "," + ChatColor.RED.toString() + ChatColor.BOLD + "REQ:"
                     + ChatColor.GREEN.toString() + " Old Horse Mount" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString()
-                    + "A well made Iron-plated armor piece for your mount.");
+                    + "A well made Iron-plated armor piece for your mount." + "," + ChatColor.GRAY.toString() + "Permanent Untradeable");
     @SuppressWarnings("deprecation")
     public static ItemStack t4_horse_armor = ItemMechanics.signCustomItem(Material.getMaterial(419), (short) 1, ChatColor.LIGHT_PURPLE.toString()
             + "Diamond Horse Armor", ChatColor.RED.toString() + "Speed: 160%" + "," + ChatColor.RED.toString() + "Jump: +110%" + "," + ChatColor.RED.toString()
             + ChatColor.BOLD.toString() + "REQ:" + ChatColor.AQUA + " Traveler's Horse Mount" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString()
-            + "Powerful brilliant diamond horse armor.");
+            + "Powerful brilliant diamond horse armor." + "," + ChatColor.GRAY.toString() + "Permanent Untradeable");
     @SuppressWarnings("deprecation")
     public static ItemStack t5_horse_armor = ItemMechanics.signCustomItem(Material.getMaterial(418), (short) 1, ChatColor.YELLOW.toString()
             + "Gold Horse Armor", ChatColor.RED.toString() + "Speed: +200%" + "," + ChatColor.RED.toString() + "Jump: +120%" + "," + ChatColor.RED.toString()
             + ChatColor.BOLD.toString() + "REQ:" + ChatColor.LIGHT_PURPLE.toString() + " Knight's Horse Mount" + "," + ChatColor.GRAY.toString()
-            + ChatColor.ITALIC.toString() + "A legendary forged intricate golden armour piece.");
+            + ChatColor.ITALIC.toString() + "A legendary forged intricate golden armour piece." + "," + ChatColor.GRAY.toString() + "Permanent Untradeable");
 
     ItemStack divider = new ItemStack(Material.THIN_GLASS, 1);
 
@@ -1044,6 +1044,12 @@ public class MountMechanics implements Listener {
                     AchievementMechanics.addAchievement(pl.getName(), "Saddle Up!");
                     pl.sendMessage(ChatColor.GRAY + "You are now the proud owner of a mount -- " + ChatColor.UNDERLINE
                             + "to summon your new mount, simply right click with the saddle in your player's hand.");
+                    Hive.sql_query.add("UPDATE statistics SET hasHorse = 1 WHERE pname = '" + pl.getName() +"'");
+                }
+                else if (isMule(product)) {
+                    pl.sendMessage(ChatColor.GRAY + "You are now the proud owner of a mule -- " + ChatColor.UNDERLINE
+                            + "to summon your new mule, simply right click with the harness in your player's hand.");
+                    Hive.sql_query.add("UPDATE statistics SET hasMule = 1 WHERE pname = '" + pl.getName() +"'");
                 }
                 mount_being_bought.remove(pl.getName());
             } else {
