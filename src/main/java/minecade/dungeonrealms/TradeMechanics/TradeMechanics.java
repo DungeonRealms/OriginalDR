@@ -314,7 +314,7 @@ public class TradeMechanics implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onItemPickup(PlayerPickupItemEvent e) {
-        // Don't let players in a trade pickup items, prevent full inventory.
+        // Don't let players in a trade to pickup items, prevent full inventory.
         Player pl = e.getPlayer();
         if (TradeMechanics.trade_map.containsKey(pl) || pl.getOpenInventory().getTitle().contains(pl.getName())) {
             e.setCancelled(true);
@@ -510,6 +510,7 @@ public class TradeMechanics implements Listener {
                 || e.getItemDrop().getItemStack().getType() == Material.NETHER_STAR) {
             return;
         }
+
         if (e.isCancelled()) {
             return;
         }

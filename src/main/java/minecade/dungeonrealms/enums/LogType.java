@@ -14,6 +14,9 @@ public enum LogType {
 	LEVEL_UP,
 	SHOP_SELL,
 	BANK_PLACE,
-	BANK_PICKUP;
-	
+	BANK_PICKUP,
+    TRADE,
+    PACKET,
+    TAB_COMPLETE_CHAT;
+    
 }
