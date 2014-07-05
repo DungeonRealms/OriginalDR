@@ -296,15 +296,15 @@ public class TradeMechanics implements Listener {
                     trade_partner.getOpenInventory().getTopInventory().clear();
                 }
 
-                closer.closeInventory();
-                trade_partner.closeInventory();
-
                 trade_map.remove(closer);
                 trade_map.remove(trade_partner);
                 trade_partners.remove(closer);
                 trade_partners.remove(trade_partner);
                 trade_secure.remove(closer);
                 trade_secure.remove(trade_partner);
+
+                closer.closeInventory();
+                trade_partner.closeInventory();
 
                 closer.sendMessage(ChatColor.RED + "Trade cancelled, entered combat.");
                 trade_partner.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + closer.getName() + ChatColor.RED + " entered combat, trade cancelled.");
@@ -314,7 +314,7 @@ public class TradeMechanics implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onItemPickup(PlayerPickupItemEvent e) {
-        // Don't let players in a trade to pickup items, prevent full inventory.
+        // Don't let players in a trade pickup items, prevent full inventory.
         Player pl = e.getPlayer();
         if (TradeMechanics.trade_map.containsKey(pl) || pl.getOpenInventory().getTitle().contains(pl.getName())) {
             e.setCancelled(true);
@@ -510,7 +510,6 @@ public class TradeMechanics implements Listener {
                 || e.getItemDrop().getItemStack().getType() == Material.NETHER_STAR) {
             return;
         }
-
         if (e.isCancelled()) {
             return;
         }
@@ -813,16 +812,15 @@ public class TradeMechanics implements Listener {
             trade_partner.getOpenInventory().getTopInventory().clear();
         }
 
-        // closer.closeInventory();
-        // This was moved above the below to ensure the log would catch the close event
-        trade_partner.closeInventory();
-
         trade_map.remove(closer);
         trade_map.remove(trade_partner);
         trade_partners.remove(closer);
         trade_partners.remove(trade_partner);
         trade_secure.remove(closer);
         trade_secure.remove(trade_partner);
+
+        // closer.closeInventory();
+        trade_partner.closeInventory();
 
         closer.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "Trade cancelled.");
         trade_partner.sendMessage(ChatColor.YELLOW + "Trade cancelled by " + ChatColor.BOLD.toString() + closer.getName() + ChatColor.YELLOW.toString() + ".");
@@ -1357,14 +1355,14 @@ public class TradeMechanics implements Listener {
                         public void run() {
                             tradie.updateInventory();
                             clicker.updateInventory();
-                            tradie.closeInventory();
-                            clicker.closeInventory();
                             trade_map.remove(clicker);
                             trade_map.remove(tradie);
                             trade_partners.remove(clicker);
                             trade_partners.remove(tradie);
                             trade_secure.remove(clicker);
                             trade_secure.remove(tradie);
+                            tradie.closeInventory();
+                            clicker.closeInventory();
                         }
                     }, 1L);
 

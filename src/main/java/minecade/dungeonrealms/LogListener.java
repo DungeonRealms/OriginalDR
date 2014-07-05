@@ -2,14 +2,10 @@ package minecade.dungeonrealms;
 
 import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
-import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
 import minecade.dungeonrealms.enums.LogType;
 import minecade.dungeonrealms.jsonlib.JsonBuilder;
-import minecade.dungeonrealms.managers.PlayerManager;
 import minecade.dungeonrealms.models.LogModel;
 
-import net.minecraft.util.com.google.common.collect.Maps;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,15 +13,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-
-@SuppressWarnings({ "unused", "deprecation" })
 public class LogListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -36,7 +31,7 @@ public class LogListener implements Listener {
         if((MonsterMechanics.getMHealth(e.getEntity()) - e.getDamage()) > 0) return;
         new LogModel(LogType.MOB_KILL, ((HumanEntity) e.getDamager()).getName(), new JsonBuilder("entity", e.getEntity().getType()).setData("location", e.getEntity().getLocation()).getJson());
 	}
-
+	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent e){
 		if(e.getEntity().getKiller() != null){
@@ -46,32 +41,32 @@ public class LogListener implements Listener {
 			new LogModel(LogType.DEATH, e.getEntity().toString(), new JsonBuilder("location", e.getEntity().getLocation()).getJson());
 		}
 	}
-
+	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerLogin(PlayerLoginEvent e){
 		if(e.getResult() == PlayerLoginEvent.Result.ALLOWED){
 			new LogModel(LogType.LOGIN, e.getPlayer().getName(), new JsonBuilder("shard", Utils.getShard()).getJson());
 		}
 	}
-
+	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerLogout(PlayerQuitEvent e){
 		new LogModel(LogType.LOGOUT, e.getPlayer().getName(), new JsonBuilder("shard", Utils.getShard()).setData("xp", LevelMechanics.getPlayerData(e.getPlayer()).getXP()).getJson());
 	}
-
+	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerCommandPreProcess(PlayerCommandPreprocessEvent e){
 		if(e.isCancelled()) return;
 		if (e.getMessage().startsWith("sendpacket") || e.getMessage().startsWith("/sendpacket")) return;
 		new LogModel(LogType.COMMAND, e.getPlayer().getName(), new JsonBuilder("command", e.getMessage()).getJson());
 	}
-
+	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerChatEvent(AsyncPlayerChatEvent e){
 		if(e.isCancelled()) return;
-		new LogModel(LogType.CHAT_MESSAGE, e.getPlayer().getName(), new JsonBuilder("message", e.getMessage()).setData("location", e.getPlayer().getLocation()).getJson());
+		new LogModel(LogType.CHAT_MESSAGE, e.getPlayer().getName(), new JsonBuilder("message", e.getMessage()).getJson());
 	}
-
+	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerPickupItem(PlayerPickupItemEvent e){
 		if(e.isCancelled()) return;
@@ -83,7 +78,7 @@ public class LogListener implements Listener {
 					.setData("amount", i.getAmount())
 					.getJson());
 	}
-
+	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDropItem(PlayerDropItemEvent e){
 		if(e.isCancelled()) return;
@@ -95,26 +90,5 @@ public class LogListener implements Listener {
 					.setData("amount", i.getAmount())
 					.getJson());
 	}
-
-    @EventHandler(priority =  EventPriority.MONITOR)
-    public void onTabChat(PlayerChatTabCompleteEvent e) {
-        if (PlayerManager.getPlayerModel(e.getPlayer()).getToggleList() != null && PlayerManager.getPlayerModel(e.getPlayer()).getToggleList().contains("tabchat")) return;
-        new LogModel(LogType.TAB_COMPLETE_CHAT, e.getPlayer().getName(), new JsonBuilder("message", e.getChatMessage()).setData("location", e.getPlayer().getLocation()).getJson());
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onTrade(InventoryCloseEvent e) {
-        Player trader = (Player)e.getPlayer();
-        Player tradie = TradeMechanics.trade_map.get(trader);
-
-        if (TradeMechanics.trade_map.containsKey(trader) && TradeMechanics.trade_map.get(trader) == tradie) {
-            Main.log.info("Trade being logged...");
-            new LogModel(LogType.TRADE, trader.getName(), new JsonBuilder("TradePartner", tradie.getName())
-                    .setData("TradeContents", e.getInventory().getContents())
-                    .getJson());
-            new LogModel(LogType.TRADE, tradie.getName(), new JsonBuilder("TradePartner", trader.getName())
-                    .setData("TradeContents", e.getInventory().getContents())
-                    .getJson());
-        }
-    }
+	
 }

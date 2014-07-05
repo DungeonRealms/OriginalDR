@@ -25,12 +25,9 @@ import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
 import minecade.dungeonrealms.config.Config;
 import minecade.dungeonrealms.enums.CC;
-import minecade.dungeonrealms.enums.LogType;
-import minecade.dungeonrealms.jsonlib.JsonBuilder;
 import minecade.dungeonrealms.managers.PlayerManager;
 import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 
-import minecade.dungeonrealms.models.LogModel;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -88,9 +85,7 @@ public class ConnectProtocol implements Runnable {
 			String inputLine;
 
 			while ((inputLine = in.readLine()) != null) {
-                new LogModel(LogType.PACKET, "CONSOLE", new JsonBuilder("current_shard", clientSocket.getLocalAddress())
-                        .setData("from", clientSocket.getInetAddress())
-                        .setData("data", inputLine).getJson());
+
 				if (inputLine.startsWith("@date_update@")) {
 					long time = Long.parseLong(inputLine.substring(inputLine.lastIndexOf("@") + 1, inputLine.length()));
 					Runtime.getRuntime().exec("date -s @" + time);
