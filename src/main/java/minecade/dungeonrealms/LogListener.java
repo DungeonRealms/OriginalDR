@@ -18,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -102,7 +103,7 @@ public class LogListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onTrade(InventoryOpenEvent e) {
+    public void onTrade(InventoryCloseEvent e) {
         Player trader = (Player)e.getPlayer();
         Player tradie = TradeMechanics.trade_map.get(trader);
 
