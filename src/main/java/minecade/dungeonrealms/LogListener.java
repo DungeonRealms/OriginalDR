@@ -107,7 +107,8 @@ public class LogListener implements Listener {
         Player trader = (Player)e.getPlayer();
         Player tradie = TradeMechanics.trade_map.get(trader);
 
-        if (e.getInventory().getName().contains(trader.getName()) && TradeMechanics.trade_map.containsKey(trader)) {
+        if (TradeMechanics.trade_map.containsKey(trader) && TradeMechanics.trade_map.get(trader) == tradie) {
+            Main.log.info("Trade being logged...");
             new LogModel(LogType.TRADE, trader.getName(), new JsonBuilder("TradePartner", tradie.getName())
                     .setData("TradeContents", e.getInventory().getContents())
                     .getJson());
