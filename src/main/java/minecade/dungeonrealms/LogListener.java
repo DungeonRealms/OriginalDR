@@ -110,6 +110,9 @@ public class LogListener implements Listener {
             new LogModel(LogType.TRADE, trader.getName(), new JsonBuilder("TradePartner", tradie.getName())
                     .setData("TradeContents", e.getInventory().getContents())
                     .getJson());
+            new LogModel(LogType.TRADE, tradie.getName(), new JsonBuilder("TradePartner", tradie.getName())
+                    .setData("TradeContents", e.getInventory().getContents())
+                    .getJson());
         }
     }
 }

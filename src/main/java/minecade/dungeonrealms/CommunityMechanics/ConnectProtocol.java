@@ -88,7 +88,9 @@ public class ConnectProtocol implements Runnable {
 			String inputLine;
 
 			while ((inputLine = in.readLine()) != null) {
-                new LogModel(LogType.PACKET, Utils.getShard(), new JsonBuilder("from", clientSocket.getInetAddress()).setData("data", inputLine).getJson());
+                new LogModel(LogType.PACKET, "CONSOLE", new JsonBuilder("current_shard", clientSocket.getLocalAddress())
+                        .setData("from", clientSocket.getInetAddress())
+                        .setData("data", inputLine).getJson());
 				if (inputLine.startsWith("@date_update@")) {
 					long time = Long.parseLong(inputLine.substring(inputLine.lastIndexOf("@") + 1, inputLine.length()));
 					Runtime.getRuntime().exec("date -s @" + time);
