@@ -20,7 +20,10 @@ import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
 import minecade.dungeonrealms.RestrictionMechanics.RestrictionMechanics;
 import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
 import minecade.dungeonrealms.TradeMechanics.commands.CommandToggleTrade;
+import minecade.dungeonrealms.enums.LogType;
+import minecade.dungeonrealms.jsonlib.JsonBuilder;
 import minecade.dungeonrealms.managers.PlayerManager;
+import minecade.dungeonrealms.models.LogModel;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -1177,6 +1180,13 @@ public class TradeMechanics implements Listener {
                         }
 
                         slot_var = -1;
+                        int tradeItem = 0;
+                        String strTradeItem = "";
+                        ItemMeta im;
+                        String itemData = "";
+                        JsonBuilder data = new JsonBuilder("trader_1", tradie.getName());
+                        data.setData("trader_2", p_name);
+                        
                         while (slot_var <= 27) {
                             slot_var++;
                             if (!(slot_var == 0 || slot_var == 1 || slot_var == 2 || slot_var == 3 || slot_var == 9 || slot_var == 10 || slot_var == 11
@@ -1194,8 +1204,22 @@ public class TradeMechanics implements Listener {
                             if (i.getType() == Material.EMERALD) {
                                 i = MoneyMechanics.makeGems(i.getAmount());
                             }
+                            tradeItem++;
+                            strTradeItem = String.valueOf(tradeItem);
+                            im = i.getItemMeta();
+                            
                             tradie.getInventory().setItem(tradie.getInventory().firstEmpty(), makeNormal(i));
+
+                            itemData += "name_" + strTradeItem + ": "
+                                    + (im.getDisplayName() == null ? i.getType().name() : im.getDisplayName())
+                                    + ", lore_" + strTradeItem + ": " + (im.getLore() == null ? "" : im.getLore())
+                                    + ", damage_" + strTradeItem + ": " + i.getDurability() + ", amount_"
+                                    + strTradeItem + ": " + i.getAmount();
                         }
+                        
+                        data.setData("items_to_trader_1", itemData);
+                        itemData = "";
+                        tradeItem = 0;
 
                         tradie.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Trade accepted.");
                         tradie.playSound(tradie.getLocation(), Sound.BLAZE_HIT, 1F, 1.5F);
@@ -1218,10 +1242,26 @@ public class TradeMechanics implements Listener {
                             if (i.getType() == Material.EMERALD) {
                                 i = MoneyMechanics.makeGems(i.getAmount());
                             }
+                            tradeItem++;
+                            strTradeItem = String.valueOf(tradeItem);
+                            im = i.getItemMeta();
+                            
                             clicker.getInventory().setItem(clicker.getInventory().firstEmpty(), makeNormal(i));
+
+                            itemData += "name_" + strTradeItem + ": "
+                                    + (im.getDisplayName() == null ? i.getType().name() : im.getDisplayName())
+                                    + ", lore_" + strTradeItem + ": " + (im.getLore() == null ? "" : im.getLore())
+                                    + ", damage_" + strTradeItem + ": " + i.getDurability() + ", amount_"
+                                    + strTradeItem + ": " + i.getAmount();
                         }
+                        
+                        data.setData("items_to_trader_2", itemData);
+                        
                         clicker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Trade accepted.");
                         clicker.playSound(clicker.getLocation(), Sound.BLAZE_HIT, 1F, 1.5F);
+                        
+                        new LogModel(LogType.TRADE, p_name, data.getJson());
+                        new LogModel(LogType.TRADE, tradie.getName(), data.getJson());
                     }
 
                     if (left_side == false) {
@@ -1298,6 +1338,13 @@ public class TradeMechanics implements Listener {
                         }
 
                         slot_var = -1;
+                        int tradeItem = 0;
+                        String strTradeItem = "";
+                        ItemMeta im;
+                        String itemData = "";
+                        JsonBuilder data = new JsonBuilder("trader_1", p_name);
+                        data.setData("trader_2", tradie.getName());
+                        
                         while (slot_var <= 27) {
                             slot_var++;
                             if (!(slot_var == 0 || slot_var == 1 || slot_var == 2 || slot_var == 3 || slot_var == 9 || slot_var == 10 || slot_var == 11
@@ -1315,8 +1362,22 @@ public class TradeMechanics implements Listener {
                             if (i.getType() == Material.EMERALD) {
                                 i = MoneyMechanics.makeGems(i.getAmount());
                             }
+                            tradeItem++;
+                            strTradeItem = String.valueOf(tradeItem);
+                            im = i.getItemMeta();
+                            
                             clicker.getInventory().setItem(clicker.getInventory().firstEmpty(), makeNormal(i));
+                            
+                            itemData += "name_" + strTradeItem + ": "
+                                    + (im.getDisplayName() == null ? i.getType().name() : im.getDisplayName())
+                                    + ", lore_" + strTradeItem + ": " + (im.getLore() == null ? "" : im.getLore())
+                                    + ", damage_" + strTradeItem + ": " + i.getDurability() + ", amount_"
+                                    + strTradeItem + ": " + i.getAmount();
                         }
+                        
+                        data.setData("items_to_trader_1", itemData);
+                        itemData = "";
+                        tradeItem = 0;
 
                         clicker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Trade accepted.");
                         clicker.playSound(clicker.getLocation(), Sound.BLAZE_HIT, 1F, 1.5F);
@@ -1340,11 +1401,26 @@ public class TradeMechanics implements Listener {
                             if (i.getType() == Material.EMERALD) {
                                 i = MoneyMechanics.makeGems(i.getAmount());
                             }
+                            tradeItem++;
+                            strTradeItem = String.valueOf(tradeItem);
+                            im = i.getItemMeta();
+                            
                             tradie.getInventory().setItem(tradie.getInventory().firstEmpty(), makeNormal(i));
+                            
+                            itemData += "name_" + strTradeItem + ": "
+                                    + (im.getDisplayName() == null ? i.getType().name() : im.getDisplayName())
+                                    + ", lore_" + strTradeItem + ": " + (im.getLore() == null ? "" : im.getLore())
+                                    + ", damage_" + strTradeItem + ": " + i.getDurability() + ", amount_"
+                                    + strTradeItem + ": " + i.getAmount();
                         }
+                        
+                        data.setData("items_to_trader_2", itemData);
 
                         tradie.playSound(tradie.getLocation(), Sound.BLAZE_HIT, 1F, 1.5F);
                         tradie.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Trade accepted.");
+                        
+                        new LogModel(LogType.TRADE, p_name, data.getJson());
+                        new LogModel(LogType.TRADE, tradie.getName(), data.getJson());
                     }
 
                     if (!tradeWin.getName().equalsIgnoreCase("container.crafting")) {

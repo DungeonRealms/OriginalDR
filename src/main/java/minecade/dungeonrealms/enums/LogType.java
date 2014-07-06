@@ -13,6 +13,9 @@ public enum LogType {
 	LOGOUT,
 	LEVEL_UP,
 	SHOP_SELL,
+	SHOP_BUY,
+	TRADE,
+	PACKET,
 	BANK_PLACE,
 	BANK_PICKUP;
 	
