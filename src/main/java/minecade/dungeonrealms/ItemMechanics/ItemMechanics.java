@@ -113,10 +113,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public class ItemMechanics implements Listener {
-
-    private static ItemMechanics instance;
-    private final static ItemGenerators iGen = new ItemGenerators(instance);
-
+    
     static Logger log = Logger.getLogger("Minecraft");
 
     public static HashMap<String, ItemStack> custom_item_table = new HashMap<String, ItemStack>();
@@ -219,7 +216,6 @@ public class ItemMechanics implements Listener {
     public void onEnable() {
         Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
         Main.plugin.getServer().getPluginManager().registerEvents(new Halloween(this), Main.plugin);
-        instance = this;
 
         Main.plugin.getCommand("addweapon").setExecutor(new CommandAddWeapon());
         Main.plugin.getCommand("addweaponnew").setExecutor(new CommandAddWeaponNew());
@@ -1744,11 +1740,18 @@ public class ItemMechanics implements Listener {
     public static int generateTotalFireRes(Player p) {
         ItemStack[] armor_contents = p.getInventory().getArmorContents();
         int total_fire_res_val = 0;
+        
         for (ItemStack i : armor_contents) {
             if (i.getType() == Material.AIR) {
                 continue;
             }
             total_fire_res_val += getFireResistance(i);
+        }
+        
+        if (str_data.containsKey(p.getName())) {
+            int str_atr = ItemMechanics.vit_data.get(p.getName());
+            double str_res_mod = 0.04D * str_atr; // This will return the modifier number... 100 * 0.05 = 5, so I need 105% HP.
+            total_fire_res_val += ((double) total_fire_res_val * (double) (str_res_mod / 100.0D));
         }
 
         return total_fire_res_val;
@@ -1757,11 +1760,18 @@ public class ItemMechanics implements Listener {
     public static int generateTotalIceRes(Player p) {
         ItemStack[] armor_contents = p.getInventory().getArmorContents();
         int total_ice_res_val = 0;
+        
         for (ItemStack i : armor_contents) {
             if (i.getType() == Material.AIR) {
                 continue;
             }
             total_ice_res_val += getIceResistance(i);
+        }
+        
+        if (str_data.containsKey(p.getName())) {
+            int str_atr = ItemMechanics.vit_data.get(p.getName());
+            double str_res_mod = 0.04D * str_atr; // This will return the modifier number... 100 * 0.05 = 5, so I need 105% HP.
+            total_ice_res_val += ((double) total_ice_res_val * (double) (str_res_mod / 100.0D));
         }
 
         return total_ice_res_val;
@@ -1770,6 +1780,7 @@ public class ItemMechanics implements Listener {
     public static int generateTotalPoisonRes(Player p) {
         ItemStack[] armor_contents = p.getInventory().getArmorContents();
         int total_poison_res_val = 0;
+        
         for (ItemStack i : armor_contents) {
             if (i.getType() == Material.AIR) {
                 continue;
@@ -1777,6 +1788,12 @@ public class ItemMechanics implements Listener {
             total_poison_res_val += getPoisonResistance(i);
         }
 
+        if (str_data.containsKey(p.getName())) {
+            int str_atr = ItemMechanics.vit_data.get(p.getName());
+            double str_res_mod = 0.04D * str_atr; // This will return the modifier number... 100 * 0.05 = 5, so I need 105% HP.
+            total_poison_res_val += ((double) total_poison_res_val * (double) (str_res_mod / 100.0D));
+        }
+        
         return total_poison_res_val;
     }
 
@@ -4907,7 +4924,7 @@ public class ItemMechanics implements Listener {
                 if (dmg_data.contains("vit=")) {
                     vit_mod += Double.parseDouble(dmg_data.split("vit=")[1].split(":")[0]);
                 }
-                dmg += (int) (double) ((double) dmg * (double) (((vit_mod * 0.015) / 100.0D)));
+                dmg += (int) (double) ((double) dmg * (double) (((vit_mod * 0.01) / 100.0D)));
             }
 
             if (ProfessionMechanics.fish_bonus_dmg.containsKey(p_attacker.getName())) {
@@ -5372,7 +5389,7 @@ public class ItemMechanics implements Listener {
                 if (dmg_data.contains("str=")) {
                     str_mod += Double.parseDouble(dmg_data.split("str=")[1].split(":")[0]);
                 }
-                dmg += (int) (double) ((double) dmg * (double) (((str_mod * 0.015) / 100.0D)));
+                dmg += (int) (double) ((double) dmg * (double) (((str_mod * 0.023) / 100.0D)));
             }
 
             if (ProfessionMechanics.fish_bonus_dmg.containsKey(p_attacker.getName())) {

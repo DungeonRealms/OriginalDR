@@ -650,6 +650,12 @@ public class HealthMechanics implements Listener {
 				p.sendMessage(ChatColor.GREEN + "+" + (new_regen - old_regen) + " HP/s [" + new_regen + "HP/s]");
 			}
 		}
+		
+		if(ItemMechanics.vit_data.containsKey(p.getName())) {
+            int vit_atr = ItemMechanics.vit_data.get(p.getName());
+            double vit_hpregen_mod = 0.3D * vit_atr; // This will return the modifier number... 100 * 0.05 = 5, so I need 105% HP.
+            total_regen += ((double) total_regen * (double) (vit_hpregen_mod / 100.0D));
+        }
 
 		health_regen_data.put(p.getName(), total_regen);
 	}
@@ -710,7 +716,7 @@ public class HealthMechanics implements Listener {
 
 		if(ItemMechanics.vit_data.containsKey(p.getName())) {
 			int vit_atr = ItemMechanics.vit_data.get(p.getName());
-			double vit_armor_mod = 0.05D * vit_atr; // This will return the modifier number... 100 * 0.05 = 5, so I need 105% HP.
+			double vit_armor_mod = 0.034D * vit_atr; // This will return the modifier number... 100 * 0.05 = 5, so I need 105% HP.
 			total_health += ((double) total_health * (double) (vit_armor_mod / 100.0D));
 		}
 
