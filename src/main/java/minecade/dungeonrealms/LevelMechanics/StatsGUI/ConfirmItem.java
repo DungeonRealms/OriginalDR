@@ -63,6 +63,7 @@ public class ConfirmItem implements MenuItem, BonusItem {
 			}
 		}
 		plr.playSound(plr.getLocation(), Sound.CLICK, 1.0F, 1.0F);
+		drPlayer.updateStats();
 		plr.closeInventory();
 	}
 
