@@ -1959,7 +1959,7 @@ public class ItemMechanics implements Listener {
         if (armor_data.contains("dex")) {
             String dex_string = armor_data.split("dex=")[1];
             int dex_atr = Integer.parseInt(dex_string.substring(0, dex_string.indexOf(":")));
-            double dex_armor_mod = 0.03D * dex_atr;
+            double dex_armor_mod = 0.017D * dex_atr;
 
             dodge_percent += dex_armor_mod;
         }
@@ -1975,12 +1975,12 @@ public class ItemMechanics implements Listener {
             block_percent = Integer.parseInt(block_string.substring(0, block_string.indexOf(":")));
         }
 
-        if (armor_data.contains("vit")) {
-            String vit_string = armor_data.split("vit=")[1];
-            int vit_atr = Integer.parseInt(vit_string.substring(0, vit_string.indexOf(":")));
-            double vit_armor_mod = 0.03D * vit_atr;
+        if (armor_data.contains("str")) {
+            String str_string = armor_data.split("str=")[1];
+            int str_atr = Integer.parseInt(str_string.substring(0, str_string.indexOf(":")));
+            double str_armor_mod = 0.017D * str_atr;
 
-            block_percent += vit_armor_mod;
+            block_percent += str_armor_mod;
         }
 
         return block_percent;
@@ -2059,7 +2059,7 @@ public class ItemMechanics implements Listener {
             if (with_str && armor_data.contains("str")) {
                 String str_string = armor_data.split("str=")[1];
                 int str_atr = Integer.parseInt(str_string.substring(0, str_string.indexOf(":")));
-                double str_armor_mod = 0.01D * str_atr;
+                double str_armor_mod = 0.03D * str_atr;
 
                 min_armor += str_armor_mod;
                 max_armor += str_armor_mod;
@@ -2075,7 +2075,7 @@ public class ItemMechanics implements Listener {
         }
     }
 
-    public static List<Integer> getDmgVal(ItemStack i, boolean with_str) {
+    public static List<Integer> getDmgVal(ItemStack i, boolean with_dex) {
         try {
             if (getArmorData(i) == "no") {
                 return null;
@@ -2096,13 +2096,13 @@ public class ItemMechanics implements Listener {
              * int armor_val = new Random().nextInt(max_armor); if(armor_val < min_armor){ armor_val = min_armor; } if(armor_val < 1){armor_val = 1;}
              */
 
-            if (with_str && armor_data.contains("str")) {
-                String str_string = armor_data.split("str=")[1];
-                int str_atr = Integer.parseInt(str_string.substring(0, str_string.indexOf(":")));
-                double str_armor_mod = 0.01D * str_atr;
+            if (with_dex && armor_data.contains("dex")) {
+                String str_string = armor_data.split("dex=")[1];
+                int dex_atr = Integer.parseInt(str_string.substring(0, str_string.indexOf(":")));
+                double dex_armor_mod = 0.03D * dex_atr;
 
-                min_armor += str_armor_mod;
-                max_armor += str_armor_mod;
+                min_armor += dex_armor_mod;
+                max_armor += dex_armor_mod;
             }
 
             net_armor_vals.add(0, min_armor);
@@ -3547,7 +3547,7 @@ public class ItemMechanics implements Listener {
                     if (attr.contains("armor_pen")) {
                         attr = attr.split("=")[1];
                         armor_pen = Integer.parseInt(attr.substring(0, attr.length()));
-                        armor_pen += (armor_pen * (dex_data.get(p.getName()) * 0.009));
+                        armor_pen += (armor_pen * (dex_data.get(p.getName()) * 0.02));
                     }
                 }
 
