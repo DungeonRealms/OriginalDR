@@ -88,17 +88,18 @@ public class LevelMechanics implements Listener {
         		}
         	}
         }.runTaskTimer(Main.plugin, 0, 1 * 20);
-        String before = PlayerLevel.FREE_STAT_NOTICE.split("Click here")[0];
-        String after = PlayerLevel.FREE_STAT_NOTICE.split("Click here")[1];
+        String before = PlayerLevel.FREE_STAT_NOTICE.split("HERE")[0];
+        String after = PlayerLevel.FREE_STAT_NOTICE.split("HERE")[1];
         freePointsNotice = new JSONMessage("", ChatColor.GRAY);
         freePointsNotice.addText(before);
-		freePointsNotice.addRunCommand("Click " + ChatColor.UNDERLINE.toString() + ChatColor.BOLD + "HERE", ChatColor.GREEN,
+		freePointsNotice.addRunCommand(ChatColor.UNDERLINE.toString() + ChatColor.BOLD + "HERE", ChatColor.GREEN,
 				"/stats");
-        freePointsNotice.addText(after, ChatColor.GREEN);
+        freePointsNotice.addText(after);
     }
 
     public void onEnable(){
         Main.plugin.getCommand("addxp").setExecutor(new CommandAddXP());
+        Main.plugin.getCommand("stat").setExecutor(new CommandStats());
         Main.plugin.getCommand("stats").setExecutor(new CommandStats());
         Main.plugin.getCommand("statsnotice").setExecutor(new CommandNotice());
         
@@ -135,8 +136,9 @@ public class LevelMechanics implements Listener {
         e.setCancelled(true);
         
         if (msg.equals(pLevel.getResetCode()) && RealmMechanics.doTheyHaveEnoughMoney(p, pLevel.getResetCost())) {
+            RealmMechanics.subtractMoney(p, pLevel.getResetCost());
             pLevel.resetStatPoints();
-            p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "           *** STAT POINTS RESET ***");
+            p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "                     *** STAT POINTS RESET ***");
             pLevel.setNumResets(pLevel.getNumResets() + 1);
         }
         else if (msg.equals(pLevel.getResetCode())) {
@@ -307,7 +309,8 @@ public class LevelMechanics implements Listener {
         PlayerLevel pLevel = PlayerManager.getPlayerModel(p).getPlayerLevel();
         if (pLevel.isResetting()) return;
         pLevel.setResetCode(pLevel.generateResetAuthenticationCode(p, String.valueOf(pLevel.getNumResets() + 1)));
-        pLevel.setResetCost((int) ((1000. * Math.pow(1.8, (pLevel.getNumResets() + 1))) - ((1000. * Math.pow(1.8, (pLevel.getNumResets() + 1))) % 1000)));
+        int resetCost = (int) ((1000. * Math.pow(1.8, (pLevel.getNumResets() + 1))) - ((1000. * Math.pow(1.8, (pLevel.getNumResets() + 1))) % 1000));
+        pLevel.setResetCost(resetCost > 60000 ? 60000 : (int) ((1000. * Math.pow(1.8, (pLevel.getNumResets() + 1))) - ((1000. * Math.pow(1.8, (pLevel.getNumResets() + 1))) % 1000)));
         p.sendMessage("");
         p.sendMessage(ChatColor.DARK_GRAY + "           *** " + ChatColor.GREEN + ChatColor.BOLD + "Stat Reset Confirmation" + ChatColor.DARK_GRAY + " ***");
         p.sendMessage(ChatColor.DARK_GRAY + "           TOTAL Points: " + ChatColor.GREEN + pLevel.getLevel() * PlayerLevel.POINTS_PER_LEVEL + ChatColor.DARK_GRAY + "          SPENT Points: " + ChatColor.GREEN + (pLevel.getLevel() * PlayerLevel.POINTS_PER_LEVEL - pLevel.getFreePoints()));

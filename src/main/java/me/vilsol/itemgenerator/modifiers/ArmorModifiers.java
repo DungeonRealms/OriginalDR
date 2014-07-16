@@ -25,11 +25,11 @@ public class ArmorModifiers {
 
 		public HPRegen() {
 			super(armor, 100, r + "HP REGEN: +", " HP/s", false);
-			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 5, 15)).setCantContain(ArmorModifiers.EnergyRegen.class));
-			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 10, 25)).setCantContain(ArmorModifiers.EnergyRegen.class));
-			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 35, 55)).setCantContain(ArmorModifiers.EnergyRegen.class));
-			addCondition(new ModifierCondition(ItemTier.T4, null, new ModifierRange(ModifierType.STATIC, 60, 75)).setCantContain(ArmorModifiers.EnergyRegen.class));
-			addCondition(new ModifierCondition(ItemTier.T5, null, new ModifierRange(ModifierType.STATIC, 80, 120)).setCantContain(ArmorModifiers.EnergyRegen.class));
+			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 20, 35)).setCantContain(ArmorModifiers.EnergyRegen.class));
+			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 45, 60)).setCantContain(ArmorModifiers.EnergyRegen.class));
+			addCondition(new ModifierCondition(ItemTier.T3, null, new ModifierRange(ModifierType.STATIC, 65, 80)).setCantContain(ArmorModifiers.EnergyRegen.class));
+			addCondition(new ModifierCondition(ItemTier.T4, null, new ModifierRange(ModifierType.STATIC, 110, 130)).setCantContain(ArmorModifiers.EnergyRegen.class));
+			addCondition(new ModifierCondition(ItemTier.T5, null, new ModifierRange(ModifierType.STATIC, 250, 300)).setCantContain(ArmorModifiers.EnergyRegen.class));
 			
 			setOrderPriority(5);
 		}

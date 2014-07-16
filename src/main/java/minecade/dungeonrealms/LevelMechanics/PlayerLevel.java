@@ -45,9 +45,8 @@ public class PlayerLevel {
     private String resetCode; // code for stat reset
     private int resetCost; // cost to reset stats for player
     public final static int POINTS_PER_LEVEL = 5; // points per level.  Change this to change the global value.
-	public final static String FREE_STAT_NOTICE = ChatColor.GREEN + "***You have" + ChatColor.BOLD + " free "
-			+ ChatColor.GREEN + "stat points!  Click here "
-			+ ChatColor.GREEN + "or type /stats to allocate them.***";
+	public final static String FREE_STAT_NOTICE = ChatColor.GREEN + "*" + ChatColor.GRAY + "You have available " + ChatColor.GREEN + "/stat" + ChatColor.GRAY + " points. Click " + ChatColor.GREEN.toString() + ChatColor.BOLD + "HERE"
+			+ ChatColor.GRAY + " to allocate them." + ChatColor.GREEN + "*";
 	private static final String ALPHA_NUM = "123456789";
 
     @SuppressWarnings("deprecation")

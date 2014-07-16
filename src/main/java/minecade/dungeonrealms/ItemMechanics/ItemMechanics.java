@@ -37,6 +37,8 @@ import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
 import minecade.dungeonrealms.PetMechanics.PetMechanics;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.RepairMechanics.RepairMechanics;
+import minecade.dungeonrealms.enums.ItemTier;
+import minecade.dungeonrealms.enums.ItemType;
 import minecade.dungeonrealms.managers.PlayerManager;
 import net.minecraft.server.v1_7_R2.EntityLiving;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
@@ -6379,92 +6381,35 @@ public class ItemMechanics implements Listener {
         return is;
     }
 
-    @SuppressWarnings("static-access")
     public static ItemStack generateRandomTierItem(int tier) {
         ItemStack i = null;
         int r = new Random().nextInt(9);
         if (r == 0) {
-            if (tier == 1) {
-                return iGen.SwordGenorator(Material.WOOD_SWORD, false, null);
-            }
-            if (tier == 2) {
-                return iGen.SwordGenorator(Material.STONE_SWORD, false, null);
-            }
-            if (tier == 3) {
-                return iGen.SwordGenorator(Material.IRON_SWORD, false, null);
-            }
-            if (tier == 4) {
-                return iGen.SwordGenorator(Material.DIAMOND_SWORD, false, null);
-            }
-            if (tier == 5) {
-                return iGen.SwordGenorator(Material.GOLD_SWORD, false, null);
-            }
+            return MonsterMechanics.generateMobGear(ItemType.SWORD, ItemTier.getTierFromInt(tier));
         }
-        if (r == 1) {
-            if (tier == 1) {
-                return iGen.AxeGenorator(Material.WOOD_AXE, false, null);
-            }
-            if (tier == 2) {
-                return iGen.AxeGenorator(Material.STONE_AXE, false, null);
-            }
-            if (tier == 3) {
-                return iGen.AxeGenorator(Material.IRON_AXE, false, null);
-            }
-            if (tier == 4) {
-                return iGen.AxeGenorator(Material.DIAMOND_AXE, false, null);
-            }
-            if (tier == 5) {
-                return iGen.AxeGenorator(Material.GOLD_AXE, false, null);
-            }
+        else if (r == 1) {
+            return MonsterMechanics.generateMobGear(ItemType.AXE, ItemTier.getTierFromInt(tier));
         }
-        if (r == 2) {
-            return iGen.BowGenorator(tier, false, null);
+        else if (r == 2) {
+            return MonsterMechanics.generateMobGear(ItemType.BOW, ItemTier.getTierFromInt(tier));
         }
-        if (r == 3) {
-            return iGen.HelmetGenerator(tier, false, null);
+        else if (r == 3) {
+            return MonsterMechanics.generateMobGear(ItemType.HELMET, ItemTier.getTierFromInt(tier));
         }
-        if (r == 4) {
-            return iGen.BootGenerator(tier, false, null);
+        else if (r == 4) {
+            return MonsterMechanics.generateMobGear(ItemType.BOOTS, ItemTier.getTierFromInt(tier));
         }
-        if (r == 5) {
-            return iGen.LeggingsGenerator(tier, false, null);
+        else if (r == 5) {
+            return MonsterMechanics.generateMobGear(ItemType.LEGGINGS, ItemTier.getTierFromInt(tier));
         }
-        if (r == 6) {
-            return iGen.ChestPlateGenerator(tier, false, null);
+        else if (r == 6) {
+            return MonsterMechanics.generateMobGear(ItemType.CHESTPLATE, ItemTier.getTierFromInt(tier));
         }
-        if (r == 7) {
-            if (tier == 1) {
-                return iGen.PolearmGenorator(Material.WOOD_SPADE, false, null);
-            }
-            if (tier == 2) {
-                return iGen.PolearmGenorator(Material.STONE_SPADE, false, null);
-            }
-            if (tier == 3) {
-                return iGen.PolearmGenorator(Material.IRON_SPADE, false, null);
-            }
-            if (tier == 4) {
-                return iGen.PolearmGenorator(Material.DIAMOND_SPADE, false, null);
-            }
-            if (tier == 5) {
-                return iGen.PolearmGenorator(Material.GOLD_SPADE, false, null);
-            }
+        else if (r == 7) {
+            return MonsterMechanics.generateMobGear(ItemType.POLEARM, ItemTier.getTierFromInt(tier));
         }
-        if (r == 8) {
-            if (tier == 1) {
-                return iGen.StaffGenorator(Material.WOOD_HOE, false, null);
-            }
-            if (tier == 2) {
-                return iGen.StaffGenorator(Material.STONE_HOE, false, null);
-            }
-            if (tier == 3) {
-                return iGen.StaffGenorator(Material.IRON_HOE, false, null);
-            }
-            if (tier == 4) {
-                return iGen.StaffGenorator(Material.DIAMOND_HOE, false, null);
-            }
-            if (tier == 5) {
-                return iGen.StaffGenorator(Material.GOLD_HOE, false, null);
-            }
+        else if (r == 8) {
+            return MonsterMechanics.generateMobGear(ItemType.STAFF, ItemTier.getTierFromInt(tier));
         }
         return i;
     }

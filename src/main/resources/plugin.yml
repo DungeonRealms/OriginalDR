@@ -349,6 +349,9 @@ commands:
   setlevel:
     description: Sets the player givens level.
     usage: /<command>
+  stat:
+    description: Opens the stat allocation GUI.
+    usage: /<command>
   stats:
     description: Opens the stat allocation GUI.
     usage: /<command>
