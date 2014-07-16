@@ -1023,10 +1023,10 @@ public class ItemMechanics implements Listener {
                                 crit_chance += 3;
                             }
 
-                            if (dex == true) {
-                                crit_chance += (dex_atr * 0.005);
+                            if (intel == true) {
+                                crit_chance += (int_atr * 0.025);
                             }
-
+                            
                             if (crit_chance >= new Random().nextInt(100)) {
                                 crit_dmg = true;
                             }
@@ -1086,6 +1086,7 @@ public class ItemMechanics implements Listener {
 
                     if (elemental_dmg == true) {
                         edmg = Integer.parseInt(elemental_data.split("\\+")[1]);
+                        edmg += edmg * (1 + 0.05 * int_atr);
                     }
 
                     String return_string = String.valueOf(dmg + edmg) + ":";
@@ -5665,7 +5666,7 @@ public class ItemMechanics implements Listener {
                 if (dmg_data.contains("int=")) {
                     int_mod += Double.parseDouble(dmg_data.split("int=")[1].split(":")[0]);
                 }
-                dmg += (int) (double) ((double) dmg * (double) (((int_mod * 0.015) / 100.0D)));
+                dmg += (int) (double) ((double) dmg * (double) (((int_mod * 0.02) / 100.0D)));
             }
 
             if (ProfessionMechanics.fish_bonus_dmg.containsKey(p_attacker.getName())) {
