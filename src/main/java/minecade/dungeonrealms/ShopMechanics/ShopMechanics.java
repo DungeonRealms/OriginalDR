@@ -31,6 +31,7 @@ import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.LootMechanics.LootMechanics;
 import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
+import minecade.dungeonrealms.MountMechanics.MountMechanics;
 import minecade.dungeonrealms.PetMechanics.PetMechanics;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
@@ -1665,6 +1666,12 @@ public class ShopMechanics implements Listener {
 					p.updateInventory();
 					return;
 				}
+			}
+			
+			if(MountMechanics.isMount(e.getCurrentItem()) || MountMechanics.isMule(e.getCurrentItem())) {
+			    e.setCancelled(true);
+			    p.updateInventory();
+			    return;
 			}
 
 			if(e.isRightClick()) {

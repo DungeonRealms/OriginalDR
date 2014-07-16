@@ -66,6 +66,7 @@ import net.minecraft.server.v1_7_R2.EntityPlayer;
 import net.minecraft.server.v1_7_R2.Packet;
 import net.minecraft.server.v1_7_R2.PacketPlayOutEntityEquipment;
 import net.minecraft.server.v1_7_R2.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -134,6 +135,8 @@ public class CommunityMechanics implements Listener {
 	public TipMechanics TipMechanics = new TipMechanics(this);
 
 	public static Thread PMThread;
+	
+	private int serverNum = -1;
 
 	public void onEnable() {
 		instance = this;
@@ -165,6 +168,8 @@ public class CommunityMechanics implements Listener {
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
 		TipMechanics.loadTips();
+		
+		serverNum = Integer.parseInt(Bukkit.getMotd().substring(Bukkit.getMotd().indexOf("-") + 1, Bukkit.getMotd().indexOf(" ")));
 
 		new BukkitRunnable() {
 			@Override
@@ -182,6 +187,17 @@ public class CommunityMechanics implements Listener {
 		}, 400 * 20L, 300 * 20L);
 
 		server_list.put(0, "72.8.157.66");
+		
+		// the following ports are listen ports, not the minecraft ports the servers are actually running on!
+        server_list.put(1, "72.20.37.210:6427");
+        server_list.put(2, "72.20.37.210:6428");
+        server_list.put(3, "72.20.37.210:6429");
+        server_list.put(4, "72.20.37.210:6430"); 
+        server_list.put(5, "72.20.37.210:6431");
+        
+        server_list.put(100, "72.20.55.80");
+        
+		/* moved to new server boxes on 7/2/14
 		server_list.put(1, "72.20.38.165"); // 74..63.245.13 US-1
 		server_list.put(2, "72.20.38.166"); // 74..63.245.14 US-2
 		server_list.put(3, "72.8.134.149"); // US-3
@@ -196,11 +212,13 @@ public class CommunityMechanics implements Listener {
 		server_list.put(100, "72.20.55.80"); // US-100
 
 		server_list.put(2001, "72.20.42.198"); // BR-1
+		*/
 
 		for (String s : server_list.values()) {
 			ip_whitelist.add(s);
 		}
-
+		
+		ip_whitelist.add("72.20.37.210"); //Live Shards
 		ip_whitelist.add(Config.Hive_IP);
 		ip_whitelist.add("72.8.157.66"); // Donation Back-end Server AND US-0
 		ip_whitelist.add("72.20.9.154");
@@ -1545,11 +1563,15 @@ public class CommunityMechanics implements Listener {
 				/*
 				* if(server_num > 1000 && server_num < 3000){ delay = 3000; }
 				*/
-
+			    String ipAndPort = server_list.get(server_num);
+                String ipNoPort = ipAndPort.contains(":") ? server_list.get(server_num).split(":")[0]
+                        : ipAndPort;
+                int port = ipAndPort.contains(":") && StringUtils.isNumeric(ipAndPort.split(":")[1]) ? Integer.parseInt(ipAndPort
+                        .split(":")[1]) : Config.transfer_port;
 				Socket s = new Socket();
 				// s.bind(new InetSocketAddress(Hive.local_IP,
 				// Hive.transfer_port+1));
-				s.connect(new InetSocketAddress(server_list.get(server_num), Config.transfer_port), delay);
+				s.connect(new InetSocketAddress(ipNoPort, port), delay);
 				return s;
 			} catch (IOException e) {
 				// e.printStackTrace(); Worthless spam for dead servers.
@@ -1564,22 +1586,24 @@ public class CommunityMechanics implements Listener {
 
 	// @server_num@p_name:server_num
 	public static void sendPacketCrossServer(String packet_data, int server_num, boolean all_servers) {
-		String local_ip = Config.local_IP;
-
 		Socket kkSocket = null;
 		PrintWriter out = null;
 
 		if (all_servers) {
 			for (int sn : CommunityMechanics.server_list.keySet()) {
-				String server_ip = CommunityMechanics.server_list.get(sn);
-				if (server_ip.equalsIgnoreCase(local_ip)) {
+			    String ipAndPort = CommunityMechanics.server_list.get(sn);
+                String ipNoPort = ipAndPort.contains(":") ? CommunityMechanics.server_list.get(sn).split(":")[0]
+                        : ipAndPort;
+                int port = ipAndPort.contains(":") && StringUtils.isNumeric(ipAndPort.split(":")[1]) ? Integer.parseInt(ipAndPort
+                        .split(":")[1]) : Config.transfer_port;
+				if (sn == Main.getCommunityMechanics().getServerNum()) {
 					continue; // Don't send to same server.
 				}
 				try {
 					kkSocket = new Socket();
 					// kkSocket.bind(new InetSocketAddress(Hive.local_IP,
 					// Hive.transfer_port+1));
-					kkSocket.connect(new InetSocketAddress(server_ip, Config.transfer_port), 100);
+					kkSocket.connect(new InetSocketAddress(ipNoPort, port), 100);
 					out = new PrintWriter(kkSocket.getOutputStream(), true);
 
 					out.println(packet_data);
@@ -1597,12 +1621,15 @@ public class CommunityMechanics implements Listener {
 			}
 		} else if (!all_servers) {
 			try {
-				String server_ip = CommunityMechanics.server_list.get(server_num);
-
+			    String ipAndPort = CommunityMechanics.server_list.get(server_num);
+                String ipNoPort = ipAndPort.contains(":") ? CommunityMechanics.server_list.get(server_num).split(":")[0]
+                        : ipAndPort;
+                int port = ipAndPort.contains(":") && StringUtils.isNumeric(ipAndPort.split(":")[1]) ? Integer.parseInt(ipAndPort
+                        .split(":")[1]) : Config.transfer_port;
 				kkSocket = new Socket();
 				// kkSocket.bind(new InetSocketAddress(Hive.local_IP,
 				// Hive.transfer_port+1));
-				kkSocket.connect(new InetSocketAddress(server_ip, Config.transfer_port), 100);
+				kkSocket.connect(new InetSocketAddress(ipNoPort, port), 100);
 				out = new PrintWriter(kkSocket.getOutputStream(), true);
 
 				out.println(packet_data);
@@ -1629,7 +1656,12 @@ public class CommunityMechanics implements Listener {
 			kkSocket = new Socket();
 			// kkSocket.bind(new InetSocketAddress(Hive.local_IP,
 			// Hive.transfer_port+1));
-			kkSocket.connect(new InetSocketAddress(ip, Config.transfer_port), 100);
+			String ipAndPort = ip;
+            String ipNoPort = ipAndPort.contains(":") ? ip.split(":")[0]
+                    : ipAndPort;
+            int port = ipAndPort.contains(":") && StringUtils.isNumeric(ipAndPort.split(":")[1]) ? Integer.parseInt(ipAndPort
+                    .split(":")[1]) : Config.transfer_port;
+            kkSocket.connect(new InetSocketAddress(ipNoPort, port), 100);
 			out = new PrintWriter(kkSocket.getOutputStream(), true);
 
 			out.println(packet_data);
@@ -2149,5 +2181,13 @@ public class CommunityMechanics implements Listener {
 			e.setCancelled(true);
 		}
 	}
+
+    public int getServerNum() {
+        return serverNum;
+    }
+
+    public void setServerNum(int serverNum) {
+        this.serverNum = serverNum;
+    }
 
 }

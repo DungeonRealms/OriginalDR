@@ -90,7 +90,7 @@ public class HiveServer {
 			try {
 				try {
 					kkSocket = new Socket();
-					kkSocket.connect(new InetSocketAddress(s, 8008), 2500);
+                    kkSocket.connect(new InetSocketAddress(s.contains(":") ? s.split(":")[0] : s, 8008), 2500);
 					out = new PrintWriter(kkSocket.getOutputStream(), true);
 				} catch(SocketTimeoutException e) {
 					e.printStackTrace();

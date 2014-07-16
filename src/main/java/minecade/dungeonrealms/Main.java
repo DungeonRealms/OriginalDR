@@ -2,6 +2,7 @@ package minecade.dungeonrealms;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.vilsol.betanpc.BetaNPC;
@@ -105,12 +106,16 @@ public class Main extends JavaPlugin implements Listener {
 
     private static BetaNPC betaNPC;
 
+    /**
+     * Holds the <code>JavaPlugin</code> instance of the DungeonRealms plugin once enabled.
+     */
     public static Main plugin;
     public static Logger log;
 
     private static final List<String> devs = Arrays.asList("Vilsol", "iFamasssxD", "Vaquxine", "Azubuso", "EtherealTemplar", "Mysteryem");
-    private static List<String> masters = Arrays.asList("Bradez1571", "felipepcjr");
+    private static final List<String> masters = Arrays.asList("Bradez1571", "felipepcjr");
 
+    @Override
     public void onEnable() {
         plugin = this;
         log = this.getLogger();
@@ -126,7 +131,7 @@ public class Main extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new LevelMechanics(), this);
         getServer().getPluginManager().registerEvents(new LogListener(), this);
-        
+
         getCommand("isunomadyet").setExecutor(new CommandIsUnoMadYet());
         getCommand("setlevel").setExecutor(new CommandSetLevel());
         levelMechanics = new LevelMechanics();
@@ -235,6 +240,7 @@ public class Main extends JavaPlugin implements Listener {
         }.runTaskTimer(this, 20L * 5, 20L * 5);
     }
 
+    @Override
     public void onDisable() {
         ConnectionPool.refresh = false;
         shopMechanics.onDisable();
@@ -301,11 +307,7 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     public static void d(Object o, CC color) {
-        if (o == null) {
-            Main.plugin.getLogger().info(color + "null" + CC.DEFAULT);
-            return;
-        }
-        Main.plugin.getLogger().info(color + o.toString() + CC.DEFAULT);
+        Main.plugin.getLogger().log(Level.INFO, "{0}{1}{2}", new Object[]{color, o, CC.DEFAULT});
     }
 
     public static void dl(Object o) {
@@ -313,199 +315,378 @@ public class Main extends JavaPlugin implements Listener {
         String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
         String methodName = Thread.currentThread().getStackTrace()[2].getMethodName();
         int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
-        Main.plugin.getLogger().info(CC.MAGENTA + className + "." + methodName + "():" + lineNumber + " - " + CC.CYAN + o + CC.DEFAULT);
+        Main.plugin.getLogger().log(Level.INFO, "{0}{1}.{2}():{3} - {4}{5}{6}",
+                new Object[]{CC.MAGENTA, className, methodName, lineNumber, CC.CYAN, o, CC.DEFAULT});
     }
 
+    /**
+     * Checks if a player is a developer based on their name.
+     * @param s the Minecraft username of the player to check.
+     * @return true if the player is a developer, otherwise, false.
+     */
     public static boolean isDev(String s) {
         return devs.contains(s);
     }
 
+    /**
+     * Checks if a player is a game master (GM), based on their name.
+     * @param s the Minecraft username of the player to check.
+     * @return true if the player is a game master or developer, otherwise, false.
+     */
     public static boolean isMaster(String s) {
-        if (devs.contains(s))
-            return true;
-        if (masters.contains(s))
-            return true;
-        return false;
+        return devs.contains(s) || masters.contains(s);
     }
 
-	public static AchievementMechanics getAchievementMechanics() {
-		return achievementMechanics;
-	}
+    public static AchievementMechanics getAchievementMechanics() {
+        return achievementMechanics;
+    }
 
-	public static BossMechanics getBossMechanics() {
-		return bossMechanics;
-	}
+    public static void setAchievementMechanics(AchievementMechanics achievementMechanics) {
+        Main.achievementMechanics = achievementMechanics;
+    }
 
-	public static ChatMechanics getChatMechanics() {
-		return chatMechanics;
-	}
+    public static BossMechanics getBossMechanics() {
+        return bossMechanics;
+    }
 
-	public static CommunityMechanics getCommunityMechanics() {
-		return communityMechanics;
-	}
+    public static void setBossMechanics(BossMechanics bossMechanics) {
+        Main.bossMechanics = bossMechanics;
+    }
 
-	public static DonationMechanics getDonationMechanics() {
-		return donationMechanics;
-	}
+    public static ChatMechanics getChatMechanics() {
+        return chatMechanics;
+    }
 
-	public static DuelMechanics getDuelMechanics() {
-		return duelMechanics;
-	}
+    public static void setChatMechanics(ChatMechanics chatMechanics) {
+        Main.chatMechanics = chatMechanics;
+    }
 
-	public static EcashMechanics getEcashMechanics() {
-		return ecashMechanics;
-	}
+    public static CommunityMechanics getCommunityMechanics() {
+        return communityMechanics;
+    }
 
-	public static EnchantMechanics getEnchantMechanics() {
-		return enchantMechanics;
-	}
+    public static void setCommunityMechanics(CommunityMechanics communityMechanics) {
+        Main.communityMechanics = communityMechanics;
+    }
 
-	public static FatigueMechanics getFatigueMechanics() {
-		return fatigueMechanics;
-	}
+    public static DonationMechanics getDonationMechanics() {
+        return donationMechanics;
+    }
 
-	public static GuildMechanics getGuildMechanics() {
-		return guildMechanics;
-	}
+    public static void setDonationMechanics(DonationMechanics donationMechanics) {
+        Main.donationMechanics = donationMechanics;
+    }
 
-	public static HealthMechanics getHealthMechanics() {
-		return healthMechanics;
-	}
+    public static DuelMechanics getDuelMechanics() {
+        return duelMechanics;
+    }
 
-	public static InstanceMechanics getInstanceMechanics() {
-		return instanceMechanics;
-	}
+    public static void setDuelMechanics(DuelMechanics duelMechanics) {
+        Main.duelMechanics = duelMechanics;
+    }
 
-	public static ItemMechanics getItemMechanics() {
-		return itemMechanics;
-	}
+    public static EcashMechanics getEcashMechanics() {
+        return ecashMechanics;
+    }
 
-	public static KarmaMechanics getKarmaMechanics() {
-		return karmaMechanics;
-	}
+    public static void setEcashMechanics(EcashMechanics ecashMechanics) {
+        Main.ecashMechanics = ecashMechanics;
+    }
 
-	public static LootMechanics getLootMechanics() {
-		return lootMechanics;
-	}
+    public static EnchantMechanics getEnchantMechanics() {
+        return enchantMechanics;
+    }
 
-	public static MerchantMechanics getMerchantMechanics() {
-		return merchantMechanics;
-	}
+    public static void setEnchantMechanics(EnchantMechanics enchantMechanics) {
+        Main.enchantMechanics = enchantMechanics;
+    }
 
-	public static ModerationMechanics getModerationMechanics() {
-		return moderationMechanics;
-	}
+    public static FatigueMechanics getFatigueMechanics() {
+        return fatigueMechanics;
+    }
 
-	public static MoneyMechanics getMoneyMechanics() {
-		return moneyMechanics;
-	}
+    public static void setFatigueMechanics(FatigueMechanics fatigueMechanics) {
+        Main.fatigueMechanics = fatigueMechanics;
+    }
 
-	public static MonsterMechanics getMonsterMechanics() {
-		return monsterMechanics;
-	}
+    public static GuildMechanics getGuildMechanics() {
+        return guildMechanics;
+    }
 
-	public static MountMechanics getMountMechanics() {
-		return mountMechanics;
-	}
+    public static void setGuildMechanics(GuildMechanics guildMechanics) {
+        Main.guildMechanics = guildMechanics;
+    }
 
-	public static PartyMechanics getPartyMechanics() {
-		return partyMechanics;
-	}
+    public static HealthMechanics getHealthMechanics() {
+        return healthMechanics;
+    }
 
-	public static PermissionMechanics getPermissionMechanics() {
-		return permissionMechanics;
-	}
+    public static void setHealthMechanics(HealthMechanics healthMechanics) {
+        Main.healthMechanics = healthMechanics;
+    }
 
-	public static PetMechanics getPetMechanics() {
-		return petMechanics;
-	}
+    public static InstanceMechanics getInstanceMechanics() {
+        return instanceMechanics;
+    }
 
-	public static PowerupMechanics getPowerupMechanics() {
-		return powerupMechanics;
-	}
+    public static void setInstanceMechanics(InstanceMechanics instanceMechanics) {
+        Main.instanceMechanics = instanceMechanics;
+    }
 
-	public static ProfessionMechanics getProfessionMechanics() {
-		return professionMechanics;
-	}
+    public static ItemMechanics getItemMechanics() {
+        return itemMechanics;
+    }
 
-	public static RealmMechanics getRealmMechanics() {
-		return realmMechanics;
-	}
+    public static void setItemMechanics(ItemMechanics itemMechanics) {
+        Main.itemMechanics = itemMechanics;
+    }
 
-	public static RecordMechanics getRecordMechanics() {
-		return recordMechanics;
-	}
+    public static KarmaMechanics getKarmaMechanics() {
+        return karmaMechanics;
+    }
 
-	public static RepairMechanics getRepairMechanics() {
-		return repairMechanics;
-	}
+    public static void setKarmaMechanics(KarmaMechanics karmaMechanics) {
+        Main.karmaMechanics = karmaMechanics;
+    }
 
-	public static RestrictionMechanics getRestrictionMechanics() {
-		return restrictionMechanics;
-	}
+    public static LootMechanics getLootMechanics() {
+        return lootMechanics;
+    }
 
-	public static ShopMechanics getShopMechanics() {
-		return shopMechanics;
-	}
+    public static void setLootMechanics(LootMechanics lootMechanics) {
+        Main.lootMechanics = lootMechanics;
+    }
 
-	public static SpawnMechanics getSpawnMechanics() {
-		return spawnMechanics;
-	}
+    public static MerchantMechanics getMerchantMechanics() {
+        return merchantMechanics;
+    }
 
-	public static SubscriberMechanics getSubscriberMechanics() {
-		return subscriberMechanics;
-	}
+    public static void setMerchantMechanics(MerchantMechanics merchantMechanics) {
+        Main.merchantMechanics = merchantMechanics;
+    }
 
-	public static TeleportationMechanics getTeleportationMechanics() {
-		return teleportationMechanics;
-	}
+    public static ModerationMechanics getModerationMechanics() {
+        return moderationMechanics;
+    }
 
-	public static TradeMechanics getTradeMechanics() {
-		return tradeMechanics;
-	}
+    public static void setModerationMechanics(ModerationMechanics moderationMechanics) {
+        Main.moderationMechanics = moderationMechanics;
+    }
 
-	public static TutorialMechanics getTutorialMechanics() {
-		return tutorialMechanics;
-	}
+    public static MoneyMechanics getMoneyMechanics() {
+        return moneyMechanics;
+    }
 
-	public static WeatherMechanics getWeatherMechanics() {
-		return weatherMechanics;
-	}
+    public static void setMoneyMechanics(MoneyMechanics moneyMechanics) {
+        Main.moneyMechanics = moneyMechanics;
+    }
 
-	public static HearthstoneMechanics getHearthstoneMechanics() {
-		return hearthstoneMechanics;
-	}
+    public static MonsterMechanics getMonsterMechanics() {
+        return monsterMechanics;
+    }
 
-	public static LevelMechanics getLevelMechanics() {
-		return levelMechanics;
-	}
+    public static void setMonsterMechanics(MonsterMechanics monsterMechanics) {
+        Main.monsterMechanics = monsterMechanics;
+    }
 
-	public static Hive getHive() {
-		return hive;
-	}
+    public static MountMechanics getMountMechanics() {
+        return mountMechanics;
+    }
 
-	public static HiveServer getHiveServer() {
-		return hiveServer;
-	}
+    public static void setMountMechanics(MountMechanics mountMechanics) {
+        Main.mountMechanics = mountMechanics;
+    }
 
-	public static BetaNPC getBetaNPC() {
-		return betaNPC;
-	}
+    public static PartyMechanics getPartyMechanics() {
+        return partyMechanics;
+    }
 
-	public static Main getPlugin() {
-		return plugin;
-	}
+    public static void setPartyMechanics(PartyMechanics partyMechanics) {
+        Main.partyMechanics = partyMechanics;
+    }
 
-	public static Logger getLog() {
-		return log;
-	}
+    public static PermissionMechanics getPermissionMechanics() {
+        return permissionMechanics;
+    }
 
-	public static List<String> getDevs() {
-		return devs;
-	}
+    public static void setPermissionMechanics(PermissionMechanics permissionMechanics) {
+        Main.permissionMechanics = permissionMechanics;
+    }
 
-	public static List<String> getMasters() {
-		return masters;
-	}
+    public static PetMechanics getPetMechanics() {
+        return petMechanics;
+    }
+
+    public static void setPetMechanics(PetMechanics petMechanics) {
+        Main.petMechanics = petMechanics;
+    }
+
+    public static PowerupMechanics getPowerupMechanics() {
+        return powerupMechanics;
+    }
+
+    public static void setPowerupMechanics(PowerupMechanics powerupMechanics) {
+        Main.powerupMechanics = powerupMechanics;
+    }
+
+    public static ProfessionMechanics getProfessionMechanics() {
+        return professionMechanics;
+    }
+
+    public static void setProfessionMechanics(ProfessionMechanics professionMechanics) {
+        Main.professionMechanics = professionMechanics;
+    }
+
+    public static RealmMechanics getRealmMechanics() {
+        return realmMechanics;
+    }
+
+    public static void setRealmMechanics(RealmMechanics realmMechanics) {
+        Main.realmMechanics = realmMechanics;
+    }
+
+    public static RecordMechanics getRecordMechanics() {
+        return recordMechanics;
+    }
+
+    public static void setRecordMechanics(RecordMechanics recordMechanics) {
+        Main.recordMechanics = recordMechanics;
+    }
+
+    public static RepairMechanics getRepairMechanics() {
+        return repairMechanics;
+    }
+
+    public static void setRepairMechanics(RepairMechanics repairMechanics) {
+        Main.repairMechanics = repairMechanics;
+    }
+
+    public static RestrictionMechanics getRestrictionMechanics() {
+        return restrictionMechanics;
+    }
+
+    public static void setRestrictionMechanics(RestrictionMechanics restrictionMechanics) {
+        Main.restrictionMechanics = restrictionMechanics;
+    }
+
+    public static ShopMechanics getShopMechanics() {
+        return shopMechanics;
+    }
+
+    public static void setShopMechanics(ShopMechanics shopMechanics) {
+        Main.shopMechanics = shopMechanics;
+    }
+
+    public static SpawnMechanics getSpawnMechanics() {
+        return spawnMechanics;
+    }
+
+    public static void setSpawnMechanics(SpawnMechanics spawnMechanics) {
+        Main.spawnMechanics = spawnMechanics;
+    }
+
+    public static SubscriberMechanics getSubscriberMechanics() {
+        return subscriberMechanics;
+    }
+
+    public static void setSubscriberMechanics(SubscriberMechanics subscriberMechanics) {
+        Main.subscriberMechanics = subscriberMechanics;
+    }
+
+    public static TeleportationMechanics getTeleportationMechanics() {
+        return teleportationMechanics;
+    }
+
+    public static void setTeleportationMechanics(TeleportationMechanics teleportationMechanics) {
+        Main.teleportationMechanics = teleportationMechanics;
+    }
+
+    public static TradeMechanics getTradeMechanics() {
+        return tradeMechanics;
+    }
+
+    public static void setTradeMechanics(TradeMechanics tradeMechanics) {
+        Main.tradeMechanics = tradeMechanics;
+    }
+
+    public static TutorialMechanics getTutorialMechanics() {
+        return tutorialMechanics;
+    }
+
+    public static void setTutorialMechanics(TutorialMechanics tutorialMechanics) {
+        Main.tutorialMechanics = tutorialMechanics;
+    }
+
+    public static WeatherMechanics getWeatherMechanics() {
+        return weatherMechanics;
+    }
+
+    public static void setWeatherMechanics(WeatherMechanics weatherMechanics) {
+        Main.weatherMechanics = weatherMechanics;
+    }
+
+    public static HearthstoneMechanics getHearthstoneMechanics() {
+        return hearthstoneMechanics;
+    }
+
+    public static void setHearthstoneMechanics(HearthstoneMechanics hearthstoneMechanics) {
+        Main.hearthstoneMechanics = hearthstoneMechanics;
+    }
+
+    public static LevelMechanics getLevelMechanics() {
+        return levelMechanics;
+    }
+
+    public static void setLevelMechanics(LevelMechanics levelMechanics) {
+        Main.levelMechanics = levelMechanics;
+    }
+
+    public static Hive getHive() {
+        return hive;
+    }
+
+    public static void setHive(Hive hive) {
+        Main.hive = hive;
+    }
+
+    public static HiveServer getHiveServer() {
+        return hiveServer;
+    }
+
+    public static void setHiveServer(HiveServer hiveServer) {
+        Main.hiveServer = hiveServer;
+    }
+
+    public static BetaNPC getBetaNPC() {
+        return betaNPC;
+    }
+
+    public static void setBetaNPC(BetaNPC betaNPC) {
+        Main.betaNPC = betaNPC;
+    }
+
+    public static Main getPlugin() {
+        return plugin;
+    }
+
+    public static void setPlugin(Main plugin) {
+        Main.plugin = plugin;
+    }
+
+    public static Logger getLog() {
+        return log;
+    }
+
+    public static void setLog(Logger log) {
+        Main.log = log;
+    }
+
+    public static List<String> getDevs() {
+        return devs;
+    }
+
+    public static List<String> getMasters() {
+        return masters;
+    }
 
 }

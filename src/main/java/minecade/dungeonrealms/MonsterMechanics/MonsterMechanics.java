@@ -3757,7 +3757,7 @@ public class MonsterMechanics implements Listener {
         double mhealth = mob_health.get(ent);
 
         if (attacker instanceof Player && mhealth == max_health && dmg >= max_health) {
-            AchievementMechanics.addAchievement(((Player) attacker).getName(), "One K.O");
+            AchievementMechanics.addAchievement(((Player) attacker).getName(), "One Hit K.O.");
         }
 
         // Rag'doll them maybe?
@@ -5091,6 +5091,11 @@ public class MonsterMechanics implements Listener {
                 return;
             }
             return; // Not a custom monster, no one cares.
+        }
+        
+        if (Bukkit.getMotd().contains("US-0")) {
+            e.getDrops().clear();
+            return;
         }
 
         if (RecordMechanics.mob_kills.containsKey(p_name)) {

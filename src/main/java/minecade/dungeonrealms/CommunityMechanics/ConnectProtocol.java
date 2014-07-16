@@ -25,7 +25,11 @@ import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
 import minecade.dungeonrealms.config.Config;
 import minecade.dungeonrealms.enums.CC;
+import minecade.dungeonrealms.enums.LogType;
+import minecade.dungeonrealms.jsonlib.JsonBuilder;
 import minecade.dungeonrealms.managers.PlayerManager;
+import minecade.dungeonrealms.models.LogModel;
+import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -40,9 +44,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 @SuppressWarnings("deprecation")
 public class ConnectProtocol implements Runnable {
 	private Socket clientSocket;
+	private String sendingIP;
 
-	public ConnectProtocol(Socket s) {
+	public ConnectProtocol(Socket s, String ip) {
 		this.clientSocket = s;
+		this.sendingIP = ip;
 	}
 
 	public static void sendResultCrossServer(String server_ip, String message, int server_num) {
@@ -54,8 +60,12 @@ public class ConnectProtocol implements Runnable {
 				kkSocket = CommunityMechanics.getSocket(server_num);
 				out = new PrintWriter(kkSocket.getOutputStream(), true);
 			} catch (Exception err) {
+                String ipAndPort = server_ip;
+                String ipNoPort = ipAndPort.contains(":") ? server_ip.split(":")[0] : ipAndPort;
+                int port = ipAndPort.contains(":") && StringUtils.isNumeric(ipAndPort.split(":")[1]) ? Integer.parseInt(ipAndPort
+                        .split(":")[1]) : Config.transfer_port;
 				kkSocket = new Socket();
-				kkSocket.connect(new InetSocketAddress(server_ip, Config.transfer_port), 150);
+				kkSocket.connect(new InetSocketAddress(ipNoPort, port), 150);
 				out = new PrintWriter(kkSocket.getOutputStream(), true);
 			}
 
@@ -78,8 +88,10 @@ public class ConnectProtocol implements Runnable {
 			// true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			String inputLine;
+			List<String> receivedData = new ArrayList<String>();
 
 			while ((inputLine = in.readLine()) != null) {
+			    receivedData.add(inputLine);
 
 				if (inputLine.startsWith("@date_update@")) {
 					long time = Long.parseLong(inputLine.substring(inputLine.lastIndexOf("@") + 1, inputLine.length()));
@@ -1191,6 +1203,15 @@ public class ConnectProtocol implements Runnable {
 
 			}
 
+			int line = 0;
+			JsonBuilder data = new JsonBuilder("receiving_server", Utils.getShard()).setData("sending_server", sendingIP);
+			
+			for (String dataLine : receivedData) {
+			    line++;
+			    data.setData("line_" + String.valueOf(line), dataLine);
+			}
+			
+			new LogModel(LogType.PACKET, "CONSOLE", data.getJson());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;

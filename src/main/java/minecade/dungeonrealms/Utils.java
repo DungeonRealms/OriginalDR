@@ -3,6 +3,8 @@ package minecade.dungeonrealms;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -36,6 +38,18 @@ public class Utils {
     
     public static String getShard(){
     	return Bukkit.getMotd().split(" ")[0];
+    }
+    
+    /**
+     * Get key from a HashMap with a value
+     */
+    public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
+        for (Entry<T, E> entry : map.entrySet()) {
+            if (value.equals(entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 	
 }
