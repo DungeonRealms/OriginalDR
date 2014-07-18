@@ -1415,7 +1415,7 @@ public class RestrictionMechanics implements Listener {
 
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
-            if (e.hasItem() && e.getItem().getType() == Material.GOLDEN_APPLE) {
+            if (e.hasItem() && e.getItem().getType() == Material.GOLDEN_APPLE && !e.getItem().getItemMeta().getDisplayName().contains(ChatColor.YELLOW.toString())) {
                 p.setItemInHand(new ItemStack(Material.AIR));
                 log.info("[RestrictionMechanics] (FLAG) Player " + p.getName() + " used a GOLDEN APPLE.");
             }

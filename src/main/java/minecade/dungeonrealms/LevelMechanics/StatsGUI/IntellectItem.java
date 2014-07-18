@@ -51,10 +51,10 @@ public class IntellectItem implements MenuItem, BonusItem {
                 allocatePoints(-1, plr);
                 break;
             case SHIFT_LEFT:
-                allocatePoints(PlayerLevel.POINTS_PER_LEVEL, plr);
+                allocatePoints(3, plr);
                 break;
             case SHIFT_RIGHT:
-                allocatePoints(-PlayerLevel.POINTS_PER_LEVEL, plr);
+                allocatePoints(-3, plr);
                 break;
             default:
                 break;
@@ -89,7 +89,7 @@ public class IntellectItem implements MenuItem, BonusItem {
 
 	private void allocatePoints(int points, Player plr) {
 	    if ((points > 0 && pLevel.getTempFreePoints() >= points
-                || (points < 0 && (this.points - pLevel.getIntPoints()) >= Math.abs(points))) && this.points + points <= 300) {
+                || (points < 0 && (this.points - pLevel.getIntPoints()) >= Math.abs(points))) && this.points + points <= 600) {
 	        this.points += points;
 	        pLevel.setTempFreePoints(pLevel.getTempFreePoints() - points);
 	        plr.playSound(plr.getLocation(), Sound.SHEEP_SHEAR, 1.0F, 1.3F);

@@ -10,10 +10,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import me.confuser.barapi.BarAPI;
+import me.vilsol.betanpc.utils.Utils;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.FatigueMechanics.FatigueMechanics;
+import minecade.dungeonrealms.HealthMechanics.commands.CommandDRFood;
 import minecade.dungeonrealms.HealthMechanics.commands.CommandSetHealth;
 import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
@@ -26,6 +28,7 @@ import minecade.dungeonrealms.MountMechanics.MountMechanics;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
 import minecade.dungeonrealms.ScoreboardMechanics.ScoreboardMechanics;
+import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
 import minecade.dungeonrealms.SpawnMechanics.SpawnMechanics;
 import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.managers.PlayerManager;
@@ -60,10 +63,13 @@ import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
@@ -130,12 +136,87 @@ public class HealthMechanics implements Listener {
 	// Noobie players, TODO: Recode this so it can be removed on death.
 
 	public static HealthMechanics plugin = null;
+	
+	// HP/s food
+    private Inventory hpFoodVendor = Bukkit.createInventory(null, 18, "Food Vendor");
+    public static ItemStack t1_common_food = ItemMechanics.signCustomItem(Material.POTATO_ITEM, (short) 1,
+            ChatColor.WHITE + "Plowed Potato", ChatColor.RED + "+9 HP/s for " + ChatColor.BOLD + "30 SECONDS" + ","
+                    + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + ","
+                    + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString()
+                    + "The staple crop of Andalucia. Definitely not rotten" + "," + ChatColor.GRAY.toString()
+                    + ChatColor.ITALIC + "Common");
+    public static ItemStack t1_unique_food = ItemMechanics.signCustomItem(Material.BAKED_POTATO, (short) 1,
+            ChatColor.WHITE + "Loaded Potato Skin", ChatColor.RED + "+20 HP/s for " + ChatColor.BOLD + "30 SECONDS"
+                    + "," + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect"
+                    + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Extremely tasty." + ","
+                    + ChatColor.YELLOW.toString() + ChatColor.ITALIC + "Unique");
+    public static ItemStack t2_common_food = ItemMechanics.signCustomItem(Material.RAW_CHICKEN, (short) 1,
+            ChatColor.GREEN + "Uncooked Chicken", ChatColor.RED + "+42 HP/s for " + ChatColor.BOLD + "30 SECONDS" + ","
+                    + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + ","
+                    + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "This may or may not be safe to eat..."
+                    + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Common");
+    public static ItemStack t2_unique_food = ItemMechanics.signCustomItem(Material.COOKED_CHICKEN, (short) 1,
+            ChatColor.GREEN + "Roast Chicken", ChatColor.RED + "+58 HP/s for " + ChatColor.BOLD + "30 SECONDS" + ","
+                    + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + ","
+                    + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Warm and toasty. Delicious too." + ","
+                    + ChatColor.YELLOW.toString() + ChatColor.ITALIC + "Unique");
+    public static ItemStack t3_common_food = ItemMechanics.signCustomItem(Material.PORK, (short) 1, ChatColor.AQUA
+            + "Salted Pork",
+            ChatColor.RED + "+90 HP/s for " + ChatColor.BOLD + "30 SECONDS" + "," + ChatColor.RED + "Moving will "
+                    + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + "," + ChatColor.GRAY.toString()
+                    + ChatColor.ITALIC.toString() + "Bringing in the bacon." + "," + ChatColor.GRAY.toString()
+                    + ChatColor.ITALIC + "Common");
+    public static ItemStack t3_unique_food = ItemMechanics.signCustomItem(Material.GRILLED_PORK, (short) 1,
+            ChatColor.AQUA + "Seasoned Pork", ChatColor.RED + "+164 HP/s for " + ChatColor.BOLD + "30 SECONDS" + ","
+                    + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + ","
+                    + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString()
+                    + "Bacon. Except tastier (is that possible?)" + "," + ChatColor.YELLOW.toString()
+                    + ChatColor.ITALIC + "Unique");
+    public static ItemStack t4_common_food = ItemMechanics.signCustomItem(Material.RAW_BEEF, (short) 1,
+            ChatColor.LIGHT_PURPLE + "Frozen Steak",
+            ChatColor.RED + "+290 HP/s for " + ChatColor.BOLD + "30 SECONDS" + "," + ChatColor.RED + "Moving will "
+                    + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + "," + ChatColor.GRAY.toString()
+                    + ChatColor.ITALIC.toString() + "Stop complaining. Your dog would sure love to eat this, " + ","
+                    + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + ChatColor.GRAY + "so don't be picky!"
+                    + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Common");
+    public static ItemStack t4_unique_food = ItemMechanics.signCustomItem(Material.COOKED_BEEF, (short) 1,
+            ChatColor.LIGHT_PURPLE + "Rare Sizzling Steak", ChatColor.RED + "+430 HP/s for " + ChatColor.BOLD
+                    + "30 SECONDS" + "," + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED
+                    + " the effect" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString()
+                    + "Real men get their steaks rare." + "," + ChatColor.YELLOW.toString() + ChatColor.ITALIC
+                    + "Unique");
+    public static ItemStack t5_common_food = ItemMechanics.signCustomItem(Material.GOLDEN_APPLE, (short) 0,
+            ChatColor.YELLOW + "King's Apple", ChatColor.RED + "+750 HP/s for " + ChatColor.BOLD + "30 SECONDS" + ","
+                    + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + ","
+                    + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "A meal fit for a king." + ","
+                    + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Common");
+    public static ItemStack t5_unique_food = ItemMechanics.signCustomItem(Material.GOLDEN_APPLE, (short) 1,
+            ChatColor.YELLOW + "Enchanted King's Apple", ChatColor.RED + "+1060 HP/s for " + ChatColor.BOLD
+                    + "30 SECONDS" + "," + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED
+                    + " the effect" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString()
+                    + "A powerful king's battle snack." + "," + ChatColor.YELLOW.toString() + ChatColor.ITALIC
+                    + "Unique");
+    public static ItemStack[] HP_regen_food = new ItemStack[] { t1_common_food, t1_unique_food, t2_common_food,
+            t2_unique_food, t3_common_food, t3_unique_food, t4_common_food, t4_unique_food, t5_common_food,
+            t5_unique_food };
 
-	public void onEnable() {
+    public void onEnable() {
 		Main.plugin.getCommand("sethealth").setExecutor(new CommandSetHealth());
+		Main.plugin.getCommand("drfood").setExecutor(new CommandDRFood());
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
 		plugin = this;
+		
+		hpFoodVendor.setItem(0, ShopMechanics.setPrice(t1_common_food, 2));
+		hpFoodVendor.setItem(1, ShopMechanics.setPrice(t1_unique_food, 4));
+		hpFoodVendor.setItem(2, ShopMechanics.setPrice(t2_common_food, 6));
+		hpFoodVendor.setItem(3, ShopMechanics.setPrice(t2_unique_food, 9));
+		hpFoodVendor.setItem(4, ShopMechanics.setPrice(t3_common_food, 15));
+		hpFoodVendor.setItem(5, ShopMechanics.setPrice(t3_unique_food, 21));
+		hpFoodVendor.setItem(6, ShopMechanics.setPrice(t4_common_food, 35));
+		hpFoodVendor.setItem(7, ShopMechanics.setPrice(t4_unique_food, 60));
+		hpFoodVendor.setItem(8, ShopMechanics.setPrice(t5_common_food, 95));
+		hpFoodVendor.setItem(9, ShopMechanics.setPrice(t5_unique_food, 160));
 
 		//manager = Bukkit.getScoreboardManager();
 		//board = manager.getNewScoreboard();
@@ -199,6 +280,24 @@ public class HealthMechanics implements Listener {
 				HealthAutoRegen();
 			}
 		}, 25L, 20L);
+		
+		// Handles timer of HP regen food
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
+            public void run() {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (PlayerManager.getPlayerModel(p) == null) continue;
+                    if (PlayerManager.getPlayerModel(p) != null && PlayerManager.getPlayerModel(p).getRegenTimer() > 0) {
+                        PlayerManager.getPlayerModel(p).setRegenTimer(PlayerManager.getPlayerModel(p).getRegenTimer() - 1);
+                    }
+                    else if (PlayerManager.getPlayerModel(p).getRegenTimer() == 0) {
+                        p.sendMessage(ChatColor.YELLOW + "Your HP regen bonus has expired.");
+                        health_regen_data.put(p.getName(), HealthMechanics.health_regen_data.get(p.getName()) - PlayerManager.getPlayerModel(p).getRegenFoodBonus());
+                        PlayerManager.getPlayerModel(p).setRegenTimer(PlayerManager.getPlayerModel(p).getRegenTimer() - 1);
+                        PlayerManager.getPlayerModel(p).setRegenFoodBonus(0);
+                    }
+                }
+            }
+        }, 25L, 20L);
 
 		// Handles auto-move of potions after drink.
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
@@ -875,6 +974,110 @@ public class HealthMechanics implements Listener {
 		}
 
 	}
+	
+	@EventHandler
+	public void onPlayerClickFoodVendorInventory(InventoryClickEvent e) {
+	    if (!(e.getWhoClicked() instanceof Player) || !e.getInventory().getName().equals("Food Vendor")) return;
+	    final Player p = (Player) e.getWhoClicked();
+	    int price = ShopMechanics.getPrice(e.getCurrentItem());
+	    
+	    e.setCancelled(true);
+	    
+	    if(!e.isShiftClick()) {
+    	    Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                public void run() {
+                    p.closeInventory();
+                }
+            }, 2L);
+    	    if(!LevelMechanics.canPlayerUseTier(p, ItemMechanics.getItemTier(e.getCurrentItem()))){
+                p.sendMessage(ChatColor.RED + "This item requires " + ChatColor.UNDERLINE + "at least" + ChatColor.RED + " level " + LevelMechanics.getLevelToUse(ItemMechanics.getItemTier(e.getCurrentItem())) + " to use this item.");
+                p.sendMessage(ChatColor.GRAY + "Do you really want to purchase it?  If not, type cancel below.");
+            }
+    	    p.sendMessage(ChatColor.GREEN + "Enter the " + ChatColor.BOLD + "QUANTITY" + ChatColor.GREEN + " you'd like to purchase.");
+            p.sendMessage(ChatColor.GRAY + "MAX: 64X (" + price * 64 + "g), OR " + price + "g/each.");
+            PlayerManager.getPlayerModel(p).setItemStackBeingBought(e.getCurrentItem());
+	    }
+        else {
+            if (RealmMechanics.doTheyHaveEnoughMoney(p, price)) {
+                if (p.getInventory().firstEmpty() == -1) {
+                    p.sendMessage(ChatColor.RED + "Please clear some inventory space first.");
+                    p.closeInventory();
+                    return;
+                }
+                RealmMechanics.subtractMoney(p, price);
+                p.getInventory().setItem(p.getInventory().firstEmpty(), ShopMechanics.removePrice(e.getCurrentItem()));
+
+                p.sendMessage(ChatColor.GREEN + "Transaction successful.");
+                p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+                p.updateInventory();
+            }
+            else {
+                p.sendMessage(ChatColor.RED + "You don't have enough GEM(s) for 1x of this item.");
+                p.sendMessage(ChatColor.RED + "COST: " + price + "g");
+            }
+        }
+	}
+	
+	@EventHandler (priority = EventPriority.LOWEST)
+	public void onPlayerRespondFoodVendor(AsyncPlayerChatEvent e) {
+	    if (!(ShopMechanics.getPrice(PlayerManager.getPlayerModel(e.getPlayer()).getItemStackBeingBought()) > 0)) return;
+	    
+	    e.setCancelled(true);
+	    
+	    Player p = e.getPlayer();
+	    String msg = e.getMessage();
+	    int cost = ShopMechanics.getPrice(PlayerManager.getPlayerModel(p).getItemStackBeingBought());
+	    
+	    if (!(Utils.isInteger(msg)) && !msg.equalsIgnoreCase("cancel")) {
+	        p.sendMessage(ChatColor.RED + "Please enter a number between 1 and 64 inclusive.");
+	    }
+	    else if (msg.equalsIgnoreCase("cancel")) {
+	        p.sendMessage(ChatColor.RED + "Purchase - " + ChatColor.BOLD + "CANCELLED");
+	        PlayerManager.getPlayerModel(p).setItemStackBeingBought(null);
+	    }
+	    else {
+	        if (Integer.valueOf(msg) >= 1 && Integer.valueOf(msg) <= 64) {
+	            int quantity = Integer.valueOf(msg);
+	            if (RealmMechanics.doTheyHaveEnoughMoney(p, quantity * cost)) {
+	                if (p.getInventory().firstEmpty() == -1) {
+	                    p.sendMessage(ChatColor.RED + "Please clear some inventory space first.");
+	                    p.closeInventory();
+	                    return;
+	                }
+	                RealmMechanics.subtractMoney(p, cost);
+	                
+	                ItemStack buyingItem = PlayerManager.getPlayerModel(p).getItemStackBeingBought().clone();
+	                buyingItem.setAmount(quantity);
+	                p.getInventory().setItem(p.getInventory().firstEmpty(), ShopMechanics.removePrice(buyingItem));
+
+	                p.sendMessage(ChatColor.GREEN + "Transaction successful.");
+	                p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1F, 1F);
+	                p.updateInventory();
+	                PlayerManager.getPlayerModel(p).setItemStackBeingBought(null);
+	            }
+	            else {
+	                p.sendMessage(ChatColor.RED + "You don't have enough GEM(s) for " + quantity + "x of this item.");
+	                p.sendMessage(ChatColor.RED + "COST: " + quantity * cost + "g");
+	                PlayerManager.getPlayerModel(p).setItemStackBeingBought(null);
+	            }
+	        }
+	    }
+	    
+	}
+	
+	@EventHandler
+	public void onPlayerInteractFoodVendor(PlayerInteractEntityEvent e) {
+	    if (!(e.getRightClicked() instanceof Player)) return;
+        Player trader = (Player) e.getRightClicked();
+        if (!(trader.hasMetadata("NPC"))) return;
+        if (!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Food Vendor"))) return;
+        if (PlayerManager.getPlayerModel(e.getPlayer()).getItemStackBeingBought() == null) {
+            e.getPlayer().openInventory(hpFoodVendor);
+        }
+        else {
+            e.getPlayer().sendMessage(ChatColor.RED + "You are already buying an item!");
+        }
+	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
 	public void onPlayerDrinkPotion(PlayerInteractEvent e) {
@@ -1507,9 +1710,9 @@ public class HealthMechanics implements Listener {
 			try {
 				p.getInventory().setItem(p.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.generateNoobWeapon()));
 
-				p.getInventory().setItem(p.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "10HP")));
-				p.getInventory().setItem(p.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "10HP")));
-				p.getInventory().setItem(p.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "10HP")));
+				p.getInventory().setItem(p.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "50HP")));
+				p.getInventory().setItem(p.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "50HP")));
+				p.getInventory().setItem(p.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "50HP")));
 				p.getInventory().setItem(p.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(new ItemStack(Material.BREAD, 1)));
 				p.getInventory().setItem(p.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(new ItemStack(Material.BREAD, 1)));
 			} catch(Exception err) {
@@ -1629,6 +1832,198 @@ public class HealthMechanics implements Listener {
 			e.setDamage(0);
 		}
 	}
+	
+	@EventHandler
+	public void onPlayerEatHPRegenFood(PlayerItemConsumeEvent e) {
+	    Player p = e.getPlayer();
+	    
+	    for (int i = 0; i < HP_regen_food.length; i++) {
+	        
+	        if (e.getItem().getItemMeta().getDisplayName().equals(HP_regen_food[i].getItemMeta().getDisplayName())) {
+	            e.setCancelled(true);
+	            
+	            if (in_combat.contains(p.getName())) {
+	                p.sendMessage(ChatColor.RED + "You " + ChatColor.BOLD + "cannot" + ChatColor.RED + " eat this while in combat!");
+	                p.updateInventory();
+	                return;
+	            }
+	            
+	            if (PlayerManager.getPlayerModel(p).getRegenFoodBonus() > 0) {
+                    p.sendMessage(ChatColor.RED + "You already have an HP regen bonus active.  You " + ChatColor.BOLD + "cannot" + ChatColor.RED + " stack bonuses from HP regen food.");
+                    p.updateInventory();
+                    return;
+                }
+	            
+	            if(!LevelMechanics.canPlayerUseTier(p, ItemMechanics.getItemTier(e.getItem()))){
+                    p.sendMessage(ChatColor.RED + "This item requires " + ChatColor.UNDERLINE + "at least" + ChatColor.RED + " level " + LevelMechanics.getLevelToUse(ItemMechanics.getItemTier(e.getItem())) + " to use this item.");
+                    return;
+                }
+	            
+	            ItemStack food = e.getItem();
+	            
+	            if (food.getAmount() > 1) {
+	                food.setAmount(e.getItem().getAmount() - 1);
+	                p.setItemInHand(food);
+	            }
+	            else {
+	                p.setItemInHand(new ItemStack(Material.AIR));
+	            }
+	            
+	            p.updateInventory();
+	            
+                if (HealthMechanics.health_regen_data.containsKey(p.getName())) {
+                    HealthMechanics.health_regen_data.put(
+                            p.getName(),
+                            HealthMechanics.health_regen_data.get(p.getName())
+                                    + Integer.valueOf(ChatColor.stripColor(
+                                            HP_regen_food[i].getItemMeta().getLore().get(0)).substring(
+                                            1,
+                                            ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0))
+                                                    .indexOf(" "))));
+                }
+                else {
+                    HealthMechanics.health_regen_data.put(p.getName(), Integer.valueOf(ChatColor.stripColor(
+                            HP_regen_food[i].getItemMeta().getLore().get(0)).substring(1,
+                            ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0)).indexOf(" "))));
+                }
+
+                PlayerManager.getPlayerModel(p).setRegenFoodBonus(
+                        Integer.valueOf(ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0))
+                                .substring(
+                                        1,
+                                        ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0)).indexOf(
+                                                " "))));
+                PlayerManager.getPlayerModel(p).setRegenTimer(30);
+                PlayerManager.getPlayerModel(p).setTeleportLoc(p.getLocation());
+                
+                break;
+            }
+
+	    }
+	    
+	}
+	
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent e) {
+	    final Player p = e.getPlayer();
+	    
+	    // only do this if the player has full food, otherwise vanilla eating animation
+	    if (p.getFoodLevel() < 20 || !e.hasItem() || (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK)) return;
+	    
+	    for (int i = 0; i < HP_regen_food.length; i++) {
+	        
+	        if (e.getItem().getItemMeta().getDisplayName().equals(HP_regen_food[i].getItemMeta().getDisplayName())) {
+	            
+	            if (in_combat.contains(p.getName())) {
+	                p.sendMessage(ChatColor.RED + "You " + ChatColor.BOLD + "cannot" + ChatColor.RED + " eat this while in combat!");
+	                p.updateInventory();
+	                return;
+	            }
+	            
+	            if (PlayerManager.getPlayerModel(p).getRegenFoodBonus() > 0) {
+	                p.sendMessage(ChatColor.RED + "You already have an HP regen bonus active.  You " + ChatColor.BOLD + "cannot" + ChatColor.RED + " stack bonuses from HP regen food.");
+	                p.updateInventory();
+	                return;
+	            }
+	            
+	            if(!LevelMechanics.canPlayerUseTier(p, ItemMechanics.getItemTier(e.getItem()))){
+                    p.sendMessage(ChatColor.RED + "This item requires " + ChatColor.UNDERLINE + "at least" + ChatColor.RED + " level " + LevelMechanics.getLevelToUse(ItemMechanics.getItemTier(e.getItem())) + " to use this item.");
+                    return;
+                }
+	            
+	            e.setCancelled(true);
+	            
+                p.getWorld().playSound(p.getLocation(), Sound.EAT, 1F, 1F);
+                Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                    public void run() {
+                        // TODO: This could be abused with a macro.
+                        ItemStack food = p.getItemInHand();
+                        if (food.getAmount() > 1) {
+                            // Subtract just 1.
+                            food.setAmount(food.getAmount() - 1);
+                            p.setItemInHand(food);
+                        }
+                        else if (food.getAmount() <= 1) {
+                            p.setItemInHand(new ItemStack(Material.AIR));
+                        }
+
+                        p.updateInventory();
+                    }
+                }, 1L);
+                Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                    public void run() {
+                        p.getWorld().playSound(p.getLocation(), Sound.EAT, 1F, 1.5F);
+                    }
+                }, 4L);
+                
+                if (HealthMechanics.health_regen_data.containsKey(p.getName())) {
+                    HealthMechanics.health_regen_data.put(
+                            p.getName(),
+                            HealthMechanics.health_regen_data.get(p.getName())
+                                    + Integer.valueOf(ChatColor.stripColor(
+                                            HP_regen_food[i].getItemMeta().getLore().get(0)).substring(
+                                            1,
+                                            ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0))
+                                                    .indexOf(" "))));
+                }
+                else {
+                    HealthMechanics.health_regen_data.put(p.getName(), Integer.valueOf(ChatColor.stripColor(
+                            HP_regen_food[i].getItemMeta().getLore().get(0)).substring(1,
+                            ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0)).indexOf(" "))));
+                }
+
+                PlayerManager.getPlayerModel(p).setRegenFoodBonus(
+                        Integer.valueOf(ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0))
+                                .substring(
+                                        1,
+                                        ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0)).indexOf(
+                                                " "))));
+                PlayerManager.getPlayerModel(p).setRegenTimer(30);
+                PlayerManager.getPlayerModel(p).setTeleportLoc(p.getLocation());
+                
+                break;
+	        }
+	        
+	    }
+	    
+	}
+	
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent e) {
+	    Player p = e.getPlayer();
+	    
+	    if (PlayerManager.getPlayerModel(p).getRegenFoodBonus() > 0 && HealthMechanics.health_regen_data.containsKey(p.getName()) && p.getLocation().distanceSquared(PlayerManager.getPlayerModel(p).getTeleportLoc()) > 2) {
+	        health_regen_data.put(p.getName(), HealthMechanics.health_regen_data.get(p.getName()) - PlayerManager.getPlayerModel(p).getRegenFoodBonus());
+	        
+	        if (PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("debug")) {
+	            p.sendMessage(ChatColor.RED + "You have " + ChatColor.BOLD + "cancelled" + ChatColor.RED + " your HP regen bonus because you moved.");
+	        }
+	        
+	        PlayerManager.getPlayerModel(p).setRegenFoodBonus(0);
+	        PlayerManager.getPlayerModel(p).setRegenTimer(-1);
+	    }
+	    
+	}
+	
+	@EventHandler
+    public void onPlayerDamaged(EntityDamageEvent e) {
+	    if (!(e.getEntity() instanceof Player)) return;
+	    
+        Player p = (Player) e.getEntity();
+        
+        if (PlayerManager.getPlayerModel(p).getRegenFoodBonus() > 0 && HealthMechanics.health_regen_data.containsKey(p.getName())) {
+            health_regen_data.put(p.getName(), HealthMechanics.health_regen_data.get(p.getName()) - PlayerManager.getPlayerModel(p).getRegenFoodBonus());
+            
+            if (PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("debug")) {
+                p.sendMessage(ChatColor.RED + "You have " + ChatColor.BOLD + "cancelled" + ChatColor.RED + " your HP regen bonus because you moved.");
+            }
+            
+            PlayerManager.getPlayerModel(p).setRegenFoodBonus(0);
+            PlayerManager.getPlayerModel(p).setRegenTimer(-1);
+        }
+        
+    }
+	
 
 	@EventHandler
 	public void onForeignDamageEvent(EntityDamageEvent e) {

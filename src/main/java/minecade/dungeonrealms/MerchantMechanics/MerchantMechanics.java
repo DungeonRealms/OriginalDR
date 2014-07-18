@@ -85,32 +85,32 @@ public class MerchantMechanics implements Listener {
     public static Inventory shardMerchant = null;
 
     public static ItemStack t1_pot = ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion",
-            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "15HP");
+            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "50HP");
     public static ItemStack t2_pot = ItemMechanics.signNewCustomItem(Material.POTION, (short) 5, ChatColor.GREEN.toString() + "Health Potion",
-            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.GREEN.toString() + "75HP");
+            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.GREEN.toString() + "250HP");
     public static ItemStack t3_pot = ItemMechanics.signNewCustomItem(Material.POTION, (short) 9, ChatColor.AQUA.toString() + "Major Health Potion",
-            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.AQUA.toString() + "300HP");
+            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.AQUA.toString() + "800HP");
     public static ItemStack t4_pot = ItemMechanics.signNewCustomItem(Material.POTION, (short) 12, ChatColor.LIGHT_PURPLE.toString() + "Superior Health Potion",
-            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.LIGHT_PURPLE.toString() + "750HP");
+            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.LIGHT_PURPLE.toString() + "2000HP");
     public static ItemStack t5_pot = ItemMechanics.signNewCustomItem(Material.POTION, (short) 3, ChatColor.YELLOW.toString() + "Legendary Health Potion",
-            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.YELLOW.toString() + "1800HP");
+            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.YELLOW.toString() + "3500HP");
 
     public static ItemStack t1_s_pot = ItemMechanics.signNewCustomItem(Material.POTION, (short) 16385, ChatColor.WHITE.toString()
             + "Minor Splash Health Potion",
-            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "15HP," + ChatColor.GRAY.toString()
+            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "35HP," + ChatColor.GRAY.toString()
                     + "to players in a 4x4 AREA");
     public static ItemStack t2_s_pot = ItemMechanics.signNewCustomItem(Material.POTION, (short) 16389, ChatColor.GREEN.toString() + "Splash Health Potion",
-            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.GREEN.toString() + "40HP," + ChatColor.GRAY.toString()
+            ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.GREEN.toString() + "150HP," + ChatColor.GRAY.toString()
                     + "to players in a 4x4 AREA");
     public static ItemStack t3_s_pot = ItemMechanics.signNewCustomItem(Material.POTION, (short) 16393,
             ChatColor.AQUA.toString() + "Major Splash Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.AQUA.toString()
-                    + "150HP," + ChatColor.GRAY.toString() + "to players in a 4x4 AREA");
+                    + "450HP," + ChatColor.GRAY.toString() + "to players in a 4x4 AREA");
     public static ItemStack t4_s_pot = ItemMechanics.signNewCustomItem(Material.POTION, (short) 16396, ChatColor.LIGHT_PURPLE.toString()
-            + "Superior Splash Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.LIGHT_PURPLE.toString() + "375HP,"
+            + "Superior Splash Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.LIGHT_PURPLE.toString() + "1250HP,"
             + ChatColor.GRAY.toString() + "to players in a 4x4 AREA");
     public static ItemStack t5_s_pot = ItemMechanics.signNewCustomItem(Material.POTION, (short) 16387,
             ChatColor.YELLOW.toString() + ChatColor.YELLOW.toString() + "Legendary Splash Health Potion", ChatColor.GRAY.toString() + "A potion that restores "
-                    + ChatColor.YELLOW.toString() + "900HP," + ChatColor.GRAY.toString() + "to players in a 4x4 AREA");
+                    + ChatColor.YELLOW.toString() + "2500HP," + ChatColor.GRAY.toString() + "to players in a 4x4 AREA");
 
     public static HashMap<String, Integer> item_being_bought = new HashMap<String, Integer>();
     public static HashMap<String, Integer> orb_being_bought = new HashMap<String, Integer>();

@@ -652,9 +652,9 @@ public class TutorialMechanics implements Listener {
 		pl.setSneaking(false);
 		
 		try {
-			pl.getInventory().setItem(pl.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "10HP")));
-			pl.getInventory().setItem(pl.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "10HP")));
-			pl.getInventory().setItem(pl.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "10HP")));
+			pl.getInventory().setItem(pl.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "50HP")));
+			pl.getInventory().setItem(pl.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "50HP")));
+			pl.getInventory().setItem(pl.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "50HP")));
 			pl.getInventory().setItem(pl.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(new ItemStack(Material.BREAD, 1)));
 			pl.getInventory().setItem(pl.getInventory().firstEmpty(), RealmMechanics.makeUntradeable(new ItemStack(Material.BREAD, 1)));
 			

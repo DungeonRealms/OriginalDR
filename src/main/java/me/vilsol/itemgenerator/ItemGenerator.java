@@ -307,7 +307,7 @@ public class ItemGenerator {
                 name += "Snaring ";
                 break;
             case "LIFE STEAL":
-                name += "Vampyric";
+                name += "Vampyric ";
                 break;
             case "CRITICAL HIT":
                 name += "Deadly ";

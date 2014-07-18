@@ -138,7 +138,7 @@ public class LevelMechanics implements Listener {
         if (msg.equals(pLevel.getResetCode()) && RealmMechanics.doTheyHaveEnoughMoney(p, pLevel.getResetCost())) {
             RealmMechanics.subtractMoney(p, pLevel.getResetCost());
             pLevel.resetStatPoints();
-            p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "                     *** STAT POINTS RESET ***");
+            p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "            *** STAT POINTS RESET ***");
             pLevel.setNumResets(pLevel.getNumResets() + 1);
         }
         else if (msg.equals(pLevel.getResetCode())) {
@@ -241,38 +241,38 @@ public class LevelMechanics implements Listener {
                     }
                     
                     if (item instanceof StrengthItem) {
-                        if (((StrengthItem) item).getPoints() + points <= 300) {
+                        if (((StrengthItem) item).getPoints() + points <= 600) {
                             ((StrengthItem) item).setPoints(((StrengthItem) item).getPoints() + points);
                         }
                         else {
-                            p.sendMessage(ChatColor.RED + "Allocating " + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
+                            p.sendMessage(ChatColor.RED + "Allocating " + msg + " points would exceed the 600 point limit.  Please input a lower number, or type cancel.");
                             return;
                         }
                     }
                     else if (item instanceof DexterityItem) {
-                        if (((DexterityItem) item).getPoints() + points <= 300) {
+                        if (((DexterityItem) item).getPoints() + points <= 600) {
                             ((DexterityItem) item).setPoints(((DexterityItem) item).getPoints() + points);
                         }
                         else {
-                            p.sendMessage(ChatColor.RED + "Allocating " + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
+                            p.sendMessage(ChatColor.RED + "Allocating " + msg + " points would exceed the 600 point limit.  Please input a lower number, or type cancel.");
                             return;
                         }
                     }
                     else if (item instanceof IntellectItem) {
-                        if (((IntellectItem) item).getPoints() + points <= 300) {
+                        if (((IntellectItem) item).getPoints() + points <= 600) {
                             ((IntellectItem) item).setPoints(((IntellectItem) item).getPoints() + points);
                         }
                         else {
-                            p.sendMessage(ChatColor.RED + "Allocating " + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
+                            p.sendMessage(ChatColor.RED + "Allocating " + msg + " points would exceed the 600 point limit.  Please input a lower number, or type cancel.");
                             return;
                         }
                     }
                     else if (item instanceof VitalityItem) {
-                        if (((VitalityItem) item).getPoints() + points <= 300) {
+                        if (((VitalityItem) item).getPoints() + points <= 600) {
                             ((VitalityItem) item).setPoints(((VitalityItem) item).getPoints() + points);
                         }
                         else {
-                            p.sendMessage(ChatColor.RED + "Allocating " + msg + " points would exceed the 300 point limit.  Please input a lower number, or type cancel.");
+                            p.sendMessage(ChatColor.RED + "Allocating " + msg + " points would exceed the 600 point limit.  Please input a lower number, or type cancel.");
                             return;
                         }
                     }
@@ -437,7 +437,7 @@ public class LevelMechanics implements Listener {
     public static int calculateXP(Player player, LivingEntity kill, int mob_level) {
 //    	int xp = (int) Math.round((6.5 * Math.pow(mob_level,1.35)) + 40 + new Random().nextInt(50)); old exp formula
     	int pLevel = PlayerManager.getPlayerModel(player).getPlayerLevel().getLevel();
-    	int xp = (int) (((pLevel * 5) + 45) * (1 + 0.05 * (pLevel + mob_level))); // patch 1.9 exp formula
+    	int xp = (int) (((pLevel * 5) + 45) * (1 + 0.05 * (pLevel + (mob_level - pLevel)))); // patch 1.9 exp formula
         //int xp = mob_level * 15 + new Random().nextInt(50) + 5;
         //int level = getPlayerLevel(player);
         ItemStack weapon = kill.getEquipment().getItemInHand();
@@ -454,13 +454,13 @@ public class LevelMechanics implements Listener {
         if (tier == 1) {
             return 1;
         } else if (tier == 2) {
-            return 20;
+            return 10;
         } else if (tier == 3) {
-            return 40;
+            return 20;
         } else if (tier == 4) {
-            return 60;
+            return 30;
         } else if (tier == 5) {
-            return 80;
+            return 40;
         }
         return 1;
     }

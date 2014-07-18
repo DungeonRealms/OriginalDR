@@ -50,9 +50,9 @@ public class StatsInfoItem implements MenuItem, BonusItem {
                                         + " point", ChatColor.AQUA + "RCLICK" + ChatColor.GRAY + " to unallocate "
                                         + ChatColor.AQUA.toString() + ChatColor.UNDERLINE + "1" + ChatColor.GRAY
                                         + " point", ChatColor.AQUA + "S-LCLICK" + ChatColor.GRAY + " to allocate "
-                                        + ChatColor.AQUA.toString() + ChatColor.UNDERLINE + "5" + ChatColor.GRAY
+                                        + ChatColor.AQUA.toString() + ChatColor.UNDERLINE + "3" + ChatColor.GRAY
                                         + " points", ChatColor.AQUA + "S-RCLICK" + ChatColor.GRAY + " to unallocate "
-                                        + ChatColor.AQUA.toString() + ChatColor.UNDERLINE + "5" + ChatColor.GRAY
+                                        + ChatColor.AQUA.toString() + ChatColor.UNDERLINE + "3" + ChatColor.GRAY
                                         + " points", ChatColor.AQUA + "MCLICK" + ChatColor.GRAY + " for a "
                                         + ChatColor.AQUA.toString() + ChatColor.UNDERLINE + "custom" + ChatColor.GRAY
                                         + " amount")).getItem();

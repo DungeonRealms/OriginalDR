@@ -179,6 +179,9 @@ commands:
   drenchant:
     description: Root command.
     usage: /<command>
+  drfood:
+    description: Adds one of each HP/s food item into your inventory.
+    usage: /<command>
   fat:
     description: Root command.
     usage: /<command>

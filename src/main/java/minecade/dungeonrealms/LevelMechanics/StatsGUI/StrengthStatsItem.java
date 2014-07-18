@@ -54,7 +54,7 @@ public class StrengthStatsItem implements MenuItem, BonusItem {
 				.setLore(
 						Arrays.asList(ChatColor.GOLD + "ARMOR: " + ChatColor.AQUA + df.format(str * 0.03) + "%"
 								+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.03) + "%]" : ""),
-								ChatColor.GOLD + "BLOCK: " + ChatColor.AQUA + df.format(str * 0.017)
+								ChatColor.GOLD + "BLOCK: " + ChatColor.AQUA + df.format(str * 0.017) + "%"
 										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.017) + "%]" : ""),
 								ChatColor.GOLD + "AXE DMG: " + ChatColor.AQUA + df.format(str * 0.015) + "%"
 										+ (spent ? ChatColor.GREEN + " [+" + df.format(aPoints * 0.015) + "%]" : ""),

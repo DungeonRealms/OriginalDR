@@ -44,7 +44,7 @@ public class PlayerLevel {
     private boolean isResetting; // flag for if the player has talked to the reset NPC
     private String resetCode; // code for stat reset
     private int resetCost; // cost to reset stats for player
-    public final static int POINTS_PER_LEVEL = 5; // points per level.  Change this to change the global value.
+    public final static int POINTS_PER_LEVEL = 6; // points per level.  Change this to change the global value.
 	public final static String FREE_STAT_NOTICE = ChatColor.GREEN + "*" + ChatColor.GRAY + "You have available " + ChatColor.GREEN + "/stat" + ChatColor.GRAY + " points. Click " + ChatColor.GREEN.toString() + ChatColor.BOLD + "HERE"
 			+ ChatColor.GRAY + " to allocate them." + ChatColor.GREEN + "*";
 	private static final String ALPHA_NUM = "123456789";
@@ -129,16 +129,16 @@ public class PlayerLevel {
             return 0;
         }
         double difficulty = 1;
-        if (level >= LevelMechanics.getLevelToUse(1) && level < LevelMechanics.getLevelToUse(3)) {
+        if (level >= 1 && level < 40) {
             difficulty = 1.3;
         }
-        else if (level >= LevelMechanics.getLevelToUse(3) && level < LevelMechanics.getLevelToUse(4)) {
+        else if (level >= 40 && level < 60) {
             difficulty = 1.6;
         }
-        else if (level >= LevelMechanics.getLevelToUse(4) && level < LevelMechanics.getLevelToUse(5)) {
+        else if (level >= 60 && level < 80) {
             difficulty = 2.2;
         }
-        else if (level >= LevelMechanics.getLevelToUse(5)) {
+        else if (level >= 80) {
             difficulty = 2.6;
         }
 //        return (int) (100 * Math.pow(level, 2.24)); old level exp formula

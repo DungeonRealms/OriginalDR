@@ -883,38 +883,38 @@ public class MonsterMechanics implements Listener {
                     } else if (m == Material.POTION) {
                         if (item_meta == 1) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "15HP"));
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "50HP"));
                         }
                         if (item_meta == 5) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 5, ChatColor.GREEN.toString() + "Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.GREEN.toString() + "75HP"));
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.GREEN.toString() + "250HP"));
                         }
                         if (item_meta == 9) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 9, ChatColor.AQUA.toString() + "Major Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.AQUA.toString() + "300HP"));
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.AQUA.toString() + "800HP"));
                         }
                         if (item_meta == 12) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 12, ChatColor.LIGHT_PURPLE.toString() + "Superior Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.LIGHT_PURPLE.toString() + "750HP"));
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.LIGHT_PURPLE.toString() + "2000HP"));
                         }
                         if (item_meta == 3) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 3, ChatColor.YELLOW.toString() + "Legendary Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.YELLOW.toString() + "1800HP"));
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.YELLOW.toString() + "3500HP"));
                         }
 
                         if (item_meta == 16385) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 16385, ChatColor.WHITE.toString() + "Minor Splash Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "15HP," + ChatColor.GRAY.toString()
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "35HP," + ChatColor.GRAY.toString()
                                             + "to players in a 4x4 AREA"));
                         }
                         if (item_meta == 16389) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 16389, ChatColor.GREEN.toString() + "Splash Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.GREEN.toString() + "40HP," + ChatColor.GRAY.toString()
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.GREEN.toString() + "150HP," + ChatColor.GRAY.toString()
                                             + "to players in a 4x4 AREA"));
                         }
                         if (item_meta == 16393) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 16393, ChatColor.AQUA.toString() + "Major Splash Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.AQUA.toString() + "150HP," + ChatColor.GRAY.toString()
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.AQUA.toString() + "450HP," + ChatColor.GRAY.toString()
                                             + "to players in a 4x4 AREA"));
                         }
                         if (item_meta == 16396) {
@@ -922,13 +922,13 @@ public class MonsterMechanics implements Listener {
                                     Material.POTION,
                                     (short) 16396,
                                     ChatColor.LIGHT_PURPLE.toString() + "Superior Splash Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.LIGHT_PURPLE.toString() + "375HP,"
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.LIGHT_PURPLE.toString() + "1250HP,"
                                             + ChatColor.GRAY.toString() + "to players in a 4x4 AREA"));
                         }
                         if (item_meta == 16387) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 16387, ChatColor.YELLOW.toString()
                                     + "Legendary Splash Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.YELLOW.toString()
-                                    + "900HP," + ChatColor.GRAY.toString() + "to players in a 4x4 AREA"));
+                                    + "2500HP," + ChatColor.GRAY.toString() + "to players in a 4x4 AREA"));
                         }
                     } else if (m == Material.MAGMA_CREAM) {
                         loot.add(ItemMechanics.signNewCustomItem(Material.MAGMA_CREAM, (short) 0, ChatColor.LIGHT_PURPLE.toString() + "Orb of Alteration",
@@ -5839,7 +5839,6 @@ public class MonsterMechanics implements Listener {
             if (wep_type == 0) {
                 return generateMobGear(ItemType.SWORD, tier);
             }
-
             if (wep_type == 1) {
                 return generateMobGear(ItemType.AXE, tier);
             }

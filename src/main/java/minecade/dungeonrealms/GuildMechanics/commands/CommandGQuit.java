@@ -26,7 +26,7 @@ public class CommandGQuit implements CommandExecutor {
 		String g_name = GuildMechanics.getGuild(p.getName());
 		p.sendMessage(ChatColor.GRAY + "Are you sure you want to QUIT the guild '" + ChatColor.DARK_AQUA + g_name + ChatColor.GRAY + "' - This cannot be undone. " + "(" + ChatColor.GREEN.toString() + ChatColor.BOLD + "Y" + ChatColor.GRAY + " / " + ChatColor.RED.toString() + ChatColor.BOLD + "N" + ChatColor.GRAY + ")");
 		if(GuildMechanics.isGuildLeader(p.getName())) {
-			p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "WARNING: " + ChatColor.GRAY + "You are the " + ChatColor.UNDERLINE + "GUILD LEADER" + ChatColor.GRAY + ", if you leave this guild it will be " + ChatColor.BOLD + "PERMENANTLY DELETED" + ChatColor.GRAY + ". All members will be kicked, and you will loose your 5,000g deposit.");
+			p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "WARNING: " + ChatColor.GRAY + "You are the " + ChatColor.UNDERLINE + "GUILD LEADER" + ChatColor.GRAY + ", if you leave this guild it will be " + ChatColor.BOLD + "PERMENANTLY DELETED" + ChatColor.GRAY + ". All members will be kicked, and you will lose your 5,000g deposit.");
 		}
 		
 		GuildMechanics.guild_quit_confirm.add(p.getName());
