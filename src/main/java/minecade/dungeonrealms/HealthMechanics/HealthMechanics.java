@@ -139,66 +139,66 @@ public class HealthMechanics implements Listener {
 	
 	// HP/s food
     private Inventory hpFoodVendor = Bukkit.createInventory(null, 18, "Food Vendor");
-    public static ItemStack t1_common_food = ItemMechanics.signCustomItem(Material.POTATO_ITEM, (short) 1,
+    public static final ItemStack T1_COMMON_FOOD = ItemMechanics.signCustomItem(Material.POTATO_ITEM, (short) 1,
             ChatColor.WHITE + "Plowed Potato", ChatColor.RED + "+9 HP/s for " + ChatColor.BOLD + "30 SECONDS" + ","
                     + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + ","
                     + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString()
                     + "The staple crop of Andalucia. Definitely not rotten" + "," + ChatColor.GRAY.toString()
                     + ChatColor.ITALIC + "Common");
-    public static ItemStack t1_unique_food = ItemMechanics.signCustomItem(Material.BAKED_POTATO, (short) 1,
+    public static final ItemStack T1_UNIQUE_FOOD = ItemMechanics.signCustomItem(Material.BAKED_POTATO, (short) 1,
             ChatColor.WHITE + "Loaded Potato Skin", ChatColor.RED + "+20 HP/s for " + ChatColor.BOLD + "30 SECONDS"
                     + "," + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect"
                     + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Extremely tasty." + ","
                     + ChatColor.YELLOW.toString() + ChatColor.ITALIC + "Unique");
-    public static ItemStack t2_common_food = ItemMechanics.signCustomItem(Material.RAW_CHICKEN, (short) 1,
+    public static final ItemStack T2_COMMON_FOOD = ItemMechanics.signCustomItem(Material.RAW_CHICKEN, (short) 1,
             ChatColor.GREEN + "Uncooked Chicken", ChatColor.RED + "+42 HP/s for " + ChatColor.BOLD + "30 SECONDS" + ","
                     + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + ","
                     + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "This may or may not be safe to eat..."
                     + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Common");
-    public static ItemStack t2_unique_food = ItemMechanics.signCustomItem(Material.COOKED_CHICKEN, (short) 1,
+    public static final ItemStack T2_UNIQUE_FOOD = ItemMechanics.signCustomItem(Material.COOKED_CHICKEN, (short) 1,
             ChatColor.GREEN + "Roast Chicken", ChatColor.RED + "+58 HP/s for " + ChatColor.BOLD + "30 SECONDS" + ","
                     + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + ","
                     + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Warm and toasty. Delicious too." + ","
                     + ChatColor.YELLOW.toString() + ChatColor.ITALIC + "Unique");
-    public static ItemStack t3_common_food = ItemMechanics.signCustomItem(Material.PORK, (short) 1, ChatColor.AQUA
+    public static final ItemStack T3_COMMON_FOOD = ItemMechanics.signCustomItem(Material.PORK, (short) 1, ChatColor.AQUA
             + "Salted Pork",
             ChatColor.RED + "+90 HP/s for " + ChatColor.BOLD + "30 SECONDS" + "," + ChatColor.RED + "Moving will "
                     + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + "," + ChatColor.GRAY.toString()
                     + ChatColor.ITALIC.toString() + "Bringing in the bacon." + "," + ChatColor.GRAY.toString()
                     + ChatColor.ITALIC + "Common");
-    public static ItemStack t3_unique_food = ItemMechanics.signCustomItem(Material.GRILLED_PORK, (short) 1,
+    public static final ItemStack T3_UNIQUE_FOOD = ItemMechanics.signCustomItem(Material.GRILLED_PORK, (short) 1,
             ChatColor.AQUA + "Seasoned Pork", ChatColor.RED + "+164 HP/s for " + ChatColor.BOLD + "30 SECONDS" + ","
                     + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + ","
                     + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString()
                     + "Bacon. Except tastier (is that possible?)" + "," + ChatColor.YELLOW.toString()
                     + ChatColor.ITALIC + "Unique");
-    public static ItemStack t4_common_food = ItemMechanics.signCustomItem(Material.RAW_BEEF, (short) 1,
+    public static final ItemStack T4_COMMON_FOOD = ItemMechanics.signCustomItem(Material.RAW_BEEF, (short) 1,
             ChatColor.LIGHT_PURPLE + "Frozen Steak",
             ChatColor.RED + "+290 HP/s for " + ChatColor.BOLD + "30 SECONDS" + "," + ChatColor.RED + "Moving will "
                     + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + "," + ChatColor.GRAY.toString()
                     + ChatColor.ITALIC.toString() + "Stop complaining. Your dog would sure love to eat this, " + ","
-                    + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + ChatColor.GRAY + "so don't be picky!"
+                    + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "so don't be picky!"
                     + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Common");
-    public static ItemStack t4_unique_food = ItemMechanics.signCustomItem(Material.COOKED_BEEF, (short) 1,
+    public static final ItemStack T4_UNIQUE_FOOD = ItemMechanics.signCustomItem(Material.COOKED_BEEF, (short) 1,
             ChatColor.LIGHT_PURPLE + "Rare Sizzling Steak", ChatColor.RED + "+430 HP/s for " + ChatColor.BOLD
                     + "30 SECONDS" + "," + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED
                     + " the effect" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString()
                     + "Real men get their steaks rare." + "," + ChatColor.YELLOW.toString() + ChatColor.ITALIC
                     + "Unique");
-    public static ItemStack t5_common_food = ItemMechanics.signCustomItem(Material.GOLDEN_APPLE, (short) 0,
+    public static final ItemStack T5_COMMON_FOOD = ItemMechanics.signCustomItem(Material.GOLDEN_APPLE, (short) 0,
             ChatColor.YELLOW + "King's Apple", ChatColor.RED + "+750 HP/s for " + ChatColor.BOLD + "30 SECONDS" + ","
                     + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + ","
                     + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "A meal fit for a king." + ","
                     + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Common");
-    public static ItemStack t5_unique_food = ItemMechanics.signCustomItem(Material.GOLDEN_APPLE, (short) 1,
+    public static final ItemStack T5_UNIQUE_FOOD = ItemMechanics.signCustomItem(Material.GOLDEN_APPLE, (short) 1,
             ChatColor.YELLOW + "Enchanted King's Apple", ChatColor.RED + "+1060 HP/s for " + ChatColor.BOLD
                     + "30 SECONDS" + "," + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED
                     + " the effect" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString()
                     + "A powerful king's battle snack." + "," + ChatColor.YELLOW.toString() + ChatColor.ITALIC
                     + "Unique");
-    public static ItemStack[] HP_regen_food = new ItemStack[] { t1_common_food, t1_unique_food, t2_common_food,
-            t2_unique_food, t3_common_food, t3_unique_food, t4_common_food, t4_unique_food, t5_common_food,
-            t5_unique_food };
+    public static ItemStack[] HP_regen_food = new ItemStack[] { T1_COMMON_FOOD, T1_UNIQUE_FOOD, T2_COMMON_FOOD,
+            T2_UNIQUE_FOOD, T3_COMMON_FOOD, T3_UNIQUE_FOOD, T4_COMMON_FOOD, T4_UNIQUE_FOOD, T5_COMMON_FOOD,
+            T5_UNIQUE_FOOD };
 
     public void onEnable() {
 		Main.plugin.getCommand("sethealth").setExecutor(new CommandSetHealth());
@@ -207,16 +207,16 @@ public class HealthMechanics implements Listener {
 
 		plugin = this;
 		
-		hpFoodVendor.setItem(0, ShopMechanics.setPrice(t1_common_food, 2));
-		hpFoodVendor.setItem(1, ShopMechanics.setPrice(t1_unique_food, 4));
-		hpFoodVendor.setItem(2, ShopMechanics.setPrice(t2_common_food, 6));
-		hpFoodVendor.setItem(3, ShopMechanics.setPrice(t2_unique_food, 9));
-		hpFoodVendor.setItem(4, ShopMechanics.setPrice(t3_common_food, 15));
-		hpFoodVendor.setItem(5, ShopMechanics.setPrice(t3_unique_food, 21));
-		hpFoodVendor.setItem(6, ShopMechanics.setPrice(t4_common_food, 35));
-		hpFoodVendor.setItem(7, ShopMechanics.setPrice(t4_unique_food, 60));
-		hpFoodVendor.setItem(8, ShopMechanics.setPrice(t5_common_food, 95));
-		hpFoodVendor.setItem(9, ShopMechanics.setPrice(t5_unique_food, 160));
+		hpFoodVendor.setItem(0, ShopMechanics.setPrice(T1_COMMON_FOOD, 2));
+		hpFoodVendor.setItem(1, ShopMechanics.setPrice(T1_UNIQUE_FOOD, 4));
+		hpFoodVendor.setItem(2, ShopMechanics.setPrice(T2_COMMON_FOOD, 6));
+		hpFoodVendor.setItem(3, ShopMechanics.setPrice(T2_UNIQUE_FOOD, 9));
+		hpFoodVendor.setItem(4, ShopMechanics.setPrice(T3_COMMON_FOOD, 15));
+		hpFoodVendor.setItem(5, ShopMechanics.setPrice(T3_UNIQUE_FOOD, 21));
+		hpFoodVendor.setItem(6, ShopMechanics.setPrice(T4_COMMON_FOOD, 35));
+		hpFoodVendor.setItem(7, ShopMechanics.setPrice(T4_UNIQUE_FOOD, 60));
+		hpFoodVendor.setItem(8, ShopMechanics.setPrice(T5_COMMON_FOOD, 95));
+		hpFoodVendor.setItem(9, ShopMechanics.setPrice(T5_UNIQUE_FOOD, 160));
 
 		//manager = Bukkit.getScoreboardManager();
 		//board = manager.getNewScoreboard();
@@ -1837,6 +1837,8 @@ public class HealthMechanics implements Listener {
 	public void onPlayerEatHPRegenFood(PlayerItemConsumeEvent e) {
 	    Player p = e.getPlayer();
 	    
+	    if (!e.getItem().hasItemMeta() || !e.getItem().getItemMeta().hasDisplayName()) return;
+	    
 	    for (int i = 0; i < HP_regen_food.length; i++) {
 	        
 	        if (e.getItem().getItemMeta().getDisplayName().equals(HP_regen_food[i].getItemMeta().getDisplayName())) {
@@ -1894,6 +1896,11 @@ public class HealthMechanics implements Listener {
                                         ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0)).indexOf(
                                                 " "))));
                 PlayerManager.getPlayerModel(p).setRegenTimer(30);
+                
+                if (PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("debug")) {
+                    p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "+" + ChatColor.GREEN + "500 HP/s for" + ChatColor.GREEN + ChatColor.BOLD + "30 SECONDS");
+                }
+                
                 PlayerManager.getPlayerModel(p).setTeleportLoc(p.getLocation());
                 
                 break;
@@ -1906,6 +1913,8 @@ public class HealthMechanics implements Listener {
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
 	    final Player p = e.getPlayer();
+	    
+	    if (!e.getItem().hasItemMeta() || !e.getItem().getItemMeta().hasDisplayName()) return;
 	    
 	    // only do this if the player has full food, otherwise vanilla eating animation
 	    if (p.getFoodLevel() < 20 || !e.hasItem() || (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK)) return;
@@ -1979,6 +1988,11 @@ public class HealthMechanics implements Listener {
                                         ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0)).indexOf(
                                                 " "))));
                 PlayerManager.getPlayerModel(p).setRegenTimer(30);
+                
+                if (PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("debug")) {
+                    p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "+" + ChatColor.GREEN + "500 HP/s for" + ChatColor.GREEN + ChatColor.BOLD + "30 SECONDS");
+                }
+                
                 PlayerManager.getPlayerModel(p).setTeleportLoc(p.getLocation());
                 
                 break;

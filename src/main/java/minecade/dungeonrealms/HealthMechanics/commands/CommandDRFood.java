@@ -17,16 +17,9 @@ public class CommandDRFood implements CommandExecutor {
 		
 		if (!pl.isOp() && !Utils.isBeta()) return true;   // enable for testing on beta shard
 		
-		pl.getInventory().addItem(HealthMechanics.t1_common_food);
-		pl.getInventory().addItem(HealthMechanics.t1_unique_food);
-		pl.getInventory().addItem(HealthMechanics.t2_common_food);
-		pl.getInventory().addItem(HealthMechanics.t2_unique_food);
-		pl.getInventory().addItem(HealthMechanics.t3_common_food);
-		pl.getInventory().addItem(HealthMechanics.t3_unique_food);
-		pl.getInventory().addItem(HealthMechanics.t4_common_food);
-		pl.getInventory().addItem(HealthMechanics.t4_unique_food);
-		pl.getInventory().addItem(HealthMechanics.t5_common_food);
-		pl.getInventory().addItem(HealthMechanics.t5_unique_food);
+		for (int i = 0; i < HealthMechanics.HP_regen_food.length; i++) {
+		    pl.getInventory().addItem(HealthMechanics.HP_regen_food[i]);
+		}
 		
 		pl.sendMessage(ChatColor.GREEN + "Added 1 of each HP regen food to your inventory.");
 		
