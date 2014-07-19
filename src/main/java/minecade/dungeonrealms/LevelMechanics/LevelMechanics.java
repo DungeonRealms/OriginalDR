@@ -417,14 +417,17 @@ public class LevelMechanics implements Listener {
         }
         */
         
-        int xp = 0; // if mob level is 10 levels below give 0 xp.
+        int xp = 0;
         
         if (mob_level > level + 10) {  // limit mob xp calculation to 10 levels above player level
             xp = calculateXP(player, kill, level + 10);
         }
-        else if (mob_level >= level - 10) {  // mob level is within range of 10 levels below/10 levels above, normal calculation
-            xp = calculateXP(player, kill, mob_level);
+        else {
+            xp  = calculateXP(player, kill, mob_level);
         }
+//        else if (mob_level >= level - 10) {  // mob level is within range of 10 levels below/10 levels above, normal calculation
+//            xp = calculateXP(player, kill, mob_level);    now disabled.  mobs 10 levels below give EXP as well on mayley's request
+//        }
 
         if (PlayerManager.getPlayerModel(player).getToggleList() != null && PlayerManager.getPlayerModel(player).getToggleList().contains("indicator")) {
             Hologram xp_hologram = new Hologram(Main.plugin, ChatColor.GREEN.toString() + "+" + ChatColor.BOLD + xp + " XP");
