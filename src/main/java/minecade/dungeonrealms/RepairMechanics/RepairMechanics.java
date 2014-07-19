@@ -505,6 +505,8 @@ public class RepairMechanics implements Listener {
 		if(item_tier == 0) { return 0; // Not a custom item.
 		}
 		
+		if (Utils.isBeta()) return 0; // free on beta shards
+		
 		if(dmg_range.equalsIgnoreCase("no") && !(armor_range.equalsIgnoreCase("no"))) { // It's a piece of armor.	
 			double avg_armor = Integer.parseInt(armor_range.split("-")[0].replaceAll(" ", "").replace("!", "")) + Integer.parseInt(armor_range.split("-")[1].substring(0, armor_range.split("-")[1].indexOf(":")).replaceAll(" ", "").replace("!", ""));
 			avg_armor = avg_armor / 2; // Get the average of the two added values.
