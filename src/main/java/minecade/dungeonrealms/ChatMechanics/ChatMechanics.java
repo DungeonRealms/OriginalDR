@@ -350,7 +350,7 @@ public class ChatMechanics implements Listener {
             if (Main.isDev(p.getName())) {
                 return_string += "" + ChatColor.DARK_AQUA + ChatColor.BOLD.toString() + "DEV" + " " + ChatColor.GRAY;
             } else if (p.getName().equalsIgnoreCase("Bradez1571")) {
-                return_string += ChatColor.RED.toString() + ChatColor.BOLD + "CM " + ChatColor.RED;
+                return_string += ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + "CM " + ChatColor.RED;
             } else {
                 return_string += "" + ChatColor.AQUA + ChatColor.BOLD.toString() + "GM" + " " + ChatColor.AQUA;
             }
@@ -392,7 +392,7 @@ public class ChatMechanics implements Listener {
             if (Main.isDev(p_name)) {
                 return_string += "" + ChatColor.DARK_AQUA + ChatColor.BOLD.toString() + "DEV" + " " + ChatColor.GRAY;
             } else if (p_name.equalsIgnoreCase("Bradez1571")) {
-                return_string += ChatColor.RED.toString() + ChatColor.BOLD + "CM " + ChatColor.RED;
+                return_string += ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + "CM " + ChatColor.RED;
             } else {
                 return_string += "" + ChatColor.AQUA + ChatColor.BOLD.toString() + "GM" + " " + ChatColor.AQUA;
             }
@@ -438,7 +438,7 @@ public class ChatMechanics implements Listener {
             if (Main.isDev(p_name)) {
                 return_string += "" + ChatColor.DARK_AQUA + ChatColor.BOLD.toString() + "DEV" + " " + ChatColor.GRAY;
             } else if (p_name.equalsIgnoreCase("Bradez1571")) {
-                return_string += ChatColor.RED.toString() + ChatColor.BOLD + "CM " + ChatColor.RED;
+                return_string += ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + "CM " + ChatColor.RED;
             } else {
                 return return_string + ChatColor.AQUA + ChatColor.BOLD.toString() + "GM" + " " + ChatColor.AQUA;
             }
