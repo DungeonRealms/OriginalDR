@@ -505,7 +505,7 @@ public class LevelMechanics implements Listener {
 
     public static boolean canPlayerUseTier(Player p, int tier) {
         int level = getPlayerLevel(p);
-        if (tier == 1 || tier == 2 && level >= 20 || tier == 3 && level >= 40 || tier == 4 && level >= 60 || tier == 5 && level >= 80) {
+        if (tier == 1 || tier == 2 && level >= 10 || tier == 3 && level >= 20 || tier == 4 && level >= 30 || tier == 5 && level >= 40) {
             return true;
         }
         return false;
@@ -513,15 +513,15 @@ public class LevelMechanics implements Listener {
 
     public static int getPlayerTier(Player p) {
         int level = getPlayerLevel(p);
-        if (level < 20) {
+        if (level < 10) {
             return 1;
-        } else if (level >= 20 && level < 40) {
+        } else if (level >= 10 && level < 20) {
             return 2;
-        } else if (level >= 40 && level < 60) {
+        } else if (level >= 20 && level < 30) {
             return 3;
-        } else if (level >= 60 && level < 80) {
+        } else if (level >= 30 && level < 40) {
             return 4;
-        } else if (level >= 80) {
+        } else if (level >= 40) {
             return 5;
         }
         return 1;
