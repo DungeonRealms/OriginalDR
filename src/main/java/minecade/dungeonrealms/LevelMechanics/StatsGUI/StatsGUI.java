@@ -17,6 +17,7 @@ public class StatsGUI extends DynamicMenuModel {
 
 	@Override
 	public void addItems(DynamicMenu i, Player player) {
+	    super.getPlayerMenu(player).setClearOnClose(true);
 		PlayerModel drplayer = PlayerManager.getPlayerModel(player);
 //		i.addItemDynamic(EmptySlot.class, 0);
 //		i.addItemDynamic(EmptySlot.class, 1);

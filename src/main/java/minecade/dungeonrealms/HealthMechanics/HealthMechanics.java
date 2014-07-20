@@ -1914,6 +1914,8 @@ public class HealthMechanics implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent e) {
 	    final Player p = e.getPlayer();
 	    
+	    if (e.getItem() == null) return;
+	    
 	    if (!e.getItem().hasItemMeta() || !e.getItem().getItemMeta().hasDisplayName()) return;
 	    
 	    // only do this if the player has full food, otherwise vanilla eating animation

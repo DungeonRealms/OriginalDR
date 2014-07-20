@@ -166,8 +166,8 @@ public class LevelMechanics implements Listener {
                 MenuItem item = null;
                 PlayerLevel pLevel = PlayerManager.getPlayerModel(p).getPlayerLevel();
                 
-                if (DynamicMenuModel.getLastMenuObject(p) != null) {
-                    item = DynamicMenuModel.getLastMenuObject(p).getDynamicItems()
+                if (DynamicMenuModel.getPlayerMenu(p) != null) {
+                    item = DynamicMenuModel.getPlayerMenu(p).getDynamicItems()
                             .get(PlayerManager.getPlayerModel(p).getPlayerLevel().getAllocateSlot());
                 }
                 if (item == null) {
@@ -182,7 +182,7 @@ public class LevelMechanics implements Listener {
                         else if (Math.abs(points) > ((StrengthItem) item).getPoints() - pLevel.getStrPoints()) {
                             p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
                                     + " have enough allocated points to do this.");
-                            DynamicMenuModel.openLastMenuObject(p);
+                            DynamicMenuModel.openLastMenu(p);
                             PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
                             return;
                         }
@@ -194,7 +194,7 @@ public class LevelMechanics implements Listener {
                         else {
                             p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
                                     + " have enough allocated points to do this.");
-                            DynamicMenuModel.openLastMenuObject(p);
+                            DynamicMenuModel.openLastMenu(p);
                             PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
                             return;
                         }
@@ -206,7 +206,7 @@ public class LevelMechanics implements Listener {
                         else {
                             p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
                                     + " have enough allocated points to do this.");
-                            DynamicMenuModel.openLastMenuObject(p);
+                            DynamicMenuModel.openLastMenu(p);
                             PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
                             return;
                         }
@@ -218,7 +218,7 @@ public class LevelMechanics implements Listener {
                         else {
                             p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
                                     + " have enough allocated points to do this.");
-                            DynamicMenuModel.openLastMenuObject(p);
+                            DynamicMenuModel.openLastMenu(p);
                             PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
                             return;
                         }
@@ -228,7 +228,7 @@ public class LevelMechanics implements Listener {
                             + ChatColor.RED + (points > 1 ? " points " : " point ") + "from "
                             + ChatColor.stripColor(item.getItem().getItemMeta().getDisplayName()).toUpperCase() + ".");
                     pLevel.setFreePoints(pLevel.getFreePoints() + Math.abs(points));
-                    DynamicMenuModel.openLastMenuObject(p);
+                    DynamicMenuModel.openLastMenu(p);
                 }
                 else {
                     
@@ -236,7 +236,7 @@ public class LevelMechanics implements Listener {
                         p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
                                 + " have enough points to do this.");
                         PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
-                        DynamicMenuModel.openLastMenuObject(p);
+                        DynamicMenuModel.openLastMenu(p);
                         return;
                     }
                     
@@ -281,13 +281,13 @@ public class LevelMechanics implements Listener {
                             + ChatColor.GREEN + (points > 1 ? " points " : " point ") + "to "
                             + ChatColor.stripColor(item.getItem().getItemMeta().getDisplayName()).toUpperCase() + ".");
                     pLevel.setTempFreePoints(pLevel.getTempFreePoints() - points);
-                    DynamicMenuModel.openLastMenuObject(p);
+                    DynamicMenuModel.openLastMenu(p);
                 }
                 
             }
             else if (msg.equalsIgnoreCase("cancel") || msg.equals("0")) {
                 p.sendMessage(ChatColor.RED + "Stat Allocation - " + ChatColor.BOLD + "CANCELLED");
-                DynamicMenuModel.openLastMenuObject(p);
+                DynamicMenuModel.openLastMenu(p);
             }
             else {
                 p.sendMessage(ChatColor.RED + "Invalid input.  Please specify a number or type cancel.");
