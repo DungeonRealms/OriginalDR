@@ -1569,7 +1569,7 @@ public class EcashMechanics implements Listener {
                 }
             }
 
-            if (!pl.getWorld().getName().equalsIgnoreCase("DungeonRealms") && !(InstanceMechanics.isInstance(pl.getWorld().getName()))) {
+            if ((!pl.getWorld().getName().equalsIgnoreCase("DungeonRealms") && !(InstanceMechanics.isInstance(pl.getWorld().getName()))) && Main.isDev(pl.getName())) {
                 pl.sendMessage(ChatColor.RED + "You cannot place your music box here.");
                 e.setCancelled(true);
                 return;
