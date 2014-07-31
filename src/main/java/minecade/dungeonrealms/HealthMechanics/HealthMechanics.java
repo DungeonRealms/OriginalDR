@@ -10,7 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import me.confuser.barapi.BarAPI;
-import me.vilsol.betanpc.utils.Utils;
+import me.vilsol.foodvendor.DynamicFoodVendor;
+import me.vilsol.foodvendor.MenuFoodVendor;
+import me.vilsol.menuengine.engine.DynamicMenuModel;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
@@ -63,7 +65,6 @@ import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -975,7 +976,7 @@ public class HealthMechanics implements Listener {
 
 	}
 	
-	@EventHandler
+	/*@EventHandler
 	public void onPlayerClickFoodVendorInventory(InventoryClickEvent e) {
 	    if (!(e.getWhoClicked() instanceof Player) || !e.getInventory().getName().equals("Food Vendor")) return;
 	    final Player p = (Player) e.getWhoClicked();
@@ -1018,7 +1019,7 @@ public class HealthMechanics implements Listener {
         }
 	}
 	
-	@EventHandler (priority = EventPriority.LOWEST)
+	//@EventHandler (priority = EventPriority.LOWEST)
 	public void onPlayerRespondFoodVendor(AsyncPlayerChatEvent e) {
 	    if (!(ShopMechanics.getPrice(PlayerManager.getPlayerModel(e.getPlayer()).getItemStackBeingBought()) > 0)) return;
 	    
@@ -1063,10 +1064,13 @@ public class HealthMechanics implements Listener {
 	        }
 	    }
 	    
-	}
+	} */
 	
 	@EventHandler
 	public void onPlayerInteractFoodVendor(PlayerInteractEntityEvent e) {
+		DynamicFoodVendor m = (DynamicFoodVendor) DynamicMenuModel.createMenu(e.getPlayer(), MenuFoodVendor.class);
+		m.showToPlayer(e.getPlayer());
+		/*
 	    if (!(e.getRightClicked() instanceof Player)) return;
         Player trader = (Player) e.getRightClicked();
         if (!(trader.hasMetadata("NPC"))) return;
@@ -1076,7 +1080,7 @@ public class HealthMechanics implements Listener {
         }
         else {
             e.getPlayer().sendMessage(ChatColor.RED + "You are already buying an item!");
-        }
+        } */
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
