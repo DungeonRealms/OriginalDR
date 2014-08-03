@@ -37,6 +37,7 @@ import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
 import minecade.dungeonrealms.PetMechanics.PetMechanics;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.RepairMechanics.RepairMechanics;
+import minecade.dungeonrealms.TeleportationMechanics.TeleportationMechanics;
 import minecade.dungeonrealms.enums.ItemTier;
 import minecade.dungeonrealms.enums.ItemType;
 import minecade.dungeonrealms.managers.PlayerManager;
@@ -96,6 +97,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -207,6 +209,9 @@ public class ItemMechanics implements Listener {
                     ChatColor.LIGHT_PURPLE + "Tier 4: " + ChatColor.WHITE + ChatColor.BOLD + "0", ChatColor.YELLOW + "Tier 5: " + ChatColor.WHITE
                             + ChatColor.BOLD + "0"));
     public static CopyOnWriteArrayList<String> to_process_weapon = new CopyOnWriteArrayList<String>();
+    
+    private static Inventory foodVendor = Bukkit.createInventory(null, 18, "Vanilla Food");
+    private static Inventory tpBookVendor = Bukkit.createInventory(null, 18, "TP Books");
 
     static ChatColor red = ChatColor.RED;
     static ChatColor white = ChatColor.WHITE;
@@ -230,7 +235,22 @@ public class ItemMechanics implements Listener {
 
         loadCustomItemTemplates();
         // Loads all custom item templates in /custom_items into memory for use in other plugins.
-
+        
+        foodVendor.addItem(new ItemStack(Material.MELON));
+        foodVendor.addItem(new ItemStack(Material.COOKED_BEEF));
+        foodVendor.addItem(new ItemStack(Material.COOKED_CHICKEN));
+        foodVendor.addItem(new ItemStack(Material.BREAD));
+        foodVendor.addItem(new ItemStack(Material.CARROT));
+        
+        tpBookVendor.addItem(TeleportationMechanics.Crestguard_keep_scroll);
+        tpBookVendor.addItem(TeleportationMechanics.Dark_Oak_Tavern_scroll);
+        tpBookVendor.addItem(TeleportationMechanics.Deadpeaks_Mountain_Camp_scroll);
+        tpBookVendor.addItem(TeleportationMechanics.Tripoli_scroll);
+        tpBookVendor.addItem(TeleportationMechanics.Harrison_scroll);
+        tpBookVendor.addItem(TeleportationMechanics.Swamp_safezone_scroll);
+        tpBookVendor.addItem(TeleportationMechanics.Jagged_Rocks_Tavern);
+        tpBookVendor.addItem(TeleportationMechanics.Cyrennica_scroll);
+        
         Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 for (Player pl : Main.plugin.getServer().getOnlinePlayers()) {
@@ -637,6 +657,42 @@ public class ItemMechanics implements Listener {
         }
 
         return "no";
+    }
+    
+    @EventHandler
+    public static void onPlayerInteractVendor(PlayerInteractEntityEvent e) {
+        if (!(e.getRightClicked() instanceof Player)) return;
+        Player trader = (Player) e.getRightClicked();
+        if (!(trader.hasMetadata("NPC"))) return;
+        if (!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("TP Books")) && !(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Vanilla Food"))) return;
+        
+        if (ChatColor.stripColor(trader.getName()).equalsIgnoreCase("TP Books")) {
+            e.getPlayer().openInventory(tpBookVendor);
+        }
+        else if (ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Vanilla Food")) {
+            e.getPlayer().openInventory(foodVendor);
+        }
+    }
+    
+    
+    @SuppressWarnings("deprecation")
+    @EventHandler
+    public static void onPlayerClickShopVendorInventory(InventoryClickEvent e) {
+        
+        if (!(e.getInventory().getTitle().equals("TP Books")) && !(e.getInventory().getTitle().equals("Vanilla Food"))) return;
+        
+        e.setCancelled(true);
+        e.setCursor(null);
+        
+        ItemStack item = e.getCurrentItem().clone();
+        
+        if (item == null) return;
+        
+        if (!e.getCurrentItem().getItemMeta().hasDisplayName())
+            item.setAmount(64);
+        
+        e.getWhoClicked().getInventory().addItem(item);
+        if (e.getWhoClicked() instanceof Player) ((Player) e.getWhoClicked()).updateInventory();
     }
 
     @SuppressWarnings("deprecation")

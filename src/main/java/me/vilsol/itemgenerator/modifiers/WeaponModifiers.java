@@ -366,7 +366,7 @@ public class WeaponModifiers {
 	public class Accuracy extends ItemModifier {
 
 		public Accuracy() {
-			super(Arrays.asList(ItemType.SWORD, ItemType.STAFF, ItemType.POLEARM), -1, r + "ACCURACY: ", "%");
+			super(Arrays.asList(ItemType.SWORD), -1, r + "ACCURACY: ", "%");
 			setOrderPriority(3);
 			addCondition(new ModifierCondition(ItemTier.T1, null, new ModifierRange(ModifierType.STATIC, 1, 10), 8));
 			addCondition(new ModifierCondition(ItemTier.T2, null, new ModifierRange(ModifierType.STATIC, 1, 12), 12));

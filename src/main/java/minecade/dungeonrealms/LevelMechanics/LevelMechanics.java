@@ -2,6 +2,7 @@ package minecade.dungeonrealms.LevelMechanics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import me.vilsol.menuengine.engine.DynamicMenuModel;
 import me.vilsol.menuengine.engine.MenuItem;
@@ -182,7 +183,10 @@ public class LevelMechanics implements Listener {
                         else if (Math.abs(points) > ((StrengthItem) item).getPoints() - pLevel.getStrPoints()) {
                             p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
                                     + " have enough allocated points to do this.");
-                            DynamicMenuModel.openLastMenu(p);
+                            for (Entry<Integer, MenuItem> entry : DynamicMenuModel.getPlayerMenu(p).getDynamicItems().entrySet()) {
+                                DynamicMenuModel.getPlayerMenu(p).getInventory().setItem(entry.getKey(), entry.getValue().getItem());
+                            }
+                            p.openInventory(DynamicMenuModel.getPlayerMenu(p).getInventory());
                             PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
                             return;
                         }
@@ -194,7 +198,10 @@ public class LevelMechanics implements Listener {
                         else {
                             p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
                                     + " have enough allocated points to do this.");
-                            DynamicMenuModel.openLastMenu(p);
+                            for (Entry<Integer, MenuItem> entry : DynamicMenuModel.getPlayerMenu(p).getDynamicItems().entrySet()) {
+                                DynamicMenuModel.getPlayerMenu(p).getInventory().setItem(entry.getKey(), entry.getValue().getItem());
+                            }
+                            p.openInventory(DynamicMenuModel.getPlayerMenu(p).getInventory());
                             PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
                             return;
                         }
@@ -206,7 +213,10 @@ public class LevelMechanics implements Listener {
                         else {
                             p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
                                     + " have enough allocated points to do this.");
-                            DynamicMenuModel.openLastMenu(p);
+                            for (Entry<Integer, MenuItem> entry : DynamicMenuModel.getPlayerMenu(p).getDynamicItems().entrySet()) {
+                                DynamicMenuModel.getPlayerMenu(p).getInventory().setItem(entry.getKey(), entry.getValue().getItem());
+                            }
+                            p.openInventory(DynamicMenuModel.getPlayerMenu(p).getInventory());
                             PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
                             return;
                         }
@@ -218,7 +228,10 @@ public class LevelMechanics implements Listener {
                         else {
                             p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
                                     + " have enough allocated points to do this.");
-                            DynamicMenuModel.openLastMenu(p);
+                            for (Entry<Integer, MenuItem> entry : DynamicMenuModel.getPlayerMenu(p).getDynamicItems().entrySet()) {
+                                DynamicMenuModel.getPlayerMenu(p).getInventory().setItem(entry.getKey(), entry.getValue().getItem());
+                            }
+                            p.openInventory(DynamicMenuModel.getPlayerMenu(p).getInventory());
                             PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
                             return;
                         }
@@ -228,7 +241,10 @@ public class LevelMechanics implements Listener {
                             + ChatColor.RED + (points > 1 ? " points " : " point ") + "from "
                             + ChatColor.stripColor(item.getItem().getItemMeta().getDisplayName()).toUpperCase() + ".");
                     pLevel.setFreePoints(pLevel.getFreePoints() + Math.abs(points));
-                    DynamicMenuModel.openLastMenu(p);
+                    for (Entry<Integer, MenuItem> entry : DynamicMenuModel.getPlayerMenu(p).getDynamicItems().entrySet()) {
+                        DynamicMenuModel.getPlayerMenu(p).getInventory().setItem(entry.getKey(), entry.getValue().getItem());
+                    }
+                    p.openInventory(DynamicMenuModel.getPlayerMenu(p).getInventory());
                 }
                 else {
                     
@@ -236,7 +252,10 @@ public class LevelMechanics implements Listener {
                         p.sendMessage(ChatColor.RED + "You do " + ChatColor.BOLD + "not" + ChatColor.RED
                                 + " have enough points to do this.");
                         PlayerManager.getPlayerModel(p).getPlayerLevel().setAllocateSlot(-1);
-                        DynamicMenuModel.openLastMenu(p);
+                        for (Entry<Integer, MenuItem> entry : DynamicMenuModel.getPlayerMenu(p).getDynamicItems().entrySet()) {
+                            DynamicMenuModel.getPlayerMenu(p).getInventory().setItem(entry.getKey(), entry.getValue().getItem());
+                        }
+                        p.openInventory(DynamicMenuModel.getPlayerMenu(p).getInventory());
                         return;
                     }
                     
@@ -281,13 +300,19 @@ public class LevelMechanics implements Listener {
                             + ChatColor.GREEN + (points > 1 ? " points " : " point ") + "to "
                             + ChatColor.stripColor(item.getItem().getItemMeta().getDisplayName()).toUpperCase() + ".");
                     pLevel.setTempFreePoints(pLevel.getTempFreePoints() - points);
-                    DynamicMenuModel.openLastMenu(p);
+                    for (Entry<Integer, MenuItem> entry : DynamicMenuModel.getPlayerMenu(p).getDynamicItems().entrySet()) {
+                        DynamicMenuModel.getPlayerMenu(p).getInventory().setItem(entry.getKey(), entry.getValue().getItem());
+                    }
+                    p.openInventory(DynamicMenuModel.getPlayerMenu(p).getInventory());
                 }
                 
             }
             else if (msg.equalsIgnoreCase("cancel") || msg.equals("0")) {
                 p.sendMessage(ChatColor.RED + "Stat Allocation - " + ChatColor.BOLD + "CANCELLED");
-                DynamicMenuModel.openLastMenu(p);
+                for (Entry<Integer, MenuItem> entry : DynamicMenuModel.getPlayerMenu(p).getDynamicItems().entrySet()) {
+                    DynamicMenuModel.getPlayerMenu(p).getInventory().setItem(entry.getKey(), entry.getValue().getItem());
+                }
+                p.openInventory(DynamicMenuModel.getPlayerMenu(p).getInventory());
             }
             else {
                 p.sendMessage(ChatColor.RED + "Invalid input.  Please specify a number or type cancel.");
