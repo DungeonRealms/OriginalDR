@@ -1068,19 +1068,13 @@ public class HealthMechanics implements Listener {
 	
 	@EventHandler
 	public void onPlayerInteractFoodVendor(PlayerInteractEntityEvent e) {
-		DynamicFoodVendor m = (DynamicFoodVendor) DynamicMenuModel.createMenu(e.getPlayer(), MenuFoodVendor.class);
-		m.showToPlayer(e.getPlayer());
-		/*
 	    if (!(e.getRightClicked() instanceof Player)) return;
         Player trader = (Player) e.getRightClicked();
         if (!(trader.hasMetadata("NPC"))) return;
         if (!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Food Vendor"))) return;
-        if (PlayerManager.getPlayerModel(e.getPlayer()).getItemStackBeingBought() == null) {
-            e.getPlayer().openInventory(hpFoodVendor);
-        }
-        else {
-            e.getPlayer().sendMessage(ChatColor.RED + "You are already buying an item!");
-        } */
+        
+		DynamicFoodVendor m = (DynamicFoodVendor) DynamicMenuModel.createMenu(e.getPlayer(), MenuFoodVendor.class);
+		m.showToPlayer(e.getPlayer());
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
