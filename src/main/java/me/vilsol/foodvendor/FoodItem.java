@@ -40,8 +40,8 @@ public class FoodItem implements MenuItem, ChatCallback, BonusItem {
 		String msg = e.getMessage();
 		int cost = ShopMechanics.getPrice(selectedItem);
 		
-		if(!(Utils.isInteger(msg)) && !msg.equalsIgnoreCase("cancel")) {
-			p.sendMessage(ChatColor.RED + "Please enter a number between 1 and 64 inclusive.");
+		if(!(Utils.isInteger(msg)) && !msg.equalsIgnoreCase("cancel") || (!(Utils.isInteger(msg)) && Integer.valueOf(msg) % 4 != 0)) {
+			p.sendMessage(ChatColor.RED + "Please enter a number between 1 and 64 inclusive that is a multiple of 4.");
 		} else if(msg.equalsIgnoreCase("cancel")) {
 			p.sendMessage(ChatColor.RED + "Purchase - " + ChatColor.BOLD + "CANCELLED");
 			ChatCallback.locked_players.remove(p);
@@ -80,7 +80,7 @@ public class FoodItem implements MenuItem, ChatCallback, BonusItem {
 			p.sendMessage(ChatColor.RED + "This item requires " + ChatColor.UNDERLINE + "at least" + ChatColor.RED + " level " + LevelMechanics.getLevelToUse(ItemMechanics.getItemTier(selectedItem)) + " to use this item.");
 			p.sendMessage(ChatColor.GRAY + "Do you really want to purchase it?  If not, type cancel below.");
 		}
-		p.sendMessage(ChatColor.GREEN + "Enter the " + ChatColor.BOLD + "QUANTITY" + ChatColor.GREEN + " you'd like to purchase.");
+		p.sendMessage(ChatColor.GREEN + "Enter the " + ChatColor.BOLD + "QUANTITY" + ChatColor.GREEN + " in a multiple of 4 you'd like to purchase.");
 		p.sendMessage(ChatColor.GRAY + "MAX: 64X (" + price * 64 + "g), OR " + price + "g/each.");
 		ChatCallback.locked_players.put(p, this);
 		p.closeInventory();
