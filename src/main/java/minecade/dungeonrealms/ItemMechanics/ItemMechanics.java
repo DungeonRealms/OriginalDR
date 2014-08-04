@@ -6147,7 +6147,7 @@ public class ItemMechanics implements Listener {
     @SuppressWarnings("deprecation")
 	public int subtractArrow(Player pl) {
         for (ItemStack is : pl.getInventory().getContents()) {
-            if (is == null || is.getType() == Material.AIR) {
+        	if (is == null || is.getType() == Material.AIR) {
                 continue;
             }
             if (is.getType() == Material.ARROW) {
@@ -6166,8 +6166,9 @@ public class ItemMechanics implements Listener {
                 return tier;
             }
             if (is.getType() == Material.FLOWER_POT_ITEM) {
-                if (getQuiverAmount(is) <= 0) {
-                    return 0;
+                int quiverAmount = getQuiverAmount(is);
+            	if (quiverAmount <= 0) {
+            		continue;
                 }
                 int highest_tier = 0;
                 int amount_of_arrows = 0;
