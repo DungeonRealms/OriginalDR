@@ -1040,16 +1040,22 @@ public class MerchantMechanics implements Listener {
                 Inventory ecash_inv = Hive.convertStringToInventory(null, EcashMechanics.ecash_storage_map.get(p.getName()), "E-Cash Storage", 54);
                 p.playSound(p.getLocation(), Sound.WOOD_CLICK, 1.0F, 1.0F);
                 boolean found_stuff = false;
+                List<ItemStack> giveBack = new ArrayList<ItemStack>();
                 for (ItemStack is : ecash_inv) {
                     if (is == null || is.getType() == Material.AIR)
                         continue;
                     if (MountMechanics.isMount(is) || MountMechanics.isMule(is)) {
+                    	giveBack.add(is);
                         ecash_inv.remove(is);
                         found_stuff = true;
                         continue;
                     }
                 }
                 if (found_stuff) {
+                	for(ItemStack i : giveBack) {
+						p.getInventory().addItem(i);
+					}
+                	
                     p.sendMessage(ChatColor.RED + "A mount/mule was found in your E-Cash Storage, it has been removed!");
                     for (Player GM : Bukkit.getOnlinePlayers()) {
                         if (PermissionMechanics.isGM(GM.getName())) {
