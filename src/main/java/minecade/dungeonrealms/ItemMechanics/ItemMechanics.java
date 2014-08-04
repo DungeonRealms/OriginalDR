@@ -3801,8 +3801,6 @@ public class ItemMechanics implements Listener {
         int tier = subtractArrow(p);
         if (tier == 0) {
             Main.d("DUDE THE TIER WAS 0");
-        } else {
-            Main.d(tier);
         }
         int bow_tier = getItemTier(p.getItemInHand());
 
@@ -6143,7 +6141,7 @@ public class ItemMechanics implements Listener {
         ItemMeta im = is.getItemMeta();
         return Integer.parseInt(ChatColor.stripColor(im.getDisplayName().split("/ ")[1]));
     }
-
+    
     @SuppressWarnings("deprecation")
 	public int subtractArrow(Player pl) {
         for (ItemStack is : pl.getInventory().getContents()) {
@@ -6153,11 +6151,10 @@ public class ItemMechanics implements Listener {
             if (is.getType() == Material.ARROW) {
                 int tier = getItemTier(is);
                 if (is.getAmount() == 1) {
-                    Main.d("SET ARROW TO AIR");
                     is.setType(Material.AIR);
                     pl.updateInventory();
                 } else {
-                    is.setAmount(is.getAmount() - 1);
+                    //is.setAmount(is.getAmount() - 1);
                 }
                 if (tier <= 0) {
                     Main.d("TIER WAS 0");
