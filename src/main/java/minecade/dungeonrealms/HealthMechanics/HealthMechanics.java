@@ -1860,6 +1860,7 @@ public class HealthMechanics implements Listener {
                 }
 	            
 	            ItemStack food = e.getItem();
+	            int regenAmount = Integer.valueOf(ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0).substring(1, HP_regen_food[i].getItemMeta().getLore().get(0).indexOf(" "))));
 	            
 	            if (food.getAmount() > 1) {
 	                food.setAmount(e.getItem().getAmount() - 1);
@@ -1872,31 +1873,18 @@ public class HealthMechanics implements Listener {
 	            p.updateInventory();
 	            
                 if (HealthMechanics.health_regen_data.containsKey(p.getName())) {
-                    HealthMechanics.health_regen_data.put(
-                            p.getName(),
-                            HealthMechanics.health_regen_data.get(p.getName())
-                                    + Integer.valueOf(ChatColor.stripColor(
-                                            HP_regen_food[i].getItemMeta().getLore().get(0)).substring(
-                                            1,
-                                            ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0))
-                                                    .indexOf(" "))));
+                    HealthMechanics.health_regen_data.put(p.getName(),
+                            HealthMechanics.health_regen_data.get(p.getName()) + regenAmount);
                 }
                 else {
-                    HealthMechanics.health_regen_data.put(p.getName(), Integer.valueOf(ChatColor.stripColor(
-                            HP_regen_food[i].getItemMeta().getLore().get(0)).substring(1,
-                            ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0)).indexOf(" "))));
+                    HealthMechanics.health_regen_data.put(p.getName(), regenAmount);
                 }
 
-                PlayerManager.getPlayerModel(p).setRegenFoodBonus(
-                        Integer.valueOf(ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0))
-                                .substring(
-                                        1,
-                                        ChatColor.stripColor(HP_regen_food[i].getItemMeta().getLore().get(0)).indexOf(
-                                                " "))));
+                PlayerManager.getPlayerModel(p).setRegenFoodBonus(regenAmount);
                 PlayerManager.getPlayerModel(p).setRegenTimer(30);
                 
                 if (PlayerManager.getPlayerModel(p).getToggleList() != null && PlayerManager.getPlayerModel(p).getToggleList().contains("debug")) {
-                    p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "+" + ChatColor.GREEN + "500 HP/s for" + ChatColor.GREEN + ChatColor.BOLD + "30 SECONDS");
+                    p.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "+" + ChatColor.GREEN + regenAmount + " HP/s for" + ChatColor.GREEN + ChatColor.BOLD + "30 SECONDS");
                 }
                 
                 PlayerManager.getPlayerModel(p).setTeleportLoc(p.getLocation());
