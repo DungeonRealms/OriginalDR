@@ -5974,6 +5974,17 @@ public class ItemMechanics implements Listener {
         }
         projectile_map.remove(proj);
     }
+    
+    public static boolean isLegacy(ItemStack is) {
+        
+        for (String line : is.getItemMeta().getLore()) {
+            if (line.equalsIgnoreCase("LEGACY")) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 
     public static boolean isQuiver(ItemStack is) {
         if (is.getType() == Material.FLOWER_POT_ITEM) {
