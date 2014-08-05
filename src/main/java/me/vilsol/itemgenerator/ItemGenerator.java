@@ -372,6 +372,7 @@ public class ItemGenerator {
 		if(rarity == ItemRarity.RARE) lore.add(ChatColor.AQUA.toString() + ChatColor.ITALIC.toString() + "Rare");
 		if(rarity == ItemRarity.UNIQUE) lore.add(ChatColor.YELLOW.toString() + ChatColor.ITALIC.toString() + "Unique");
 		
+		if (isReroll && ItemMechanics.isLegacy(origItem)) lore.add (ChatColor.GOLD.toString() + ChatColor.BOLD + "LEGACY");
 		if (isReroll && EnchantMechanics.hasProtection(origItem)) lore.add(ChatColor.GREEN.toString() + ChatColor.BOLD + "PROTECTED");
 		
 		meta.setLore(lore);
