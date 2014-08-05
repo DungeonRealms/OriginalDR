@@ -5978,7 +5978,7 @@ public class ItemMechanics implements Listener {
     public static boolean isLegacy(ItemStack is) {
         
         for (String line : is.getItemMeta().getLore()) {
-            if (line.equalsIgnoreCase("LEGACY")) {
+            if (ChatColor.stripColor(line).equalsIgnoreCase("LEGACY")) {
                 return true;
             }
         }
