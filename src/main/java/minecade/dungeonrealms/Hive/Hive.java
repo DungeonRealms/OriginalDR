@@ -44,6 +44,7 @@ import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
 import minecade.dungeonrealms.Hive.commands.CommandAllowLogin;
 import minecade.dungeonrealms.Hive.commands.CommandBenchmark;
 import minecade.dungeonrealms.Hive.commands.CommandBio;
+import minecade.dungeonrealms.Hive.commands.CommandCode;
 import minecade.dungeonrealms.Hive.commands.CommandDRLoad;
 import minecade.dungeonrealms.Hive.commands.CommandDRSave;
 import minecade.dungeonrealms.Hive.commands.CommandHQuery;
@@ -384,6 +385,7 @@ public class Hive implements Listener {
 		Main.plugin.getCommand("whois").setExecutor(new CommandWhois());
 		Main.plugin.getCommand("wipe").setExecutor(new CommandWipe());
 		Main.plugin.getCommand("allowjoin").setExecutor(new CommandAllowLogin());
+		Main.plugin.getCommand("code").setExecutor(new CommandCode());
 		MOTD = Bukkit.getMotd();
 
 		restoreCorruptShops(false);

@@ -515,6 +515,9 @@ commands:
     description: Sets the players alignment.
     usage: /<command>
     aliases: [alignmentset]
+  code:
+    description: Displays generated player profile code.
+    usage: /<command>
   profile:
     description: Spits out link to player profile on website.
     usage: /<command>
