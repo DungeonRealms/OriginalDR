@@ -1019,18 +1019,18 @@ public class MountMechanics implements Listener {
                 }
                 ItemStack horse = TradeWindow.getItem(slot);
                 int horse_tier = ItemMechanics.getItemTier(horse);
-                if (horse_tier == 3 && LevelMechanics.getPlayerLevel(pl) < 30) {
-                    pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "30" + ChatColor.RED
+                if (horse_tier == 3 && LevelMechanics.getPlayerLevel(pl) < 20) {
+                    pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "20" + ChatColor.RED
                             + " to purchase a Tier 3 horse!");
                     mount_being_bought.remove(pl.getName());
                     return;
-                } else if (horse_tier == 4 && LevelMechanics.getPlayerLevel(pl) < 60) {
-                    pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "60" + ChatColor.RED
+                } else if (horse_tier == 4 && LevelMechanics.getPlayerLevel(pl) < 40) {
+                    pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "40" + ChatColor.RED
                             + " to purchase a Tier 4 horse!");
                     mount_being_bought.remove(pl.getName());
                     return;
-                } else if (horse_tier == 5 && LevelMechanics.getPlayerLevel(pl) < 90) {
-                    pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "90" + ChatColor.RED
+                } else if (horse_tier == 5 && LevelMechanics.getPlayerLevel(pl) < 60) {
+                    pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "60" + ChatColor.RED
                             + " to purchase a Tier 5 horse!");
                     mount_being_bought.remove(pl.getName());
                     return;
@@ -1163,14 +1163,14 @@ public class MountMechanics implements Listener {
             int price = ShopMechanics.getPrice(e.getCurrentItem());
             String i_name = e.getCurrentItem().getItemMeta().getDisplayName();
             int horse_tier = ItemMechanics.getItemTier(e.getCurrentItem());
-            if (horse_tier == 3 && LevelMechanics.getPlayerLevel(pl) < 30) {
-                pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "30" + ChatColor.RED + " to purchase a Tier 3 horse!");
+            if (horse_tier == 3 && LevelMechanics.getPlayerLevel(pl) < 20) {
+                pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "20" + ChatColor.RED + " to purchase a Tier 3 horse!");
                 return;
-            } else if (horse_tier == 4 && LevelMechanics.getPlayerLevel(pl) < 60) {
-                pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "60" + ChatColor.RED + " to purchase a Tier 4 horse!");
+            } else if (horse_tier == 4 && LevelMechanics.getPlayerLevel(pl) < 40) {
+                pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "40" + ChatColor.RED + " to purchase a Tier 4 horse!");
                 return;
-            } else if (horse_tier == 5 && LevelMechanics.getPlayerLevel(pl) < 90) {
-                pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "90" + ChatColor.RED + " to purchase a Tier 5 horse!");
+            } else if (horse_tier == 5 && LevelMechanics.getPlayerLevel(pl) < 60) {
+                pl.sendMessage(ChatColor.RED + "You need to be atleast level " + ChatColor.UNDERLINE + "60" + ChatColor.RED + " to purchase a Tier 5 horse!");
                 return;
             }
             if (!RealmMechanics.doTheyHaveEnoughMoney(pl, price)) {

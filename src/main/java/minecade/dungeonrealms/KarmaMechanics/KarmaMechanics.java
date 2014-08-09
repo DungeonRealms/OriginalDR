@@ -929,7 +929,7 @@ public class KarmaMechanics implements Listener {
 					p.sendMessage("");
 					p.sendMessage(ChatColor.RED + "              " + "* YOU ARE NOW " + ChatColor.BOLD + " CHAOTIC " + ChatColor.RED + "ALIGNMENT *");
 					if(echo_type > 1) {
-						p.sendMessage(ChatColor.GRAY + "While chaotic, you cannot enter any major cities or safe zones. If you are killed while chaotic, you will loose everything in your inventory. Chaotic alignment will expire 20 minutes after your last player kill.");
+						p.sendMessage(ChatColor.GRAY + "While chaotic, you cannot enter any major cities or safe zones. If you are killed while chaotic, you will lose everything in your inventory. Chaotic alignment will expire 20 minutes after your last player kill.");
 						p.sendMessage(ChatColor.RED + "              " + "* YOU ARE NOW " + ChatColor.BOLD + " CHAOTIC " + ChatColor.RED + "ALIGNMENT *");
 					}
 				}

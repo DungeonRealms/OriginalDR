@@ -19,6 +19,7 @@ public abstract class ItemModifier implements Comparable<ItemModifier> {
 	private String prefix;
 	private String suffix;
 	private int orderPriority = 10;
+	private boolean includeOnReroll = true;
 	
 	public ItemModifier(List<ItemType> possibleApplicants, int chance, String prefix, String suffix){
 		this.possibleApplicants = possibleApplicants;
@@ -28,6 +29,16 @@ public abstract class ItemModifier implements Comparable<ItemModifier> {
 		ItemGenerator.modifiers.put(this.getClass(), this);
 		ItemGenerator.modifierObjects.add(this);
 	}
+	
+	public ItemModifier(List<ItemType> possibleApplicants, int chance, String prefix, String suffix, boolean includeOnReroll){
+        this.possibleApplicants = possibleApplicants;
+        this.chance = chance;
+        this.prefix = prefix;
+        this.suffix = suffix;
+        this.includeOnReroll = includeOnReroll;
+        ItemGenerator.modifiers.put(this.getClass(), this);
+        ItemGenerator.modifierObjects.add(this);
+    }
 	
 	public void setOrderPriority(int position){
 		this.orderPriority = position;
@@ -105,5 +116,13 @@ public abstract class ItemModifier implements Comparable<ItemModifier> {
 	public int getChance(){
 		return chance;
 	}
+
+    public boolean isIncludeOnReroll() {
+        return includeOnReroll;
+    }
+
+    public void setIncludeOnReroll(boolean includeOnReroll) {
+        this.includeOnReroll = includeOnReroll;
+    }
 	
 }

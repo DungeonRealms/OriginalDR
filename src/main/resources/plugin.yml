@@ -179,6 +179,9 @@ commands:
   drenchant:
     description: Root command.
     usage: /<command>
+  drfood:
+    description: Adds one of each HP/s food item into your inventory.
+    usage: /<command>
   fat:
     description: Root command.
     usage: /<command>
@@ -348,6 +351,15 @@ commands:
     usage: /<command>
   setlevel:
     description: Sets the player givens level.
+    usage: /<command>
+  stat:
+    description: Opens the stat allocation GUI.
+    usage: /<command>
+  stats:
+    description: Opens the stat allocation GUI.
+    usage: /<command>
+  statsnotice:
+    description: Sends the JSON stat notice message.
     usage: /<command>
   addhearthstone:
     description: Adds a hearthstone spawn point.

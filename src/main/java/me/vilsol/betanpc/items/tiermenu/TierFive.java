@@ -7,7 +7,7 @@ import me.vilsol.betanpc.menus.ItemSpawnMenu;
 import me.vilsol.betanpc.workers.ItemSpawnWorker;
 import me.vilsol.menuengine.engine.DynamicMenuModel;
 import me.vilsol.menuengine.engine.MenuItem;
-import me.vilsol.menuengine.enums.ClickType;
+import org.bukkit.event.inventory.ClickType;
 import me.vilsol.menuengine.utils.Builder;
 
 import org.bukkit.ChatColor;

@@ -507,8 +507,8 @@ public class InstanceMechanics implements Listener {
                         if (instance_name.equalsIgnoreCase("onewolfedungeon")) {
                             instance_name = "OneWolfeDungeon";
                         }
-                        if (LevelMechanics.getPlayerLevel(pl) < 9) {
-                            pl.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level 9 to enter a dungeon.");
+                        if (LevelMechanics.getPlayerLevel(pl) < 5) {
+                            pl.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level 5 to enter a dungeon.");
                             continue;
                         }
                         if (instances_run.containsKey(pl.getName())) {

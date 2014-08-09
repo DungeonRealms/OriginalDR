@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.vilsol.menuengine.engine.MenuItem;
-import me.vilsol.menuengine.enums.ClickType;
+import org.bukkit.event.inventory.ClickType;
 import me.vilsol.menuengine.utils.Builder;
 
 import org.bukkit.ChatColor;

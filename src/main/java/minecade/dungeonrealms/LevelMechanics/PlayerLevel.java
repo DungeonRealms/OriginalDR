@@ -24,14 +24,47 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerLevel {
 
-    Player p;
-    String p_name;
-    int level;
-    int xp;
-    Entity last_mob_gained_from;
+    private Player p;
+    private String p_name;
+    private int level;
+    private int xp;
+    private Entity last_mob_gained_from;
+    
+    // stat point stuff
+    private int freePoints;
+    private int strPoints;
+    private int dexPoints;
+    private int vitPoints;
+    private int intPoints;
+    private int tempFreePoints; // free points left before player clicks confirm
+    private int tmrSecs; // timer for when to notify player of free points
+    private int numWarnings; // number of free stat point warnings sent so far to prevent spam
+    private int allocateSlot; // when a player is allocating a custom amount of points to a stat
+    private int numResets; // number of stat resets the player has already had
+    private boolean isResetting; // flag for if the player has talked to the reset NPC
+    private String resetCode; // code for stat reset
+    private int resetCost; // cost to reset stats for player
+    public final static int POINTS_PER_LEVEL = 6; // points per level.  Change this to change the global value.
+	public final static String FREE_STAT_NOTICE = ChatColor.GREEN + "*" + ChatColor.GRAY + "You have available " + ChatColor.GREEN + "/stat" + ChatColor.GRAY + " points. Click " + ChatColor.GREEN.toString() + ChatColor.BOLD + "HERE"
+			+ ChatColor.GRAY + " to allocate them." + ChatColor.GREEN + "*";
+	private static final String ALPHA_NUM = "123456789";
 
-    public PlayerLevel(String p_name, boolean aSync) {
+    @SuppressWarnings("deprecation")
+	public PlayerLevel(String p_name, boolean aSync) {
         this.p_name = p_name;
+        this.freePoints = 0;
+        this.tempFreePoints = 0;
+        this.strPoints = 0;
+        this.dexPoints = 0;
+        this.vitPoints = 0;
+        this.intPoints = 0;
+        this.tmrSecs = 0;
+        this.numWarnings = 0;
+        this.allocateSlot = -1;
+        this.isResetting = false;
+        this.resetCode = "";
+        this.resetCost = 0;
+        this.p = Bukkit.getPlayer(p_name);
         if (aSync) {
             new BukkitRunnable() {
                 public void run() {
@@ -95,7 +128,21 @@ public class PlayerLevel {
         if (level >= 101) {
             return 0;
         }
-        return (int) (100 * Math.pow(level, 2.24));
+        double difficulty = 1;
+        if (level >= 1 && level < 40) {
+            difficulty = 1.3;
+        }
+        else if (level >= 40 && level < 60) {
+            difficulty = 1.6;
+        }
+        else if (level >= 60 && level < 80) {
+            difficulty = 2.2;
+        }
+        else if (level >= 80) {
+            difficulty = 2.6;
+        }
+//        return (int) (100 * Math.pow(level, 2.24)); old level exp formula
+        return (int) ((100 * Math.pow(level, 2)) * difficulty); // patch 1.9 exp formula
     }
 
     public void saveData(boolean remove) {
@@ -110,11 +157,18 @@ public class PlayerLevel {
         }
         new BukkitRunnable() {
             public void run() {
-                try (PreparedStatement prest = ConnectionPool.getConnection().prepareStatement(
-                        "UPDATE player_database SET player_level = ?, player_xp = ? WHERE p_name = ?")) {
+				try (PreparedStatement prest = ConnectionPool
+						.getConnection()
+						.prepareStatement(
+								"UPDATE player_database SET player_level = ?, player_xp = ?, allocated_str = ?, allocated_dex = ?, allocated_int = ?, allocated_vit = ?, resets = ? WHERE p_name = ?")) {
                     prest.setInt(1, level);
                     prest.setInt(2, xp);
-                    prest.setString(3, name);
+                    prest.setInt(3, strPoints);
+                    prest.setInt(4, dexPoints);
+                    prest.setInt(5, intPoints);
+                    prest.setInt(6, vitPoints);
+                    prest.setInt(7, numResets);
+                    prest.setString(8, name);
                     prest.executeUpdate();
                     prest.close();
                 } catch (Exception e) {
@@ -134,10 +188,11 @@ public class PlayerLevel {
             return;
         }
         setLevel(getLevel() + 1);
+        freePoints += POINTS_PER_LEVEL;
         updateScoreboardLevel();
         if(getLevel() == 100){
             CommunityMechanics.sendPacketCrossServer("@level100@" + p_name + ":", -1, true);
-            AchievementMechanics.addAchievement(p_name, "Over Acheiver");
+            AchievementMechanics.addAchievement(p_name, "Overachiever");
             Bukkit.broadcastMessage(ChatColor.AQUA.toString() + ChatColor.BOLD + p_name + ChatColor.WHITE + " has reached level 100!");
         }
         new LogModel(LogType.LEVEL_UP, p_name, new JsonBuilder("level", getLevel()).getJson());
@@ -152,7 +207,18 @@ public class PlayerLevel {
             p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "         " + " LEVEL UP! " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel() - 1)
                     + ChatColor.BOLD + " -> " + ChatColor.YELLOW + ChatColor.UNDERLINE + (getLevel()));
             p.playSound(p.getLocation(), Sound.LEVEL_UP, 0.5F, 1F);
+            sendStatNoticeToPlayer(p);
         }
+    }
+    
+    public void sendStatNoticeToPlayer() {
+    	if (p != null) {
+        	Main.getLevelMechanics().getFreePointsNotice().sendToPlayer(p);
+    	}
+    }
+    
+    public void sendStatNoticeToPlayer(Player p) {
+        Main.getLevelMechanics().getFreePointsNotice().sendToPlayer(p);
     }
 
     public void updateScoreboardLevel() {
@@ -167,8 +233,11 @@ public class PlayerLevel {
     }
 
     public void loadData() {
-        try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
-                "SELECT player_level, player_xp FROM player_database WHERE p_name = '" + p_name + "'")) {
+		try (PreparedStatement pst = ConnectionPool
+				.getConnection()
+				.prepareStatement(
+						"SELECT player_level, player_xp, allocated_str, allocated_dex, allocated_int, allocated_vit, resets FROM player_database WHERE p_name = '"
+								+ p_name + "'")) {
             ResultSet rs = pst.executeQuery();
             if (!rs.first()) {
                 sendInsertUpdate();
@@ -180,6 +249,15 @@ public class PlayerLevel {
             } else {
                 setLevel(rs.getInt("player_level"));
                 setXP(rs.getInt("player_xp"));
+                setStrPoints(rs.getInt("allocated_str"));
+                setDexPoints(rs.getInt("allocated_dex"));
+                setIntPoints(rs.getInt("allocated_int"));
+                setVitPoints(rs.getInt("allocated_vit"));
+                setNumResets(rs.getInt("resets"));
+                setFreePoints(level * POINTS_PER_LEVEL - (strPoints + dexPoints + intPoints + vitPoints));
+                if (freePoints > 0) {
+                	setTmrSecs(180);
+                }
             }
             pst.close();
         } catch (SQLException e) {
@@ -189,20 +267,67 @@ public class PlayerLevel {
     }
 
     public void sendInsertUpdate() {
-        try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
-                "INSERT INTO player_database(p_name, player_level, player_xp) VALUES ('" + p_name + "', 1, 0) ON DUPLICATE KEY UPDATE p_name = '" + p_name
-                        + "'")) {
+		try (PreparedStatement pst = ConnectionPool
+				.getConnection()
+				.prepareStatement(
+						"INSERT INTO player_database(p_name, player_level, player_xp, allocated_str, allocated_dex, allocated_int, allocated_vit) VALUES ('"
+								+ p_name + "', 1, 0, 0, 0, 0, 0) ON DUPLICATE KEY UPDATE p_name = '" + p_name + "'")) {
             pst.executeUpdate();
             pst.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    
+    public String generateResetAuthenticationCode(Player p, String resets) {
+        StringBuffer sb = new StringBuffer(4);
+        for(int i = 0; i < 4; i++) {
+            int ndx = (int) (Math.random() * ALPHA_NUM.length());
+            sb.append(ALPHA_NUM.charAt(ndx));
+        }
 
-    public void setLevel(int level) {
+        return resets + sb.toString();
+    }
+    
+    public void resetStatPoints() {
+        this.strPoints = 0;
+        this.dexPoints = 0;
+        this.intPoints = 0;
+        this.vitPoints = 0;
+        this.freePoints = this.level * POINTS_PER_LEVEL;
+        saveData(false);
+    }
+
+    /**
+	 * @return The amount of free stat points the user currently has
+	 */
+	public int getFreePoints() {
+		return freePoints;
+	}
+
+	/**
+	 * @param Set the amount of free stat points for the user
+	 */
+	public void setFreePoints(int freePoints) {
+		this.freePoints = freePoints;
+	}
+
+	public void setLevel(int level) {
         this.level = level;
+        this.freePoints = level * POINTS_PER_LEVEL - (strPoints + dexPoints + intPoints + vitPoints);
         if (p != null) {
             ScoreboardMechanics.setPlayerLevel(getLevel(), p);
+            if (freePoints > 0) {
+            	sendStatNoticeToPlayer(p);
+            }
+            else if (freePoints < 0) {
+            	strPoints = 0;
+            	dexPoints = 0;
+            	intPoints = 0;
+            	vitPoints = 0;
+            	freePoints = level * POINTS_PER_LEVEL;
+            	p.sendMessage(ChatColor.RED + "Your level was decreased, so your stats have been reset.");
+            }
         }
     }
 
@@ -220,4 +345,104 @@ public class PlayerLevel {
         return xp;
     }
 
+	public int getStrPoints() {
+		return strPoints;
+	}
+
+	public void setStrPoints(int strPoints) {
+		this.strPoints = strPoints;
+	}
+
+	public int getDexPoints() {
+		return dexPoints;
+	}
+
+	public void setDexPoints(int dexPoints) {
+		this.dexPoints = dexPoints;
+	}
+
+	public int getVitPoints() {
+		return vitPoints;
+	}
+
+	public void setVitPoints(int vitPoints) {
+		this.vitPoints = vitPoints;
+	}
+
+	public int getIntPoints() {
+		return intPoints;
+	}
+
+	public void setIntPoints(int intPoints) {
+		this.intPoints = intPoints;
+	}
+
+	public int getTempFreePoints() {
+		return tempFreePoints;
+	}
+
+	public void setTempFreePoints(int tempFreePoints) {
+		this.tempFreePoints = tempFreePoints;
+	}
+
+	public int getTmrSecs() {
+		return tmrSecs;
+	}
+
+	public void setTmrSecs(int tmrSecs) {
+		this.tmrSecs = tmrSecs;
+	}
+	
+	public void tickTmr() {
+		this.tmrSecs--;
+	}
+
+    public boolean isResetting() {
+        return isResetting;
+    }
+
+    public void setResetting(boolean isResetting) {
+        this.isResetting = isResetting;
+    }
+
+    public int getAllocateSlot() {
+        return allocateSlot;
+    }
+
+    public void setAllocateSlot(int allocateSlot) {
+        this.allocateSlot = allocateSlot;
+    }
+
+    public int getNumWarnings() {
+        return numWarnings;
+    }
+
+    public void setNumWarnings(int numWarnings) {
+        this.numWarnings = numWarnings;
+    }
+
+    public int getNumResets() {
+        return numResets;
+    }
+
+    public void setNumResets(int numResets) {
+        this.numResets = numResets;
+    }
+
+    public String getResetCode() {
+        return resetCode;
+    }
+
+    public void setResetCode(String resetCode) {
+        this.resetCode = resetCode;
+    }
+
+    public int getResetCost() {
+        return resetCost;
+    }
+
+    public void setResetCost(int resetCost) {
+        this.resetCost = resetCost;
+    }
+    
 }

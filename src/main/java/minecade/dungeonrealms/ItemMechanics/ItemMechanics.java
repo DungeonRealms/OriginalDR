@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import javax.swing.text.Utilities;
 
+import me.vilsol.itemgenerator.ItemGenerator;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
@@ -36,6 +37,9 @@ import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
 import minecade.dungeonrealms.PetMechanics.PetMechanics;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.RepairMechanics.RepairMechanics;
+import minecade.dungeonrealms.TeleportationMechanics.TeleportationMechanics;
+import minecade.dungeonrealms.enums.ItemTier;
+import minecade.dungeonrealms.enums.ItemType;
 import minecade.dungeonrealms.managers.PlayerManager;
 import net.minecraft.server.v1_7_R2.EntityLiving;
 import net.minecraft.server.v1_7_R2.NBTTagCompound;
@@ -93,6 +97,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -110,10 +115,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public class ItemMechanics implements Listener {
-
-    private static ItemMechanics instance;
-    private final static ItemGenerators iGen = new ItemGenerators(instance);
-
+    
     static Logger log = Logger.getLogger("Minecraft");
 
     public static HashMap<String, ItemStack> custom_item_table = new HashMap<String, ItemStack>();
@@ -207,6 +209,9 @@ public class ItemMechanics implements Listener {
                     ChatColor.LIGHT_PURPLE + "Tier 4: " + ChatColor.WHITE + ChatColor.BOLD + "0", ChatColor.YELLOW + "Tier 5: " + ChatColor.WHITE
                             + ChatColor.BOLD + "0"));
     public static CopyOnWriteArrayList<String> to_process_weapon = new CopyOnWriteArrayList<String>();
+    
+    private static Inventory foodVendor = Bukkit.createInventory(null, 18, "Vanilla Food");
+    private static Inventory tpBookVendor = Bukkit.createInventory(null, 18, "TP Books");
 
     static ChatColor red = ChatColor.RED;
     static ChatColor white = ChatColor.WHITE;
@@ -216,7 +221,6 @@ public class ItemMechanics implements Listener {
     public void onEnable() {
         Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
         Main.plugin.getServer().getPluginManager().registerEvents(new Halloween(this), Main.plugin);
-        instance = this;
 
         Main.plugin.getCommand("addweapon").setExecutor(new CommandAddWeapon());
         Main.plugin.getCommand("addweaponnew").setExecutor(new CommandAddWeaponNew());
@@ -231,7 +235,22 @@ public class ItemMechanics implements Listener {
 
         loadCustomItemTemplates();
         // Loads all custom item templates in /custom_items into memory for use in other plugins.
-
+        
+        foodVendor.addItem(new ItemStack(Material.MELON));
+        foodVendor.addItem(new ItemStack(Material.COOKED_BEEF));
+        foodVendor.addItem(new ItemStack(Material.COOKED_CHICKEN));
+        foodVendor.addItem(new ItemStack(Material.BREAD));
+        foodVendor.addItem(new ItemStack(Material.CARROT));
+        
+        tpBookVendor.addItem(TeleportationMechanics.Crestguard_keep_scroll);
+        tpBookVendor.addItem(TeleportationMechanics.Dark_Oak_Tavern_scroll);
+        tpBookVendor.addItem(TeleportationMechanics.Deadpeaks_Mountain_Camp_scroll);
+        tpBookVendor.addItem(TeleportationMechanics.Tripoli_scroll);
+        tpBookVendor.addItem(TeleportationMechanics.Harrison_scroll);
+        tpBookVendor.addItem(TeleportationMechanics.Swamp_safezone_scroll);
+        tpBookVendor.addItem(TeleportationMechanics.Jagged_Rocks_Tavern);
+        tpBookVendor.addItem(TeleportationMechanics.Cyrennica_scroll);
+        
         Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 for (Player pl : Main.plugin.getServer().getOnlinePlayers()) {
@@ -639,6 +658,42 @@ public class ItemMechanics implements Listener {
 
         return "no";
     }
+    
+    @EventHandler
+    public static void onPlayerInteractVendor(PlayerInteractEntityEvent e) {
+        if (!(e.getRightClicked() instanceof Player)) return;
+        Player trader = (Player) e.getRightClicked();
+        if (!(trader.hasMetadata("NPC"))) return;
+        if (!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("TP Books")) && !(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Vanilla Food"))) return;
+        
+        if (ChatColor.stripColor(trader.getName()).equalsIgnoreCase("TP Books")) {
+            e.getPlayer().openInventory(tpBookVendor);
+        }
+        else if (ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Vanilla Food")) {
+            e.getPlayer().openInventory(foodVendor);
+        }
+    }
+    
+    
+    @SuppressWarnings("deprecation")
+    @EventHandler
+    public static void onPlayerClickShopVendorInventory(InventoryClickEvent e) {
+        
+        if (!(e.getInventory().getTitle().equals("TP Books")) && !(e.getInventory().getTitle().equals("Vanilla Food"))) return;
+        
+        e.setCancelled(true);
+        e.setCursor(null);
+        
+        ItemStack item = e.getCurrentItem().clone();
+        
+        if (item == null) return;
+        
+        if (!e.getCurrentItem().getItemMeta().hasDisplayName())
+            item.setAmount(64);
+        
+        e.getWhoClicked().getInventory().addItem(item);
+        if (e.getWhoClicked() instanceof Player) ((Player) e.getWhoClicked()).updateInventory();
+    }
 
     @SuppressWarnings("deprecation")
     public static void updatePlayerStats(String p_name) {
@@ -896,10 +951,10 @@ public class ItemMechanics implements Listener {
         int wep_type = new Random().nextInt(2);
         if (wep_type == 0) {
             return removeAttributes(signCustomItem(Material.WOOD_SWORD, (short) 0, ChatColor.WHITE.toString() + "Training Sword", ChatColor.RED.toString()
-                    + "DMG: 3 - 4"));
+                    + "DMG: 6 - 9"));
         }
         return removeAttributes(signCustomItem(Material.WOOD_AXE, (short) 0, ChatColor.WHITE.toString() + "Training Hatchet", ChatColor.RED.toString()
-                + "DMG: 2 - 5"));
+                + "DMG: 5 - 11"));
     }
 
     public static List<ItemStack> generateNoobArmor() {
@@ -1024,10 +1079,10 @@ public class ItemMechanics implements Listener {
                                 crit_chance += 3;
                             }
 
-                            if (dex == true) {
-                                crit_chance += (dex_atr * 0.005);
+                            if (intel == true) {
+                                crit_chance += (int_atr * 0.025);
                             }
-
+                            
                             if (crit_chance >= new Random().nextInt(100)) {
                                 crit_dmg = true;
                             }
@@ -1087,6 +1142,7 @@ public class ItemMechanics implements Listener {
 
                     if (elemental_dmg == true) {
                         edmg = Integer.parseInt(elemental_data.split("\\+")[1]);
+                        edmg += edmg * (1 + 0.05 * int_atr);
                     }
 
                     String return_string = String.valueOf(dmg + edmg) + ":";
@@ -1656,9 +1712,15 @@ public class ItemMechanics implements Listener {
             total_str_val += getStrVal(i);
         }
 
+        /* As of patch 1.9, weapon str, dex, int, and vit no longer count on weapons
         if (getStrVal(p.getItemInHand()) != 0) {
             total_str_val += getStrVal(p.getItemInHand());
         }
+        */
+        
+        total_str_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getStrPoints();
+        
+        PlayerManager.getPlayerModel(p).setStrength(total_str_val);
 
         return total_str_val;
     }
@@ -1673,9 +1735,15 @@ public class ItemMechanics implements Listener {
             total_dex_val += getDexVal(i);
         }
 
+        /* As of patch 1.9, weapon str, dex, int, and vit no longer count on weapons
         if (getDexVal(p.getItemInHand()) != 0) {
             total_dex_val += getDexVal(p.getItemInHand());
         }
+        */
+        
+        total_dex_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getDexPoints();
+        
+        PlayerManager.getPlayerModel(p).setStrength(total_dex_val);
 
         return total_dex_val;
     }
@@ -1690,10 +1758,16 @@ public class ItemMechanics implements Listener {
             total_vit_val += getVitVal(i);
         }
 
+        /* As of patch 1.9, weapon str, dex, int, and vit no longer count on weapons
         if (getVitVal(p.getItemInHand()) != 0) {
             total_vit_val += getVitVal(p.getItemInHand());
         }
+        */
 
+        total_vit_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getVitPoints();
+        
+        PlayerManager.getPlayerModel(p).setStrength(total_vit_val);
+        
         return total_vit_val;
     }
 
@@ -1707,9 +1781,15 @@ public class ItemMechanics implements Listener {
             total_int_val += getIntVal(i);
         }
 
+        /* As of patch 1.9, weapon str, dex, int, and vit no longer count on weapons
         if (getIntVal(p.getItemInHand()) != 0) {
             total_int_val += getIntVal(p.getItemInHand());
         }
+        */
+        
+        total_int_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getIntPoints();
+        
+        PlayerManager.getPlayerModel(p).setStrength(total_int_val);
 
         return total_int_val;
     }
@@ -1717,11 +1797,18 @@ public class ItemMechanics implements Listener {
     public static int generateTotalFireRes(Player p) {
         ItemStack[] armor_contents = p.getInventory().getArmorContents();
         int total_fire_res_val = 0;
+        
         for (ItemStack i : armor_contents) {
             if (i.getType() == Material.AIR) {
                 continue;
             }
             total_fire_res_val += getFireResistance(i);
+        }
+        
+        if (str_data.containsKey(p.getName())) {
+            int str_atr = ItemMechanics.vit_data.get(p.getName());
+            double str_res_mod = 0.04D * str_atr; // This will return the modifier number... 100 * 0.05 = 5, so I need 105% HP.
+            total_fire_res_val += ((double) total_fire_res_val * (double) (str_res_mod / 100.0D));
         }
 
         return total_fire_res_val;
@@ -1730,11 +1817,18 @@ public class ItemMechanics implements Listener {
     public static int generateTotalIceRes(Player p) {
         ItemStack[] armor_contents = p.getInventory().getArmorContents();
         int total_ice_res_val = 0;
+        
         for (ItemStack i : armor_contents) {
             if (i.getType() == Material.AIR) {
                 continue;
             }
             total_ice_res_val += getIceResistance(i);
+        }
+        
+        if (str_data.containsKey(p.getName())) {
+            int str_atr = ItemMechanics.vit_data.get(p.getName());
+            double str_res_mod = 0.04D * str_atr; // This will return the modifier number... 100 * 0.05 = 5, so I need 105% HP.
+            total_ice_res_val += ((double) total_ice_res_val * (double) (str_res_mod / 100.0D));
         }
 
         return total_ice_res_val;
@@ -1743,6 +1837,7 @@ public class ItemMechanics implements Listener {
     public static int generateTotalPoisonRes(Player p) {
         ItemStack[] armor_contents = p.getInventory().getArmorContents();
         int total_poison_res_val = 0;
+        
         for (ItemStack i : armor_contents) {
             if (i.getType() == Material.AIR) {
                 continue;
@@ -1750,6 +1845,12 @@ public class ItemMechanics implements Listener {
             total_poison_res_val += getPoisonResistance(i);
         }
 
+        if (str_data.containsKey(p.getName())) {
+            int str_atr = ItemMechanics.vit_data.get(p.getName());
+            double str_res_mod = 0.04D * str_atr; // This will return the modifier number... 100 * 0.05 = 5, so I need 105% HP.
+            total_poison_res_val += ((double) total_poison_res_val * (double) (str_res_mod / 100.0D));
+        }
+        
         return total_poison_res_val;
     }
 
@@ -1915,7 +2016,7 @@ public class ItemMechanics implements Listener {
         if (armor_data.contains("dex")) {
             String dex_string = armor_data.split("dex=")[1];
             int dex_atr = Integer.parseInt(dex_string.substring(0, dex_string.indexOf(":")));
-            double dex_armor_mod = 0.03D * dex_atr;
+            double dex_armor_mod = 0.017D * dex_atr;
 
             dodge_percent += dex_armor_mod;
         }
@@ -1931,12 +2032,12 @@ public class ItemMechanics implements Listener {
             block_percent = Integer.parseInt(block_string.substring(0, block_string.indexOf(":")));
         }
 
-        if (armor_data.contains("vit")) {
-            String vit_string = armor_data.split("vit=")[1];
-            int vit_atr = Integer.parseInt(vit_string.substring(0, vit_string.indexOf(":")));
-            double vit_armor_mod = 0.03D * vit_atr;
+        if (armor_data.contains("str")) {
+            String str_string = armor_data.split("str=")[1];
+            int str_atr = Integer.parseInt(str_string.substring(0, str_string.indexOf(":")));
+            double str_armor_mod = 0.017D * str_atr;
 
-            block_percent += vit_armor_mod;
+            block_percent += str_armor_mod;
         }
 
         return block_percent;
@@ -2015,7 +2116,7 @@ public class ItemMechanics implements Listener {
             if (with_str && armor_data.contains("str")) {
                 String str_string = armor_data.split("str=")[1];
                 int str_atr = Integer.parseInt(str_string.substring(0, str_string.indexOf(":")));
-                double str_armor_mod = 0.01D * str_atr;
+                double str_armor_mod = 0.03D * str_atr;
 
                 min_armor += str_armor_mod;
                 max_armor += str_armor_mod;
@@ -2031,7 +2132,7 @@ public class ItemMechanics implements Listener {
         }
     }
 
-    public static List<Integer> getDmgVal(ItemStack i, boolean with_str) {
+    public static List<Integer> getDmgVal(ItemStack i, boolean with_dex) {
         try {
             if (getArmorData(i) == "no") {
                 return null;
@@ -2052,13 +2153,13 @@ public class ItemMechanics implements Listener {
              * int armor_val = new Random().nextInt(max_armor); if(armor_val < min_armor){ armor_val = min_armor; } if(armor_val < 1){armor_val = 1;}
              */
 
-            if (with_str && armor_data.contains("str")) {
-                String str_string = armor_data.split("str=")[1];
-                int str_atr = Integer.parseInt(str_string.substring(0, str_string.indexOf(":")));
-                double str_armor_mod = 0.01D * str_atr;
+            if (with_dex && armor_data.contains("dex")) {
+                String str_string = armor_data.split("dex=")[1];
+                int dex_atr = Integer.parseInt(str_string.substring(0, str_string.indexOf(":")));
+                double dex_armor_mod = 0.03D * dex_atr;
 
-                min_armor += str_armor_mod;
-                max_armor += str_armor_mod;
+                min_armor += dex_armor_mod;
+                max_armor += dex_armor_mod;
             }
 
             net_armor_vals.add(0, min_armor);
@@ -3067,8 +3168,8 @@ public class ItemMechanics implements Listener {
         }
 
         if (isOrbOfAlteration(cursor) && (isArmor(in_slot) || !getDamageData(in_slot).equalsIgnoreCase("no"))) {
-            if (LevelMechanics.getPlayerLevel(p.getName()) < 60) {
-                p.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level 60 to use Orbs of Alteration.");
+            if (LevelMechanics.getPlayerLevel(p.getName()) < 30) {
+                p.sendMessage(ChatColor.RED + "You need to be " + ChatColor.UNDERLINE + "atleast" + ChatColor.RED + " level 30 to use Orbs of Alteration.");
                 e.setCancelled(true);
                 return;
             }
@@ -3102,26 +3203,7 @@ public class ItemMechanics implements Listener {
 
             ItemStack in_slot_c = CraftItemStack.asCraftCopy(in_slot);
 
-            if (in_slot_c.getType().name().toLowerCase().contains("axe")) {
-                e.setCurrentItem(ItemGenerators.AxeGenorator(in_slot_c.getType(), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("sword")) {
-                e.setCurrentItem(ItemGenerators.SwordGenorator(in_slot_c.getType(), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("spade")) {
-                e.setCurrentItem(ItemGenerators.PolearmGenorator(in_slot_c.getType(), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("hoe")) {
-                e.setCurrentItem(ItemGenerators.StaffGenorator(in_slot_c.getType(), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("bow")) {
-                e.setCurrentItem(ItemGenerators.BowGenorator(getItemTier(in_slot_c), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("helmet")) {
-                e.setCurrentItem(ItemGenerators.HelmetGenerator(getItemTier(in_slot_c), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("chest")) {
-                e.setCurrentItem(ItemGenerators.ChestPlateGenerator(getItemTier(in_slot_c), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("leg")) {
-                // log.info("[IM] Leg generator launched.");
-                e.setCurrentItem(ItemGenerators.LeggingsGenerator(getItemTier(in_slot_c), true, in_slot_c));
-            } else if (in_slot_c.getType().name().toLowerCase().contains("boot")) {
-                e.setCurrentItem(ItemGenerators.BootGenerator(getItemTier(in_slot_c), true, in_slot_c));
-            }
+            e.setCurrentItem(new ItemGenerator().setReroll(true).setOrigItem(in_slot_c).generateItem().getItem());
 
             ItemStack new_in_slot = e.getCurrentItem();
 
@@ -3522,7 +3604,7 @@ public class ItemMechanics implements Listener {
                     if (attr.contains("armor_pen")) {
                         attr = attr.split("=")[1];
                         armor_pen = Integer.parseInt(attr.substring(0, attr.length()));
-                        armor_pen += (armor_pen * (dex_data.get(p.getName()) * 0.009));
+                        armor_pen += (armor_pen * (dex_data.get(p.getName()) * 0.02));
                     }
                 }
 
@@ -3719,8 +3801,6 @@ public class ItemMechanics implements Listener {
         int tier = subtractArrow(p);
         if (tier == 0) {
             Main.d("DUDE THE TIER WAS 0");
-        } else {
-            Main.d(tier);
         }
         int bow_tier = getItemTier(p.getItemInHand());
 
@@ -4899,7 +4979,7 @@ public class ItemMechanics implements Listener {
                 if (dmg_data.contains("vit=")) {
                     vit_mod += Double.parseDouble(dmg_data.split("vit=")[1].split(":")[0]);
                 }
-                dmg += (int) (double) ((double) dmg * (double) (((vit_mod * 0.015) / 100.0D)));
+                dmg += (int) (double) ((double) dmg * (double) (((vit_mod * 0.01) / 100.0D)));
             }
 
             if (ProfessionMechanics.fish_bonus_dmg.containsKey(p_attacker.getName())) {
@@ -5364,7 +5444,7 @@ public class ItemMechanics implements Listener {
                 if (dmg_data.contains("str=")) {
                     str_mod += Double.parseDouble(dmg_data.split("str=")[1].split(":")[0]);
                 }
-                dmg += (int) (double) ((double) dmg * (double) (((str_mod * 0.015) / 100.0D)));
+                dmg += (int) (double) ((double) dmg * (double) (((str_mod * 0.023) / 100.0D)));
             }
 
             if (ProfessionMechanics.fish_bonus_dmg.containsKey(p_attacker.getName())) {
@@ -5640,7 +5720,7 @@ public class ItemMechanics implements Listener {
                 if (dmg_data.contains("int=")) {
                     int_mod += Double.parseDouble(dmg_data.split("int=")[1].split(":")[0]);
                 }
-                dmg += (int) (double) ((double) dmg * (double) (((int_mod * 0.015) / 100.0D)));
+                dmg += (int) (double) ((double) dmg * (double) (((int_mod * 0.02) / 100.0D)));
             }
 
             if (ProfessionMechanics.fish_bonus_dmg.containsKey(p_attacker.getName())) {
@@ -5894,6 +5974,17 @@ public class ItemMechanics implements Listener {
         }
         projectile_map.remove(proj);
     }
+    
+    public static boolean isLegacy(ItemStack is) {
+        
+        for (String line : is.getItemMeta().getLore()) {
+            if (ChatColor.stripColor(line).equalsIgnoreCase("LEGACY")) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 
     public static boolean isQuiver(ItemStack is) {
         if (is.getType() == Material.FLOWER_POT_ITEM) {
@@ -6061,21 +6152,20 @@ public class ItemMechanics implements Listener {
         ItemMeta im = is.getItemMeta();
         return Integer.parseInt(ChatColor.stripColor(im.getDisplayName().split("/ ")[1]));
     }
-
+    
     @SuppressWarnings("deprecation")
 	public int subtractArrow(Player pl) {
         for (ItemStack is : pl.getInventory().getContents()) {
-            if (is == null || is.getType() == Material.AIR) {
+        	if (is == null || is.getType() == Material.AIR) {
                 continue;
             }
             if (is.getType() == Material.ARROW) {
                 int tier = getItemTier(is);
                 if (is.getAmount() == 1) {
-                    Main.d("SET ARROW TO AIR");
                     is.setType(Material.AIR);
                     pl.updateInventory();
                 } else {
-                    is.setAmount(is.getAmount() - 1);
+                    //is.setAmount(is.getAmount() - 1);
                 }
                 if (tier <= 0) {
                     Main.d("TIER WAS 0");
@@ -6084,8 +6174,9 @@ public class ItemMechanics implements Listener {
                 return tier;
             }
             if (is.getType() == Material.FLOWER_POT_ITEM) {
-                if (getQuiverAmount(is) <= 0) {
-                    return 0;
+                int quiverAmount = getQuiverAmount(is);
+            	if (quiverAmount <= 0) {
+            		continue;
                 }
                 int highest_tier = 0;
                 int amount_of_arrows = 0;
@@ -6373,92 +6464,35 @@ public class ItemMechanics implements Listener {
         return is;
     }
 
-    @SuppressWarnings("static-access")
     public static ItemStack generateRandomTierItem(int tier) {
         ItemStack i = null;
         int r = new Random().nextInt(9);
         if (r == 0) {
-            if (tier == 1) {
-                return iGen.SwordGenorator(Material.WOOD_SWORD, false, null);
-            }
-            if (tier == 2) {
-                return iGen.SwordGenorator(Material.STONE_SWORD, false, null);
-            }
-            if (tier == 3) {
-                return iGen.SwordGenorator(Material.IRON_SWORD, false, null);
-            }
-            if (tier == 4) {
-                return iGen.SwordGenorator(Material.DIAMOND_SWORD, false, null);
-            }
-            if (tier == 5) {
-                return iGen.SwordGenorator(Material.GOLD_SWORD, false, null);
-            }
+            return MonsterMechanics.generateMobGear(ItemType.SWORD, ItemTier.getTierFromInt(tier));
         }
-        if (r == 1) {
-            if (tier == 1) {
-                return iGen.AxeGenorator(Material.WOOD_AXE, false, null);
-            }
-            if (tier == 2) {
-                return iGen.AxeGenorator(Material.STONE_AXE, false, null);
-            }
-            if (tier == 3) {
-                return iGen.AxeGenorator(Material.IRON_AXE, false, null);
-            }
-            if (tier == 4) {
-                return iGen.AxeGenorator(Material.DIAMOND_AXE, false, null);
-            }
-            if (tier == 5) {
-                return iGen.AxeGenorator(Material.GOLD_AXE, false, null);
-            }
+        else if (r == 1) {
+            return MonsterMechanics.generateMobGear(ItemType.AXE, ItemTier.getTierFromInt(tier));
         }
-        if (r == 2) {
-            return iGen.BowGenorator(tier, false, null);
+        else if (r == 2) {
+            return MonsterMechanics.generateMobGear(ItemType.BOW, ItemTier.getTierFromInt(tier));
         }
-        if (r == 3) {
-            return iGen.HelmetGenerator(tier, false, null);
+        else if (r == 3) {
+            return MonsterMechanics.generateMobGear(ItemType.HELMET, ItemTier.getTierFromInt(tier));
         }
-        if (r == 4) {
-            return iGen.BootGenerator(tier, false, null);
+        else if (r == 4) {
+            return MonsterMechanics.generateMobGear(ItemType.BOOTS, ItemTier.getTierFromInt(tier));
         }
-        if (r == 5) {
-            return iGen.LeggingsGenerator(tier, false, null);
+        else if (r == 5) {
+            return MonsterMechanics.generateMobGear(ItemType.LEGGINGS, ItemTier.getTierFromInt(tier));
         }
-        if (r == 6) {
-            return iGen.ChestPlateGenerator(tier, false, null);
+        else if (r == 6) {
+            return MonsterMechanics.generateMobGear(ItemType.CHESTPLATE, ItemTier.getTierFromInt(tier));
         }
-        if (r == 7) {
-            if (tier == 1) {
-                return iGen.PolearmGenorator(Material.WOOD_SPADE, false, null);
-            }
-            if (tier == 2) {
-                return iGen.PolearmGenorator(Material.STONE_SPADE, false, null);
-            }
-            if (tier == 3) {
-                return iGen.PolearmGenorator(Material.IRON_SPADE, false, null);
-            }
-            if (tier == 4) {
-                return iGen.PolearmGenorator(Material.DIAMOND_SPADE, false, null);
-            }
-            if (tier == 5) {
-                return iGen.PolearmGenorator(Material.GOLD_SPADE, false, null);
-            }
+        else if (r == 7) {
+            return MonsterMechanics.generateMobGear(ItemType.POLEARM, ItemTier.getTierFromInt(tier));
         }
-        if (r == 8) {
-            if (tier == 1) {
-                return iGen.StaffGenorator(Material.WOOD_HOE, false, null);
-            }
-            if (tier == 2) {
-                return iGen.StaffGenorator(Material.STONE_HOE, false, null);
-            }
-            if (tier == 3) {
-                return iGen.StaffGenorator(Material.IRON_HOE, false, null);
-            }
-            if (tier == 4) {
-                return iGen.StaffGenorator(Material.DIAMOND_HOE, false, null);
-            }
-            if (tier == 5) {
-                return iGen.StaffGenorator(Material.GOLD_HOE, false, null);
-            }
+        else if (r == 8) {
+            return MonsterMechanics.generateMobGear(ItemType.STAFF, ItemTier.getTierFromInt(tier));
         }
         return i;
     }

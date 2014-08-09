@@ -12,7 +12,7 @@ import me.vilsol.betanpc.utils.Utils;
 import me.vilsol.menuengine.engine.ChatCallback;
 import me.vilsol.menuengine.engine.MenuItem;
 import me.vilsol.menuengine.engine.MenuModel;
-import me.vilsol.menuengine.enums.ClickType;
+import org.bukkit.event.inventory.ClickType;
 import me.vilsol.menuengine.utils.Builder;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 

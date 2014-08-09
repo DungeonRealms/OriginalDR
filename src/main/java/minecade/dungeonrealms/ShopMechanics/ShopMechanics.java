@@ -2359,7 +2359,7 @@ public class ShopMechanics implements Listener {
 				p.sendMessage(ChatColor.GRAY + "You now have " + getShopSlots(new_tier) + " shop slots available.");
 				p.playSound(p.getLocation(), Sound.LEVEL_UP, 1F, 1.25F);
 			} else {
-				p.sendMessage(ChatColor.RED + "Invalid authentication code entered. Bank upgrade cancelled.");
+				p.sendMessage(ChatColor.RED + "Invalid authentication code entered. Shop upgrade cancelled.");
 				shop_upgrade_codes.remove(p.getName());
 			}
 

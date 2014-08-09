@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import minecade.dungeonrealms.Main;
+import minecade.dungeonrealms.Utils;
 import minecade.dungeonrealms.DuelMechanics.DuelMechanics;
 import minecade.dungeonrealms.EnchantMechanics.EnchantMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
@@ -505,6 +506,8 @@ public class RepairMechanics implements Listener {
 		}
 		if(item_tier == 0) { return 0; // Not a custom item.
 		}
+		
+		if (Utils.isBeta()) return 1; // free on beta shards
 		
 		if(dmg_range.equalsIgnoreCase("no") && !(armor_range.equalsIgnoreCase("no"))) { // It's a piece of armor.	
 			double avg_armor = Integer.parseInt(armor_range.split("-")[0].replaceAll(" ", "").replace("!", "")) + Integer.parseInt(armor_range.split("-")[1].substring(0, armor_range.split("-")[1].indexOf(":")).replaceAll(" ", "").replace("!", ""));

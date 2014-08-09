@@ -23,7 +23,7 @@ public class CommandSuicide implements CommandExecutor {
 				}
 				
 				Hive.killing_self.add(p.getName());
-				p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "WARNING: " + ChatColor.GRAY + "This command will KILL you, you will LOOSE every thing you are carrying. If you are sure, type '" + ChatColor.GREEN.toString() + ChatColor.BOLD + "Y" + ChatColor.GRAY + "', if not, type '" + ChatColor.RED.toString() + "cancel" + ChatColor.RED + "'.");
+				p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD.toString() + "WARNING: " + ChatColor.GRAY + "This command will KILL you, you will LOSE every thing you are carrying. If you are sure, type '" + ChatColor.GREEN.toString() + ChatColor.BOLD + "Y" + ChatColor.GRAY + "', if not, type '" + ChatColor.RED.toString() + "cancel" + ChatColor.RED + "'.");
 				
 			}
 		}, 4L);

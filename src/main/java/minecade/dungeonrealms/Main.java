@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.vilsol.betanpc.BetaNPC;
+import me.vilsol.foodvendor.FoodVendor;
 import me.vilsol.itemgenerator.ItemGenerator;
 import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.BossMechanics.BossMechanics;
@@ -105,6 +106,7 @@ public class Main extends JavaPlugin implements Listener {
     private static HiveServer hiveServer;
 
     private static BetaNPC betaNPC;
+    private static FoodVendor foodVendor;
 
     /**
      * Holds the <code>JavaPlugin</code> instance of the DungeonRealms plugin once enabled.
@@ -175,6 +177,7 @@ public class Main extends JavaPlugin implements Listener {
         hive = new Hive();
         hiveServer = new HiveServer();
         betaNPC = new BetaNPC();
+        foodVendor = new FoodVendor();
 
         hive.onEnable();
         hearthstoneMechanics.onEnable();
@@ -217,6 +220,8 @@ public class Main extends JavaPlugin implements Listener {
         weatherMechanics.onEnable();
         betaNPC.onEnable();
         levelMechanics.onEnable();
+        foodVendor.onEnable();
+        
         ItemGenerator.loadModifiers();
 
         new BukkitRunnable() {

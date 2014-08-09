@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
+import me.vilsol.itemgenerator.ItemGenerator;
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.BossMechanics.BossMechanics;
@@ -47,6 +48,9 @@ import minecade.dungeonrealms.RepairMechanics.RepairMechanics;
 import minecade.dungeonrealms.TeleportationMechanics.TeleportationMechanics;
 import minecade.dungeonrealms.enums.CC;
 import minecade.dungeonrealms.enums.Delay;
+import minecade.dungeonrealms.enums.ItemRarity;
+import minecade.dungeonrealms.enums.ItemTier;
+import minecade.dungeonrealms.enums.ItemType;
 import net.minecraft.server.v1_7_R2.DataWatcher;
 import net.minecraft.server.v1_7_R2.EntityCreature;
 import net.minecraft.server.v1_7_R2.EntityLiving;
@@ -879,38 +883,38 @@ public class MonsterMechanics implements Listener {
                     } else if (m == Material.POTION) {
                         if (item_meta == 1) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 1, ChatColor.WHITE.toString() + "Minor Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "15HP"));
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "50HP"));
                         }
                         if (item_meta == 5) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 5, ChatColor.GREEN.toString() + "Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.GREEN.toString() + "75HP"));
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.GREEN.toString() + "250HP"));
                         }
                         if (item_meta == 9) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 9, ChatColor.AQUA.toString() + "Major Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.AQUA.toString() + "300HP"));
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.AQUA.toString() + "800HP"));
                         }
                         if (item_meta == 12) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 12, ChatColor.LIGHT_PURPLE.toString() + "Superior Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.LIGHT_PURPLE.toString() + "750HP"));
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.LIGHT_PURPLE.toString() + "2000HP"));
                         }
                         if (item_meta == 3) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 3, ChatColor.YELLOW.toString() + "Legendary Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.YELLOW.toString() + "1800HP"));
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.YELLOW.toString() + "3500HP"));
                         }
 
                         if (item_meta == 16385) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 16385, ChatColor.WHITE.toString() + "Minor Splash Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "15HP," + ChatColor.GRAY.toString()
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.WHITE.toString() + "35HP," + ChatColor.GRAY.toString()
                                             + "to players in a 4x4 AREA"));
                         }
                         if (item_meta == 16389) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 16389, ChatColor.GREEN.toString() + "Splash Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.GREEN.toString() + "40HP," + ChatColor.GRAY.toString()
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.GREEN.toString() + "150HP," + ChatColor.GRAY.toString()
                                             + "to players in a 4x4 AREA"));
                         }
                         if (item_meta == 16393) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 16393, ChatColor.AQUA.toString() + "Major Splash Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.AQUA.toString() + "150HP," + ChatColor.GRAY.toString()
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.AQUA.toString() + "450HP," + ChatColor.GRAY.toString()
                                             + "to players in a 4x4 AREA"));
                         }
                         if (item_meta == 16396) {
@@ -918,13 +922,13 @@ public class MonsterMechanics implements Listener {
                                     Material.POTION,
                                     (short) 16396,
                                     ChatColor.LIGHT_PURPLE.toString() + "Superior Splash Health Potion",
-                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.LIGHT_PURPLE.toString() + "375HP,"
+                                    ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.LIGHT_PURPLE.toString() + "1250HP,"
                                             + ChatColor.GRAY.toString() + "to players in a 4x4 AREA"));
                         }
                         if (item_meta == 16387) {
                             loot.add(ItemMechanics.signNewCustomItem(Material.POTION, (short) 16387, ChatColor.YELLOW.toString()
                                     + "Legendary Splash Health Potion", ChatColor.GRAY.toString() + "A potion that restores " + ChatColor.YELLOW.toString()
-                                    + "900HP," + ChatColor.GRAY.toString() + "to players in a 4x4 AREA"));
+                                    + "2500HP," + ChatColor.GRAY.toString() + "to players in a 4x4 AREA"));
                         }
                     } else if (m == Material.MAGMA_CREAM) {
                         loot.add(ItemMechanics.signNewCustomItem(Material.MAGMA_CREAM, (short) 0, ChatColor.LIGHT_PURPLE.toString() + "Orb of Alteration",
@@ -5797,210 +5801,80 @@ public class MonsterMechanics implements Listener {
         }
         return 1;
     }
+    
+    /**
+     * Generates mob gear using the newest item generation engine added in patch 1.9.  Supports 
+     * both weapons and armor.
+     * @param type - The type of gear to generate, can be weapons or armor.
+     * @param tier - The tier from T1 - T5
+     * @return The item in a Bukkit ItemStack object
+     */
+    public static ItemStack generateMobGear(ItemType type, ItemTier tier) {
+        int armor_range_check = new Random().nextInt(100);
+        ItemRarity rarity = null;
+        
+        if (armor_range_check <= 80) {
+            rarity = ItemRarity.COMMON;
+        }
+        else if (armor_range_check < 95) {
+            rarity = ItemRarity.UNCOMMON;
+        }
+        else if (armor_range_check < 98) {
+            rarity = ItemRarity.RARE;
+        }
+        else if (armor_range_check == 99) {
+            rarity = ItemRarity.UNIQUE;
+        }
+        
+        if (rarity == null) {
+            rarity = ItemRarity.COMMON;
+        }
+        
+        return (new ItemGenerator()).setType(type).setTier(tier).setRarity(rarity).generateItem().getItem();
+    }
 
-    public static ItemStack spawnRandomMeleeWeapon(int tier, boolean no_bow, boolean no_weapon) {
+    public static ItemStack spawnRandomWeapon(ItemTier tier, boolean no_bow, boolean no_weapon) {
         if (no_weapon == true) {
             int wep_type = new Random().nextInt(2);
             if (wep_type == 0) {
-                if (tier == 1) {
-                    return ItemGenerators.SwordGenorator(Material.WOOD_SWORD, false, null);
-                }
-                if (tier == 2) {
-                    return ItemGenerators.SwordGenorator(Material.STONE_SWORD, false, null);
-                }
-                if (tier == 3) {
-                    return ItemGenerators.SwordGenorator(Material.IRON_SWORD, false, null);
-                }
-                if (tier == 4) {
-                    return ItemGenerators.SwordGenorator(Material.DIAMOND_SWORD, false, null);
-                }
-                if (tier == 5) {
-                    return ItemGenerators.SwordGenorator(Material.GOLD_SWORD, false, null);
-                }
+                return generateMobGear(ItemType.SWORD, tier);
             }
-
             if (wep_type == 1) {
-                if (tier == 1) {
-                    return ItemGenerators.AxeGenorator(Material.WOOD_AXE, false, null);
-                }
-                if (tier == 2) {
-                    return ItemGenerators.AxeGenorator(Material.STONE_AXE, false, null);
-                }
-                if (tier == 3) {
-                    return ItemGenerators.AxeGenorator(Material.IRON_AXE, false, null);
-                }
-                if (tier == 4) {
-                    return ItemGenerators.AxeGenorator(Material.DIAMOND_AXE, false, null);
-                }
-                if (tier == 5) {
-                    return ItemGenerators.AxeGenorator(Material.GOLD_AXE, false, null);
-                }
+                return generateMobGear(ItemType.AXE, tier);
             }
         } else if (no_bow == true && no_weapon == false) {
             int wep_type = new Random().nextInt(4);
             if (wep_type == 0) {
-                if (tier == 1) {
-                    return ItemGenerators.SwordGenorator(Material.WOOD_SWORD, false, null);
-                }
-                if (tier == 2) {
-                    return ItemGenerators.SwordGenorator(Material.STONE_SWORD, false, null);
-                }
-                if (tier == 3) {
-                    return ItemGenerators.SwordGenorator(Material.IRON_SWORD, false, null);
-                }
-                if (tier == 4) {
-                    return ItemGenerators.SwordGenorator(Material.DIAMOND_SWORD, false, null);
-                }
-                if (tier == 5) {
-                    return ItemGenerators.SwordGenorator(Material.GOLD_SWORD, false, null);
-                }
+                return generateMobGear(ItemType.SWORD, tier);
             }
-
-            if (wep_type == 1) {
-                if (tier == 1) {
-                    return ItemGenerators.AxeGenorator(Material.WOOD_AXE, false, null);
-                }
-                if (tier == 2) {
-                    return ItemGenerators.AxeGenorator(Material.STONE_AXE, false, null);
-                }
-                if (tier == 3) {
-                    return ItemGenerators.AxeGenorator(Material.IRON_AXE, false, null);
-                }
-                if (tier == 4) {
-                    return ItemGenerators.AxeGenorator(Material.DIAMOND_AXE, false, null);
-                }
-                if (tier == 5) {
-                    return ItemGenerators.AxeGenorator(Material.GOLD_AXE, false, null);
-                }
+            else if (wep_type == 1) {
+                return generateMobGear(ItemType.AXE, tier);
             }
-
-            if (wep_type == 2) {
-                if (tier == 1) {
-                    return ItemGenerators.PolearmGenorator(Material.WOOD_SPADE, false, null);
-                }
-                if (tier == 2) {
-                    return ItemGenerators.PolearmGenorator(Material.STONE_SPADE, false, null);
-                }
-                if (tier == 3) {
-                    return ItemGenerators.PolearmGenorator(Material.IRON_SPADE, false, null);
-                }
-                if (tier == 4) {
-                    return ItemGenerators.PolearmGenorator(Material.DIAMOND_SPADE, false, null);
-                }
-                if (tier == 5) {
-                    return ItemGenerators.PolearmGenorator(Material.GOLD_SPADE, false, null);
-                }
+            else if (wep_type == 2) {
+                return generateMobGear(ItemType.POLEARM, tier);
             }
-            if (wep_type == 3) {
-                if (tier == 1) {
-                    return ItemGenerators.StaffGenorator(Material.WOOD_HOE, false, null);
-                }
-                if (tier == 2) {
-                    return ItemGenerators.StaffGenorator(Material.STONE_HOE, false, null);
-                }
-                if (tier == 3) {
-                    return ItemGenerators.StaffGenorator(Material.IRON_HOE, false, null);
-                }
-                if (tier == 4) {
-                    return ItemGenerators.StaffGenorator(Material.DIAMOND_HOE, false, null);
-                }
-                if (tier == 5) {
-                    return ItemGenerators.StaffGenorator(Material.GOLD_HOE, false, null);
-                }
+            else if (wep_type == 3) {
+                return generateMobGear(ItemType.STAFF, tier);
             }
         } else if (no_bow == false && no_weapon == false) {
             int wep_type = new Random().nextInt(5);
             if (wep_type == 0) {
-                if (tier == 1) {
-                    return ItemGenerators.SwordGenorator(Material.WOOD_SWORD, false, null);
-                }
-                if (tier == 2) {
-                    return ItemGenerators.SwordGenorator(Material.STONE_SWORD, false, null);
-                }
-                if (tier == 3) {
-                    return ItemGenerators.SwordGenorator(Material.IRON_SWORD, false, null);
-                }
-                if (tier == 4) {
-                    return ItemGenerators.SwordGenorator(Material.DIAMOND_SWORD, false, null);
-                }
-                if (tier == 5) {
-                    return ItemGenerators.SwordGenorator(Material.GOLD_SWORD, false, null);
-                }
+                return generateMobGear(ItemType.SWORD, tier);
             }
-
-            if (wep_type == 1) {
-                if (tier == 1) {
-                    return ItemGenerators.AxeGenorator(Material.WOOD_AXE, false, null);
-                }
-                if (tier == 2) {
-                    return ItemGenerators.AxeGenorator(Material.STONE_AXE, false, null);
-                }
-                if (tier == 3) {
-                    return ItemGenerators.AxeGenorator(Material.IRON_AXE, false, null);
-                }
-                if (tier == 4) {
-                    return ItemGenerators.AxeGenorator(Material.DIAMOND_AXE, false, null);
-                }
-                if (tier == 5) {
-                    return ItemGenerators.AxeGenorator(Material.GOLD_AXE, false, null);
-                }
+            else if (wep_type == 1) {
+                return generateMobGear(ItemType.AXE, tier);
             }
-
-            if (wep_type == 2) {
-                if (tier == 1) {
-                    return ItemGenerators.BowGenorator(1, false, null);
-                }
-                if (tier == 2) {
-                    return ItemGenerators.BowGenorator(2, false, null);
-                }
-                if (tier == 3) {
-                    return ItemGenerators.BowGenorator(3, false, null);
-                }
-                if (tier == 4) {
-                    return ItemGenerators.BowGenorator(4, false, null);
-                }
-                if (tier == 5) {
-                    return ItemGenerators.BowGenorator(5, false, null);
-                }
+            else if (wep_type == 2) {
+                return generateMobGear(ItemType.BOW, tier);
             }
-
-            if (wep_type == 3) {
-                if (tier == 1) {
-                    return ItemGenerators.PolearmGenorator(Material.WOOD_SPADE, false, null);
-                }
-                if (tier == 2) {
-                    return ItemGenerators.PolearmGenorator(Material.STONE_SPADE, false, null);
-                }
-                if (tier == 3) {
-                    return ItemGenerators.PolearmGenorator(Material.IRON_SPADE, false, null);
-                }
-                if (tier == 4) {
-                    return ItemGenerators.PolearmGenorator(Material.DIAMOND_SPADE, false, null);
-                }
-                if (tier == 5) {
-                    return ItemGenerators.PolearmGenorator(Material.GOLD_SPADE, false, null);
-                }
+            else if (wep_type == 3) {
+                return generateMobGear(ItemType.POLEARM, tier);
             }
-
-            if (wep_type == 4) {
-                if (tier == 1) {
-                    return ItemGenerators.StaffGenorator(Material.WOOD_HOE, false, null);
-                }
-                if (tier == 2) {
-                    return ItemGenerators.StaffGenorator(Material.STONE_HOE, false, null);
-                }
-                if (tier == 3) {
-                    return ItemGenerators.StaffGenorator(Material.IRON_HOE, false, null);
-                }
-                if (tier == 4) {
-                    return ItemGenerators.StaffGenorator(Material.DIAMOND_HOE, false, null);
-                }
-                if (tier == 5) {
-                    return ItemGenerators.StaffGenorator(Material.GOLD_HOE, false, null);
-                }
+            else if (wep_type == 4) {
+                return generateMobGear(ItemType.STAFF, tier);
             }
         }
-        return ItemGenerators.SwordGenorator(Material.WOOD_SWORD, false, null);
+        return generateMobGear(ItemType.SWORD, tier);
     }
 
     public static Entity spawnBossMob(Location l, EntityType et, String meta_data, String custom_name, int mob_t) {
@@ -6156,10 +6030,10 @@ public class MonsterMechanics implements Listener {
             // TODO: Custom armor set.
             dmg_mult = 2.5D;
             hp_mult = 6;
-            boots = ItemGenerators.BootGenerator(2, false, null);
-            legs = ItemGenerators.LeggingsGenerator(1, false, null);
-            chest = ItemGenerators.ChestPlateGenerator(1, false, null);
-            weapon = ItemGenerators.StaffGenorator(Material.STONE_HOE, false, null);
+            boots = generateMobGear(ItemType.BOOTS, ItemTier.T2);
+            legs = generateMobGear(ItemType.LEGGINGS, ItemTier.T1);
+            chest = generateMobGear(ItemType.CHESTPLATE, ItemTier.T1);
+            weapon = generateMobGear(ItemType.STAFF, ItemTier.T2);
 
             gear_list.add(weapon);
             gear_list.add(boots);
@@ -6195,11 +6069,11 @@ public class MonsterMechanics implements Listener {
         if (custom_name.contains("Diner of Bones")) {
             dmg_mult = 2.5D;
             hp_mult = 6;
-            boots = ItemGenerators.BootGenerator(4, false, null);
-            legs = ItemGenerators.LeggingsGenerator(4, false, null);
-            chest = ItemGenerators.ChestPlateGenerator(4, false, null);
-            helmet = ItemGenerators.HelmetGenerator(4, false, null);
-            weapon = ItemGenerators.AxeGenorator(Material.DIAMOND_AXE, false, null);
+            boots = generateMobGear(ItemType.BOOTS, ItemTier.T4);
+            legs = generateMobGear(ItemType.LEGGINGS, ItemTier.T4);
+            chest = generateMobGear(ItemType.CHESTPLATE, ItemTier.T4);
+            helmet = generateMobGear(ItemType.HELMET, ItemTier.T4);
+            weapon = generateMobGear(ItemType.AXE, ItemTier.T4);
 
             gear_list.add(weapon);
             gear_list.add(boots);
@@ -6403,6 +6277,7 @@ public class MonsterMechanics implements Listener {
             String custom_name, boolean return_entity, int level) {
 
         Entity e = null;
+        ItemTier itemTier = ItemTier.getTierFromInt(tier);
 
         if (custom_name != null && custom_name.equalsIgnoreCase("Mad_Bandit_Pyromancer")) {
             return spawnBossMob(l, et, "bandit", "Mad Bandit Pyromancer", 1);
@@ -6476,11 +6351,11 @@ public class MonsterMechanics implements Listener {
 
         if (et == EntityType.WOLF || et == EntityType.IRON_GOLEM || et == EntityType.ENDERMAN || et == EntityType.BLAZE || et == EntityType.SILVERFISH
                 || et == EntityType.WITCH || et == EntityType.MAGMA_CUBE || et == EntityType.SPIDER || et == EntityType.CAVE_SPIDER) {
-            is_weapon = spawnRandomMeleeWeapon(tier, false, true);
+            is_weapon = spawnRandomWeapon(itemTier, false, true);
         } else if (et == EntityType.PIG_ZOMBIE) {
-            is_weapon = spawnRandomMeleeWeapon(tier, true, false);
+            is_weapon = spawnRandomWeapon(itemTier, true, false);
         } else {
-            is_weapon = spawnRandomMeleeWeapon(tier, false, false);
+            is_weapon = spawnRandomWeapon(itemTier, false, false);
         }
         if (elite == true) {
             is_weapon.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
@@ -6514,7 +6389,7 @@ public class MonsterMechanics implements Listener {
         while (gear_check > 0) {
             larmor_type = armor_type.nextInt(4) + 1; // 1, 2, 3, 4
             if (larmor_type == 1 && boots == null) {
-                boots = ItemGenerators.MobBootGenerator(tier, false, null, level);
+                boots = generateMobGear(ItemType.BOOTS, itemTier);
                 if (elite == true) {
                     boots.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
                 }
@@ -6522,7 +6397,7 @@ public class MonsterMechanics implements Listener {
                 gear_check = gear_check - 1;
             }
             if (larmor_type == 2 && legs == null) {
-                legs = ItemGenerators.MobLeggingsGenerator(tier, false, null, level);
+                legs = generateMobGear(ItemType.LEGGINGS, itemTier);
                 if (elite == true) {
                     legs.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
                 }
@@ -6530,7 +6405,7 @@ public class MonsterMechanics implements Listener {
                 gear_check = gear_check - 1;
             }
             if (larmor_type == 3 && chest == null) {
-                chest = ItemGenerators.MobChestPlateGenerator(tier, level);
+                chest = generateMobGear(ItemType.CHESTPLATE, itemTier);
                 if (elite == true) {
                     chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
                 }
@@ -6538,7 +6413,7 @@ public class MonsterMechanics implements Listener {
                 gear_check = gear_check - 1;
             }
             if (larmor_type == 4 && helmet == null) {
-                helmet = ItemGenerators.MobHelmetGenerator(tier, false, null, level);
+                helmet = generateMobGear(ItemType.HELMET, itemTier);
                 if (elite == true) {
                     helmet.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
                 }
@@ -6637,7 +6512,7 @@ public class MonsterMechanics implements Listener {
             if (meta_data.equalsIgnoreCase("bandit") || meta_data.equalsIgnoreCase("monk")) {
 
                 if (chest == null) { // They don't normally have the torso.
-                    chest = ItemGenerators.MobChestPlateGenerator(tier, level);
+                    chest = generateMobGear(ItemType.CHESTPLATE, itemTier);
                     if (elite == true) {
                         chest.addUnsafeEnchantment(EnchantMechanics.getCustomEnchant(), 1);
                     }

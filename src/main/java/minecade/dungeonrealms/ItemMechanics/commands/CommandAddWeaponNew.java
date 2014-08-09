@@ -70,6 +70,7 @@ public class CommandAddWeaponNew implements CommandExecutor {
 			item = type.generateWeapon(tier, null, rarity);
 		}
 
+		p.sendMessage(ChatColor.RED + "You spawned an item using old item values!  For updated patch 1.9 values, use /addweaponnewnew.");
 		p.getInventory().addItem(item);
 
 		return true;

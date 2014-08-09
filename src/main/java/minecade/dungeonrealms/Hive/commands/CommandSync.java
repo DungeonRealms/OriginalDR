@@ -1,19 +1,16 @@
 package minecade.dungeonrealms.Hive.commands;
 
-import minecade.dungeonrealms.Hive.Hive;
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class CommandSync implements CommandExecutor {
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		final Player p = (Player) sender;
+		sender.sendMessage("Temporarily Disabled");
+		return true;
+		/*final Player p = (Player) sender;
 		p.updateInventory();
 		p.teleport(p);
 		
@@ -32,7 +29,7 @@ public class CommandSync implements CommandExecutor {
 		//sync_queue.add(p.getName()); - Disabled lol
 		p.sendMessage(ChatColor.GREEN + "Synced player data to " + ChatColor.UNDERLINE + "HIVE" + ChatColor.GREEN + " server.");
 		
-		return true;
+		return true;*/
 	}
 	
 }

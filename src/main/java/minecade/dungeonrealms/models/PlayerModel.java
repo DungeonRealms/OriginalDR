@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import minecade.dungeonrealms.HearthstoneMechanics.Hearthstone;
+import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.ItemMechanics.PlayerArrowReplace;
 import minecade.dungeonrealms.LevelMechanics.PlayerLevel;
 import minecade.dungeonrealms.PartyMechanics.Party;
@@ -217,6 +218,7 @@ public class PlayerModel {
 	private int fishBonusLifesteal;
 	private int fishBonusCriticalHit;
 	private int currentItemBeingBought;
+	private ItemStack itemStackBeingBought;
 	private int shopPage;
 	private String shopCurrency;
 	private long recentMovement;
@@ -282,6 +284,10 @@ public class PlayerModel {
 	private WeatherType weather;
 	private long lastLocalLogin;
 	private PlayerLevel player_level;
+	private int regenFoodBonus;
+	private boolean isBuyingItem;
+	private int regenTimer = -1;
+	private Location teleportLoc;
 	public PlayerModel(String name) {
 		this.name = name;
 	}
@@ -2339,5 +2345,54 @@ public class PlayerModel {
 	public void setLastLocalLogin(long lastLocalLogin) {
 		this.lastLocalLogin = lastLocalLogin;
 	}
+	
+	public void updateStats() {
+	    Player p = getPlayer();
+	    ItemMechanics.str_data.put(name, ItemMechanics.generateTotalStrVal(p));
+	    ItemMechanics.dex_data.put(name, ItemMechanics.generateTotalDexVal(p));
+	    ItemMechanics.int_data.put(name, ItemMechanics.generateTotalIntVal(p));
+	    ItemMechanics.vit_data.put(name, ItemMechanics.generateTotalVitVal(p));
+	}
+
+    public int getRegenFoodBonus() {
+        return regenFoodBonus;
+    }
+
+    public void setRegenFoodBonus(int regenFoodBonus) {
+        this.regenFoodBonus = regenFoodBonus;
+    }
+
+    public boolean isBuyingItem() {
+        return isBuyingItem;
+    }
+
+    public void setBuyingItem(boolean isBuyingItem) {
+        this.isBuyingItem = isBuyingItem;
+    }
+
+
+    public ItemStack getItemStackBeingBought() {
+        return itemStackBeingBought;
+    }
+
+    public void setItemStackBeingBought(ItemStack itemStackBeingBought) {
+        this.itemStackBeingBought = itemStackBeingBought;
+    }
+
+    public int getRegenTimer() {
+        return regenTimer;
+    }
+
+    public void setRegenTimer(int regenTimer) {
+        this.regenTimer = regenTimer;
+    }
+
+    public Location getTeleportLoc() {
+        return teleportLoc;
+    }
+
+    public void setTeleportLoc(Location teleportLoc) {
+        this.teleportLoc = teleportLoc;
+    }
 	
 }

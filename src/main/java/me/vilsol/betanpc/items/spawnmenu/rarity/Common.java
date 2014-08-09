@@ -5,13 +5,13 @@ import me.vilsol.betanpc.workers.ItemSpawnWorker;
 import me.vilsol.itemgenerator.ItemGenerator;
 import me.vilsol.menuengine.engine.DynamicMenuModel;
 import me.vilsol.menuengine.engine.MenuItem;
-import me.vilsol.menuengine.enums.ClickType;
 import me.vilsol.menuengine.utils.Builder;
 import minecade.dungeonrealms.enums.ItemRarity;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 public class Common implements MenuItem {
