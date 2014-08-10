@@ -3956,6 +3956,11 @@ public class ItemMechanics implements Listener {
             }
         }, 1L);
     }
+    
+    public static boolean isECNamed(ItemStack is) {
+        if (is.getItemMeta().getDisplayName().contains("EC")) return true;
+        return false;
+    }
 
     public static ItemStack makeSoulBound(ItemStack is) {
         ItemMeta im = is.getItemMeta();
