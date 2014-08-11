@@ -385,7 +385,7 @@ public class ItemGenerator {
 		}
 		    
 		meta.setDisplayName(name);
-		if (ItemMechanics.isECNamed(origItem)) meta.setDisplayName(origItem.getItemMeta().getDisplayName());
+		if (isReroll && ItemMechanics.isECNamed(origItem)) meta.setDisplayName(origItem.getItemMeta().getDisplayName());
 		
 		item.setItemMeta(meta);
 		this.item = item;
