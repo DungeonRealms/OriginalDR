@@ -135,19 +135,6 @@ public class CommandAddWeapon implements CommandExecutor {
         if (args[0].equalsIgnoreCase("egg")) {
             p.getInventory().addItem(ItemMechanics.easter_egg);
         }
-        if (args[0].equalsIgnoreCase("mount") && p.getName().equalsIgnoreCase("iFamasssxD")) {
-            p.sendMessage("Mount summoned!");
-            WorldServer w = ((CraftWorld) p.getWorld()).getHandle();
-            MountSpider ms = new MountSpider(w);
-            // w.getMinecraftServer().getPlayerList().repositionEntity(ms, p.getLocation(), false);
-            ms.setLocation(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), 0, 0);
-            w.addEntity(ms, SpawnReason.CUSTOM);
-            ((CraftPlayer) p).getHandle().mount(ms);
-            ms.passenger = ((CraftPlayer) p).getHandle();
-            MountMechanics.mount_map.put(p.getName(), ms.getBukkitEntity());
-            MonsterMechanics.ignore_target_event.add(ms.getBukkitEntity());
-            MonsterMechanics.mob_health.put(ms.getBukkitEntity(), 10);
-        }
         if (args[0].equalsIgnoreCase("pots")) {
             p.getInventory().addItem(MerchantMechanics.t1_pot);
             p.getInventory().addItem(MerchantMechanics.t2_pot);

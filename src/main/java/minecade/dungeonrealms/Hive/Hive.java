@@ -2529,8 +2529,7 @@ public class Hive implements Listener {
 	public void onCommandPreProcess(PlayerCommandPreprocessEvent e) {
 		if (e.getMessage().equalsIgnoreCase("/stop")
 				&& e.getPlayer() != null
-				&& (e.getPlayer().getName().equalsIgnoreCase("availer") || e.getPlayer().getName().equalsIgnoreCase("vaquxine") || e.getPlayer().getName()
-						.equalsIgnoreCase("ifamasssxd"))) {
+				&& (e.getPlayer().getName().equalsIgnoreCase("availer") || e.getPlayer().getName().equalsIgnoreCase("vaquxine"))) {
 			server_lock = true;
 			force_kick = true;
 			setAllPlayersAsOffline();
