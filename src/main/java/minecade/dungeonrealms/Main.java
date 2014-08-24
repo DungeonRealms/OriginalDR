@@ -114,7 +114,7 @@ public class Main extends JavaPlugin implements Listener {
     public static Main plugin;
     public static Logger log;
 
-    private static final List<String> devs = Arrays.asList("EtherealTemplar");
+    private static final List<String> devs = Arrays.asList("EtherealTemplar", "Vilsol");
     private static final List<String> masters = Arrays.asList("Bradez1571", "felipepcjr");
 
     @Override
