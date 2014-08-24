@@ -16,8 +16,8 @@ import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
 import minecade.dungeonrealms.managers.PlayerManager;
-import net.minecraft.server.v1_7_R2.Packet;
-import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_7_R4.Packet;
+import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,9 +25,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -942,6 +942,42 @@ public class RepairMechanics implements Listener {
 		
 		subtractCustomDurability(p, e.getBow(), 1, "wep");
 	}
+	
+	   @EventHandler (priority = EventPriority.LOWEST)
+	    public void onPlayerEnvironmentDamage(EntityDamageEvent e) {
+	        if (!(e.getEntity() instanceof Player)) return;
+        if (e.getCause() != DamageCause.LAVA && e.getCause() != DamageCause.DROWNING
+                && e.getCause() != DamageCause.SUFFOCATION && e.getCause() != DamageCause.CONTACT)
+            return;
+	        
+	        Player p = (Player) e.getEntity();
+	        
+	        e.setCancelled(true);
+	        
+	        // adjust vanilla damage to damage as a percentage of player's max health
+	        if (e.getDamage() < 20) p.damage((e.getDamage() / 20) * HealthMechanics.getMaxHealthValue(p.getName()));
+	        
+	        if(p.getInventory().getBoots() != null && p.getInventory().getBoots().getType() != Material.AIR) {
+	            ItemStack boots = p.getInventory().getBoots();
+	            subtractCustomDurability(p, boots, 1, "armor");
+	            log.info("BOOTS: " + getCustomDurability(boots, "armor"));
+	        }
+	        if(p.getInventory().getLeggings() != null && p.getInventory().getLeggings().getType() != Material.AIR) {
+	            ItemStack Leggings = p.getInventory().getLeggings();
+	            subtractCustomDurability(p, Leggings, 1, "armor");
+	            log.info("LEGS: " + getCustomDurability(Leggings, "armor"));
+	        }
+	        if(p.getInventory().getChestplate() != null && p.getInventory().getChestplate().getType() != Material.AIR) {
+	            ItemStack Chestplate = p.getInventory().getChestplate();
+	            subtractCustomDurability(p, Chestplate, 1, "armor");
+	            log.info("CHEST: " + getCustomDurability(Chestplate, "armor"));
+	        }
+	        if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getType() != Material.AIR) {
+	            ItemStack Helmet = p.getInventory().getHelmet();
+	            subtractCustomDurability(p, Helmet, 1, "armor");
+	            log.info("HELMET: " + getCustomDurability(Helmet, "armor"));
+	        }
+	    }
 
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)

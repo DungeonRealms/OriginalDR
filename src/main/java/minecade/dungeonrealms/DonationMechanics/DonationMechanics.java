@@ -82,7 +82,7 @@ public class DonationMechanics implements Listener {
 		server_list.put(5, "72.20.37.210:10005");
 		server_list.put(100, "72.20.55.80:25151");
 		
-		log.info("" + Bukkit.getOnlinePlayers().length);
+		log.info("" + Bukkit.getOnlinePlayers().size());
 		
 		/* Do NOT uncomment!  The timer is now handled by a separate donation-dedicated server!
 		if (Bukkit.getMotd().contains("US-0")) {
