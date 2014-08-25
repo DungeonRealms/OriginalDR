@@ -88,6 +88,8 @@ public class GuildMechanics implements Listener {
 	public ItemStack gray_button = ItemMechanics.signCustomItem(Material.INK_SACK, (short) 8, ChatColor.YELLOW.toString() + "Click to CONFIRM Color Choice.", ChatColor.GRAY.toString() + "You can change this color later for a fee.");
 
 	public static ItemStack guild_emblem = ItemMechanics.signCustomItem(Material.EYE_OF_ENDER, (short) 1, ChatColor.DARK_AQUA.toString() + ChatColor.BOLD.toString() + "Guild Emblem", ChatColor.GRAY.toString() + "Guild:" + ChatColor.GRAY.toString() + " Legendary Heroes" + "," + ChatColor.DARK_AQUA + "Right Click: " + ChatColor.GRAY.toString() + "Open Guild Portal" + "," + ChatColor.DARK_AQUA + "Left Click: " + ChatColor.GRAY.toString() + "Invite to Guild" + ",");
+	
+	public static ArrayList<String> invalid_guild_handles = new ArrayList<String>(Arrays.asList("kkk"));
 
 	private static final String ALPHA_NUM = "123456789";
 
@@ -530,6 +532,10 @@ public class GuildMechanics implements Listener {
 				String guild_handle = e.getMessage();
 				Pattern pattern = Pattern.compile("^([A-Za-z]|[0-9])+$");
 				Matcher matcher = pattern.matcher(guild_handle);
+				if(invalid_guild_handles.contains(guild_handle.toLowerCase())) {
+                    pl.sendMessage(ChatColor.RED + "This is an invalid guild tag. Please try again");
+                    return;
+				}
 				if (!matcher.find()) {
 				    pl.sendMessage(ChatColor.RED + "Your guild tag can only contain alphanumerical values. Please try again");
 				    return;
