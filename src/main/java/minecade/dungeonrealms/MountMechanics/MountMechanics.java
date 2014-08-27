@@ -1424,6 +1424,9 @@ public class MountMechanics implements Listener {
                 // so the stupid thing doesnt drop the chest
                 horse.setCarryingChest(false);
             }
+            if(horse.getInventory().getArmor() != null) {
+                horse.getInventory().setArmor(new ItemStack(Material.AIR));
+            }
             if (horse.getInventory().getSaddle() != null) {
                 horse.getInventory().setSaddle(new ItemStack(Material.AIR));
             }
