@@ -41,7 +41,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -1398,7 +1397,7 @@ public class DuelMechanics implements Listener {
     }
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.HIGHEST)
-    public void DuelManager(EntityDamageEvent e) {
+    public void DuelManager(EntityDamageByEntityEvent e) {
         if (!(e.getEntity().getType() == EntityType.PLAYER)) {
             return;
         }
@@ -1415,11 +1414,7 @@ public class DuelMechanics implements Listener {
 
         Entity ent_attacker = null;
 
-        if (!(e instanceof EntityDamageByEntityEvent)) {
-            return; // Nothing to do here.
-        }
-
-        ent_attacker = ((EntityDamageByEntityEvent) e).getDamager();
+        ent_attacker = e.getDamager();
         if (ent_attacker instanceof Arrow) {
             ent_attacker = (Entity) ((Arrow) ent_attacker).getShooter();
         }
@@ -1852,7 +1847,7 @@ public class DuelMechanics implements Listener {
     }
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
-    public void DuelChallengeDetector(EntityDamageEvent e) {
+    public void DuelChallengeDetector(EntityDamageByEntityEvent e) {
         if (!(e.isCancelled())) {
             return;
         }
@@ -1862,10 +1857,7 @@ public class DuelMechanics implements Listener {
         if (!(e.getCause() == DamageCause.ENTITY_ATTACK)) {
             return;
         }
-        if (!(e instanceof EntityDamageByEntityEvent)) {
-            return;
-        }
-        Entity ent_attacker = ((EntityDamageByEntityEvent) e).getDamager();
+        Entity ent_attacker = e.getDamager();
         if (!(ent_attacker.getType() == EntityType.PLAYER)) {
             return;
         }
