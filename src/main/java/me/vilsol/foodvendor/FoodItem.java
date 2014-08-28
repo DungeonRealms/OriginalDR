@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class FoodItem implements MenuItem, ChatCallback, BonusItem {
+public class FoodItem implements MenuItem, ChatCallback, BonusItem<Integer> {
 	
 	public static final ItemStack T1_COMMON_FOOD = ItemMechanics.signCustomItem(Material.POTATO_ITEM, (short) 1, ChatColor.WHITE + "Plowed Potato", ChatColor.RED + "+9 HP/s for " + ChatColor.BOLD + "30 SECONDS" + "," + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "The staple crop of Andalucia. Definitely not rotten" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Common");
 	public static final ItemStack T1_UNIQUE_FOOD = ItemMechanics.signCustomItem(Material.BAKED_POTATO, (short) 1, ChatColor.WHITE + "Loaded Potato Skin", ChatColor.RED + "+20 HP/s for " + ChatColor.BOLD + "30 SECONDS" + "," + ChatColor.RED + "Moving will " + ChatColor.BOLD + "CANCEL" + ChatColor.RED + " the effect" + "," + ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Extremely tasty." + "," + ChatColor.YELLOW.toString() + ChatColor.ITALIC + "Unique");
@@ -131,8 +131,8 @@ public class FoodItem implements MenuItem, ChatCallback, BonusItem {
 	}
 	
 	@Override
-	public void setBonusData(Object arg0) {
-		this.slot = (int) arg0;
+	public void setBonusData(Integer arg0) {
+		this.slot = arg0;
 	}
 	
 }

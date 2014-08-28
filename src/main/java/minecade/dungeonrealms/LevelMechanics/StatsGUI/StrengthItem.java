@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
-public class StrengthItem implements MenuItem, BonusItem {
+public class StrengthItem implements MenuItem, BonusItem<PlayerModel> {
 
 	private PlayerModel drPlayer;
 	private PlayerLevel pLevel;
@@ -75,8 +75,8 @@ public class StrengthItem implements MenuItem, BonusItem {
 	}
 
 	@Override
-	public void setBonusData(Object player) {
-		drPlayer = (PlayerModel) player;
+	public void setBonusData(PlayerModel player) {
+		drPlayer = player;
 		pLevel = drPlayer.getPlayerLevel();
 		points = pLevel.getStrPoints();
 		pLevel.setTempFreePoints(pLevel.getFreePoints());

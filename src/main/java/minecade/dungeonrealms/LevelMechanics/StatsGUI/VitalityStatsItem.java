@@ -17,7 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class VitalityStatsItem implements MenuItem, BonusItem {
+public class VitalityStatsItem implements MenuItem, BonusItem<PlayerModel> {
 
 	private PlayerModel drPlayer;
 	private PlayerLevel pLevel;
@@ -64,8 +64,8 @@ public class VitalityStatsItem implements MenuItem, BonusItem {
 	}
 
 	@Override
-	public void setBonusData(Object player) {
-		drPlayer = (PlayerModel) player;
+	public void setBonusData(PlayerModel player) {
+		drPlayer = player;
 		pLevel = drPlayer.getPlayerLevel();
 		points = pLevel.getVitPoints();
 		pLevel.setTempFreePoints(pLevel.getFreePoints());
