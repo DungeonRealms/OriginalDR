@@ -920,7 +920,7 @@ public class ChatMechanics implements Listener {
                           // messages.
             }
 
-            if (ModerationMechanics.vanish_list.contains(pl.getName())) {
+            if (ModerationMechanics.isPlayerVanished(pl.getName())) {
                 secret_send.add(pl);
             } else {
                 to_send.add(pl);

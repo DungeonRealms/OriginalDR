@@ -3436,7 +3436,7 @@ public class Hive implements Listener {
 			// p.setLevel(9999);
 			HealthMechanics.setPlayerHP(p.getName(), 9999);
 			p.sendMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "                GM INVINSIBILITY (infinite)");
-			ModerationMechanics.vanish_list.add(p.getName());
+			ModerationMechanics.vanishPlayer(p.getName());
 			p.sendMessage(ChatColor.GREEN + "You are now " + ChatColor.BOLD + "invisible.");
 		}
 

@@ -562,7 +562,7 @@ public class PetMechanics implements Listener {
 								if(p.getPlayerListName().equalsIgnoreCase("")) {
 									continue;
 								}
-								if(ModerationMechanics.vanish_list.contains(p.getName())){
+								if(ModerationMechanics.isPlayerVanished(p.getName())){
 								    continue;
 								}
 								partner = ent;

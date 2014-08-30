@@ -2775,7 +2775,7 @@ public class RealmMechanics implements Listener {
 	public void onPlayerMove(PlayerMoveEvent e) {
 		Player p = e.getPlayer();
 
-		if (ModerationMechanics.vanish_list.contains(p.getName())) {
+		if (ModerationMechanics.isPlayerVanished(p.getName())) {
 			return; // Don't particle vanish'd mods.
 		}
 

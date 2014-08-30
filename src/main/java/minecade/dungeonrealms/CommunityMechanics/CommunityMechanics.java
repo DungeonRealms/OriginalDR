@@ -56,6 +56,7 @@ import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
 import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
+import minecade.dungeonrealms.ModerationMechanics.ModerationMechanics;
 import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.ScoreboardMechanics.ScoreboardMechanics;
 import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
@@ -298,9 +299,10 @@ public class CommunityMechanics implements Listener {
 					sent_to_s = PlayerManager.getPlayerModel(p_name).getLastReply();
 				}
 
-				if (!PermissionMechanics.getRank(sent_from.getName()).equalsIgnoreCase("gm")
-						&& (PlayerManager.getPlayerModel(sent_from).getIgnoreList().contains(sent_to_s) || CommunityMechanics.socialQuery(sent_from_s,
-								sent_to_s, "CHECK_FOE"))) {
+                if ((!PermissionMechanics.getRank(sent_from.getName()).equalsIgnoreCase("gm")
+                        && (PlayerManager.getPlayerModel(sent_from).getIgnoreList().contains(sent_to_s)) || (CommunityMechanics
+                            .socialQuery(sent_from_s, sent_to_s, "CHECK_FOE")))
+                        || (!sent_from.isOp() && ModerationMechanics.isPlayerVanished(sent_to_s))) {
 					sent_from.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + sent_to_s + ChatColor.RED + " is OFFLINE.");
 					continue;
 				}

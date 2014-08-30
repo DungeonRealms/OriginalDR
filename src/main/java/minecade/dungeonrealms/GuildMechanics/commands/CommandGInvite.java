@@ -2,6 +2,7 @@ package minecade.dungeonrealms.GuildMechanics.commands;
 
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.GuildMechanics.GuildMechanics;
+import minecade.dungeonrealms.ModerationMechanics.ModerationMechanics;
 import minecade.dungeonrealms.managers.PlayerManager;
 
 import org.bukkit.Bukkit;
@@ -58,7 +59,7 @@ public class CommandGInvite implements CommandExecutor {
 		
 		Player to_invite = Bukkit.getPlayer(p_name);
 		
-		if(CommunityMechanics.isPlayerOnIgnoreList(to_invite, p.getName())) {
+		if(CommunityMechanics.isPlayerOnIgnoreList(to_invite, p.getName()) || ModerationMechanics.isPlayerVanished(p_name)) {
 			p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + p_name + ChatColor.RED + " is OFFLINE");
 			return true;
 		}
