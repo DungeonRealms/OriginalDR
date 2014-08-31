@@ -47,7 +47,7 @@ public class CommandPInvite implements CommandExecutor {
 		
 		Player to_invite = Bukkit.getPlayer(p_name);
 		if(CommunityMechanics.isPlayerOnIgnoreList(to_invite, p.getName()) || ModerationMechanics.isPlayerVanished(p_name)) {
-			p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + p_name + ChatColor.RED + " is OFFLINE");
+			p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + p_name + ChatColor.RED + " is OFFLINE.");
 			return true;
 		}
 		PartyMechanics.inviteToParty(to_invite, p);
