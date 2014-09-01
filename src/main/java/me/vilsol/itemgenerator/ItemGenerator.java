@@ -34,6 +34,7 @@ public class ItemGenerator {
 	
 	private int mobTier = -1;
 	private boolean isReroll = false;
+    private int pLevel;
 	
 	private ItemStack item;
 	private ItemStack origItem; // for rerolling
@@ -67,7 +68,12 @@ public class ItemGenerator {
         this.origItem = origItem;
         return this;
     }
-	
+
+    public ItemGenerator setPLevel(int level) {
+        this.pLevel = level;
+        return this;
+    }
+
 	@SuppressWarnings("unchecked")
     public ItemGenerator generateItem(){
 	    ItemTier tier = this.tier;
@@ -170,7 +176,7 @@ public class ItemGenerator {
 			}
 			
 		});
-		
+
 		String modName = "";
         String name = tier.getTierColor().toString();
         String[] bonuses = new String[24];
@@ -373,7 +379,17 @@ public class ItemGenerator {
 		if(rarity == ItemRarity.UNIQUE) lore.add(ChatColor.YELLOW.toString() + ChatColor.ITALIC.toString() + "Unique");
 		
 		if (isReroll && ItemMechanics.isLegacy(origItem)) lore.add (ChatColor.GOLD.toString() + ChatColor.BOLD + "LEGACY");
-		if (isReroll && EnchantMechanics.hasProtection(origItem)) lore.add(ChatColor.GREEN.toString() + ChatColor.BOLD + "PROTECTED");
+
+        // add custom EC lore
+        if (isReroll && origItem != null && origItem.hasItemMeta() && origItem.getItemMeta().hasLore()) {
+            for (String line : origItem.getItemMeta().getLore()) {
+                if (line.contains(ChatColor.GOLD.toString()) && line.contains(ChatColor.ITALIC.toString())) {
+                    lore.add(line);
+                }
+            }
+        }
+
+        if (isReroll && EnchantMechanics.hasProtection(origItem)) lore.add(ChatColor.GREEN.toString() + ChatColor.BOLD + "PROTECTED");
 		
 		meta.setLore(lore);
 		
@@ -385,8 +401,7 @@ public class ItemGenerator {
 		}
 		    
 		meta.setDisplayName(name);
-		if (isReroll && ItemMechanics.isECNamed(origItem)) meta.setDisplayName(origItem.getItemMeta().getDisplayName());
-		
+		if (isReroll && (ItemMechanics.isECNamed(origItem) || ItemMechanics.isCustomNamed(origItem))) meta.setDisplayName(origItem.getItemMeta().getDisplayName());
 		item.setItemMeta(meta);
 		this.item = item;
 		

@@ -115,7 +115,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public class ItemMechanics implements Listener {
-    
+
     static Logger log = Logger.getLogger("Minecraft");
 
     public static HashMap<String, ItemStack> custom_item_table = new HashMap<String, ItemStack>();
@@ -209,7 +209,7 @@ public class ItemMechanics implements Listener {
                     ChatColor.LIGHT_PURPLE + "Tier 4: " + ChatColor.WHITE + ChatColor.BOLD + "0", ChatColor.YELLOW + "Tier 5: " + ChatColor.WHITE
                             + ChatColor.BOLD + "0"));
     public static CopyOnWriteArrayList<String> to_process_weapon = new CopyOnWriteArrayList<String>();
-    
+
     private static Inventory foodVendor = Bukkit.createInventory(null, 18, "Vanilla Food");
     private static Inventory tpBookVendor = Bukkit.createInventory(null, 18, "TP Books");
 
@@ -235,13 +235,13 @@ public class ItemMechanics implements Listener {
 
         loadCustomItemTemplates();
         // Loads all custom item templates in /custom_items into memory for use in other plugins.
-        
+
         foodVendor.addItem(new ItemStack(Material.MELON));
         foodVendor.addItem(new ItemStack(Material.COOKED_BEEF));
         foodVendor.addItem(new ItemStack(Material.COOKED_CHICKEN));
         foodVendor.addItem(new ItemStack(Material.BREAD));
         foodVendor.addItem(new ItemStack(Material.CARROT));
-        
+
         tpBookVendor.addItem(TeleportationMechanics.Crestguard_keep_scroll);
         tpBookVendor.addItem(TeleportationMechanics.Dark_Oak_Tavern_scroll);
         tpBookVendor.addItem(TeleportationMechanics.Deadpeaks_Mountain_Camp_scroll);
@@ -250,7 +250,7 @@ public class ItemMechanics implements Listener {
         tpBookVendor.addItem(TeleportationMechanics.Swamp_safezone_scroll);
         tpBookVendor.addItem(TeleportationMechanics.Jagged_Rocks_Tavern);
         tpBookVendor.addItem(TeleportationMechanics.Cyrennica_scroll);
-        
+
         Main.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(Main.plugin, new Runnable() {
             public void run() {
                 for (Player pl : Main.plugin.getServer().getOnlinePlayers()) {
@@ -658,14 +658,14 @@ public class ItemMechanics implements Listener {
 
         return "no";
     }
-    
+
     @EventHandler
     public static void onPlayerInteractVendor(PlayerInteractEntityEvent e) {
         if (!(e.getRightClicked() instanceof Player)) return;
         Player trader = (Player) e.getRightClicked();
         if (!(trader.hasMetadata("NPC"))) return;
         if (!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("TP Books")) && !(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Vanilla Food"))) return;
-        
+
         if (ChatColor.stripColor(trader.getName()).equalsIgnoreCase("TP Books")) {
             e.getPlayer().openInventory(tpBookVendor);
         }
@@ -673,24 +673,24 @@ public class ItemMechanics implements Listener {
             e.getPlayer().openInventory(foodVendor);
         }
     }
-    
-    
+
+
     @SuppressWarnings("deprecation")
     @EventHandler
     public static void onPlayerClickShopVendorInventory(InventoryClickEvent e) {
-        
+
         if (!(e.getInventory().getTitle().equals("TP Books")) && !(e.getInventory().getTitle().equals("Vanilla Food"))) return;
-        
+
         e.setCancelled(true);
         e.setCursor(null);
-        
+
         ItemStack item = e.getCurrentItem().clone();
-        
+
         if (item == null) return;
-        
+
         if (!e.getCurrentItem().getItemMeta().hasDisplayName())
             item.setAmount(64);
-        
+
         e.getWhoClicked().getInventory().addItem(item);
         if (e.getWhoClicked() instanceof Player) ((Player) e.getWhoClicked()).updateInventory();
     }
@@ -1082,7 +1082,7 @@ public class ItemMechanics implements Listener {
                             if (intel == true) {
                                 crit_chance += (int_atr * 0.025);
                             }
-                            
+
                             if (crit_chance >= new Random().nextInt(100)) {
                                 crit_dmg = true;
                             }
@@ -1717,9 +1717,9 @@ public class ItemMechanics implements Listener {
             total_str_val += getStrVal(p.getItemInHand());
         }
         */
-        
+
         total_str_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getStrPoints();
-        
+
         PlayerManager.getPlayerModel(p).setStrength(total_str_val);
 
         return total_str_val;
@@ -1740,9 +1740,9 @@ public class ItemMechanics implements Listener {
             total_dex_val += getDexVal(p.getItemInHand());
         }
         */
-        
+
         total_dex_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getDexPoints();
-        
+
         PlayerManager.getPlayerModel(p).setStrength(total_dex_val);
 
         return total_dex_val;
@@ -1765,9 +1765,9 @@ public class ItemMechanics implements Listener {
         */
 
         total_vit_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getVitPoints();
-        
+
         PlayerManager.getPlayerModel(p).setStrength(total_vit_val);
-        
+
         return total_vit_val;
     }
 
@@ -1786,9 +1786,9 @@ public class ItemMechanics implements Listener {
             total_int_val += getIntVal(p.getItemInHand());
         }
         */
-        
+
         total_int_val += PlayerManager.getPlayerModel(p).getPlayerLevel().getIntPoints();
-        
+
         PlayerManager.getPlayerModel(p).setStrength(total_int_val);
 
         return total_int_val;
@@ -1797,14 +1797,14 @@ public class ItemMechanics implements Listener {
     public static int generateTotalFireRes(Player p) {
         ItemStack[] armor_contents = p.getInventory().getArmorContents();
         int total_fire_res_val = 0;
-        
+
         for (ItemStack i : armor_contents) {
             if (i.getType() == Material.AIR) {
                 continue;
             }
             total_fire_res_val += getFireResistance(i);
         }
-        
+
         if (str_data.containsKey(p.getName())) {
             int str_atr = ItemMechanics.vit_data.get(p.getName());
             double str_res_mod = 0.04D * str_atr; // This will return the modifier number... 100 * 0.05 = 5, so I need 105% HP.
@@ -1817,14 +1817,14 @@ public class ItemMechanics implements Listener {
     public static int generateTotalIceRes(Player p) {
         ItemStack[] armor_contents = p.getInventory().getArmorContents();
         int total_ice_res_val = 0;
-        
+
         for (ItemStack i : armor_contents) {
             if (i.getType() == Material.AIR) {
                 continue;
             }
             total_ice_res_val += getIceResistance(i);
         }
-        
+
         if (str_data.containsKey(p.getName())) {
             int str_atr = ItemMechanics.vit_data.get(p.getName());
             double str_res_mod = 0.04D * str_atr; // This will return the modifier number... 100 * 0.05 = 5, so I need 105% HP.
@@ -1837,7 +1837,7 @@ public class ItemMechanics implements Listener {
     public static int generateTotalPoisonRes(Player p) {
         ItemStack[] armor_contents = p.getInventory().getArmorContents();
         int total_poison_res_val = 0;
-        
+
         for (ItemStack i : armor_contents) {
             if (i.getType() == Material.AIR) {
                 continue;
@@ -1850,7 +1850,7 @@ public class ItemMechanics implements Listener {
             double str_res_mod = 0.04D * str_atr; // This will return the modifier number... 100 * 0.05 = 5, so I need 105% HP.
             total_poison_res_val += ((double) total_poison_res_val * (double) (str_res_mod / 100.0D));
         }
-        
+
         return total_poison_res_val;
     }
 
@@ -3143,6 +3143,35 @@ public class ItemMechanics implements Listener {
         return false;
     }
 
+    public static boolean isCustomNamed(ItemStack is) {
+        if (is == null || !is.hasItemMeta() || !is.getItemMeta().hasDisplayName()) return false;
+        boolean found = false;
+        String iName = ChatColor.stripColor(is.getItemMeta().getDisplayName());
+        List<String> normalNames = new ArrayList<String>(Arrays.asList("Agile", "Reflective", "Mending",
+                "Protective", "Pure", "Accurate", "Brute", "Snaring", "Vampyric", "Deadly", "Penetrating", "of",
+                "Fortitude", "Fire", "Poison", "Ice", "and", "Pickpocketing", "Treasure", "Golden", "Spikes",
+                "Thorns", "Resist", "Blindness", "Slaying", "Slaughter"));
+        // strip enchantment + in name
+        if (iName.contains("[")) iName = iName.substring(iName.indexOf(" ") + 1);
+        for (ItemType type : ItemType.values()) {
+            for (ItemTier tier : ItemTier.values()) {
+                for (String word : type.getTierName(tier).split(" ")) {
+                    normalNames.add(word);
+                }
+            }
+        }
+        for (String word : iName.split(" ")) {
+            for (String normalWord : normalNames) {
+                if (word.contains(normalWord)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) return true;
+        }
+        return false;
+    }
+
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onOrbUse(InventoryClickEvent e) {
@@ -3956,7 +3985,7 @@ public class ItemMechanics implements Listener {
             }
         }, 1L);
     }
-    
+
     public static boolean isECNamed(ItemStack is) {
         if (is.getItemMeta().getDisplayName().contains("EC")) return true;
         return false;
@@ -5979,15 +6008,15 @@ public class ItemMechanics implements Listener {
         }
         projectile_map.remove(proj);
     }
-    
+
     public static boolean isLegacy(ItemStack is) {
-        
+
         for (String line : is.getItemMeta().getLore()) {
             if (ChatColor.stripColor(line).equalsIgnoreCase("LEGACY")) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -6157,7 +6186,7 @@ public class ItemMechanics implements Listener {
         ItemMeta im = is.getItemMeta();
         return Integer.parseInt(ChatColor.stripColor(im.getDisplayName().split("/ ")[1]));
     }
-    
+
     @SuppressWarnings("deprecation")
 	public int subtractArrow(Player pl) {
         for (ItemStack is : pl.getInventory().getContents()) {
