@@ -1276,8 +1276,8 @@ public class MonsterMechanics implements Listener {
                     }
                 }
 
-                LivingEntity le = (LivingEntity) ent;
-                le.damage(le.getHealth());
+                //LivingEntity le = (LivingEntity) ent;
+                //le.damage(le.getHealth());
                 ent.remove();
                 continue;
             }
