@@ -6095,7 +6095,7 @@ public class MonsterMechanics implements Listener {
         if (custom_name.contains("Wicked Gatekeeper")) {
             // TODO: WORK
         }
-        if (custom_name.contains("Aceron the Wicked")) {
+        if (custom_name.contains("Aceron The Wicked")) {
             hp_mult = 6D;
             dmg_mult = 2.5D;
             boots = ItemGenerators.customGenerator("aceronboots");
