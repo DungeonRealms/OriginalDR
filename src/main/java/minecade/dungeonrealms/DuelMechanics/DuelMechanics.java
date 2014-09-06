@@ -1443,7 +1443,7 @@ public class DuelMechanics implements Listener {
 
         if (!(e.getCause() == DamageCause.ENTITY_ATTACK) && !(e.getCause() == DamageCause.PROJECTILE)) {
             // Fire, fall, etc damage.
-            if (HealthMechanics.getPlayerHP(attacked.getName()) - e.getDamage() <= 1) {
+            if (attacked.getHealth() - e.getDamage() <= 1) {
                 String attacker_name = duel_map.get(attacked.getName());
 
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
@@ -1537,7 +1537,7 @@ public class DuelMechanics implements Listener {
         } // Duel hasn't started yet here.
 
         if (duel_map.get(attacked.getName()).equalsIgnoreCase(attacker.getName())) {
-            if ((HealthMechanics.getPlayerHP(attacked.getName()) - e.getDamage() <= 1)) {
+            if (attacked.getHealth() - e.getDamage() <= 1) {
                 RealmMechanics.player_god_mode.put(attacked.getName(), System.currentTimeMillis());
                 attacked.setFireTicks(0);
                 attacked.setFallDistance(0.0F);
@@ -1602,6 +1602,7 @@ public class DuelMechanics implements Listener {
             }
 
             e.setCancelled(false);
+            attacked.damage(e.getDamage());
             HealthMechanics.setOverheadHP(attacked, HealthMechanics.getPlayerHP(attacked.getName()));
             return;
             // Cancel any previously made event cancels... if this doesn't work, just do direct damage lool.

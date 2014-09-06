@@ -1,8 +1,5 @@
 package minecade.dungeonrealms.enums;
 
-import minecade.dungeonrealms.EnchantMechanics.EnchantMechanics;
-import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
-
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
