@@ -33,6 +33,8 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.persistence.EntityManager;
+
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.Utils;
 import minecade.dungeonrealms.ChatMechanics.ChatMechanics;
@@ -59,6 +61,7 @@ import minecade.dungeonrealms.Hive.commands.CommandWipe;
 import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
+import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.LootMechanics.LootMechanics;
 import minecade.dungeonrealms.ModerationMechanics.ModerationMechanics;
 import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
@@ -67,6 +70,7 @@ import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.PetMechanics.PetMechanics;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
+import minecade.dungeonrealms.ScoreboardMechanics.ScoreboardMechanics;
 import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
 import minecade.dungeonrealms.SpawnMechanics.SpawnMechanics;
 import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
@@ -75,9 +79,12 @@ import minecade.dungeonrealms.config.Config;
 import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.managers.PlayerManager;
 import minecade.dungeonrealms.models.LogModel;
-import net.minecraft.server.v1_7_R2.EntityPlayer;
-import net.minecraft.server.v1_7_R2.Packet;
-import net.minecraft.server.v1_7_R2.PacketPlayOutEntityEquipment;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.trait.Equipment;
+import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_7_R4.Packet;
+import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
 import net.minecraft.util.io.netty.util.internal.ConcurrentSet;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -90,9 +97,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -131,12 +138,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.fusesource.jansi.Ansi;
 
 import com.google.common.base.Joiner;
-
-import de.kumpelblase2.remoteentities.EntityManager;
-import de.kumpelblase2.remoteentities.RemoteEntities;
-import de.kumpelblase2.remoteentities.api.DespawnReason;
-import de.kumpelblase2.remoteentities.api.RemoteEntity;
-import de.kumpelblase2.remoteentities.api.RemoteEntityType;
 
 @SuppressWarnings("deprecation")
 public class Hive implements Listener {
@@ -210,7 +211,7 @@ public class Hive implements Listener {
 	// Player Name, Bio(being written)
 
 	// These two hashes are both used for COMBAT-LOGGING NPC management.
-	public static HashMap<String, RemoteEntity> player_to_npc = new HashMap<String, RemoteEntity>();
+	public static HashMap<String, NPC> player_to_npc = new HashMap<String, NPC>();
 
 	public static HashMap<String, String> player_to_npc_align = new HashMap<String, String>();
 	// ^ Largely Depreciated due to issues with onLogin inventories not being cleared, can cause dupes.
@@ -220,12 +221,9 @@ public class Hive implements Listener {
 
 	public static HashMap<String, Inventory> player_mule_inventory = new HashMap<String, Inventory>();
 	// Stores data for mule inventories on combat log.
-
-	public static HashMap<RemoteEntity, List<ItemStack>> npc_inventory = new HashMap<RemoteEntity, List<ItemStack>>();
-	// The inventory of a combat logged-NPC.
-
-	public static HashMap<RemoteEntity, List<ItemStack>> npc_armor = new HashMap<RemoteEntity, List<ItemStack>>();
-	// The armor of a combat logged-NPC.
+	
+	public static HashMap<NPC, List<ItemStack>> npc_inventory = new HashMap<NPC, List<ItemStack>>();
+	// Store player inventory for combat log.
 
 	static ConcurrentHashMap<String, Long> logout_time = new ConcurrentHashMap<String, Long>();
 	// Saves the time at which a combat-logging player logs out to determine when to despawn the NPC.
@@ -419,6 +417,12 @@ public class Hive implements Listener {
 		Main.plugin.getServer().getMessenger().registerOutgoingPluginChannel(Main.plugin, "BungeeCord");
 
 		main_world_name = Bukkit.getWorlds().get(0).getName();
+		
+		for (NPC n : CitizensAPI.getNPCRegistry().sorted()) {
+		    if (n.data().get("combat_log_npc") != null && (Boolean) n.data().get("combat_log_npc") == true) {
+		        n.destroy();
+		    }
+		}
 
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
@@ -426,12 +430,6 @@ public class Hive implements Listener {
 			}
 			/* 5 second delay, 10 second increments */
 		}, 20 * 5, 20 * 10);
-
-		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-			public void run() {
-				npc_manager = RemoteEntities.createManager(Main.plugin);
-			}
-		}, 5 * 20L);
 
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			public void run() {
@@ -518,7 +516,7 @@ public class Hive implements Listener {
 
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
-				player_count = Bukkit.getServer().getOnlinePlayers().length;
+				player_count = Bukkit.getServer().getOnlinePlayers().size();
 			}
 		}, 10 * 20L, 5 * 20L);
 
@@ -622,7 +620,7 @@ public class Hive implements Listener {
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				if (server_lock == true && (force_kick == true || get_payload == true || get_payload_spoof == true)
-						&& Main.plugin.getServer().getOnlinePlayers().length > 0) {
+						&& Main.plugin.getServer().getOnlinePlayers().size() > 0) {
 					for (Player p : Main.plugin.getServer().getOnlinePlayers()) {
 						if (p.isOp() && get_payload == false && get_payload_spoof == false) {
 							continue; // Don't kick the OP's.
@@ -700,24 +698,22 @@ public class Hive implements Listener {
 							if (!(player_to_npc.containsKey(p_name))) { // If the NPC died or something.
 								logout_time.remove(p_name);
 
-							log.info(Ansi.ansi().fg(Ansi.Color.CYAN).boldOff().toString() + "[HIVE (SLAVE Edition)] Player " + p_name
-									+ "'s NPC has been killed [DEBUG]." + Ansi.ansi().fg(Ansi.Color.WHITE).boldOff().toString());
-
-							Thread t = new Thread(new Runnable() {
-								public void run() {
-									setCombatLogger(p_name);
-									Hive.setPlayerOffline(p_name, 5);
-								}
-							});
-
-							t.start();
-							continue;
+    							log.info(Ansi.ansi().fg(Ansi.Color.CYAN).boldOff().toString() + "[HIVE (SLAVE Edition)] Player " + p_name
+    									+ "'s NPC has been killed [DEBUG]." + Ansi.ansi().fg(Ansi.Color.WHITE).boldOff().toString());
+    
+    							Thread t = new Thread(new Runnable() {
+    								public void run() {
+    									setCombatLogger(p_name);
+    									Hive.setPlayerOffline(p_name, 5);
+    								}
+    							});
+    
+    							t.start();
+    							continue;
 							}
 
-							RemoteEntity n = player_to_npc.get(p_name);
+							NPC n = player_to_npc.get(p_name);
 
-							npc_inventory.remove(n);
-							npc_armor.remove(n);
 							logout_time.remove(p_name); // The player is now safe and may log back in again with their items still intact.
 							player_to_npc.remove(p_name);
 							player_to_npc_align.remove(p_name);
@@ -731,7 +727,8 @@ public class Hive implements Listener {
 								}
 							}
 
-							n.despawn(DespawnReason.CUSTOM);
+							n.despawn();
+							n.destroy();
 
 							Thread t = new Thread(new Runnable() {
 								public void run() {
@@ -829,16 +826,16 @@ public class Hive implements Listener {
 
 		shutting_down = true;
 
-		for (RemoteEntity n : player_to_npc.values()) {
+		for (NPC n : player_to_npc.values()) {
 			// n.removeFromWorld();
-			n.despawn(DespawnReason.CUSTOM);
+			n.destroy();
 		}
 
 		player_to_npc.clear();
 
 		/*
 		 * int count = 0; while(pending_upload.size() > 0 && count <= 200){ count++; log.info("[HIVE (SLAVE Edition)] ONLINE PLAYERS: " +
-		 * Bukkit.getOnlinePlayers().length); log.info("[HIVE (SLAVE Edition)] PENDING UPLOAD: " + pending_upload.size()); try { Thread.sleep(100); // Let all
+		 * Bukkit.getOnlinePlayers().size()); log.info("[HIVE (SLAVE Edition)] PENDING UPLOAD: " + pending_upload.size()); try { Thread.sleep(100); // Let all
 		 * pending multi-thread uploads finish. } catch (InterruptedException e) { e.printStackTrace(); } }
 		 */
 
@@ -848,7 +845,7 @@ public class Hive implements Listener {
 	}
 
 	public void updateServerPlayers() {
-		final int playerCount = Bukkit.getOnlinePlayers().length;
+		final int playerCount = Bukkit.getOnlinePlayers().size();
 		if (playerCount == last_player_count) {
 			return;
 		}
@@ -1019,7 +1016,7 @@ public class Hive implements Listener {
 
 		// if(prefix.equalsIgnoreCase("US-0") || prefix.equalsIgnoreCase("US-99")) { return; }
 
-		int players_on = Main.plugin.getServer().getOnlinePlayers().length;
+		int players_on = Main.plugin.getServer().getOnlinePlayers().size();
 		int players_max = Main.plugin.getServer().getMaxPlayers();
 
 		if (Hive.shutting_down || Hive.server_frozen || Hive.server_lock || Hive.force_kick || Hive.restart_inc) {
@@ -2531,8 +2528,7 @@ public class Hive implements Listener {
 	public void onCommandPreProcess(PlayerCommandPreprocessEvent e) {
 		if (e.getMessage().equalsIgnoreCase("/stop")
 				&& e.getPlayer() != null
-				&& (e.getPlayer().getName().equalsIgnoreCase("availer") || e.getPlayer().getName().equalsIgnoreCase("vaquxine") || e.getPlayer().getName()
-						.equalsIgnoreCase("ifamasssxd"))) {
+				&& (e.getPlayer().getName().equalsIgnoreCase("availer") || e.getPlayer().getName().equalsIgnoreCase("vaquxine"))) {
 			server_lock = true;
 			force_kick = true;
 			setAllPlayersAsOffline();
@@ -2880,7 +2876,7 @@ public class Hive implements Listener {
 		 * return; }
 		 */
 
-		int players_online = Main.plugin.getServer().getOnlinePlayers().length;
+		int players_online = Main.plugin.getServer().getOnlinePlayers().size();
 		if (players_online >= Bukkit.getMaxPlayers()) {
 			if (VIP == false) {
 				e.setKickMessage(ChatColor.RED.toString() + "This Dungeon Realms server is currently FULL." + "\n" + ChatColor.GRAY.toString()
@@ -3559,6 +3555,24 @@ public class Hive implements Listener {
 		Hive.sql_query.add("UPDATE player_database SET login_delay = " + (can_join ? 0 : (System.currentTimeMillis() + 300000)) + " WHERE p_name = '" + p_name
 				+ "';");
 	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onCombatLogNPCDamage(EntityDamageByEntityEvent e) {
+	    if (!CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) return;
+	    log.info("yes");
+	    
+	    NPC n = CitizensAPI.getNPCRegistry().getNPC(e.getEntity());
+	    Player p = (Player) n.getEntity();
+	    
+	    if (n.data().get("combat_log_npc") == null || ((boolean) n.data().get("combat_log_npc")) == false) return;
+	    
+	    p.damage(0);
+	    HealthMechanics.setPlayerHP(p.getName(), (int) (HealthMechanics.getPlayerHP(p.getName()) - e.getDamage()));
+	    e.setDamage(0);
+	    log.info("yes1");
+	    
+	    e.setCancelled(true);
+	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerQuit(PlayerQuitEvent e) throws IOException {
@@ -3617,17 +3631,39 @@ public class Hive implements Listener {
 				&& (server_lock == false && shutting_down == false)) { // They're in combat, let's spawn an NPC.
 			logout_time.put(p.getName(), System.currentTimeMillis());
 			Location loc = p.getLocation();
-			RemoteEntity re = npc_manager.createNamedEntity(RemoteEntityType.Human, loc, p.getName(), true);
-			re.setPushable(false);
-			re.setStationary(true);
-
-			Player playerNPC = (Player) re.getBukkitEntity();
+			
+			// spawn the NPC!
+			NPC combatLogNPC = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, p.getName());
+			combatLogNPC.addTrait(Equipment.class);
+			combatLogNPC.getTrait(Equipment.class).set(0, p.getItemInHand());
+			combatLogNPC.getTrait(Equipment.class).set(1, p.getInventory().getHelmet());
+			combatLogNPC.getTrait(Equipment.class).set(2, p.getInventory().getChestplate());
+			combatLogNPC.getTrait(Equipment.class).set(3, p.getInventory().getLeggings());
+			combatLogNPC.getTrait(Equipment.class).set(4, p.getInventory().getBoots());
+			combatLogNPC.getTrait(net.citizensnpcs.api.trait.trait.Inventory.class).setContents(p.getInventory().getContents());
+			combatLogNPC.data().setPersistent("combat_log_npc", true);
+			combatLogNPC.spawn(loc);
+			
+			Player playerNPC = (Player) combatLogNPC.getEntity();
+			log.info("" + HealthMechanics.getPlayerHP(p.getName()));
+			HealthMechanics.setOverheadHP(playerNPC, HealthMechanics.getPlayerHP(p.getName()));
 			HealthMechanics.setPlayerHP(playerNPC.getName(), HealthMechanics.getPlayerHP(p.getName()));
-			// playerNPC.setLevel(HealthMechanics.getPlayerHP(p.getName()));
+			playerNPC.setLevel(LevelMechanics.getPlayerLevel(p));
 			playerNPC.setExp(1.0F);
 			playerNPC.setGameMode(GameMode.SURVIVAL);
-
-			player_to_npc.put(p.getName(), re);
+			playerNPC.getInventory().setContents(p.getInventory().getContents());
+			playerNPC.getInventory().setArmorContents(p.getInventory().getArmorContents());
+			playerNPC.setItemInHand(p.getItemInHand());
+			
+			ScoreboardMechanics.cloneScoreboard(playerNPC);
+			
+			// refresh packets
+			for (Entity ent : playerNPC.getNearbyEntities(50, 50, 50)) {
+			    if (ent instanceof Player && ((Player) ent).canSee(playerNPC))
+			        Utils.refreshPlayerEquipment(playerNPC, (Player) ent);
+			}
+			
+			player_to_npc.put(p.getName(), combatLogNPC);
 			player_to_npc_align.put(p.getName(), KarmaMechanics.getRawAlignment(p.getName()));
 			player_item_in_hand.put(p.getName(), p.getItemInHand());
 
@@ -3674,20 +3710,17 @@ public class Hive implements Listener {
 				armor_list.add(is);
 			}
 
-			npc_armor.put(re, armor_list);
-			npc_inventory.put(re, l_is);
-
 			log.info(Ansi.ansi().fg(Ansi.Color.CYAN).boldOff().toString() + "[HIVE (SLAVE Edition)] Player " + p.getName()
 					+ " logged out in combat, NPC spawned." + Ansi.ansi().fg(Ansi.Color.WHITE).boldOff().toString());
 
-			final Entity ent = re.getBukkitEntity();
+			final Entity ent = combatLogNPC.getBukkitEntity();
 
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 				public void run() {
 					Player playerNPC = ((Player) ent);
 
 					EntityPlayer origin_p = ((CraftPlayer) p).getHandle();
-					net.minecraft.server.v1_7_R2.ItemStack weapon = null, boots = null, legs = null, chest = null, head = null;
+					net.minecraft.server.v1_7_R4.ItemStack weapon = null, boots = null, legs = null, chest = null, head = null;
 
 					if (origin_p.getEquipment(0) != null) {
 						weapon = origin_p.getEquipment(0);
@@ -4041,7 +4074,7 @@ public class Hive implements Listener {
 		// This is the server they're on. Green dye to show they're connected.
 		icon = new ItemStack(Material.WOOL, 1, (short) 5);
 		cc = ChatColor.GREEN;
-		online_players = (int) Math.round((double) Bukkit.getOnlinePlayers().length);
+		online_players = (int) Math.round((double) Bukkit.getOnlinePlayers().size());
 		max_players = Bukkit.getMaxPlayers();
 	} else {
 		boolean server_open = true; // BungeeCord.getInstance().getServerInfo(server_prefix).canAccess((net.md_5.bungee.api.CommandSender) pl);
@@ -4558,7 +4591,7 @@ public class Hive implements Listener {
 			// ply.playEffect(EntityEffect.DEATH);
 
 			if (Hive.player_to_npc.containsKey(ply.getName())) { // It was an NPC that died!
-				RemoteEntity n = Hive.player_to_npc.get(ply.getName());
+			    NPC n = player_to_npc.get(ply.getName());
 				ply.playEffect(EntityEffect.DEATH);
 
 				String align = null;
@@ -4607,7 +4640,7 @@ public class Hive implements Listener {
 					}
 				}
 
-				List<ItemStack> p_inv = Hive.npc_inventory.get(n);
+				List<ItemStack> p_inv = new ArrayList<ItemStack>(Arrays.asList(ply.getInventory().getContents()));
 				if (align != null && !align.equalsIgnoreCase("evil")) {
 					if (!neutral_weapon && !ProfessionMechanics.isSkillItem(p_inv.get(0)) && p_inv.get(0) != null
 							&& !ItemMechanics.getDamageData(p_inv.get(0)).equalsIgnoreCase("no")) {
@@ -4633,7 +4666,7 @@ public class Hive implements Listener {
 
 				if (align != null && (align.equalsIgnoreCase("evil") || align.equalsIgnoreCase("neutral"))) {
 					// Drop armor as well if chaotic.
-					for (ItemStack is : Hive.npc_armor.get(n)) {
+					for (ItemStack is : ply.getInventory().getArmorContents()) {
 						if (is == null || is.getType() == Material.AIR) {
 							continue;
 						}
@@ -4667,8 +4700,6 @@ public class Hive implements Listener {
 					}
 				}
 
-				Hive.npc_inventory.remove(n);
-				Hive.npc_armor.remove(n);
 				Hive.player_to_npc.remove(ply.getName());
 				Hive.player_to_npc_align.remove(ply.getName());
 				Hive.player_item_in_hand.remove(ply.getName());
@@ -4680,7 +4711,8 @@ public class Hive implements Listener {
 					}
 				}
 
-				n.despawn(DespawnReason.CUSTOM);
+				n.despawn();
+				n.destroy();
 			}
 
 		}

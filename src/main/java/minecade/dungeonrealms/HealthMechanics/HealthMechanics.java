@@ -2,6 +2,7 @@ package minecade.dungeonrealms.HealthMechanics;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,8 @@ import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
 import minecade.dungeonrealms.SpawnMechanics.SpawnMechanics;
 import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.managers.PlayerManager;
-import net.minecraft.server.v1_7_R2.EntityLiving;
+import net.citizensnpcs.api.npc.NPC;
+import net.minecraft.server.v1_7_R4.EntityLiving;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,8 +44,8 @@ import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -77,9 +79,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import de.kumpelblase2.remoteentities.api.DespawnReason;
-import de.kumpelblase2.remoteentities.api.RemoteEntity;
 
 @SuppressWarnings("deprecation")
 public class HealthMechanics implements Listener {
@@ -271,6 +270,13 @@ public class HealthMechanics implements Listener {
 					if(getPlayerHP(pl.getName()) > 0) {
 						setOverheadHP(pl, getPlayerHP(pl.getName()));
 					}
+				}
+				for (NPC n : Hive.player_to_npc.values()) {
+				    if (!(n.getEntity() instanceof Player)) continue;
+				    if (((Player) n.getEntity()).getHealth() > 0) {
+				        setOverheadHP((Player) n.getEntity(), getPlayerHP(((Player) n.getEntity()).getName()));
+				        log.info(getPlayerHP(((Player) n.getEntity()).getName()) + "");
+				    }
 				}
 			}
 		}, 5 * 20L, 5L);
@@ -592,7 +598,7 @@ public class HealthMechanics implements Listener {
 		p.setLevel(0);
 
 		if(Hive.player_to_npc.containsKey(p.getName())) { // It was an NPC that died!
-			RemoteEntity n = Hive.player_to_npc.get(p.getName());
+			NPC n = Hive.player_to_npc.get(p.getName());
 			p.playEffect(EntityEffect.DEATH);
 
 			String align = null;
@@ -640,7 +646,7 @@ public class HealthMechanics implements Listener {
 				}
 			}
 
-			List<ItemStack> p_inv = Hive.npc_inventory.get(n);
+			List<ItemStack> p_inv = new ArrayList<ItemStack>(Arrays.asList(p.getInventory().getContents()));
 			if(align != null && !align.equalsIgnoreCase("evil")) {
 				if(!neutral_weapon && !ProfessionMechanics.isSkillItem(p_inv.get(0)) && p_inv.get(0) != null && !ItemMechanics.getDamageData(p_inv.get(0)).equalsIgnoreCase("no")) {
 					try {
@@ -652,6 +658,7 @@ public class HealthMechanics implements Listener {
 			}
 
 			for(ItemStack is : p_inv) {
+			    if(is == null) continue;
 				if(align != null && !align.equalsIgnoreCase("evil")) {
 					// They're not chaotic.
 					if(ProfessionMechanics.isSkillItem(is)) {
@@ -664,7 +671,7 @@ public class HealthMechanics implements Listener {
 
 			if(align != null && (align.equalsIgnoreCase("evil") || align.equalsIgnoreCase("neutral"))) {
 				// Drop armor as well if chaotic.
-				for(ItemStack is : Hive.npc_armor.get(n)) {
+				for(ItemStack is : p.getInventory().getArmorContents()) {
 					if(is == null || is.getType() == Material.AIR) {
 						continue;
 					}
@@ -696,13 +703,10 @@ public class HealthMechanics implements Listener {
 				}
 			}
 
-			Hive.npc_inventory.remove(n);
-			Hive.npc_armor.remove(n);
 			Hive.player_to_npc.remove(p.getName());
 			Hive.player_to_npc_align.remove(p.getName());
-			Hive.player_item_in_hand.remove(p.getName());
 			Hive.player_mule_inventory.remove(p.getName());
-			n.despawn(DespawnReason.CUSTOM);
+			n.destroy();
 		}
 	}
 
@@ -829,9 +833,9 @@ public class HealthMechanics implements Listener {
 
 	public static int generateMaxHP(Entity e) {
 		EntityLiving ent = ((CraftLivingEntity) e).getHandle();
-		net.minecraft.server.v1_7_R2.ItemStack[] armor_contents = ent.getEquipment();
+		net.minecraft.server.v1_7_R4.ItemStack[] armor_contents = ent.getEquipment();
 		double total_health = 0;
-		for(net.minecraft.server.v1_7_R2.ItemStack i : armor_contents) {
+		for(net.minecraft.server.v1_7_R4.ItemStack i : armor_contents) {
 			ItemStack is = CraftItemStack.asBukkitCopy(i);
 			if(is.getType() == Material.AIR) {
 				continue;
