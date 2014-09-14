@@ -36,7 +36,6 @@ import minecade.dungeonrealms.SpawnMechanics.SpawnMechanics;
 import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.managers.PlayerManager;
 import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.trait.Equipment;
 import net.minecraft.server.v1_7_R4.EntityLiving;
 
 import org.bukkit.Bukkit;
@@ -271,6 +270,13 @@ public class HealthMechanics implements Listener {
 					if(getPlayerHP(pl.getName()) > 0) {
 						setOverheadHP(pl, getPlayerHP(pl.getName()));
 					}
+				}
+				for (NPC n : Hive.player_to_npc.values()) {
+				    if (!(n.getEntity() instanceof Player)) continue;
+				    if (((Player) n.getEntity()).getHealth() > 0) {
+				        setOverheadHP((Player) n.getEntity(), getPlayerHP(((Player) n.getEntity()).getName()));
+				        log.info(getPlayerHP(((Player) n.getEntity()).getName()) + "");
+				    }
 				}
 			}
 		}, 5 * 20L, 5L);
@@ -640,7 +646,7 @@ public class HealthMechanics implements Listener {
 				}
 			}
 
-			List<ItemStack> p_inv = Arrays.asList(n.getTrait(net.citizensnpcs.api.trait.trait.Inventory.class).getContents());
+			List<ItemStack> p_inv = new ArrayList<ItemStack>(Arrays.asList(p.getInventory().getContents()));
 			if(align != null && !align.equalsIgnoreCase("evil")) {
 				if(!neutral_weapon && !ProfessionMechanics.isSkillItem(p_inv.get(0)) && p_inv.get(0) != null && !ItemMechanics.getDamageData(p_inv.get(0)).equalsIgnoreCase("no")) {
 					try {
@@ -652,6 +658,7 @@ public class HealthMechanics implements Listener {
 			}
 
 			for(ItemStack is : p_inv) {
+			    if(is == null) continue;
 				if(align != null && !align.equalsIgnoreCase("evil")) {
 					// They're not chaotic.
 					if(ProfessionMechanics.isSkillItem(is)) {
@@ -664,7 +671,7 @@ public class HealthMechanics implements Listener {
 
 			if(align != null && (align.equalsIgnoreCase("evil") || align.equalsIgnoreCase("neutral"))) {
 				// Drop armor as well if chaotic.
-				for(ItemStack is : Arrays.asList(n.getTrait(Equipment.class).getEquipment())) {
+				for(ItemStack is : p.getInventory().getArmorContents()) {
 					if(is == null || is.getType() == Material.AIR) {
 						continue;
 					}

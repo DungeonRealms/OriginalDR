@@ -135,6 +135,7 @@ public class ScoreboardMechanics implements Listener {
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			ScoreboardMechanics.getBoard(p).getObjective(DisplaySlot.BELOW_NAME).getScore(pl.getName()).setScore(hp);
 		}
+//		ScoreboardMechanics.getBoard(pl).getObjective(DisplaySlot.BELOW_NAME).getScore(pl.getName()).setScore(hp);
 		main.getObjective(DisplaySlot.BELOW_NAME).getScore(pl.getName()).setScore(hp);
 	}
 	

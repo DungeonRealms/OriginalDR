@@ -60,6 +60,7 @@ import minecade.dungeonrealms.Hive.commands.CommandWipe;
 import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
+import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.LootMechanics.LootMechanics;
 import minecade.dungeonrealms.ModerationMechanics.ModerationMechanics;
 import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
@@ -68,6 +69,7 @@ import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.PetMechanics.PetMechanics;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
+import minecade.dungeonrealms.ScoreboardMechanics.ScoreboardMechanics;
 import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
 import minecade.dungeonrealms.SpawnMechanics.SpawnMechanics;
 import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
@@ -218,6 +220,9 @@ public class Hive implements Listener {
 
 	public static HashMap<String, Inventory> player_mule_inventory = new HashMap<String, Inventory>();
 	// Stores data for mule inventories on combat log.
+	
+	public static HashMap<NPC, List<ItemStack>> npc_inventory = new HashMap<NPC, List<ItemStack>>();
+	// Store player inventory for combat log.
 
 	static ConcurrentHashMap<String, Long> logout_time = new ConcurrentHashMap<String, Long>();
 	// Saves the time at which a combat-logging player logs out to determine when to despawn the NPC.
@@ -691,18 +696,18 @@ public class Hive implements Listener {
 							if (!(player_to_npc.containsKey(p_name))) { // If the NPC died or something.
 								logout_time.remove(p_name);
 
-							log.info(Ansi.ansi().fg(Ansi.Color.CYAN).boldOff().toString() + "[HIVE (SLAVE Edition)] Player " + p_name
-									+ "'s NPC has been killed [DEBUG]." + Ansi.ansi().fg(Ansi.Color.WHITE).boldOff().toString());
-
-							Thread t = new Thread(new Runnable() {
-								public void run() {
-									setCombatLogger(p_name);
-									Hive.setPlayerOffline(p_name, 5);
-								}
-							});
-
-							t.start();
-							continue;
+    							log.info(Ansi.ansi().fg(Ansi.Color.CYAN).boldOff().toString() + "[HIVE (SLAVE Edition)] Player " + p_name
+    									+ "'s NPC has been killed [DEBUG]." + Ansi.ansi().fg(Ansi.Color.WHITE).boldOff().toString());
+    
+    							Thread t = new Thread(new Runnable() {
+    								public void run() {
+    									setCombatLogger(p_name);
+    									Hive.setPlayerOffline(p_name, 5);
+    								}
+    							});
+    
+    							t.start();
+    							continue;
 							}
 
 							NPC n = player_to_npc.get(p_name);
@@ -720,6 +725,7 @@ public class Hive implements Listener {
 								}
 							}
 
+							n.despawn();
 							n.destroy();
 
 							Thread t = new Thread(new Runnable() {
@@ -3547,6 +3553,24 @@ public class Hive implements Listener {
 		Hive.sql_query.add("UPDATE player_database SET login_delay = " + (can_join ? 0 : (System.currentTimeMillis() + 300000)) + " WHERE p_name = '" + p_name
 				+ "';");
 	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onCombatLogNPCDamage(EntityDamageByEntityEvent e) {
+	    if (!CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) return;
+	    log.info("yes");
+	    
+	    NPC n = CitizensAPI.getNPCRegistry().getNPC(e.getEntity());
+	    Player p = (Player) n.getEntity();
+	    
+	    if (n.data().get("combat_log_npc") == null || ((boolean) n.data().get("combat_log_npc")) == false) return;
+	    
+	    p.damage(0);
+	    HealthMechanics.setPlayerHP(p.getName(), (int) (HealthMechanics.getPlayerHP(p.getName()) - e.getDamage()));
+	    e.setDamage(0);
+	    log.info("yes1");
+	    
+	    e.setCancelled(true);
+	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerQuit(PlayerQuitEvent e) throws IOException {
@@ -3614,19 +3638,29 @@ public class Hive implements Listener {
 			combatLogNPC.getTrait(Equipment.class).set(2, p.getInventory().getChestplate());
 			combatLogNPC.getTrait(Equipment.class).set(3, p.getInventory().getLeggings());
 			combatLogNPC.getTrait(Equipment.class).set(4, p.getInventory().getBoots());
-			combatLogNPC.addTrait(net.citizensnpcs.api.trait.trait.Inventory.class);
 			combatLogNPC.getTrait(net.citizensnpcs.api.trait.trait.Inventory.class).setContents(p.getInventory().getContents());
 			combatLogNPC.data().setPersistent("combat_log_npc", true);
 			combatLogNPC.spawn(loc);
 			
 			Player playerNPC = (Player) combatLogNPC.getEntity();
+			log.info("" + HealthMechanics.getPlayerHP(p.getName()));
+			HealthMechanics.setOverheadHP(playerNPC, HealthMechanics.getPlayerHP(p.getName()));
 			HealthMechanics.setPlayerHP(playerNPC.getName(), HealthMechanics.getPlayerHP(p.getName()));
-	        playerNPC.setMaxHealth(HealthMechanics.getPlayerHP(playerNPC.getName()));
-			playerNPC.setHealth(HealthMechanics.getPlayerHP(playerNPC.getName()));
-			// playerNPC.setLevel(HealthMechanics.getPlayerHP(p.getName()));
+			playerNPC.setLevel(LevelMechanics.getPlayerLevel(p));
 			playerNPC.setExp(1.0F);
 			playerNPC.setGameMode(GameMode.SURVIVAL);
-
+			playerNPC.getInventory().setContents(p.getInventory().getContents());
+			playerNPC.getInventory().setArmorContents(p.getInventory().getArmorContents());
+			playerNPC.setItemInHand(p.getItemInHand());
+			
+			ScoreboardMechanics.cloneScoreboard(playerNPC);
+			
+			// refresh packets
+			for (Entity ent : playerNPC.getNearbyEntities(50, 50, 50)) {
+			    if (ent instanceof Player && ((Player) ent).canSee(playerNPC))
+			        Utils.refreshPlayerEquipment(playerNPC, (Player) ent);
+			}
+			
 			player_to_npc.put(p.getName(), combatLogNPC);
 			player_to_npc_align.put(p.getName(), KarmaMechanics.getRawAlignment(p.getName()));
 			player_item_in_hand.put(p.getName(), p.getItemInHand());
@@ -4555,7 +4589,7 @@ public class Hive implements Listener {
 			// ply.playEffect(EntityEffect.DEATH);
 
 			if (Hive.player_to_npc.containsKey(ply.getName())) { // It was an NPC that died!
-				NPC n = Hive.player_to_npc.get(ply.getName());
+			    NPC n = player_to_npc.get(ply.getName());
 				ply.playEffect(EntityEffect.DEATH);
 
 				String align = null;
@@ -4604,7 +4638,7 @@ public class Hive implements Listener {
 					}
 				}
 
-				List<ItemStack> p_inv = Arrays.asList(n.getTrait(net.citizensnpcs.api.trait.trait.Inventory.class).getContents());
+				List<ItemStack> p_inv = new ArrayList<ItemStack>(Arrays.asList(ply.getInventory().getContents()));
 				if (align != null && !align.equalsIgnoreCase("evil")) {
 					if (!neutral_weapon && !ProfessionMechanics.isSkillItem(p_inv.get(0)) && p_inv.get(0) != null
 							&& !ItemMechanics.getDamageData(p_inv.get(0)).equalsIgnoreCase("no")) {
@@ -4630,7 +4664,7 @@ public class Hive implements Listener {
 
 				if (align != null && (align.equalsIgnoreCase("evil") || align.equalsIgnoreCase("neutral"))) {
 					// Drop armor as well if chaotic.
-					for (ItemStack is : Arrays.asList(n.getTrait(Equipment.class).getEquipment())) {
+					for (ItemStack is : ply.getInventory().getArmorContents()) {
 						if (is == null || is.getType() == Material.AIR) {
 							continue;
 						}
@@ -4675,6 +4709,7 @@ public class Hive implements Listener {
 					}
 				}
 
+				n.despawn();
 				n.destroy();
 			}
 

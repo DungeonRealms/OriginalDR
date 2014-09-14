@@ -2287,6 +2287,8 @@ public class MonsterMechanics implements Listener {
             Player p = (Player) e.getEntity();
             if (!p.hasMetadata("NPC"))
                 return;
+            if (Hive.player_to_npc.containsKey(p.getName()))
+                return;
             e.setCancelled(true);
         }
     }
