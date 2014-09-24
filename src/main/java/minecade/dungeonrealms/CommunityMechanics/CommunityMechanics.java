@@ -56,16 +56,17 @@ import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
 import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
+import minecade.dungeonrealms.ModerationMechanics.ModerationMechanics;
 import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.ScoreboardMechanics.ScoreboardMechanics;
 import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
 import minecade.dungeonrealms.config.Config;
 import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.managers.PlayerManager;
-import net.minecraft.server.v1_7_R2.EntityPlayer;
-import net.minecraft.server.v1_7_R2.Packet;
-import net.minecraft.server.v1_7_R2.PacketPlayOutEntityEquipment;
-import net.minecraft.server.v1_7_R2.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_7_R4.Packet;
+import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_7_R4.PacketPlayOutNamedEntitySpawn;
 import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -74,8 +75,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -298,9 +299,10 @@ public class CommunityMechanics implements Listener {
 					sent_to_s = PlayerManager.getPlayerModel(p_name).getLastReply();
 				}
 
-				if (!PermissionMechanics.getRank(sent_from.getName()).equalsIgnoreCase("gm")
-						&& (PlayerManager.getPlayerModel(sent_from).getIgnoreList().contains(sent_to_s) || CommunityMechanics.socialQuery(sent_from_s,
-								sent_to_s, "CHECK_FOE"))) {
+                if ((!PermissionMechanics.getRank(sent_from.getName()).equalsIgnoreCase("gm")
+                        && (PlayerManager.getPlayerModel(sent_from).getIgnoreList().contains(sent_to_s)) || (CommunityMechanics
+                            .socialQuery(sent_from_s, sent_to_s, "CHECK_FOE")))
+                        || (!sent_from.isOp() && ModerationMechanics.isPlayerVanished(sent_to_s))) {
 					sent_from.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + sent_to_s + ChatColor.RED + " is OFFLINE.");
 					continue;
 				}
@@ -1839,7 +1841,7 @@ public class CommunityMechanics implements Listener {
 				// test = (CraftPlayer)e_test.getBukkitEntity();
 
 				EntityPlayer ent_p_edited = ((CraftPlayer) p_edited).getHandle();
-				net.minecraft.server.v1_7_R2.ItemStack boots = null, legs = null, chest = null, head = null;
+				net.minecraft.server.v1_7_R4.ItemStack boots = null, legs = null, chest = null, head = null;
 
 				if (ent_p_edited.getEquipment(1) != null) {
 					boots = ent_p_edited.getEquipment(1);

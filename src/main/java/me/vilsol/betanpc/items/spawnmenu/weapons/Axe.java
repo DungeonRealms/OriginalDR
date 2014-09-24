@@ -16,13 +16,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
-public class Axe implements MenuItem, BonusItem {
+public class Axe implements MenuItem, BonusItem<ItemTier> {
 
 	private ItemTier tier;
 	
 	@Override
-	public void setBonusData(Object o) {
-		tier = (ItemTier) o;
+	public void setBonusData(ItemTier t) {
+		tier = t;
 	}
 
 	@Override

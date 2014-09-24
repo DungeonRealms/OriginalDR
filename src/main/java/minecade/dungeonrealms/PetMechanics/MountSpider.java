@@ -2,11 +2,11 @@ package minecade.dungeonrealms.PetMechanics;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.server.v1_7_R2.EntityHuman;
-import net.minecraft.server.v1_7_R2.EntityLiving;
-import net.minecraft.server.v1_7_R2.EntitySpider;
-import net.minecraft.server.v1_7_R2.GenericAttributes;
-import net.minecraft.server.v1_7_R2.World;
+import net.minecraft.server.v1_7_R4.EntityHuman;
+import net.minecraft.server.v1_7_R4.EntityLiving;
+import net.minecraft.server.v1_7_R4.EntitySpider;
+import net.minecraft.server.v1_7_R4.GenericAttributes;
+import net.minecraft.server.v1_7_R4.World;
 
 public class MountSpider extends EntitySpider {
 
@@ -63,7 +63,7 @@ public class MountSpider extends EntitySpider {
     }
 
     @Override
-    public boolean bj() {
+    public boolean bk() {
         return true;
     }
 }

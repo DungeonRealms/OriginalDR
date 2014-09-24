@@ -6,9 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.minecraft.server.v1_7_R4.EntityHuman;
+import net.minecraft.server.v1_7_R4.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_7_R4.PacketPlayOutNamedEntitySpawn;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 public class Utils {
 	
@@ -51,5 +59,27 @@ public class Utils {
         }
         return null;
     }
-	
+    
+    public static void refreshPlayerEquipment(Player player, Player forWhom) {
+
+        if (forWhom.canSee(player) && player.getWorld().equals(forWhom.getWorld())) {
+            final int id = player.getEntityId();
+            final EntityHuman human = ((CraftPlayer) player).getHandle();
+            final CraftPlayer otherGuyC = (CraftPlayer) forWhom;
+            otherGuyC.getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(id));
+            otherGuyC.getHandle().playerConnection.sendPacket(new PacketPlayOutNamedEntitySpawn(human));
+            otherGuyC.getHandle().playerConnection.sendPacket(new PacketPlayOutEntityEquipment(id, 0, CraftItemStack
+                    .asNMSCopy(player.getItemInHand())));
+            otherGuyC.getHandle().playerConnection.sendPacket(new PacketPlayOutEntityEquipment(id, 1, CraftItemStack
+                    .asNMSCopy(player.getInventory().getBoots())));
+            otherGuyC.getHandle().playerConnection.sendPacket(new PacketPlayOutEntityEquipment(id, 2, CraftItemStack
+                    .asNMSCopy(player.getInventory().getLeggings())));
+            otherGuyC.getHandle().playerConnection.sendPacket(new PacketPlayOutEntityEquipment(id, 3, CraftItemStack
+                    .asNMSCopy(player.getInventory().getChestplate())));
+            otherGuyC.getHandle().playerConnection.sendPacket(new PacketPlayOutEntityEquipment(id, 4, CraftItemStack
+                    .asNMSCopy(player.getInventory().getHelmet())));
+        }
+
+    }
+    
 }

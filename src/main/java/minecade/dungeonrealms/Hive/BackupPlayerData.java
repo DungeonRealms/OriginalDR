@@ -40,7 +40,7 @@ public class BackupPlayerData extends Thread {
 			//  15 minute delay between syncs.
 			
 			if(!(Hive.restart_inc) && !(Hive.shutting_down) && !(ShopMechanics.shop_shutdown) && !(Hive.server_frozen)) {
-				backupPlayers(Main.plugin.getServer().getOnlinePlayers());
+				backupPlayers(Main.plugin.getServer().getOnlinePlayers().toArray(new Player[Main.plugin.getServer().getOnlinePlayers().size()]));
 				System.out.println("");
 				System.out.println(Ansi.ansi().fg(Ansi.Color.MAGENTA).boldOff().toString() + "[Hive] Backup Query Complete. Sleeping 15m..." + Ansi.ansi().fg(Ansi.Color.WHITE).boldOff().toString());
 				System.out.println("");

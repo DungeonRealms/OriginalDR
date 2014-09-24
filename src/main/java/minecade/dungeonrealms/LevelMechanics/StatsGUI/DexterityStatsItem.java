@@ -17,7 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class DexterityStatsItem implements MenuItem, BonusItem {
+public class DexterityStatsItem implements MenuItem, BonusItem<PlayerModel> {
 
 	private PlayerModel drPlayer;
 	private PlayerLevel pLevel;
@@ -63,8 +63,8 @@ public class DexterityStatsItem implements MenuItem, BonusItem {
 	}
 
 	@Override
-	public void setBonusData(Object player) {
-		drPlayer = (PlayerModel) player;
+	public void setBonusData(PlayerModel player) {
+		drPlayer = player;
 		pLevel = drPlayer.getPlayerLevel();
 		points = pLevel.getDexPoints();
 		pLevel.setTempFreePoints(pLevel.getFreePoints());

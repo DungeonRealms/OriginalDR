@@ -7,7 +7,6 @@ import me.vilsol.menuengine.engine.BonusItem;
 import me.vilsol.menuengine.engine.DynamicMenu;
 import me.vilsol.menuengine.engine.DynamicMenuModel;
 import me.vilsol.menuengine.engine.MenuItem;
-import org.bukkit.event.inventory.ClickType;
 import me.vilsol.menuengine.utils.Builder;
 import minecade.dungeonrealms.LevelMechanics.PlayerLevel;
 import minecade.dungeonrealms.models.PlayerModel;
@@ -16,9 +15,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
-public class ConfirmItem implements MenuItem, BonusItem {
+public class ConfirmItem implements MenuItem, BonusItem<PlayerModel> {
 
 	private PlayerModel drPlayer;
 	int slot = -1;
@@ -79,8 +79,8 @@ public class ConfirmItem implements MenuItem, BonusItem {
     }
 
 	@Override
-	public void setBonusData(Object player) {
-		drPlayer = (PlayerModel) player;
+	public void setBonusData(PlayerModel player) {
+		drPlayer = player;
 		DynamicMenuModel.getMenu(((PlayerModel) player).getPlayer()).setName(
 				ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + "Stat Points");
 	}

@@ -1009,7 +1009,7 @@ public class ConnectProtocol implements Runnable {
 						String sender_server_name = inputLine.substring(inputLine.indexOf("/") + 1, inputLine.indexOf("*"));
 						String raw_message = inputLine.substring(inputLine.indexOf(":") + 1, inputLine.length());
 
-						if (Bukkit.getOnlinePlayers().length <= 0) { in.close(); return; } // No one to receive message
+						if (Bukkit.getOnlinePlayers().size() <= 0) { in.close(); return; } // No one to receive message
 						for (Player pl : Bukkit.getOnlinePlayers()) {
 							if (PermissionMechanics.isStaff(pl)) {
 								ChatColor pColor = ChatMechanics.getPlayerColor(sender_name, pl.getName());

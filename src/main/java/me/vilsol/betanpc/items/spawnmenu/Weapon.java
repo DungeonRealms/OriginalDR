@@ -16,13 +16,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class Weapon implements MenuItem, BonusItem {
+public class Weapon implements MenuItem, BonusItem<ItemTier> {
 
 	private ItemTier tier;
 	
 	@Override
-	public void setBonusData(Object o) {
-		tier = (ItemTier) o;
+	public void setBonusData(ItemTier t) {
+		tier = t;
 	}
 
 	@Override

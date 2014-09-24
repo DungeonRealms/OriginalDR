@@ -20,8 +20,8 @@ public class CommandDRVanish implements CommandExecutor {
 		
 		if(!(p.isOp())) { return true; }
 		
-		if(ModerationMechanics.vanish_list.contains(p.getName())) {
-			ModerationMechanics.vanish_list.remove(p.getName());
+		if(ModerationMechanics.isPlayerVanished(p.getName())) {
+			ModerationMechanics.unvanishPlayer(p.getName());
 			for(Player pl : Bukkit.getServer().getOnlinePlayers()) {
 				if(pl.getName().equalsIgnoreCase(p.getName())) {
 					continue;
@@ -30,7 +30,7 @@ public class CommandDRVanish implements CommandExecutor {
 			}
 			p.sendMessage(ChatColor.RED + "You are now " + ChatColor.BOLD + "visible.");
 		} else {
-			ModerationMechanics.vanish_list.add(p.getName());
+			ModerationMechanics.vanishPlayer(p.getName());
 			p.sendMessage(ChatColor.GREEN + "You are now " + ChatColor.BOLD + "invisible.");
 		}
 		

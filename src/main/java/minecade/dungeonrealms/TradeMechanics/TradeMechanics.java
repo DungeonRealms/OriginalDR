@@ -191,7 +191,7 @@ public class TradeMechanics implements Listener {
             // check for entities near this block in the line of sight
             for (LivingEntity e : livingE) {
                 if (e instanceof Player) {
-                    if (ModerationMechanics.vanish_list.contains(((Player) e).getName())) {
+                    if (ModerationMechanics.isPlayerVanished(((Player) e).getName())) {
                         continue; // Ignore vanish'd GM's.
                     }
                 }

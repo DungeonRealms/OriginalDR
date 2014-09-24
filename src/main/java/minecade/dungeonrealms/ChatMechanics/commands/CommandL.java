@@ -61,7 +61,7 @@ public class CommandL implements CommandExecutor {
 							// no need for them to be able to see each other's
 							// messages.
 			}
-			if(ModerationMechanics.vanish_list.contains(pl.getName())) {
+			if(ModerationMechanics.isPlayerVanished(pl.getName())) {
 				secret_send.add(pl);
 			} else {
 				to_send.add(pl);

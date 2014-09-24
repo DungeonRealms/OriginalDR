@@ -26,16 +26,16 @@ import minecade.dungeonrealms.PetMechanics.PetMechanics;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
 import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
-import net.minecraft.server.v1_7_R2.EntityHorse;
-import net.minecraft.server.v1_7_R2.GenericAttributes;
+import net.minecraft.server.v1_7_R4.EntityHorse;
+import net.minecraft.server.v1_7_R4.GenericAttributes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftHorse;
-import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftHorse;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -1423,6 +1423,9 @@ public class MountMechanics implements Listener {
             if (horse.isCarryingChest()) {
                 // so the stupid thing doesnt drop the chest
                 horse.setCarryingChest(false);
+            }
+            if(horse.getInventory().getArmor() != null) {
+                horse.getInventory().setArmor(new ItemStack(Material.AIR));
             }
             if (horse.getInventory().getSaddle() != null) {
                 horse.getInventory().setSaddle(new ItemStack(Material.AIR));

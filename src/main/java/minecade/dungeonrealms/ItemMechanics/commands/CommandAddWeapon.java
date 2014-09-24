@@ -9,21 +9,14 @@ import minecade.dungeonrealms.ItemMechanics.Halloween;
 import minecade.dungeonrealms.ItemMechanics.ItemGenerators;
 import minecade.dungeonrealms.ItemMechanics.ItemMechanics;
 import minecade.dungeonrealms.MerchantMechanics.MerchantMechanics;
-import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
-import minecade.dungeonrealms.MountMechanics.MountMechanics;
-import minecade.dungeonrealms.PetMechanics.MountSpider;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
-import net.minecraft.server.v1_7_R2.WorldServer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -134,19 +127,6 @@ public class CommandAddWeapon implements CommandExecutor {
         }
         if (args[0].equalsIgnoreCase("egg")) {
             p.getInventory().addItem(ItemMechanics.easter_egg);
-        }
-        if (args[0].equalsIgnoreCase("mount") && p.getName().equalsIgnoreCase("iFamasssxD")) {
-            p.sendMessage("Mount summoned!");
-            WorldServer w = ((CraftWorld) p.getWorld()).getHandle();
-            MountSpider ms = new MountSpider(w);
-            // w.getMinecraftServer().getPlayerList().repositionEntity(ms, p.getLocation(), false);
-            ms.setLocation(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), 0, 0);
-            w.addEntity(ms, SpawnReason.CUSTOM);
-            ((CraftPlayer) p).getHandle().mount(ms);
-            ms.passenger = ((CraftPlayer) p).getHandle();
-            MountMechanics.mount_map.put(p.getName(), ms.getBukkitEntity());
-            MonsterMechanics.ignore_target_event.add(ms.getBukkitEntity());
-            MonsterMechanics.mob_health.put(ms.getBukkitEntity(), 10);
         }
         if (args[0].equalsIgnoreCase("pots")) {
             p.getInventory().addItem(MerchantMechanics.t1_pot);

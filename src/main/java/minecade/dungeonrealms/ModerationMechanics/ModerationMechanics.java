@@ -25,15 +25,15 @@ import minecade.dungeonrealms.ModerationMechanics.commands.*;
 import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.config.Config;
 import minecade.dungeonrealms.database.ConnectionPool;
-import net.minecraft.server.v1_7_R2.Packet;
-import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_7_R4.Packet;
+import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -578,6 +578,18 @@ public class ModerationMechanics implements Listener {
 		} else {
 			return true;
 		}
+	}
+	
+	public static boolean isPlayerVanished(String p_name) {
+	    return vanish_list.contains(p_name.toLowerCase());
+	}
+	
+	public static void unvanishPlayer(String p_name) {
+	    if (isPlayerVanished(p_name)) vanish_list.remove(p_name.toLowerCase());
+	}
+	
+	public static void vanishPlayer(String p_name) {
+	    if (!vanish_list.contains(p_name)) vanish_list.add(p_name.toLowerCase());
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

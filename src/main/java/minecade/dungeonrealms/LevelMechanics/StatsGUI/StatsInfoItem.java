@@ -16,7 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class StatsInfoItem implements MenuItem, BonusItem {
+public class StatsInfoItem implements MenuItem, BonusItem<PlayerModel> {
 
 	private PlayerModel drPlayer;
 	private PlayerLevel pLevel;
@@ -59,8 +59,8 @@ public class StatsInfoItem implements MenuItem, BonusItem {
     }
 
 	@Override
-	public void setBonusData(Object player) {
-		drPlayer = (PlayerModel) player;
+	public void setBonusData(PlayerModel player) {
+		drPlayer = player;
 		pLevel = drPlayer.getPlayerLevel();
 	}
 

@@ -1,6 +1,7 @@
 package minecade.dungeonrealms.PartyMechanics.commands;
 
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
+import minecade.dungeonrealms.ModerationMechanics.ModerationMechanics;
 import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
 import minecade.dungeonrealms.managers.PlayerManager;
 
@@ -45,8 +46,8 @@ public class CommandPInvite implements CommandExecutor {
 		}
 		
 		Player to_invite = Bukkit.getPlayer(p_name);
-		if(CommunityMechanics.isPlayerOnIgnoreList(to_invite, p.getName())) {
-			p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + p_name + ChatColor.RED + " is OFFLINE");
+		if(CommunityMechanics.isPlayerOnIgnoreList(to_invite, p.getName()) || ModerationMechanics.isPlayerVanished(p_name)) {
+			p.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + p_name + ChatColor.RED + " is OFFLINE.");
 			return true;
 		}
 		PartyMechanics.inviteToParty(to_invite, p);

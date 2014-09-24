@@ -32,14 +32,14 @@ import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.jsonlib.JSONMessage;
 import minecade.dungeonrealms.managers.PlayerManager;
-import net.minecraft.server.v1_7_R2.NBTTagCompound;
+import net.minecraft.server.v1_7_R4.NBTTagCompound;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -264,8 +264,6 @@ public class ChatMechanics implements Listener {
                 return ChatColor.DARK_AQUA;
             } else if (p.getName().equalsIgnoreCase("Vilsol")) {
                 return ChatColor.DARK_PURPLE;
-            } else if (p.getName().equalsIgnoreCase("iFamasssxD")) {
-                return ChatColor.DARK_GREEN;
             } else if (Main.isDev(p.getName())) {
                 return ChatColor.DARK_AQUA;
             }
@@ -306,8 +304,6 @@ public class ChatMechanics implements Listener {
                 return ChatColor.DARK_AQUA;
             } else if (p_name.equalsIgnoreCase("Vilsol")) {
                 return ChatColor.DARK_PURPLE;
-            } else if (p_name.equalsIgnoreCase("iFamasssxD")) {
-                return ChatColor.DARK_GREEN;
             } else if (Main.isDev(p_name)) {
                 return ChatColor.DARK_AQUA;
             }
@@ -785,7 +781,7 @@ public class ChatMechanics implements Listener {
                             LivingEntity le = (LivingEntity) enti;
                             if (le.getEquipment().getHelmet().getType() == Material.SKULL_ITEM) {
                                 ItemStack is = le.getEquipment().getHelmet();
-                                net.minecraft.server.v1_7_R2.ItemStack mItem = CraftItemStack.asNMSCopy(is);
+                                net.minecraft.server.v1_7_R4.ItemStack mItem = CraftItemStack.asNMSCopy(is);
                                 NBTTagCompound tag = mItem.tag;
                                 String skin_name = tag.getString("SkullOwner");
                                 if (skin_name.equalsIgnoreCase("dEr_t0d") || skin_name.equalsIgnoreCase("niv330")) {
@@ -920,7 +916,7 @@ public class ChatMechanics implements Listener {
                           // messages.
             }
 
-            if (ModerationMechanics.vanish_list.contains(pl.getName())) {
+            if (ModerationMechanics.isPlayerVanished(pl.getName())) {
                 secret_send.add(pl);
             } else {
                 to_send.add(pl);

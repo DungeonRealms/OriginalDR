@@ -13,7 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class BackToMainMenu implements MenuItem, BonusItem {
+public class BackToMainMenu implements MenuItem, BonusItem<Boolean> {
     
     private boolean isAddWeaponNewNew = false;
 
@@ -38,8 +38,8 @@ public class BackToMainMenu implements MenuItem, BonusItem {
 	}
 
     @Override
-    public void setBonusData(Object isAddWeaponNewNewCommand) {
-        isAddWeaponNewNew = (boolean) isAddWeaponNewNewCommand;
+    public void setBonusData(Boolean isAddWeaponNewNewCommand) {
+        isAddWeaponNewNew = isAddWeaponNewNewCommand;
     }
 	
 }

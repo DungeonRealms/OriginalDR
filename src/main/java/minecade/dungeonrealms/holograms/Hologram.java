@@ -6,19 +6,19 @@ import java.util.HashMap;
 import java.util.List;
 
 import minecade.dungeonrealms.Utils;
-import net.minecraft.server.v1_7_R2.EntityHorse;
-import net.minecraft.server.v1_7_R2.EntityPlayer;
-import net.minecraft.server.v1_7_R2.EntityWitherSkull;
-import net.minecraft.server.v1_7_R2.PacketPlayOutAttachEntity;
-import net.minecraft.server.v1_7_R2.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_7_R2.PacketPlayOutSpawnEntity;
-import net.minecraft.server.v1_7_R2.PacketPlayOutSpawnEntityLiving;
-import net.minecraft.server.v1_7_R2.WorldServer;
+import net.minecraft.server.v1_7_R4.EntityHorse;
+import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_7_R4.EntityWitherSkull;
+import net.minecraft.server.v1_7_R4.PacketPlayOutAttachEntity;
+import net.minecraft.server.v1_7_R4.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_7_R4.PacketPlayOutSpawnEntity;
+import net.minecraft.server.v1_7_R4.PacketPlayOutSpawnEntityLiving;
+import net.minecraft.server.v1_7_R4.WorldServer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
