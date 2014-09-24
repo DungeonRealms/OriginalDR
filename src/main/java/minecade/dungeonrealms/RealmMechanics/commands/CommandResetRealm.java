@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 public class CommandResetRealm implements CommandExecutor {
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		final Player p = (Player) sender;

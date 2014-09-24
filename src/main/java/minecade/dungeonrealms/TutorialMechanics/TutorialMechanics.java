@@ -195,7 +195,6 @@ public class TutorialMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		final Player pl = e.getPlayer();
@@ -270,7 +269,6 @@ public class TutorialMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onItemDrop(PlayerDropItemEvent e) {
 		Player pl = e.getPlayer();
@@ -280,7 +278,6 @@ public class TutorialMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onMapDrop(PlayerDropItemEvent e) {
 		Player pl = e.getPlayer();
@@ -300,7 +297,6 @@ public class TutorialMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
 	public void onMapInteract(HangingBreakByEntityEvent e) {
 		if(e.getRemover() instanceof Player && e.getEntity() instanceof ItemFrame) {

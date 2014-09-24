@@ -1117,7 +1117,6 @@ public class MerchantMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings({ "deprecation" })
     @EventHandler
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent e) {
         Player pl = e.getPlayer();
@@ -2040,7 +2039,6 @@ public class MerchantMechanics implements Listener {
 
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerCloseInventory(InventoryCloseEvent e) {
         Player closer = (Player) e.getPlayer();
@@ -2081,7 +2079,6 @@ public class MerchantMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         Player closer = e.getPlayer();

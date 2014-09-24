@@ -743,7 +743,6 @@ public class MountMechanics implements Listener {
         return false;
     }
 
-    @SuppressWarnings("deprecation")
     public static int getHighestMuleTier(String p_name) {
         ItemStack mule = null;
         int mule_tier = 0;
@@ -795,7 +794,6 @@ public class MountMechanics implements Listener {
         return mule_tier; // 0 = no mule.
     }
 
-    @SuppressWarnings("deprecation")
     public void changeStickToSaddle(Player pl) {
         for (ItemStack is : pl.getInventory().getContents()) {
             if (is == null || is.getType() == Material.AIR) {
@@ -809,7 +807,6 @@ public class MountMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public void changeSaddleToStick(Player pl) {
         for (ItemStack is : pl.getInventory().getContents()) {
             if (is == null || is.getType() == Material.AIR) {
@@ -911,7 +908,6 @@ public class MountMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
         final Player p = e.getPlayer();
@@ -1219,7 +1215,6 @@ public class MountMechanics implements Listener {
         convertMounts(e.getInventory());
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         changeStickToSaddle(e.getPlayer());
@@ -1241,7 +1236,6 @@ public class MountMechanics implements Listener {
         }, 40L);
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent e) {
         final Player p = e.getPlayer();

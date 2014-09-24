@@ -47,7 +47,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-@SuppressWarnings("deprecation")
 public class HearthstoneMechanics implements Listener {
     public static ConcurrentHashMap<String, Hearthstone> hearthstone_map = new ConcurrentHashMap<String, Hearthstone>();
     public static ConcurrentHashMap<String, Integer> hearthstone_price = new ConcurrentHashMap<String, Integer>();

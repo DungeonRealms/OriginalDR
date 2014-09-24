@@ -712,7 +712,6 @@ public class EcashMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void eatRollbackFood(PlayerInteractEvent e) {
         if ((e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
@@ -742,7 +741,6 @@ public class EcashMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onRollbackBackerClick(PlayerInteractEntityEvent e) {
         Player p = e.getPlayer();
@@ -764,7 +762,6 @@ public class EcashMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void controlEcashStorageContent(InventoryClickEvent e) {
         if (e.getInventory().getName().equalsIgnoreCase("E-Cash Storage")) {
@@ -1058,7 +1055,6 @@ public class EcashMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerUseEnderPerl(PlayerInteractEvent e) {
         if (e.hasItem() && isGChatModifier(e.getItem())) {
@@ -1119,7 +1115,6 @@ public class EcashMechanics implements Listener {
         ent.pitch = (float) newPitch;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onItemLoreEnter(AsyncPlayerChatEvent e) {
         Player pl = e.getPlayer();
@@ -1490,7 +1485,6 @@ public class EcashMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onMusicSelect(InventoryClickEvent e) {
         final Player pl = (Player) e.getWhoClicked();
@@ -1529,7 +1523,6 @@ public class EcashMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onMusicBoxPlace(BlockPlaceEvent e) {
         if (e.getBlock().getType() == Material.PORTAL) {

@@ -247,7 +247,6 @@ public class ProfessionMechanics implements Listener {
 
     public static int splashCounter = 10;
 
-    @SuppressWarnings("deprecation")
     public void onEnable() {
         instance = this;
         // checkForLootBuffs();
@@ -2242,7 +2241,6 @@ public class ProfessionMechanics implements Listener {
         return false;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerItemConsumeEvent(PlayerItemConsumeEvent e) {
         final ItemStack is = e.getItem();
@@ -2555,7 +2553,6 @@ public class ProfessionMechanics implements Listener {
 
                 pl.getWorld().playSound(pl.getLocation(), Sound.EAT, 1F, 1F);
                 Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-                    @SuppressWarnings("deprecation")
                     public void run() {
                         // TODO: This could be abused with a macro.
                         if (isCustomFish(pl.getItemInHand())) {
@@ -3552,7 +3549,6 @@ public class ProfessionMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent e) {
         Player pl = e.getPlayer();

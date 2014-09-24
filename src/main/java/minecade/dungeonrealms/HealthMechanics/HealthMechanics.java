@@ -80,7 +80,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@SuppressWarnings("deprecation")
 public class HealthMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
 

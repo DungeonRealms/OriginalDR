@@ -29,7 +29,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-@SuppressWarnings("deprecation")
 public class AchievementMechanics implements Listener {
     static Logger log = Logger.getLogger("Minecraft");
 

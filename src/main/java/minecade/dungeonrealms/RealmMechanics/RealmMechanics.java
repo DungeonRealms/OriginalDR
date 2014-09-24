@@ -1760,7 +1760,6 @@ public class RealmMechanics implements Listener {
 		}
 	}
 
-	@SuppressWarnings({ "deprecation", "static-access" })
 	@EventHandler
 	public void onPlayerEnterAmount(AsyncPlayerChatEvent e) {
 		if (!(current_item_being_bought.containsKey(e.getPlayer().getName()))) {
@@ -1804,7 +1803,7 @@ public class RealmMechanics implements Listener {
 		}
 
 		int slot = current_item_being_bought.get(p.getName());
-		int shop_page = this.shop_page.get(p.getName());
+		int shop_page = RealmMechanics.shop_page.get(p.getName());
 		ItemStack i = null;
 
 		if (shop_page == 1) {
@@ -2162,7 +2161,6 @@ public class RealmMechanics implements Listener {
 		}
  	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onOrbUse(PlayerInteractEvent e) {
 		Player pl = e.getPlayer();
@@ -2285,7 +2283,6 @@ public class RealmMechanics implements Listener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent e) {
 		final Player p = e.getPlayer();
@@ -2835,7 +2832,6 @@ public class RealmMechanics implements Listener {
 		return ItemMechanics.signCustomItem(m, meta_data, name, desc);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void removePistonHeads(Player pl) {
 		for (ItemStack is : pl.getInventory().getContents()) {
 			if (is != null && is.getType() == Material.THIN_GLASS && is.hasItemMeta() && is.getItemMeta().hasDisplayName()
@@ -2846,7 +2842,6 @@ public class RealmMechanics implements Listener {
 		pl.updateInventory();
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR)
 	// After location is loaded.
 	public void onPlayerJoin(PlayerJoinEvent e) {
@@ -3126,7 +3121,6 @@ public class RealmMechanics implements Listener {
 		return false;
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void subtractMoney(Player p, int amount) {
 		Inventory i = p.getInventory();
 		int paid_off = 0;
@@ -3592,7 +3586,6 @@ public class RealmMechanics implements Listener {
 
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void MaterialShopInventoryEvent(InventoryClickEvent e) {
 		if (!(e.getWhoClicked() instanceof Player)) {
@@ -4381,7 +4374,6 @@ public class RealmMechanics implements Listener {
 		return 0;
 	}
 
-	@SuppressWarnings("deprecation")
 	public void setRealmTier(final Player p, final int new_tier) {
 		if (!(isWorldLoaded(p.getName()))) {
 			p.sendMessage(ChatColor.RED + "Your realm must be loaded locally to modify its size.");
@@ -4591,7 +4583,6 @@ public class RealmMechanics implements Listener {
 		t.start();
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void realmHandler(final Player p, String realm_name) {
 		if (realm_name.contains("§")) {
 			String color_code_to_remove = realm_name.substring(0, realm_name.indexOf("�") + 2);

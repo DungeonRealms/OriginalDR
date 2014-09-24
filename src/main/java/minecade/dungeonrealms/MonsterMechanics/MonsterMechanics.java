@@ -1165,7 +1165,6 @@ public class MonsterMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public void fixStuckEntities() {
         for (Entity ent : mob_target.keySet()) {
             if (!(mob_health.containsKey(ent))) {

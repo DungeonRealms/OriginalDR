@@ -148,7 +148,6 @@ public class Halloween implements Listener {
 	}
 	
 	//@EventHandler
-	@SuppressWarnings("deprecation")
 	public void onTrickOrTreat(PlayerInteractEntityEvent e) {
 		if(e.getRightClicked() instanceof Player) {
 			Player trader = (Player) e.getRightClicked();
@@ -252,7 +251,6 @@ public class Halloween implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onCandyEat(PlayerInteractEvent e) {
 		Player pl = e.getPlayer();

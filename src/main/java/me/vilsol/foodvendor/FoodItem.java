@@ -33,7 +33,6 @@ public class FoodItem implements MenuItem, ChatCallback, BonusItem<Integer> {
 	private int slot;
 	private ItemStack selectedItem;
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onChatMessage(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();

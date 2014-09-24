@@ -321,7 +321,6 @@ public class EnchantMechanics implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(final PlayerJoinEvent e) {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-			@SuppressWarnings("deprecation")
 			public void run() {
 				// Inventory inv = e.getPlayer().getInventory();
 				List<ItemStack> to_glow = new ArrayList<ItemStack>();
@@ -565,7 +564,6 @@ public class EnchantMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		Player p = e.getPlayer();

@@ -695,7 +695,6 @@ public class ItemMechanics implements Listener {
         if (e.getWhoClicked() instanceof Player) ((Player) e.getWhoClicked()).updateInventory();
     }
 
-    @SuppressWarnings("deprecation")
     public static void updatePlayerStats(String p_name) {
         if (Bukkit.getPlayer(p_name) == null || !Bukkit.getPlayer(p_name).isOnline()) {
             return;
@@ -2896,7 +2895,6 @@ public class ItemMechanics implements Listener {
 
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -3050,12 +3048,12 @@ public class ItemMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings({ "deprecation", "unused" })
     @EventHandler
     public void onPlayerAttemptBowFire(PlayerInteractEvent e) {
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player p = e.getPlayer();
             if (p.getItemInHand().getType() == Material.BOW) {
+                @SuppressWarnings("unused")
                 int bow_tier = getItemTier(p.getItemInHand());
                 // if(!doesPlayerHaveArrows(p, bow_tier)) {
                 if (!doesPlayerHaveAnyArrows(p)) {
@@ -3788,7 +3786,6 @@ public class ItemMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityShootBowEvent(EntityShootBowEvent e) {
         if (!(e.getEntity().getType() == EntityType.PLAYER)) {
@@ -4260,7 +4257,6 @@ public class ItemMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
@@ -4277,7 +4273,6 @@ public class ItemMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
         Player p = e.getEntity();
@@ -4289,7 +4284,6 @@ public class ItemMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerOpen(PlayerQuitEvent e) {
         Player p = e.getPlayer();
@@ -4304,7 +4298,6 @@ public class ItemMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerOpenInv(InventoryOpenEvent e) {
         Player p = (Player) e.getPlayer();
@@ -6030,7 +6023,6 @@ public class ItemMechanics implements Listener {
         return false;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerCancelled(final InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
@@ -6187,7 +6179,6 @@ public class ItemMechanics implements Listener {
         return Integer.parseInt(ChatColor.stripColor(im.getDisplayName().split("/ ")[1]));
     }
 
-    @SuppressWarnings("deprecation")
 	public int subtractArrow(Player pl) {
         for (ItemStack is : pl.getInventory().getContents()) {
         	if (is == null || is.getType() == Material.AIR) {
@@ -6262,7 +6253,6 @@ public class ItemMechanics implements Listener {
         return quiver;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerThrowItem(PlayerDropItemEvent e) {
         if (e.getItemDrop().getItemStack().getType() == Material.ARROW) {

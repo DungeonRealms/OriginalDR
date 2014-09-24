@@ -56,7 +56,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 
-@SuppressWarnings("deprecation")
 public class FatigueMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
 	public static ConcurrentHashMap<Player, Integer> fatigue_effect = new ConcurrentHashMap<Player, Integer>();

@@ -22,7 +22,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class CommandAddWeapon implements CommandExecutor {
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) return true;

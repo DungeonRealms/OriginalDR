@@ -112,7 +112,6 @@ public class MoneyMechanics implements Listener {
 
 	public static ItemStack t4_gem_pouch = ItemMechanics.signCustomItem(Material.INK_SACK, (short) 0, ChatColor.LIGHT_PURPLE.toString() + "Gigantic Gem Container" + ChatColor.GREEN + ChatColor.BOLD.toString() + " 0g", ChatColor.GRAY.toString() + "A giant container that holds " + ChatColor.BOLD + "300g");
 
-	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 
@@ -995,7 +994,6 @@ public class MoneyMechanics implements Listener {
 		return false;
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean giveGems(Player p, int Gems_worth) {
 		if(Gems_worth > 64) {
 			int space_needed = Math.round(Gems_worth / 64) + 1;
@@ -1613,7 +1611,6 @@ public class MoneyMechanics implements Listener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	// false?
 	public void onPlayerPickupItemEvent(PlayerPickupItemEvent e) {

@@ -42,7 +42,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
-@SuppressWarnings("deprecation")
 public class KarmaMechanics implements Listener {
 	static Logger log = Logger.getLogger("Minecraft");
 

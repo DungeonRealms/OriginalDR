@@ -135,7 +135,6 @@ public class PetMechanics implements Listener {
 	
 	PetMechanics instance = null;
 	
-	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
 		loadPetMessageTemplates();
@@ -687,7 +686,6 @@ public class PetMechanics implements Listener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void addPetToPlayer(String p_name, String pet) {
 		List<String> pet_list = downloadPetData(p_name);
 		String pet_string = "";
@@ -1225,7 +1223,6 @@ public class PetMechanics implements Listener {
 		}
 		
 		Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-			@SuppressWarnings("deprecation")
 			public void run() {
 				if(!(player_pets.containsKey(p.getName()))) {
 					// They may have logged out or d/c'd within these 10 ticks.
@@ -1337,7 +1334,6 @@ public class PetMechanics implements Listener {
 		player_pets.remove(e.getPlayer().getName());
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onEntityPortalEnterEvent(EntityPortalEnterEvent e) {
 		if(!(e.getEntity() instanceof Player)) {

@@ -44,7 +44,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-@SuppressWarnings("deprecation")
 public class ModerationMechanics implements Listener {
 
 	public static Logger log = Logger.getLogger("Minecraft");

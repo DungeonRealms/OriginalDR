@@ -67,7 +67,6 @@ public class RepairMechanics implements Listener {
 	
 	static RepairMechanics instance = null;
 	
-	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		instance = this;
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
@@ -252,7 +251,6 @@ public class RepairMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void subtractCustomDurability(final Player p, final ItemStack i, double amount, String item_type, boolean ignoreSafe) {
 		double cur_dur = getCustomDurability(i, item_type);
 		double new_dur = (cur_dur - amount);
@@ -342,7 +340,6 @@ public class RepairMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void subtractCustomDurability(final Player p, final ItemStack i, double amount, String item_type) {
 		
 		if(DuelMechanics.isDamageDisabled(p.getLocation()) && (!(ProfessionMechanics.isSkillItem(i)))) {
@@ -704,7 +701,6 @@ public class RepairMechanics implements Listener {
 		}
 	}*/
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDamge(EntityDamageEvent e) {
 		if(e.getEntity() instanceof Player) {
@@ -842,7 +838,6 @@ public class RepairMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerChatAsyncEvent(AsyncPlayerChatEvent e) {
 		if(!(anvil_map.containsKey(e.getPlayer()))) { return; } // We have no business.
@@ -913,7 +908,6 @@ public class RepairMechanics implements Listener {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
 		if(!(anvil_map.containsKey(e.getPlayer()))) { return; }

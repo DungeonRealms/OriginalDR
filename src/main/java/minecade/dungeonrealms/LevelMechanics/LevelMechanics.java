@@ -402,7 +402,6 @@ public class LevelMechanics implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public static void addKillXP(Player player, LivingEntity kill, int mob_level, boolean first) {
         int level = getPlayerLevel(player);
 

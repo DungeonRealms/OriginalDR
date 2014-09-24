@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-@SuppressWarnings("deprecation")
 public class CommandArmorSee implements CommandExecutor {
 	
 	@Override

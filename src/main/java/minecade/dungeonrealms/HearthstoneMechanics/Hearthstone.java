@@ -19,7 +19,6 @@ public class Hearthstone {
     private Player p;
     private String p_name;
 
-    @SuppressWarnings("deprecation")
 	public Hearthstone(String p_name) {
         this.p_name = p_name;
         this.timer_seconds = 0;

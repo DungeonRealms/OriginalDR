@@ -128,7 +128,6 @@ public class PermissionMechanics implements Listener {
 		
 	}
 
-	@SuppressWarnings("deprecation")	
 	public static void setRank(String p_name, String rank, boolean upload_sql) {
 		Player p = null;
 		if(Bukkit.getPlayer(p_name) != null && Bukkit.getPlayer(p_name).isOnline()) {

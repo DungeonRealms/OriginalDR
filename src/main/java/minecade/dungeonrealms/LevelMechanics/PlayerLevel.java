@@ -49,7 +49,6 @@ public class PlayerLevel {
 			+ ChatColor.GRAY + " to allocate them." + ChatColor.GREEN + "*";
 	private static final String ALPHA_NUM = "123456789";
 
-    @SuppressWarnings("deprecation")
 	public PlayerLevel(String p_name, boolean aSync) {
         this.p_name = p_name;
         this.freePoints = 0;
@@ -227,7 +226,6 @@ public class PlayerLevel {
         ScoreboardMechanics.setPlayerLevel(getLevel(), p);
     }
 
-    @SuppressWarnings("deprecation")
     public void checkPlayer() {
         this.p = Bukkit.getPlayer(p_name);
     }
