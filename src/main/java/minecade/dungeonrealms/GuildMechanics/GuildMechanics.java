@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1436,7 +1435,8 @@ public class GuildMechanics implements Listener {
 	}
 
 	public static void updateGuildTabList(final Player pl) {
-		if(pl == null) { return; }
+	    // 1.8 RIP in peace TabAPI
+/*		if(pl == null) { return; }
 		String g_name = getGuild(pl.getName());
 		if(pl == null || !(inGuild(pl.getName())) || g_name == null) {
 			TabAPI.setTabString(Main.plugin, pl, 0, 0, ChatColor.GRAY + "*------------");
@@ -1759,7 +1759,7 @@ public class GuildMechanics implements Listener {
 			TabAPI.setTabString(Main.plugin, pl, 10, 1, ChatColor.GRAY + "N/A" + TabAPI.nextNull());
 		}
 
-		TabAPI.updatePlayer(pl);
+		TabAPI.updatePlayer(pl);*/
 	}
 
 	public static void setupGuildTeam(String g_name) {

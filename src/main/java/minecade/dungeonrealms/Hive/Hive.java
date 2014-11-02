@@ -1708,6 +1708,8 @@ public class Hive implements Listener {
 			data.add(level);
 			data.add((double) hp);
 			data.add(food_level);
+			
+			log.info(inventory_s);
 
 			remote_player_data.put(p_name, data);
 
@@ -1947,6 +1949,8 @@ public class Hive implements Listener {
 		Inventory inv = null;
 		// int slot_cache = -1;
 		int expected_item_size = inventory_string.split("@item@").length - 1;
+		
+		log.info(inventory_string);
 
 		if (pl == null && inventory_name != null) {
 			// Using inventory.
@@ -3143,8 +3147,15 @@ public class Hive implements Listener {
 				}
 			}, 10L);
 
-			String inventory_s = (String) data.get(1);
-			convertStringToInventory(p, inventory_s, null, 0);
+			final String inventory_s = (String) data.get(1);
+			
+			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+			    public void run() {
+			        log.info("Loading inventory for " + p.getName());
+			        convertStringToInventory(p, inventory_s, null, 0);
+			        log.info("Inventory loaded for " + p.getName());
+			    }
+			}, 20L);
 
 			final int level = (Integer) data.get(2);
 			Double hp = (Double) data.get(3);
@@ -3559,7 +3570,6 @@ public class Hive implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onCombatLogNPCDamage(EntityDamageByEntityEvent e) {
 	    if (!CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) return;
-	    log.info("yes");
 	    
 	    NPC n = CitizensAPI.getNPCRegistry().getNPC(e.getEntity());
 	    Player p = (Player) n.getEntity();

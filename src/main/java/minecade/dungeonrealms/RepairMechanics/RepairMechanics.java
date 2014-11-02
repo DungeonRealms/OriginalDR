@@ -937,42 +937,38 @@ public class RepairMechanics implements Listener {
 		
 		subtractCustomDurability(p, e.getBow(), 1, "wep");
 	}
-	
-	   @EventHandler (priority = EventPriority.LOWEST)
-	    public void onPlayerEnvironmentDamage(EntityDamageEvent e) {
-	        if (!(e.getEntity() instanceof Player)) return;
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerEnvironmentDamage(EntityDamageEvent e) {
+        if (!(e.getEntity() instanceof Player))
+            return;
         if (e.getCause() != DamageCause.LAVA && e.getCause() != DamageCause.DROWNING
                 && e.getCause() != DamageCause.SUFFOCATION && e.getCause() != DamageCause.CONTACT)
             return;
-	        
-	        Player p = (Player) e.getEntity();
-	        
-	        e.setCancelled(true);
-	        
-	        // adjust vanilla damage to damage as a percentage of player's max health
-	        if (e.getDamage() < 20) p.damage((e.getDamage() / 20) * HealthMechanics.getMaxHealthValue(p.getName()));
-	        
-	        if(p.getInventory().getBoots() != null && p.getInventory().getBoots().getType() != Material.AIR) {
-	            ItemStack boots = p.getInventory().getBoots();
-	            subtractCustomDurability(p, boots, 1, "armor");
-	            log.info("BOOTS: " + getCustomDurability(boots, "armor"));
-	        }
-	        if(p.getInventory().getLeggings() != null && p.getInventory().getLeggings().getType() != Material.AIR) {
-	            ItemStack Leggings = p.getInventory().getLeggings();
-	            subtractCustomDurability(p, Leggings, 1, "armor");
-	            log.info("LEGS: " + getCustomDurability(Leggings, "armor"));
-	        }
-	        if(p.getInventory().getChestplate() != null && p.getInventory().getChestplate().getType() != Material.AIR) {
-	            ItemStack Chestplate = p.getInventory().getChestplate();
-	            subtractCustomDurability(p, Chestplate, 1, "armor");
-	            log.info("CHEST: " + getCustomDurability(Chestplate, "armor"));
-	        }
-	        if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getType() != Material.AIR) {
-	            ItemStack Helmet = p.getInventory().getHelmet();
-	            subtractCustomDurability(p, Helmet, 1, "armor");
-	            log.info("HELMET: " + getCustomDurability(Helmet, "armor"));
-	        }
-	    }
+
+        Player p = (Player) e.getEntity();
+
+        if (p.getInventory().getBoots() != null && p.getInventory().getBoots().getType() != Material.AIR) {
+            ItemStack boots = p.getInventory().getBoots();
+            subtractCustomDurability(p, boots, 1, "armor");
+            log.info("BOOTS: " + getCustomDurability(boots, "armor"));
+        }
+        if (p.getInventory().getLeggings() != null && p.getInventory().getLeggings().getType() != Material.AIR) {
+            ItemStack Leggings = p.getInventory().getLeggings();
+            subtractCustomDurability(p, Leggings, 1, "armor");
+            log.info("LEGS: " + getCustomDurability(Leggings, "armor"));
+        }
+        if (p.getInventory().getChestplate() != null && p.getInventory().getChestplate().getType() != Material.AIR) {
+            ItemStack Chestplate = p.getInventory().getChestplate();
+            subtractCustomDurability(p, Chestplate, 1, "armor");
+            log.info("CHEST: " + getCustomDurability(Chestplate, "armor"));
+        }
+        if (p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getType() != Material.AIR) {
+            ItemStack Helmet = p.getInventory().getHelmet();
+            subtractCustomDurability(p, Helmet, 1, "armor");
+            log.info("HELMET: " + getCustomDurability(Helmet, "armor"));
+        }
+    }
 
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)

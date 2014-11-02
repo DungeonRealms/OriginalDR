@@ -268,6 +268,8 @@ public class MountMechanics implements Listener {
                             Horse h = (Horse) emule;
                             EntityHorse eh = ((EntityHorse) ((CraftHorse) h).getHandle());
 
+                            h.setAdult();
+                            h.setAgeLock(true);
                             h.setVariant(Variant.DONKEY);
                             h.setCarryingChest(true);
                             h.setTamed(true);
@@ -301,9 +303,13 @@ public class MountMechanics implements Listener {
                             Horse h = (Horse) emount;
                             EntityHorse eh = ((EntityHorse) ((CraftHorse) h).getHandle());
 
+                            h.setVariant(Variant.HORSE);
+                            h.setAdult();
                             h.setTamed(true);
                             h.setOwner((AnimalTamer) pl);
                             h.setColor(Color.BROWN);
+                            h.setAgeLock(true);
+                            h.setStyle(Horse.Style.NONE);
 
                             /*
                              * if(p_name.equalsIgnoreCase("Vaquxine")){ h.setColor(Color.WHITE); Entity boat = pl.getWorld().spawnEntity(pl.getLocation(),

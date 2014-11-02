@@ -3192,6 +3192,12 @@ public class MonsterMechanics implements Listener {
             event.setCancelled(true);
         }
     }
+    
+    @EventHandler (priority = EventPriority.LOWEST)
+    public void onCreatureSpawn(CreatureSpawnEvent e) {
+        LivingEntity ent = e.getEntity();
+        ent.getEquipment().clear();
+    }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
