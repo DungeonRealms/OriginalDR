@@ -45,54 +45,14 @@ public class ItemGenerators {
             String line = "";
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("item_name=")) {
-                    line = line.replaceAll("&0", ChatColor.BLACK.toString());
-                    line = line.replaceAll("&1", ChatColor.DARK_BLUE.toString());
-                    line = line.replaceAll("&2", ChatColor.DARK_GREEN.toString());
-                    line = line.replaceAll("&3", ChatColor.DARK_AQUA.toString());
-                    line = line.replaceAll("&4", ChatColor.DARK_RED.toString());
-                    line = line.replaceAll("&5", ChatColor.DARK_PURPLE.toString());
-                    line = line.replaceAll("&6", ChatColor.GOLD.toString());
-                    line = line.replaceAll("&7", ChatColor.GRAY.toString());
-                    line = line.replaceAll("&8", ChatColor.DARK_GRAY.toString());
-                    line = line.replaceAll("&9", ChatColor.BLUE.toString());
-                    line = line.replaceAll("&a", ChatColor.GREEN.toString());
-                    line = line.replaceAll("&b", ChatColor.AQUA.toString());
-                    line = line.replaceAll("&c", ChatColor.RED.toString());
-                    line = line.replaceAll("&d", ChatColor.LIGHT_PURPLE.toString());
-                    line = line.replaceAll("&e", ChatColor.YELLOW.toString());
-                    line = line.replaceAll("&f", ChatColor.WHITE.toString());
-
-                    line = line.replaceAll("&u", ChatColor.UNDERLINE.toString());
-                    line = line.replaceAll("&s", ChatColor.BOLD.toString());
-                    line = line.replaceAll("&i", ChatColor.ITALIC.toString());
-                    line = line.replaceAll("&m", ChatColor.MAGIC.toString());
+                	line = ChatColor.translateAlternateColorCodes('&', line);
 
                     item_name = line.substring(line.indexOf("=") + 1, line.length());
                 } else if (line.startsWith("item_id=")) {
                     item_id = Integer.parseInt(line.substring(line.indexOf("=") + 1, line.length()));
                 } else {
                     // It's lore!
-                    line = line.replaceAll("&0", ChatColor.BLACK.toString());
-                    line = line.replaceAll("&1", ChatColor.DARK_BLUE.toString());
-                    line = line.replaceAll("&2", ChatColor.DARK_GREEN.toString());
-                    line = line.replaceAll("&3", ChatColor.DARK_AQUA.toString());
-                    line = line.replaceAll("&4", ChatColor.DARK_RED.toString());
-                    line = line.replaceAll("&5", ChatColor.DARK_PURPLE.toString());
-                    line = line.replaceAll("&6", ChatColor.GOLD.toString());
-                    line = line.replaceAll("&7", ChatColor.GRAY.toString());
-                    line = line.replaceAll("&8", ChatColor.DARK_GRAY.toString());
-                    line = line.replaceAll("&9", ChatColor.BLUE.toString());
-                    line = line.replaceAll("&a", ChatColor.GREEN.toString());
-                    line = line.replaceAll("&b", ChatColor.AQUA.toString());
-                    line = line.replaceAll("&c", ChatColor.RED.toString());
-                    line = line.replaceAll("&d", ChatColor.LIGHT_PURPLE.toString());
-                    line = line.replaceAll("&e", ChatColor.YELLOW.toString());
-                    line = line.replaceAll("&f", ChatColor.WHITE.toString());
-
-                    line = line.replaceAll("&u", ChatColor.UNDERLINE.toString());
-                    line = line.replaceAll("&s", ChatColor.BOLD.toString());
-                    line = line.replaceAll("&i", ChatColor.ITALIC.toString());
-                    line = line.replaceAll("&m", ChatColor.MAGIC.toString());
+                	line = ChatColor.translateAlternateColorCodes('&', line);
 
                     if (line.contains("(")) {
                         // Number range!

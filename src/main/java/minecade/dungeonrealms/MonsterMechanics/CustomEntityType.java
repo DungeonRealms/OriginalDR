@@ -5,23 +5,24 @@ import java.util.List;
 import java.util.Map;
 
 import minecade.dungeonrealms.PetMechanics.MountSpider;
-import net.minecraft.server.v1_7_R4.BiomeBase;
-import net.minecraft.server.v1_7_R4.BiomeMeta;
-import net.minecraft.server.v1_7_R4.EntityInsentient;
-import net.minecraft.server.v1_7_R4.EntityIronGolem;
-import net.minecraft.server.v1_7_R4.EntitySpider;
-import net.minecraft.server.v1_7_R4.EntityTypes;
-import net.minecraft.server.v1_7_R4.EntityWolf;
-import net.minecraft.server.v1_7_R4.EntityZombie;
+import net.minecraft.server.v1_8_R1.BiomeBase;
+import net.minecraft.server.v1_8_R1.BiomeMeta;
+import net.minecraft.server.v1_8_R1.EntityInsentient;
+import net.minecraft.server.v1_8_R1.EntityIronGolem;
+import net.minecraft.server.v1_8_R1.EntitySpider;
+import net.minecraft.server.v1_8_R1.EntityTypes;
+import net.minecraft.server.v1_8_R1.EntityWolf;
+import net.minecraft.server.v1_8_R1.EntityZombie;
 
 import org.bukkit.entity.EntityType;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public enum CustomEntityType {
 
-    ZOMBIE("Zombie", 54, EntityType.ZOMBIE, EntityZombie.class, ZombieArcher.class), IRON_GOLEM("IronGolem", 99, EntityType.IRON_GOLEM, EntityIronGolem.class,
-            Golem.class), SPIDER_MOUNT("Spider", 52, EntityType.SPIDER, EntitySpider.class, MountSpider.class), WOLF("Wolf", 95, EntityType.WOLF,
-            EntityWolf.class, CustomWolf.class);//, CHICKEN("Chicken", 93, EntityType.CHICKEN, EntityChicken.class, MountSpider.class)
+    ZOMBIE("Zombie", 54, EntityType.ZOMBIE, EntityZombie.class, ZombieArcher.class), 
+    IRON_GOLEM("IronGolem", 99, EntityType.IRON_GOLEM, EntityIronGolem.class, Golem.class),
+    SPIDER_MOUNT("Spider", 52, EntityType.SPIDER, EntitySpider.class, MountSpider.class),
+    WOLF("Wolf", 95, EntityType.WOLF, EntityWolf.class, CustomWolf.class);//, CHICKEN("Chicken", 93, EntityType.CHICKEN, EntityChicken.class, MountSpider.class)
 
     private String name;
     private int id;
@@ -78,7 +79,7 @@ public enum CustomEntityType {
                 break;
 
             // This changed names from J, K, L and M.
-            for (String field : new String[] { "as", "at", "au", "av" })
+            for (String field : new String[] { "at", "au", "av", "aw" })
                 try {
                     Field list = BiomeBase.class.getDeclaredField(field);
                     list.setAccessible(true);
@@ -136,7 +137,7 @@ public enum CustomEntityType {
                 break;
 
             // The list fields changed names but update the meta regardless.
-            for (String field : new String[] { "as", "at", "au", "av" })
+            for (String field : new String[] { "at", "au", "av", "aw"  })
                 try {
                     Field list = BiomeBase.class.getDeclaredField(field);
                     list.setAccessible(true);

@@ -46,12 +46,13 @@ import minecade.dungeonrealms.holograms.Hologram;
 import minecade.dungeonrealms.jsonlib.JsonBuilder;
 import minecade.dungeonrealms.models.LogModel;
 import net.citizensnpcs.api.CitizensAPI;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.EntityTracker;
-import net.minecraft.server.v1_7_R4.EntityTrackerEntry;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
-import net.minecraft.server.v1_7_R4.WorldServer;
+import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import net.minecraft.server.v1_8_R1.EntityTracker;
+import net.minecraft.server.v1_8_R1.EntityTrackerEntry;
+import net.minecraft.server.v1_8_R1.Packet;
+import net.minecraft.server.v1_8_R1.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_8_R1.WorldServer;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -64,10 +65,10 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -2172,10 +2173,10 @@ public class ShopMechanics implements Listener {
 							chest.setType(Material.AIR);
 							other_chest.setType(Material.AIR);
 
-							Packet b_particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ()), 54, false);
+							Packet b_particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ())), 54, false);
 							((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(chest.getLocation().getX(), chest.getLocation().getY(), chest.getLocation().getZ(), 24, ((CraftWorld) chest.getWorld()).getHandle().dimension, b_particles);
 
-							Packet other_chest_particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(other_chest.getLocation().getX()), (int) Math.round(other_chest.getLocation().getY()), (int) Math.round(other_chest.getLocation().getZ()), 54, false);
+							Packet other_chest_particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(other_chest.getLocation().getX()), (int) Math.round(other_chest.getLocation().getY()), (int) Math.round(other_chest.getLocation().getZ())), 54, false);
 							((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(other_chest.getLocation().getX(), other_chest.getLocation().getY(), other_chest.getLocation().getZ(), 24, ((CraftWorld) other_chest.getWorld()).getHandle().dimension, other_chest_particles);
 
 							asyncSetShopServerSQL(shop_owner, -1);
@@ -2603,10 +2604,10 @@ public class ShopMechanics implements Listener {
 						chest.setType(Material.AIR);
 						other_chest.setType(Material.AIR);
 
-						Packet b_particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ()), 54, false);
+						Packet b_particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ())), 54, false);
 						((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(chest.getLocation().getX(), chest.getLocation().getY(), chest.getLocation().getZ(), 24, ((CraftWorld) chest.getWorld()).getHandle().dimension, b_particles);
 
-						Packet other_chest_particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(other_chest.getLocation().getX()), (int) Math.round(other_chest.getLocation().getY()), (int) Math.round(other_chest.getLocation().getZ()), 54, false);
+						Packet other_chest_particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(other_chest.getLocation().getX()), (int) Math.round(other_chest.getLocation().getY()), (int) Math.round(other_chest.getLocation().getZ())), 54, false);
 						((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(other_chest.getLocation().getX(), other_chest.getLocation().getY(), other_chest.getLocation().getZ(), 24, ((CraftWorld) other_chest.getWorld()).getHandle().dimension, other_chest_particles);
 
 						asyncSetShopServerSQL(shop_owner, -1);
@@ -2832,10 +2833,10 @@ public class ShopMechanics implements Listener {
 					b.setType(Material.AIR);
 					other_chest.setType(Material.AIR);
 
-					Packet b_particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(b.getLocation().getX()), (int) Math.round(b.getLocation().getY()), (int) Math.round(b.getLocation().getZ()), 54, false);
+					Packet b_particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(b.getLocation().getX()), (int) Math.round(b.getLocation().getY()), (int) Math.round(b.getLocation().getZ())), 54, false);
 					((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(b.getLocation().getX(), b.getLocation().getY(), b.getLocation().getZ(), 24, ((CraftWorld) b.getWorld()).getHandle().dimension, b_particles);
 
-					Packet other_chest_particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(other_chest.getLocation().getX()), (int) Math.round(other_chest.getLocation().getY()), (int) Math.round(other_chest.getLocation().getZ()), 54, false);
+					Packet other_chest_particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(other_chest.getLocation().getX()), (int) Math.round(other_chest.getLocation().getY()), (int) Math.round(other_chest.getLocation().getZ())), 54, false);
 					((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(other_chest.getLocation().getX(), other_chest.getLocation().getY(), other_chest.getLocation().getZ(), 24, ((CraftWorld) other_chest.getWorld()).getHandle().dimension, other_chest_particles);
 
 					// TODO: At this point, they are breaking their shop block. Their items

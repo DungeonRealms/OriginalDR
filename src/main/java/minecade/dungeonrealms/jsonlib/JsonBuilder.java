@@ -3,7 +3,7 @@ package minecade.dungeonrealms.jsonlib;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import net.minecraft.util.com.google.gson.JsonObject;
+import org.bukkit.craftbukkit.libs.com.google.gson.JsonObject;
 
 public class JsonBuilder {
 	

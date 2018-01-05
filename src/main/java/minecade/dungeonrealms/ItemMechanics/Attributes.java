@@ -9,11 +9,11 @@ import java.util.concurrent.ConcurrentMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.server.v1_7_R4.NBTBase;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
-import net.minecraft.server.v1_7_R4.NBTTagList;
+import net.minecraft.server.v1_8_R1.NBTBase;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.NBTTagList;
 
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.common.base.Function;
@@ -218,7 +218,7 @@ public class Attributes {
 	}
 	
 	// This may be modified
-	public net.minecraft.server.v1_7_R4.ItemStack nmsStack;
+	public net.minecraft.server.v1_8_R1.ItemStack nmsStack;
 	
 	private NBTTagCompound parent;
 	private NBTTagList attributes;
@@ -228,10 +228,12 @@ public class Attributes {
 		this.nmsStack = CraftItemStack.asNMSCopy(stack);
 		
 		// Load NBT
-		if(nmsStack.tag == null) {
-			parent = (nmsStack.tag = new NBTTagCompound());
+		if(nmsStack.getTag() == null) {
+			
+			parent = new NBTTagCompound();
+			nmsStack.setTag(parent);
 		} else {
-			parent = nmsStack.tag;
+			parent = nmsStack.getTag();
 		}
 		
 		// Load attribute list

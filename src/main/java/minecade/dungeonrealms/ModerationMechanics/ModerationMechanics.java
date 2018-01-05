@@ -25,15 +25,16 @@ import minecade.dungeonrealms.ModerationMechanics.commands.*;
 import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
 import minecade.dungeonrealms.config.Config;
 import minecade.dungeonrealms.database.ConnectionPool;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.Packet;
+import net.minecraft.server.v1_8_R1.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -139,7 +140,7 @@ public class ModerationMechanics implements Listener {
 
 			if(Bukkit.getPlayer(p_name) != null && Bukkit.getPlayer(p_name).isOnline()) {
 				Player pl = Bukkit.getPlayer(p_name);
-				Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(pl.getLocation().getX()), (int) Math.round(pl.getLocation().getY()), (int) Math.round(pl.getLocation().getZ()), 30, false);
+				Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(pl.getLocation().getX()), (int) Math.round(pl.getLocation().getY()), (int) Math.round(pl.getLocation().getZ())), 30, false);
 				((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(pl.getLocation().getX(), pl.getLocation().getY(), pl.getLocation().getZ(), 24, ((CraftWorld) pl.getWorld()).getHandle().dimension, particles);
 			}
 

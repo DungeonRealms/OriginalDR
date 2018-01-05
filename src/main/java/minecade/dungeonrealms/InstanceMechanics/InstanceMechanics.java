@@ -42,13 +42,13 @@ import minecade.dungeonrealms.MountMechanics.MountMechanics;
 import minecade.dungeonrealms.PartyMechanics.PartyMechanics;
 import minecade.dungeonrealms.SpawnMechanics.SpawnMechanics;
 import minecade.dungeonrealms.database.ConnectionPool;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.EntityTracker;
-import net.minecraft.server.v1_7_R4.EntityTrackerEntry;
-import net.minecraft.server.v1_7_R4.PacketPlayOutRespawn;
-import net.minecraft.server.v1_7_R4.WorldServer;
-import net.minecraft.util.org.apache.commons.io.FileUtils;
-import net.minecraft.util.org.apache.commons.io.IOUtils;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import net.minecraft.server.v1_8_R1.EntityTracker;
+import net.minecraft.server.v1_8_R1.EntityTrackerEntry;
+import net.minecraft.server.v1_8_R1.PacketPlayOutRespawn;
+import net.minecraft.server.v1_8_R1.WorldServer;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,8 +63,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -934,7 +934,7 @@ public class InstanceMechanics implements Listener {
         EntityPlayer ep = (EntityPlayer) cp.getHandle();
         WorldServer worldserver = ((CraftWorld) pl.getWorld()).getHandle();
 
-        PacketPlayOutRespawn packet_a = new PacketPlayOutRespawn((byte) dimension, worldserver.difficulty, worldserver.getWorldData().getType(),
+        PacketPlayOutRespawn packet_a = new PacketPlayOutRespawn((byte) dimension, worldserver.getDifficulty(), worldserver.getWorldData().getType(),
                 ep.playerInteractManager.getGameMode());
 
         cp.getHandle().playerConnection.sendPacket(packet_a);

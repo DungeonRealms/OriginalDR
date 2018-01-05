@@ -24,7 +24,7 @@ public class SpawnPotions implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		MenuModel.menus.get(PotionMenu.class).getMenu().showToPlayer(plr);
+		MenuModel.getAllMenus().get(PotionMenu.class).getMenu().showToPlayer(plr);
 	}
 
 	@Override

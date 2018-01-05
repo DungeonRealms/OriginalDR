@@ -51,14 +51,14 @@ import minecade.dungeonrealms.enums.Delay;
 import minecade.dungeonrealms.enums.ItemRarity;
 import minecade.dungeonrealms.enums.ItemTier;
 import minecade.dungeonrealms.enums.ItemType;
-import net.minecraft.server.v1_7_R4.DataWatcher;
-import net.minecraft.server.v1_7_R4.EntityCreature;
-import net.minecraft.server.v1_7_R4.EntityLiving;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.GenericAttributes;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
-import net.minecraft.util.io.netty.util.internal.ConcurrentSet;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
+import net.minecraft.server.v1_8_R1.DataWatcher;
+import net.minecraft.server.v1_8_R1.EntityCreature;
+import net.minecraft.server.v1_8_R1.EntityLiving;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import net.minecraft.server.v1_8_R1.GenericAttributes;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
+import io.netty.util.internal.ConcurrentSet;
+import org.apache.commons.lang3.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -71,11 +71,11 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftSkeleton;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
@@ -1045,7 +1045,7 @@ public class MonsterMechanics implements Listener {
             EntityLiving el = (EntityLiving) ((CraftEntity) ent).getHandle();
             el.yaw = (float) (yaw);
             EntityCreature ec = (EntityCreature) ((CraftEntity) ent).getHandle();
-            ec.setTarget(null);
+            ec.setGoalTarget(null);
             ec.yaw = (float) (yaw);
             ent.teleport(loc);
             // el.teleportTo(loc, false);
@@ -1065,7 +1065,7 @@ public class MonsterMechanics implements Listener {
                 int step = data.getValue();
                 if (step <= 4) { // Charging...
                     EntityCreature ec = (EntityCreature) ((CraftEntity) ent).getHandle();
-                    ec.setTarget(null);
+                    ec.setGoalTarget(null);
 
                     step += 1;
                     whirlwind.put(ent, step);
@@ -2108,12 +2108,12 @@ public class MonsterMechanics implements Listener {
                     // The mob is between 20-40 blocks from the spawner.
                     if (e instanceof EntityCreature) {
                         EntityCreature ec = (EntityCreature) ((CraftEntity) e).getHandle();
-                        if (ec.target != null) {
-                            if (!(ec.target instanceof Player)) {
+                        if (ec.getGoalTarget() != null) {
+                            if (!(ec.getGoalTarget() instanceof Player)) {
                                 continue;
                             }
 
-                            Player e_target = (Player) (((EntityPlayer) ec.target).getBukkitEntity());
+                            Player e_target = (Player) (((EntityPlayer) ec.getGoalTarget()).getBukkitEntity());
                             Location target_loc = e_target.getLocation();
                             if (target_loc.getWorld().getName().equalsIgnoreCase(current_mob_loc.getWorld().getName())) {
                                 if (e_target != null && e_target.getHealth() > 0 && e_target.isOnline() && e_target.getGameMode() == GameMode.SURVIVAL
@@ -2466,6 +2466,17 @@ public class MonsterMechanics implements Listener {
         }
         Location l = e.getTo();
         player_locations.put(p.getName(), l);
+    }
+    
+    @EventHandler
+    public void onEntityImmunityAfterHit(EntityDamageByEntityEvent e) {
+        // MC patch 1.8 added a 0.5 second (10 tick) mob immunity after each hit.  Cancel it here!
+        if(e.getEntity() instanceof LivingEntity && !(e.getEntity() instanceof Player)) {
+            LivingEntity ent = (LivingEntity) e.getEntity();
+            ent.setMaximumNoDamageTicks(0);
+            ent.setNoDamageTicks(0);
+            ent.setVelocity(new Vector(0, 0, 0));
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -4818,8 +4829,8 @@ public class MonsterMechanics implements Listener {
                 LivingEntity le = (LivingEntity) e;
                 if (le.getEquipment().getHelmet() != null && le.getEquipment().getHelmet().getType() == Material.SKULL_ITEM) {
                     ItemStack h = le.getEquipment().getHelmet();
-                    net.minecraft.server.v1_7_R4.ItemStack mItem = CraftItemStack.asNMSCopy(h);
-                    NBTTagCompound tag = mItem.tag;
+                    net.minecraft.server.v1_8_R1.ItemStack mItem = CraftItemStack.asNMSCopy(h);
+                    NBTTagCompound tag = mItem.getTag();
                     String skin_name = tag.getString("SkullOwner");
                     if (skin_name.equalsIgnoreCase("dEr_t0d") || skin_name.equalsIgnoreCase("niv330")) {
                         mob_type = "Goblin";
@@ -4891,8 +4902,8 @@ public class MonsterMechanics implements Listener {
                 LivingEntity le = (LivingEntity) e;
                 if (le.getEquipment().getHelmet() != null && le.getEquipment().getHelmet().getType() == Material.SKULL_ITEM) {
                     ItemStack h = le.getEquipment().getHelmet();
-                    net.minecraft.server.v1_7_R4.ItemStack mItem = CraftItemStack.asNMSCopy(h);
-                    NBTTagCompound tag = mItem.tag;
+                    net.minecraft.server.v1_8_R1.ItemStack mItem = CraftItemStack.asNMSCopy(h);
+                    NBTTagCompound tag = mItem.getTag();
                     String skin_name = tag.getString("SkullOwner");
                     if (skin_name.equalsIgnoreCase("dEr_t0d") || skin_name.equalsIgnoreCase("niv330")) {
                         mob_type = "Goblin";
@@ -5779,8 +5790,9 @@ public class MonsterMechanics implements Listener {
     public static ItemStack getHead(String player_name) {
 
         ItemStack c_mask = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-        net.minecraft.server.v1_7_R4.ItemStack mItem = CraftItemStack.asNMSCopy(c_mask);
-        NBTTagCompound tag = mItem.tag = new NBTTagCompound();
+        net.minecraft.server.v1_8_R1.ItemStack mItem = CraftItemStack.asNMSCopy(c_mask);
+        NBTTagCompound tag = new NBTTagCompound();
+        mItem.setTag(tag);
         tag.setString("SkullOwner", player_name);
         return CraftItemStack.asBukkitCopy(mItem);
     }
@@ -6353,7 +6365,7 @@ public class MonsterMechanics implements Listener {
                 new ItemStack(Material.AIR), new ItemStack(Material.AIR), new ItemStack(Material.AIR)));
 
         int gear_check = new Random().nextInt(3) + 1; // 1, 2, 3, 4
-        net.minecraft.server.v1_7_R4.ItemStack weapon = null;
+        net.minecraft.server.v1_8_R1.ItemStack weapon = null;
         ItemStack is_weapon = null;
 
         if (et == EntityType.WOLF || et == EntityType.IRON_GOLEM || et == EntityType.ENDERMAN || et == EntityType.BLAZE || et == EntityType.SILVERFISH
@@ -6689,13 +6701,13 @@ public class MonsterMechanics implements Listener {
         dmg_range.add((int) Math.round(max_dmg));
         // Spawns the custom zombie if they have a bow
         if (et == EntityType.ZOMBIE && is_weapon != null && is_weapon.getType() == Material.BOW) {
-            net.minecraft.server.v1_7_R4.World ws = ((CraftWorld) l.getWorld()).getHandle();
+            net.minecraft.server.v1_8_R1.World ws = ((CraftWorld) l.getWorld()).getHandle();
             ZombieArcher za = new ZombieArcher(ws);
             za.teleportTo(l, true);
             ws.addEntity(za);
             e = za.getBukkitEntity();
         } else if (et == EntityType.IRON_GOLEM) {
-            net.minecraft.server.v1_7_R4.World ws = ((CraftWorld) l.getWorld()).getHandle();
+            net.minecraft.server.v1_8_R1.World ws = ((CraftWorld) l.getWorld()).getHandle();
             Golem golem = new Golem(ws);
             golem.setLocation(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
             ws.addEntity(golem, SpawnReason.CUSTOM);
@@ -6844,6 +6856,8 @@ public class MonsterMechanics implements Listener {
          */
 
         if (e.getType() == EntityType.ZOMBIE) {
+            Zombie z = (Zombie) e;
+            z.setBaby(false);
             // EntityZombie ez = (EntityZombie)ent;
             /*
              * if(elite){ TODO ez.bi = 0.32F; }

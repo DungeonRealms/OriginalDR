@@ -1,18 +1,20 @@
 package minecade.dungeonrealms.Hive.commands;
 
+import minecade.dungeonrealms.Hive.Hive;
+
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class CommandSync implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		sender.sendMessage("Temporarily Disabled");
-		return true;
-		/*final Player p = (Player) sender;
+		final Player p = (Player) sender;
 		p.updateInventory();
-		p.teleport(p);
+//		p.teleport(p); causing weird block/dodge ignore bugs?
 		
 		if((System.currentTimeMillis() - Hive.login_time.get(p.getName())) <= 5000) {
 			int seconds_left = 5 - (int) ((System.currentTimeMillis() - Hive.login_time.get(p.getName())) / 1000.0D);
@@ -29,7 +31,7 @@ public class CommandSync implements CommandExecutor {
 		//sync_queue.add(p.getName()); - Disabled lol
 		p.sendMessage(ChatColor.GREEN + "Synced player data to " + ChatColor.UNDERLINE + "HIVE" + ChatColor.GREEN + " server.");
 		
-		return true;*/
+		return true;
 	}
 	
 }

@@ -1,9 +1,9 @@
 package me.vilsol.betanpc.utils;
 
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
 
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class Utils {
@@ -23,13 +23,15 @@ public class Utils {
         if (i == null) {
             return i;
         }
-    	net.minecraft.server.v1_7_R4.ItemStack x = CraftItemStack.asNMSCopy(i);
+    	net.minecraft.server.v1_8_R1.ItemStack x = CraftItemStack.asNMSCopy(i);
         try {
-            net.minecraft.server.v1_7_R4.NBTTagList cpe = new net.minecraft.server.v1_7_R4.NBTTagList();
+            net.minecraft.server.v1_8_R1.NBTTagList cpe = new net.minecraft.server.v1_8_R1.NBTTagList();
             NBTTagCompound tag = new NBTTagCompound();
             tag.setByte("Id", (byte) 6);
             cpe.add(tag);
-            x.tag.set("CustomPotionEffects", cpe);
+            NBTTagCompound xtag = x.getTag();
+            xtag.set("CustomPotionEffects", cpe);
+            x.setTag(xtag);
         } catch (NullPointerException npe) {
             return CraftItemStack.asBukkitCopy(x);
         }

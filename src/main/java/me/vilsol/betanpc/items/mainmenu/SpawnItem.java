@@ -22,7 +22,7 @@ public class SpawnItem implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		MenuModel.menus.get(TierMenu.class).getMenu().showToPlayer(plr);
+		MenuModel.getAllMenus().get(TierMenu.class).getMenu().showToPlayer(plr);
 	}
 
 	@Override

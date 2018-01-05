@@ -32,14 +32,14 @@ import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.jsonlib.JSONMessage;
 import minecade.dungeonrealms.managers.PlayerManager;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -781,8 +781,8 @@ public class ChatMechanics implements Listener {
                             LivingEntity le = (LivingEntity) enti;
                             if (le.getEquipment().getHelmet().getType() == Material.SKULL_ITEM) {
                                 ItemStack is = le.getEquipment().getHelmet();
-                                net.minecraft.server.v1_7_R4.ItemStack mItem = CraftItemStack.asNMSCopy(is);
-                                NBTTagCompound tag = mItem.tag;
+                                net.minecraft.server.v1_8_R1.ItemStack mItem = CraftItemStack.asNMSCopy(is);
+                                NBTTagCompound tag = mItem.getTag();
                                 String skin_name = tag.getString("SkullOwner");
                                 if (skin_name.equalsIgnoreCase("dEr_t0d") || skin_name.equalsIgnoreCase("niv330")) {
                                     mob_name = "Goblin";

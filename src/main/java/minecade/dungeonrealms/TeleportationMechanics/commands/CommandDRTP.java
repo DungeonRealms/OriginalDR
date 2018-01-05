@@ -5,7 +5,7 @@ import minecade.dungeonrealms.TeleportationMechanics.TeleportationMechanics;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 public class CommandDRTP implements CommandExecutor {

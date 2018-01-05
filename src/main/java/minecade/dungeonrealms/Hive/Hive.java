@@ -82,10 +82,10 @@ import minecade.dungeonrealms.models.LogModel;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
-import net.minecraft.util.io.netty.util.internal.ConcurrentSet;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import net.minecraft.server.v1_8_R1.Packet;
+import net.minecraft.server.v1_8_R1.PacketPlayOutEntityEquipment;
+import io.netty.util.internal.ConcurrentSet;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -97,9 +97,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -1709,7 +1709,7 @@ public class Hive implements Listener {
 			data.add((double) hp);
 			data.add(food_level);
 			
-			log.info(inventory_s);
+//			log.info(inventory_s);
 
 			remote_player_data.put(p_name, data);
 
@@ -1950,7 +1950,7 @@ public class Hive implements Listener {
 		// int slot_cache = -1;
 		int expected_item_size = inventory_string.split("@item@").length - 1;
 		
-		log.info(inventory_string);
+//		log.info(inventory_string);
 
 		if (pl == null && inventory_name != null) {
 			// Using inventory.
@@ -2532,7 +2532,7 @@ public class Hive implements Listener {
 	public void onCommandPreProcess(PlayerCommandPreprocessEvent e) {
 		if (e.getMessage().equalsIgnoreCase("/stop")
 				&& e.getPlayer() != null
-				&& (e.getPlayer().getName().equalsIgnoreCase("availer") || e.getPlayer().getName().equalsIgnoreCase("vaquxine"))) {
+				&& Main.isMaster(e.getPlayer().getName())) {
 			server_lock = true;
 			force_kick = true;
 			setAllPlayersAsOffline();
@@ -2703,6 +2703,77 @@ public class Hive implements Listener {
 				}
 
 			}
+
+            @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+            public void onPlayerAsyncChatEvent(final AsyncPlayerChatEvent e) {
+            	Bukkit.getScheduler().runTask(Main.plugin, new Runnable() {
+            
+            		public void run() {
+            			Player pl = e.getPlayer();
+            			if (player_bio.containsKey(pl.getName())) {
+            				// They're writing their guild bio!
+            				e.setCancelled(true);
+            
+            				// Add on to the bio.
+            				String bio = player_bio.get(pl.getName());
+            
+            				String msg = ChatMechanics.censorMessage(e.getMessage());
+            				if (msg.equalsIgnoreCase("cancel")) {
+            					pl.sendMessage(ChatColor.RED + "/bio - " + ChatColor.BOLD + "CANCELLED");
+            					player_bio.remove(pl.getName());
+            					return;
+            				}
+            				if (msg.equalsIgnoreCase("confirm")) {
+            					bio = StringEscapeUtils.escapeSql(bio);
+            					Hive.sql_query.add("INSERT INTO player_database (p_name, biography) VALUES('" + pl.getName() + "', '" + bio
+            							+ "') ON DUPLICATE KEY UPDATE biography='" + bio + "'");
+            					pl.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD.toString() + "Profile Biography Submitted.");
+            					pl.sendMessage(ChatColor.GRAY + bio);
+            					player_bio.remove(pl.getName());
+            					return;
+            				}
+            
+            				if ((bio.length() + msg.length()) > 255) {
+            					// Too long.
+            					int length = (bio.length() + msg.length());
+            					int overflow = length - 255;
+            					pl.sendMessage(ChatColor.RED + "Your profile biography would be " + length + " characters long with this addition, that's "
+            							+ ChatColor.UNDERLINE + overflow + " more characters than allowed.");
+            					pl.sendMessage(ChatColor.GRAY + "No additional text has been added to the biography.");
+            					return;
+            				}
+            
+            				if (bio.length() > 0) {
+            					bio += " ";
+            				}
+            				bio += msg;
+            
+            				player_bio.put(pl.getName(), bio);
+            				pl.sendMessage(ChatColor.GREEN + "Biography appended. " + ChatColor.BOLD.toString() + bio.length() + "/512 characters.");
+            			}
+            
+            			if (killing_self.contains(pl.getName())) {
+            				e.setCancelled(true);
+            				String msg = e.getMessage();
+            				if (msg.equalsIgnoreCase("y")) {
+            					KarmaMechanics.plast_hit.remove(pl.getName());
+            					KarmaMechanics.last_hit_time.remove(pl.getName());
+            
+            					pl.setLastDamageCause(new EntityDamageEvent(pl, DamageCause.SUICIDE, 0)); // Sets death message to suicide.
+            					// pl.setLevel(0);
+            					HealthMechanics.setPlayerHP(pl.getName(), 0);
+            					pl.setHealth(0);
+            					pl.setMetadata("hp", new FixedMetadataValue(Main.plugin, 0));
+            					killing_self.remove(pl.getName());
+            				} else {
+            					pl.sendMessage(ChatColor.YELLOW + "/suicide - " + ChatColor.BOLD + "CANCELLED");
+            					killing_self.remove(pl.getName());
+            				}
+            			}
+            
+            		}
+            	});
+            }
 		});
 	}
 
@@ -2765,6 +2836,7 @@ public class Hive implements Listener {
 				e.setLoginResult(AsyncPlayerPreLoginEvent.Result.ALLOWED);
 			}
 		}
+		/* Wilderness timer disabled - 11/9/2014 no longer needed due to new lobby system
 		if (!canTheyLogin(e.getName())) {
 			int seconds_to_login = getTimeToLogin(e.getName());
 			if (seconds_to_login == 0) {
@@ -2776,6 +2848,7 @@ public class Hive implements Listener {
 				return;
 			}
 		}
+		*/
 		if (Bukkit.hasWhitelist()) {
 			if (Bukkit.getMotd().contains("DEVELOPER") && (!(Bukkit.getWhitelistedPlayers().contains(of)))) { // !of.isOp() ||
 				e.setKickMessage(ChatColor.RED.toString() + "You are currently " + ChatColor.BOLD.toString() + "NOT" + ChatColor.RED.toString()
@@ -3151,9 +3224,9 @@ public class Hive implements Listener {
 			
 			Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
 			    public void run() {
-			        log.info("Loading inventory for " + p.getName());
+//			        log.info("Loading inventory for " + p.getName());
 			        convertStringToInventory(p, inventory_s, null, 0);
-			        log.info("Inventory loaded for " + p.getName());
+//			        log.info("Inventory loaded for " + p.getName());
 			    }
 			}, 20L);
 
@@ -3579,7 +3652,6 @@ public class Hive implements Listener {
 	    p.damage(0);
 	    HealthMechanics.setPlayerHP(p.getName(), (int) (HealthMechanics.getPlayerHP(p.getName()) - e.getDamage()));
 	    e.setDamage(0);
-	    log.info("yes1");
 	    
 	    e.setCancelled(true);
 	}
@@ -3654,16 +3726,25 @@ public class Hive implements Listener {
 			combatLogNPC.data().setPersistent("combat_log_npc", true);
 			combatLogNPC.spawn(loc);
 			
-			Player playerNPC = (Player) combatLogNPC.getEntity();
+			final Player playerNPC = (Player) combatLogNPC.getEntity();
 			log.info("" + HealthMechanics.getPlayerHP(p.getName()));
-			HealthMechanics.setOverheadHP(playerNPC, HealthMechanics.getPlayerHP(p.getName()));
-			HealthMechanics.setPlayerHP(playerNPC.getName(), HealthMechanics.getPlayerHP(p.getName()));
+			
+			new BukkitRunnable() {
+			    
+			    @Override
+			    public void run() {
+			        HealthMechanics.setPlayerHP(playerNPC.getName(), HealthMechanics.getPlayerHP(p.getName()));
+			        HealthMechanics.setOverheadHP(playerNPC, HealthMechanics.getPlayerHP(p.getName()));
+			    }
+			    
+			}.runTaskLater(Main.plugin, 2);
+			
 			playerNPC.setLevel(LevelMechanics.getPlayerLevel(p));
 			playerNPC.setExp(1.0F);
 			playerNPC.setGameMode(GameMode.SURVIVAL);
+			playerNPC.setItemInHand(p.getItemInHand());
 			playerNPC.getInventory().setContents(p.getInventory().getContents());
 			playerNPC.getInventory().setArmorContents(p.getInventory().getArmorContents());
-			playerNPC.setItemInHand(p.getItemInHand());
 			
 			ScoreboardMechanics.cloneScoreboard(playerNPC);
 			
@@ -3730,7 +3811,7 @@ public class Hive implements Listener {
 					Player playerNPC = ((Player) ent);
 
 					EntityPlayer origin_p = ((CraftPlayer) p).getHandle();
-					net.minecraft.server.v1_7_R4.ItemStack weapon = null, boots = null, legs = null, chest = null, head = null;
+					net.minecraft.server.v1_8_R1.ItemStack weapon = null, boots = null, legs = null, chest = null, head = null;
 
 					if (origin_p.getEquipment(0) != null) {
 						weapon = origin_p.getEquipment(0);

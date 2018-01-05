@@ -25,10 +25,10 @@ public class BackToMainMenu implements MenuItem, BonusItem<Boolean> {
 	@Override
 	public void execute(Player plr, ClickType click) {
 	    if (!isAddWeaponNewNew) {
-	        MenuModel.menus.get(MainMenu.class).getMenu().showToPlayer(plr);
+	        MenuModel.getAllMenus().get(MainMenu.class).getMenu().showToPlayer(plr);
 	    }
 	    else {
-	        MenuModel.menus.get(TierMenu.class).getMenu().showToPlayer(plr);
+	        MenuModel.getAllMenus().get(TierMenu.class).getMenu().showToPlayer(plr);
 	    }
 	}
 

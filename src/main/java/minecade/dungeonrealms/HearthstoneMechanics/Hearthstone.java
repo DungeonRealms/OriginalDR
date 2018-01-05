@@ -100,6 +100,22 @@ public class Hearthstone {
             }
         }.runTaskAsynchronously(Main.plugin);
     }
+    
+    public void saveDataSync() {
+        try (PreparedStatement pst = ConnectionPool.getConnection().prepareStatement(
+                "INSERT INTO hearthstone VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE location_name = ?, timer = ?;")) {
+            pst.setString(1, p_name);
+            pst.setString(2, tp_name);
+            pst.setInt(3, timer_seconds);
+            pst.setString(4, tp_name);
+            pst.setInt(5, timer_seconds);
+            pst.executeUpdate();
+            // System.out.print("[HeartstoneMechanics] Saved " + p.getName() + "s Hearthstone data.");
+            pst.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public Location getLocation() {
         return tp_loc;

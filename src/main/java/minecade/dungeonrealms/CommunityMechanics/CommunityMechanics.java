@@ -29,6 +29,7 @@ import minecade.dungeonrealms.CommunityMechanics.commands.CommandDebug;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandDelete;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandIgnore;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandRoll;
+import minecade.dungeonrealms.CommunityMechanics.commands.CommandRules;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandTips;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleChaos;
 import minecade.dungeonrealms.CommunityMechanics.commands.CommandToggleFF;
@@ -63,11 +64,11 @@ import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
 import minecade.dungeonrealms.config.Config;
 import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.managers.PlayerManager;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
-import net.minecraft.server.v1_7_R4.PacketPlayOutNamedEntitySpawn;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import net.minecraft.server.v1_8_R1.Packet;
+import net.minecraft.server.v1_8_R1.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_8_R1.PacketPlayOutNamedEntitySpawn;
+import org.apache.commons.lang3.StringUtils;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -75,8 +76,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -147,6 +148,7 @@ public class CommunityMechanics implements Listener {
 		Main.plugin.getCommand("delete").setExecutor(new CommandDelete());
 		Main.plugin.getCommand("ignore").setExecutor(new CommandIgnore());
 		Main.plugin.getCommand("roll").setExecutor(new CommandRoll());
+		Main.plugin.getCommand("rules").setExecutor(new CommandRules());
 		Main.plugin.getCommand("tips").setExecutor(new CommandTips());
 		Main.plugin.getCommand("togglechaos").setExecutor(new CommandToggleChaos());
 		Main.plugin.getCommand("toggleff").setExecutor(new CommandToggleFF());
@@ -444,7 +446,7 @@ public class CommunityMechanics implements Listener {
 			return;
 		}
 
-		ScoreboardMechanics.setPlayerColor(c, pl);
+		ScoreboardMechanics.setPlayerLevelAndColor(c, PlayerManager.getPlayerModel(pl).getPlayerLevel().getLevel(), pl);
 	}
 
 	public static int getPlayerServer(String p_name, boolean refresh) {
@@ -1841,7 +1843,7 @@ public class CommunityMechanics implements Listener {
 				// test = (CraftPlayer)e_test.getBukkitEntity();
 
 				EntityPlayer ent_p_edited = ((CraftPlayer) p_edited).getHandle();
-				net.minecraft.server.v1_7_R4.ItemStack boots = null, legs = null, chest = null, head = null;
+				net.minecraft.server.v1_8_R1.ItemStack boots = null, legs = null, chest = null, head = null;
 
 				if (ent_p_edited.getEquipment(1) != null) {
 					boots = ent_p_edited.getEquipment(1);

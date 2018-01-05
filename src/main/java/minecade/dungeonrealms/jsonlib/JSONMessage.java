@@ -1,12 +1,12 @@
 package minecade.dungeonrealms.jsonlib;
 
-import net.minecraft.server.v1_7_R4.ChatSerializer;
-import net.minecraft.server.v1_7_R4.PacketPlayOutChat;
-import net.minecraft.util.com.google.gson.JsonArray;
-import net.minecraft.util.com.google.gson.JsonObject;
+import net.minecraft.server.v1_8_R1.ChatSerializer;
+import net.minecraft.server.v1_8_R1.PacketPlayOutChat;
+import org.bukkit.craftbukkit.libs.com.google.gson.JsonArray;
+import org.bukkit.craftbukkit.libs.com.google.gson.JsonObject;
 
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -150,7 +150,7 @@ public class JSONMessage {
 	}
 	
 	public void sendToPlayer(Player p){
-		((CraftPlayer) p).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(json.toString()), true));
+		((CraftPlayer) p).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(json.toString())));
 	}
 	
 	public void setColor(ChatColor color){

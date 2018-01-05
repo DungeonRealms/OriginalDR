@@ -17,10 +17,12 @@ import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
 import minecade.dungeonrealms.MerchantMechanics.MerchantMechanics;
 import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
 import minecade.dungeonrealms.MountMechanics.MountMechanics;
+import minecade.dungeonrealms.PetMechanics.PetMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
 import minecade.dungeonrealms.RecordMechanics.RecordMechanics;
 import minecade.dungeonrealms.RestrictionMechanics.RestrictionMechanics;
 import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
+import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
 import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.enums.CC;
 import minecade.dungeonrealms.managers.PlayerManager;
@@ -46,6 +48,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -77,57 +80,67 @@ public class DuelMechanics implements Listener {
 
     // These are just items used for the dueling menu.
     public static ItemStack divider = ItemMechanics.signNewCustomItem(Material.BONE, (short) 0, " ", "");
-    public static ItemStack gray_button = ItemMechanics.signNewCustomItem(Material.INK_SACK, (short) 8, ChatColor.YELLOW.toString()
-            + "Click to ACCEPT Duel Stake", "");
-    public static ItemStack green_button = ItemMechanics.signNewCustomItem(Material.INK_SACK, (short) 10, ChatColor.GREEN.toString() + "Duel ACCEPTED.",
-            ChatColor.GRAY.toString() + "Modify the stake to unaccept.");
+    public static ItemStack gray_button = ItemMechanics.signNewCustomItem(Material.INK_SACK, (short) 8,
+            ChatColor.YELLOW.toString() + "Click to ACCEPT Duel Stake", "");
+    public static ItemStack green_button = ItemMechanics.signNewCustomItem(Material.INK_SACK, (short) 10,
+            ChatColor.GREEN.toString() + "Duel ACCEPTED.", ChatColor.GRAY.toString() + "Modify the stake to unaccept.");
 
-    public static ItemStack t0_armor_icon = ItemMechanics.signNewCustomItem(Material.getMaterial(111), (short) 0, ChatColor.WHITE.toString()
-            + "Armor Tier Limit", ChatColor.RED + "Tier 0 [NO ARMOR]" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY
-            + "armor in this duel.");
+    public static ItemStack t0_armor_icon = ItemMechanics.signNewCustomItem(Material.getMaterial(111), (short) 0,
+            ChatColor.WHITE.toString() + "Armor Tier Limit", ChatColor.RED + "Tier 0 [NO ARMOR]" + "," + ChatColor.GRAY
+                    + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor in this duel.");
 
-    public static ItemStack t1_armor_icon = ItemMechanics.signNewCustomItem(Material.LEATHER_CHESTPLATE, (short) 0, ChatColor.WHITE.toString()
-            + "Armor Tier Limit", ChatColor.RED + "Tier 1" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor above "
-            + ChatColor.WHITE + ChatColor.UNDERLINE + "TIER 1");
-
-    public static ItemStack t2_armor_icon = ItemMechanics.signNewCustomItem(Material.CHAINMAIL_CHESTPLATE, (short) 0, ChatColor.GREEN.toString()
-            + "Armor Tier Limit", ChatColor.RED + "Tier 2" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor above "
-            + ChatColor.GREEN + ChatColor.UNDERLINE + "TIER 2");
-
-    public static ItemStack t3_armor_icon = ItemMechanics.signNewCustomItem(Material.IRON_CHESTPLATE, (short) 0,
-            ChatColor.AQUA.toString() + "Armor Tier Limit", ChatColor.RED + "Tier 3" + "," + ChatColor.GRAY + "You will not be able to use ANY" + ","
-                    + ChatColor.GRAY + "armor above " + ChatColor.AQUA + ChatColor.UNDERLINE + "TIER 3");
-
-    public static ItemStack t4_armor_icon = ItemMechanics.signNewCustomItem(Material.DIAMOND_CHESTPLATE, (short) 0, ChatColor.LIGHT_PURPLE.toString()
-            + "Armor Tier Limit", ChatColor.RED + "Tier 4" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor above "
-            + ChatColor.LIGHT_PURPLE + ChatColor.UNDERLINE + "TIER 4");
-
-    public static ItemStack t5_armor_icon = ItemMechanics.signNewCustomItem(Material.GOLD_CHESTPLATE, (short) 0, ChatColor.YELLOW.toString()
-            + "Armor Tier Limit", ChatColor.RED + "Tier 5" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor above "
-            + ChatColor.YELLOW + ChatColor.UNDERLINE + "TIER 5");
-
-    public static ItemStack t0_weapon_icon = ItemMechanics.signNewCustomItem(Material.getMaterial(397), (short) 3, ChatColor.WHITE.toString()
-            + "Weapon Tier Limit", ChatColor.RED + "Tier 0 [FISTS]" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY
-            + "weapons in this duel.");
-
-    public static ItemStack t1_weapon_icon = ItemMechanics.signNewCustomItem(Material.WOOD_SWORD, (short) 0, ChatColor.WHITE.toString() + "Weapon Tier Limit",
-            ChatColor.RED + "Tier 1" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapon above " + ChatColor.WHITE
+    public static ItemStack t1_armor_icon = ItemMechanics.signNewCustomItem(Material.LEATHER_CHESTPLATE, (short) 0,
+            ChatColor.WHITE.toString() + "Armor Tier Limit", ChatColor.RED + "Tier 1" + "," + ChatColor.GRAY
+                    + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor above " + ChatColor.WHITE
                     + ChatColor.UNDERLINE + "TIER 1");
 
-    public static ItemStack t2_weapon_icon = ItemMechanics.signNewCustomItem(Material.STONE_SWORD, (short) 0, ChatColor.GREEN.toString() + "Weapon Tier Limit",
-            ChatColor.RED + "Tier 2" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapon above " + ChatColor.GREEN
+    public static ItemStack t2_armor_icon = ItemMechanics.signNewCustomItem(Material.CHAINMAIL_CHESTPLATE, (short) 0,
+            ChatColor.GREEN.toString() + "Armor Tier Limit", ChatColor.RED + "Tier 2" + "," + ChatColor.GRAY
+                    + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor above " + ChatColor.GREEN
                     + ChatColor.UNDERLINE + "TIER 2");
 
-    public static ItemStack t3_weapon_icon = ItemMechanics.signNewCustomItem(Material.IRON_SWORD, (short) 0, ChatColor.AQUA.toString() + "Weapon Tier Limit",
-            ChatColor.RED + "Tier 3" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapon above " + ChatColor.AQUA
+    public static ItemStack t3_armor_icon = ItemMechanics.signNewCustomItem(Material.IRON_CHESTPLATE, (short) 0,
+            ChatColor.AQUA.toString() + "Armor Tier Limit", ChatColor.RED + "Tier 3" + "," + ChatColor.GRAY
+                    + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor above " + ChatColor.AQUA
                     + ChatColor.UNDERLINE + "TIER 3");
 
-    public static ItemStack t4_weapon_icon = ItemMechanics.signNewCustomItem(Material.DIAMOND_SWORD, (short) 0, ChatColor.LIGHT_PURPLE.toString()
-            + "Weapon Tier Limit", ChatColor.RED + "Tier 4" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapon above "
-            + ChatColor.LIGHT_PURPLE + ChatColor.UNDERLINE + "TIER 4");
+    public static ItemStack t4_armor_icon = ItemMechanics.signNewCustomItem(Material.DIAMOND_CHESTPLATE, (short) 0,
+            ChatColor.LIGHT_PURPLE.toString() + "Armor Tier Limit", ChatColor.RED + "Tier 4" + "," + ChatColor.GRAY
+                    + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor above "
+                    + ChatColor.LIGHT_PURPLE + ChatColor.UNDERLINE + "TIER 4");
 
-    public static ItemStack t5_weapon_icon = ItemMechanics.signNewCustomItem(Material.GOLD_SWORD, (short) 0, ChatColor.YELLOW.toString() + "Weapon Tier Limit",
-            ChatColor.RED + "Tier 5" + "," + ChatColor.GRAY + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapon above " + ChatColor.YELLOW
+    public static ItemStack t5_armor_icon = ItemMechanics.signNewCustomItem(Material.GOLD_CHESTPLATE, (short) 0,
+            ChatColor.YELLOW.toString() + "Armor Tier Limit", ChatColor.RED + "Tier 5" + "," + ChatColor.GRAY
+                    + "You will not be able to use ANY" + "," + ChatColor.GRAY + "armor above " + ChatColor.YELLOW
+                    + ChatColor.UNDERLINE + "TIER 5");
+
+    public static ItemStack t0_weapon_icon = ItemMechanics.signNewCustomItem(Material.getMaterial(397), (short) 3,
+            ChatColor.WHITE.toString() + "Weapon Tier Limit", ChatColor.RED + "Tier 0 [FISTS]" + "," + ChatColor.GRAY
+                    + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapons in this duel.");
+
+    public static ItemStack t1_weapon_icon = ItemMechanics.signNewCustomItem(Material.WOOD_SWORD, (short) 0,
+            ChatColor.WHITE.toString() + "Weapon Tier Limit", ChatColor.RED + "Tier 1" + "," + ChatColor.GRAY
+                    + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapon above " + ChatColor.WHITE
+                    + ChatColor.UNDERLINE + "TIER 1");
+
+    public static ItemStack t2_weapon_icon = ItemMechanics.signNewCustomItem(Material.STONE_SWORD, (short) 0,
+            ChatColor.GREEN.toString() + "Weapon Tier Limit", ChatColor.RED + "Tier 2" + "," + ChatColor.GRAY
+                    + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapon above " + ChatColor.GREEN
+                    + ChatColor.UNDERLINE + "TIER 2");
+
+    public static ItemStack t3_weapon_icon = ItemMechanics.signNewCustomItem(Material.IRON_SWORD, (short) 0,
+            ChatColor.AQUA.toString() + "Weapon Tier Limit", ChatColor.RED + "Tier 3" + "," + ChatColor.GRAY
+                    + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapon above " + ChatColor.AQUA
+                    + ChatColor.UNDERLINE + "TIER 3");
+
+    public static ItemStack t4_weapon_icon = ItemMechanics.signNewCustomItem(Material.DIAMOND_SWORD, (short) 0,
+            ChatColor.LIGHT_PURPLE.toString() + "Weapon Tier Limit", ChatColor.RED + "Tier 4" + "," + ChatColor.GRAY
+                    + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapon above "
+                    + ChatColor.LIGHT_PURPLE + ChatColor.UNDERLINE + "TIER 4");
+
+    public static ItemStack t5_weapon_icon = ItemMechanics.signNewCustomItem(Material.GOLD_SWORD, (short) 0,
+            ChatColor.YELLOW.toString() + "Weapon Tier Limit", ChatColor.RED + "Tier 5" + "," + ChatColor.GRAY
+                    + "You will not be able to use ANY" + "," + ChatColor.GRAY + "weapon above " + ChatColor.YELLOW
                     + ChatColor.UNDERLINE + "TIER 5");
     // These are just items used for the dueling menu.
 
@@ -136,7 +149,7 @@ public class DuelMechanics implements Listener {
     public static HashMap<String, Integer> duel_max_armor_tier = new HashMap<String, Integer>();
     public static HashMap<String, Integer> duel_max_weapon_tier = new HashMap<String, Integer>();
 
-    // static HashMap<String, Inventory> duel_stake = new HashMap<String, Inventory>();
+    static HashMap<String, Inventory> duel_stake = new HashMap<String, Inventory>();
 
     public static HashMap<Player, Integer> duel_countdown = new HashMap<Player, Integer>();
     public static HashMap<Player, Integer> duel_request_cooldown = new HashMap<Player, Integer>();
@@ -144,7 +157,7 @@ public class DuelMechanics implements Listener {
     static HashMap<Player, Inventory> duel_secure = new HashMap<Player, Inventory>();
     static HashMap<String, Location> duel_start_location = new HashMap<String, Location>();
 
-    // List<String> in_duel_window = new ArrayList<String>();
+    List<String> in_duel_window = new ArrayList<String>();
     public static List<Player> in_duel = new ArrayList<Player>();
     public static List<String> warned_players = new ArrayList<String>();
 
@@ -195,12 +208,13 @@ public class DuelMechanics implements Listener {
                 continue;
             }
             Player p_enemy = Bukkit.getPlayer(opponent);
-            if (!(p.getWorld().getName().equalsIgnoreCase(p_enemy.getWorld().getName())) || p.getLocation().distanceSquared(p_enemy.getLocation()) > 100.0D) {
+            if (!(p.getWorld().getName().equalsIgnoreCase(p_enemy.getWorld().getName()))
+                    || p.getLocation().distanceSquared(p_enemy.getLocation()) > 100.0D) {
                 // Cancel duel request.
-                p.sendMessage(ChatColor.RED + "The user " + p_enemy.getName() + " is now " + ChatColor.BOLD + " >10 blocks " + ChatColor.RED
-                        + "away from you, and therfore cancelled their duel request.");
-                p_enemy.sendMessage(ChatColor.RED + "The user " + p.getName() + " is now " + ChatColor.BOLD + " >10 blocks " + ChatColor.RED
-                        + "away from you, and therfore cancelled their duel request.");
+                p.sendMessage(ChatColor.RED + "The user " + p_enemy.getName() + " is now " + ChatColor.BOLD
+                        + " >10 blocks " + ChatColor.RED + "away from you, and therfore cancelled their duel request.");
+                p_enemy.sendMessage(ChatColor.RED + "The user " + p.getName() + " is now " + ChatColor.BOLD
+                        + " >10 blocks " + ChatColor.RED + "away from you, and therfore cancelled their duel request.");
 
                 if (p.getOpenInventory().getTopInventory().getTitle().contains(p.getName())) {
                     p.closeInventory();
@@ -297,37 +311,60 @@ public class DuelMechanics implements Listener {
          * 
          * String r_name1 = p1.getName(); String r_name2 = p2.getName();
          * 
-         * EntityPlayer ent_p1 = ((CraftPlayer) p1).getHandle(); EntityPlayer ent_p2 = ((CraftPlayer) p2).getHandle();
+         * EntityPlayer ent_p1 = ((CraftPlayer) p1).getHandle(); EntityPlayer
+         * ent_p2 = ((CraftPlayer) p2).getHandle();
          * 
-         * net.minecraft.server.v1_7_R1.ItemStack ent1_boots = null, ent1_legs = null, ent1_chest = null, ent1_head = null;
-         * net.minecraft.server.v1_7_R1.ItemStack ent2_boots = null, ent2_legs = null, ent2_chest = null, ent2_head = null;
+         * net.minecraft.server.v1_7_R1.ItemStack ent1_boots = null, ent1_legs =
+         * null, ent1_chest = null, ent1_head = null;
+         * net.minecraft.server.v1_7_R1.ItemStack ent2_boots = null, ent2_legs =
+         * null, ent2_chest = null, ent2_head = null;
          * 
-         * if(ent_p1.getEquipment(1) != null){ ent1_boots = ent_p1.getEquipment(1); } if(ent_p1.getEquipment(2) != null){ ent1_legs = ent_p1.getEquipment(2); }
-         * if(ent_p1.getEquipment(3) != null){ ent1_chest = ent_p1.getEquipment(3); } if(ent_p1.getEquipment(4) != null){ ent1_head =ent_p1.getEquipment(4); }
+         * if(ent_p1.getEquipment(1) != null){ ent1_boots =
+         * ent_p1.getEquipment(1); } if(ent_p1.getEquipment(2) != null){
+         * ent1_legs = ent_p1.getEquipment(2); } if(ent_p1.getEquipment(3) !=
+         * null){ ent1_chest = ent_p1.getEquipment(3); }
+         * if(ent_p1.getEquipment(4) != null){ ent1_head
+         * =ent_p1.getEquipment(4); }
          * 
-         * if(ent_p2.getEquipment(1) != null){ ent2_boots = ent_p2.getEquipment(1); } if(ent_p2.getEquipment(2) != null){ ent2_legs = ent_p2.getEquipment(2); }
-         * if(ent_p2.getEquipment(3) != null){ ent2_chest = ent_p2.getEquipment(3); } if(ent_p2.getEquipment(4) != null){ ent2_head =ent_p2.getEquipment(4); }
+         * if(ent_p2.getEquipment(1) != null){ ent2_boots =
+         * ent_p2.getEquipment(1); } if(ent_p2.getEquipment(2) != null){
+         * ent2_legs = ent_p2.getEquipment(2); } if(ent_p2.getEquipment(3) !=
+         * null){ ent2_chest = ent_p2.getEquipment(3); }
+         * if(ent_p2.getEquipment(4) != null){ ent2_head
+         * =ent_p2.getEquipment(4); }
          * 
-         * ent_p1.name = red.toString() + ChatColor.stripColor(p1.getName()); ent_p2.name = red.toString() + ChatColor.stripColor(p2.getName());
+         * ent_p1.name = red.toString() + ChatColor.stripColor(p1.getName());
+         * ent_p2.name = red.toString() + ChatColor.stripColor(p2.getName());
          * 
-         * ((CraftPlayer) p1).getHandle().playerConnection.sendPacket(new Packet20NamedEntitySpawn(ent_p2)); ((CraftPlayer)
-         * p2).getHandle().playerConnection.sendPacket(new Packet20NamedEntitySpawn(ent_p1));
+         * ((CraftPlayer) p1).getHandle().playerConnection.sendPacket(new
+         * Packet20NamedEntitySpawn(ent_p2)); ((CraftPlayer)
+         * p2).getHandle().playerConnection.sendPacket(new
+         * Packet20NamedEntitySpawn(ent_p1));
          * 
-         * List<Packet> ent1_pack_list = new ArrayList<Packet>(); if(ent1_boots != null){ ent1_pack_list.add(new Packet5EntityEquipment(ent_p1.id, 1,
-         * ent1_boots)); } if(ent1_legs != null){ ent1_pack_list.add(new Packet5EntityEquipment(ent_p1.id, 2, ent1_legs)); } if(ent1_chest != null){
-         * ent1_pack_list.add(new Packet5EntityEquipment(ent_p1.id, 3, ent1_chest)); } if(ent1_head != null){ ent1_pack_list.add(new
+         * List<Packet> ent1_pack_list = new ArrayList<Packet>(); if(ent1_boots
+         * != null){ ent1_pack_list.add(new Packet5EntityEquipment(ent_p1.id, 1,
+         * ent1_boots)); } if(ent1_legs != null){ ent1_pack_list.add(new
+         * Packet5EntityEquipment(ent_p1.id, 2, ent1_legs)); } if(ent1_chest !=
+         * null){ ent1_pack_list.add(new Packet5EntityEquipment(ent_p1.id, 3,
+         * ent1_chest)); } if(ent1_head != null){ ent1_pack_list.add(new
          * Packet5EntityEquipment(ent_p1.id, 4, ent1_head)); }
          * 
-         * List<Packet> ent2_pack_list = new ArrayList<Packet>(); if(ent2_boots != null){ ent2_pack_list.add(new Packet5EntityEquipment(ent_p2.id, 1,
-         * ent2_boots)); } if(ent2_legs != null){ ent2_pack_list.add(new Packet5EntityEquipment(ent_p2.id, 2, ent2_legs)); } if(ent2_chest != null){
-         * ent2_pack_list.add(new Packet5EntityEquipment(ent_p2.id, 3, ent2_chest)); } if(ent2_head != null){ ent2_pack_list.add(new
+         * List<Packet> ent2_pack_list = new ArrayList<Packet>(); if(ent2_boots
+         * != null){ ent2_pack_list.add(new Packet5EntityEquipment(ent_p2.id, 1,
+         * ent2_boots)); } if(ent2_legs != null){ ent2_pack_list.add(new
+         * Packet5EntityEquipment(ent_p2.id, 2, ent2_legs)); } if(ent2_chest !=
+         * null){ ent2_pack_list.add(new Packet5EntityEquipment(ent_p2.id, 3,
+         * ent2_chest)); } if(ent2_head != null){ ent2_pack_list.add(new
          * Packet5EntityEquipment(ent_p2.id, 4, ent2_head)); }
          * 
-         * for(Packet pa : ent1_pack_list){ ((CraftPlayer) p2).getHandle().playerConnection.sendPacket(pa); }
+         * for(Packet pa : ent1_pack_list){ ((CraftPlayer)
+         * p2).getHandle().playerConnection.sendPacket(pa); }
          * 
-         * for(Packet pa : ent2_pack_list){ ((CraftPlayer) p1).getHandle().playerConnection.sendPacket(pa); }
+         * for(Packet pa : ent2_pack_list){ ((CraftPlayer)
+         * p1).getHandle().playerConnection.sendPacket(pa); }
          * 
-         * ent_p1.name = ChatColor.stripColor(r_name1); ent_p2.name = ChatColor.stripColor(r_name2);
+         * ent_p1.name = ChatColor.stripColor(r_name1); ent_p2.name =
+         * ChatColor.stripColor(r_name2);
          */
     }
 
@@ -344,12 +381,12 @@ public class DuelMechanics implements Listener {
         duel_request.remove(attacker.getName());
         duel_start_location.put(attacker.getName(), attacker.getLocation());
         duel_start_location.put(attacked.getName(), attacked.getLocation());
-        attacker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Duel stake ACCEPTED -> Opponent: " + ChatColor.GREEN + "" + ChatColor.BOLD
-                + attacked.getName() + ChatColor.GREEN + "");
+        attacker.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Duel stake ACCEPTED -> Opponent: "
+                + ChatColor.GREEN + "" + ChatColor.BOLD + attacked.getName() + ChatColor.GREEN + "");
         attacker.sendMessage(ChatColor.YELLOW + "Duel will begin in 10 seconds...");
 
-        attacked.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Duel stake ACCEPTED -> Opponent: " + ChatColor.GREEN + "" + ChatColor.BOLD
-                + attacker.getName() + ChatColor.GREEN + "");
+        attacked.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Duel stake ACCEPTED -> Opponent: "
+                + ChatColor.GREEN + "" + ChatColor.BOLD + attacker.getName() + ChatColor.GREEN + "");
         attacked.sendMessage(ChatColor.YELLOW + "Duel will begin in 10 seconds...");
 
         MountMechanics.summon_mount.remove(attacker.getName());
@@ -370,7 +407,8 @@ public class DuelMechanics implements Listener {
 
     public boolean removeIllegalArmor(Player pl) {
         int max_armor_tier = duel_max_armor_tier.get(pl.getName());
-        // Remove any illegal armor the player may be wearing at the start of the duel.
+        // Remove any illegal armor the player may be wearing at the start of
+        // the duel.
         ItemStack helmet = pl.getInventory().getHelmet();
         ItemStack chest = pl.getInventory().getChestplate();
         ItemStack legs = pl.getInventory().getLeggings();
@@ -402,7 +440,8 @@ public class DuelMechanics implements Listener {
                 }
             }, 2L);
 
-        } catch (ArrayIndexOutOfBoundsException err) {
+        }
+        catch (ArrayIndexOutOfBoundsException err) {
             // ArrayIndexOutOfBounds thrown when no space?
             // err.printStackTrace();
             return false;
@@ -412,7 +451,8 @@ public class DuelMechanics implements Listener {
     }
 
     public static boolean isArmorIcon(ItemStack is) {
-        if (is != null && is.hasItemMeta() && is.getItemMeta().hasDisplayName() && is.getItemMeta().getDisplayName().contains("Armor Tier Limit")
+        if (is != null && is.hasItemMeta() && is.getItemMeta().hasDisplayName()
+                && is.getItemMeta().getDisplayName().contains("Armor Tier Limit")
                 && !(is.getItemMeta().getDisplayName().contains(ChatColor.GOLD.toString()))) {
             return true;
         }
@@ -420,7 +460,8 @@ public class DuelMechanics implements Listener {
     }
 
     public static boolean isWeaponIcon(ItemStack is) {
-        if (is != null && is.hasItemMeta() && is.getItemMeta().hasDisplayName() && is.getItemMeta().getDisplayName().contains("Weapon Tier Limit")
+        if (is != null && is.hasItemMeta() && is.getItemMeta().hasDisplayName()
+                && is.getItemMeta().getDisplayName().contains("Weapon Tier Limit")
                 && !(is.getItemMeta().getDisplayName().contains(ChatColor.GOLD.toString()))) {
             return true;
         }
@@ -475,52 +516,76 @@ public class DuelMechanics implements Listener {
         return t0_weapon_icon; // Default.
     }
 
-    /*
-     * public void loadDuelMenu(final Player attacker, final Player attacked) {
-     * 
-     * duel_start_location.put(attacker.getName(), attacker.getLocation()); duel_start_location.put(attacked.getName(), attacked.getLocation());
-     * 
-     * final Inventory DuelWindow = Bukkit.createInventory(null, 36, TradeMechanics.generateTitle(attacked.getName(), attacker.getName()));
-     * DuelWindow.setItem(4, divider); DuelWindow.setItem(13, divider); DuelWindow.setItem(22, divider); DuelWindow.setItem(0, gray_button);
-     * DuelWindow.setItem(8, gray_button);
-     * 
-     * DuelWindow.setItem(27, divider); DuelWindow.setItem(28, divider); DuelWindow.setItem(29, divider); DuelWindow.setItem(31, divider);
-     * 
-     * DuelWindow.setItem(30, divider); DuelWindow.setItem(32, divider);
-     * 
-     * // 1.1 DuelWindow.setItem(30, t5_armor_icon); DuelWindow.setItem(32, t5_weapon_icon);
-     * 
-     * DuelWindow.setItem(33, divider); DuelWindow.setItem(34, divider); DuelWindow.setItem(35, divider);
-     * 
-     * 
-     * //attacker.openInventory(DuelWindow); //attacked.openInventory(DuelWindow);
-     * 
-     * //attacker.sendMessage(ChatColor.YELLOW + "Duel Menu Opened."); //attacker.sendMessage(ChatColor.GRAY + "Place staked items here.");
-     * //attacker.sendMessage(ChatColor.GRAY + "No stakes required.");
-     * 
-     * //attacked.sendMessage(ChatColor.YELLOW + "Duel Menu Opened."); //attacked.sendMessage(ChatColor.GRAY + "Place staked items here.");
-     * //attacked.sendMessage(ChatColor.GRAY + "No stakes required.");
-     * 
-     * attacker.playSound(attacker.getLocation(), Sound.WOOD_CLICK, 1F, 0.8F); attacked.playSound(attacked.getLocation(), Sound.WOOD_CLICK, 1F, 0.8F);
-     * 
-     * //in_duel_window.add(attacked.getName()); //in_duel_window.add(attacker.getName());
-     * 
-     * duel_map.remove(attacker.getName()); duel_map.remove(attacked.getName());
-     * 
-     * duel_max_weapon_tier.remove(attacker.getName()); duel_max_armor_tier.remove(attacker.getName());
-     * 
-     * duel_max_weapon_tier.remove(attacked.getName()); duel_max_armor_tier.remove(attacked.getName());
-     * 
-     * duel_map.put(attacker.getName(), attacked.getName()); duel_map.put(attacked.getName(), attacker.getName()); startDuel(attacker, attacked); }
-     */
+    public void loadDuelMenu(final Player attacker, final Player attacked) {
+
+        duel_start_location.put(attacker.getName(), attacker.getLocation());
+        duel_start_location.put(attacked.getName(), attacked.getLocation());
+
+        final Inventory DuelWindow = Bukkit.createInventory(null, 36,
+                TradeMechanics.generateTitle(attacked.getName(), attacker.getName()));
+        DuelWindow.setItem(4, divider);
+        DuelWindow.setItem(13, divider);
+        DuelWindow.setItem(22, divider);
+        DuelWindow.setItem(0, gray_button);
+        DuelWindow.setItem(8, gray_button);
+
+        DuelWindow.setItem(27, divider);
+        DuelWindow.setItem(28, divider);
+        DuelWindow.setItem(29, divider);
+        DuelWindow.setItem(31, divider);
+
+        DuelWindow.setItem(30, divider);
+        DuelWindow.setItem(32, divider);
+
+        // 1.1
+        DuelWindow.setItem(30, t5_armor_icon);
+        DuelWindow.setItem(32, t5_weapon_icon);
+
+        DuelWindow.setItem(33, divider);
+        DuelWindow.setItem(34, divider);
+        DuelWindow.setItem(35, divider);
+
+        attacker.openInventory(DuelWindow);
+        attacked.openInventory(DuelWindow);
+
+        attacker.sendMessage(ChatColor.YELLOW + "Duel Menu Opened.");
+        attacker.sendMessage(ChatColor.GRAY + "Place staked items here.");
+        attacker.sendMessage(ChatColor.GRAY + "No stakes required.");
+
+        attacked.sendMessage(ChatColor.YELLOW + "Duel Menu Opened.");
+        attacked.sendMessage(ChatColor.GRAY + "Place staked items here.");
+        attacked.sendMessage(ChatColor.GRAY + "No stakes required.");
+
+        attacker.playSound(attacker.getLocation(), Sound.WOOD_CLICK, 1F, 0.8F);
+        attacked.playSound(attacked.getLocation(), Sound.WOOD_CLICK, 1F, 0.8F);
+
+        in_duel_window.add(attacked.getName());
+        in_duel_window.add(attacker.getName());
+
+        duel_map.remove(attacker.getName());
+        duel_map.remove(attacked.getName());
+
+        duel_max_weapon_tier.remove(attacker.getName());
+        duel_max_armor_tier.remove(attacker.getName());
+
+        duel_max_weapon_tier.remove(attacked.getName());
+        duel_max_armor_tier.remove(attacked.getName());
+
+        duel_map.put(attacker.getName(), attacked.getName());
+        duel_map.put(attacked.getName(), attacker.getName());
+//        startDuel(attacker, attacked);
+    }
 
     @EventHandler(priority = EventPriority.LOW)
     public void DuelWindowQuitMonitor(PlayerQuitEvent e) {
         Player closer = e.getPlayer();
-        // if(!(in_duel_window.contains(closer.getName()))) { return; }
+        if (!(in_duel_window.contains(closer.getName()))) {
+            return;
+        }
 
         if (!(duel_map.containsKey(closer.getName()))) {
-            // This could be an issue since we have a 10 tick delay on opening the menu...
+            // This could be an issue since we have a 10 tick delay on opening
+            // the menu...
             return;
         }
 
@@ -532,8 +597,8 @@ public class DuelMechanics implements Listener {
             duel_request.remove(closer.getName());
             duel_request.remove(close_partner);
             duel_secure.remove(closer);
-            // in_duel_window.remove(closer.getName());
-            // in_duel_window.remove(close_partner);
+            in_duel_window.remove(closer.getName());
+            in_duel_window.remove(close_partner);
             return;
         }
 
@@ -554,12 +619,14 @@ public class DuelMechanics implements Listener {
             if (left_side == true) {
                 while (slot_var <= 27) {
                     slot_var++;
-                    if (!(slot_var == 0 || slot_var == 1 || slot_var == 2 || slot_var == 3 || slot_var == 9 || slot_var == 10 || slot_var == 11
-                            || slot_var == 12 || slot_var == 18 || slot_var == 19 || slot_var == 20 || slot_var == 21)) {
+                    if (!(slot_var == 0 || slot_var == 1 || slot_var == 2 || slot_var == 3 || slot_var == 9
+                            || slot_var == 10 || slot_var == 11 || slot_var == 12 || slot_var == 18 || slot_var == 19
+                            || slot_var == 20 || slot_var == 21)) {
                         continue;
                     }
                     ItemStack i = duelInv.getItem(slot_var);
-                    if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.BONE) {
+                    if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i)
+                            || i.getType() == Material.BONE) {
                         continue;
                     }
                     if (i.getType() == Material.EMERALD) {
@@ -573,12 +640,14 @@ public class DuelMechanics implements Listener {
 
                 while (slot_var <= 27) {
                     slot_var++;
-                    if (!(slot_var == 5 || slot_var == 6 || slot_var == 7 || slot_var == 8 || slot_var == 14 || slot_var == 15 || slot_var == 16
-                            || slot_var == 17 || slot_var == 23 || slot_var == 24 || slot_var == 25 || slot_var == 26)) {
+                    if (!(slot_var == 5 || slot_var == 6 || slot_var == 7 || slot_var == 8 || slot_var == 14
+                            || slot_var == 15 || slot_var == 16 || slot_var == 17 || slot_var == 23 || slot_var == 24
+                            || slot_var == 25 || slot_var == 26)) {
                         continue;
                     }
                     ItemStack i = duelInv.getItem(slot_var);
-                    if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.BONE) {
+                    if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i)
+                            || i.getType() == Material.BONE) {
                         continue;
                     }
                     if (i.getType() == Material.EMERALD) {
@@ -591,12 +660,14 @@ public class DuelMechanics implements Listener {
             if (left_side == false) {
                 while (slot_var <= 27) {
                     slot_var++;
-                    if (!(slot_var == 0 || slot_var == 1 || slot_var == 2 || slot_var == 3 || slot_var == 9 || slot_var == 10 || slot_var == 11
-                            || slot_var == 12 || slot_var == 18 || slot_var == 19 || slot_var == 20 || slot_var == 21)) {
+                    if (!(slot_var == 0 || slot_var == 1 || slot_var == 2 || slot_var == 3 || slot_var == 9
+                            || slot_var == 10 || slot_var == 11 || slot_var == 12 || slot_var == 18 || slot_var == 19
+                            || slot_var == 20 || slot_var == 21)) {
                         continue;
                     }
                     ItemStack i = duelInv.getItem(slot_var);
-                    if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.BONE) {
+                    if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i)
+                            || i.getType() == Material.BONE) {
                         continue;
                     }
                     if (i.getType() == Material.EMERALD) {
@@ -608,12 +679,14 @@ public class DuelMechanics implements Listener {
 
                 while (slot_var <= 27) {
                     slot_var++;
-                    if (!(slot_var == 5 || slot_var == 6 || slot_var == 7 || slot_var == 8 || slot_var == 14 || slot_var == 15 || slot_var == 16
-                            || slot_var == 17 || slot_var == 23 || slot_var == 24 || slot_var == 25 || slot_var == 26)) {
+                    if (!(slot_var == 5 || slot_var == 6 || slot_var == 7 || slot_var == 8 || slot_var == 14
+                            || slot_var == 15 || slot_var == 16 || slot_var == 17 || slot_var == 23 || slot_var == 24
+                            || slot_var == 25 || slot_var == 26)) {
                         continue;
                     }
                     ItemStack i = duelInv.getItem(slot_var);
-                    if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.BONE) {
+                    if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i)
+                            || i.getType() == Material.BONE) {
                         continue;
                     }
                     if (i.getType() == Material.EMERALD) {
@@ -641,8 +714,8 @@ public class DuelMechanics implements Listener {
             duel_request.remove(duel_partner.getName());
             duel_secure.remove(closer);
             duel_secure.remove(duel_partner);
-            // in_duel_window.remove(closer.getName());
-            // in_duel_window.remove(duel_partner.getName());
+            in_duel_window.remove(closer.getName());
+            in_duel_window.remove(duel_partner.getName());
 
             duel_partner.closeInventory();
 
@@ -650,11 +723,16 @@ public class DuelMechanics implements Listener {
         }
     }
 
-    /*
-     * @EventHandler public void onInventoryOpenEvent(InventoryOpenEvent e) { Player p = (Player) e.getPlayer(); if(in_duel_window.contains(p.getName()) &&
-     * duel_map.containsKey(p.getName()) && Bukkit.getPlayer(duel_map.get(p.getName())) != null) {
-     * if(!e.getInventory().getName().toLowerCase().contains(p.getName().toLowerCase())) { e.setCancelled(true); } } }
-     */
+    @EventHandler
+    public void onInventoryOpenEvent(InventoryOpenEvent e) {
+        Player p = (Player) e.getPlayer();
+        if (in_duel_window.contains(p.getName()) && duel_map.containsKey(p.getName())
+                && Bukkit.getPlayer(duel_map.get(p.getName())) != null) {
+            if (!e.getInventory().getName().toLowerCase().contains(p.getName().toLowerCase())) {
+                e.setCancelled(true);
+            }
+        }
+    }
 
     @EventHandler
     public void onSpoilersMenuCloseEvent(InventoryCloseEvent e) {
@@ -683,14 +761,16 @@ public class DuelMechanics implements Listener {
         if (!(e.getInventory().getName().contains(closer.getName())) || !e.getInventory().contains(Material.BONE)) {
             return;
         }
-        // if(!in_duel_window.contains(closer.getName())) { return; }
+        if (!in_duel_window.contains(closer.getName())) {
+            return;
+        }
         if (!(duel_map.containsKey(closer.getName()))) {
             return;
         }
         Player trade_partner = Bukkit.getPlayer(duel_map.get(closer.getName()));
 
-        // in_duel_window.remove(closer.getName());
-        // in_duel_window.remove(trade_partner.getName());
+        in_duel_window.remove(closer.getName());
+        in_duel_window.remove(trade_partner.getName());
 
         boolean left_side = false;
         Inventory tradeInv = closer.getOpenInventory().getTopInventory();
@@ -706,18 +786,21 @@ public class DuelMechanics implements Listener {
         if (left_side == true) {
             while (slot_var <= 27) {
                 slot_var++;
-                if (!(slot_var == 0 || slot_var == 1 || slot_var == 2 || slot_var == 3 || slot_var == 9 || slot_var == 10 || slot_var == 11 || slot_var == 12
-                        || slot_var == 18 || slot_var == 19 || slot_var == 20 || slot_var == 21)) {
+                if (!(slot_var == 0 || slot_var == 1 || slot_var == 2 || slot_var == 3 || slot_var == 9
+                        || slot_var == 10 || slot_var == 11 || slot_var == 12 || slot_var == 18 || slot_var == 19
+                        || slot_var == 20 || slot_var == 21)) {
                     continue;
                 }
                 ItemStack i = tradeInv.getItem(slot_var);
-                if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.BONE) {
+                if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i)
+                        || i.getType() == Material.BONE) {
                     continue;
                 }
                 if (i.getType() == Material.EMERALD) {
                     i = MoneyMechanics.makeGems(MoneyMechanics.getCountMeta(i));
                 }
-                // closer.getInventory().setItem(closer.getInventory().firstEmpty(), i);
+                // closer.getInventory().setItem(closer.getInventory().firstEmpty(),
+                // i);
                 closer.getInventory().setItem(closer.getInventory().firstEmpty(), i);
 
             }
@@ -726,12 +809,14 @@ public class DuelMechanics implements Listener {
 
             while (slot_var <= 27) {
                 slot_var++;
-                if (!(slot_var == 5 || slot_var == 6 || slot_var == 7 || slot_var == 8 || slot_var == 14 || slot_var == 15 || slot_var == 16 || slot_var == 17
-                        || slot_var == 23 || slot_var == 24 || slot_var == 25 || slot_var == 26)) {
+                if (!(slot_var == 5 || slot_var == 6 || slot_var == 7 || slot_var == 8 || slot_var == 14
+                        || slot_var == 15 || slot_var == 16 || slot_var == 17 || slot_var == 23 || slot_var == 24
+                        || slot_var == 25 || slot_var == 26)) {
                     continue;
                 }
                 ItemStack i = tradeInv.getItem(slot_var);
-                if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.BONE) {
+                if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i)
+                        || i.getType() == Material.BONE) {
                     continue;
                 }
                 if (i.getType() == Material.EMERALD) {
@@ -744,12 +829,14 @@ public class DuelMechanics implements Listener {
         if (left_side == false) {
             while (slot_var <= 27) {
                 slot_var++;
-                if (!(slot_var == 0 || slot_var == 1 || slot_var == 2 || slot_var == 3 || slot_var == 9 || slot_var == 10 || slot_var == 11 || slot_var == 12
-                        || slot_var == 18 || slot_var == 19 || slot_var == 20 || slot_var == 21)) {
+                if (!(slot_var == 0 || slot_var == 1 || slot_var == 2 || slot_var == 3 || slot_var == 9
+                        || slot_var == 10 || slot_var == 11 || slot_var == 12 || slot_var == 18 || slot_var == 19
+                        || slot_var == 20 || slot_var == 21)) {
                     continue;
                 }
                 ItemStack i = tradeInv.getItem(slot_var);
-                if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.BONE) {
+                if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i)
+                        || i.getType() == Material.BONE) {
                     continue;
                 }
                 if (i.getType() == Material.EMERALD) {
@@ -761,12 +848,14 @@ public class DuelMechanics implements Listener {
 
             while (slot_var <= 27) {
                 slot_var++;
-                if (!(slot_var == 5 || slot_var == 6 || slot_var == 7 || slot_var == 8 || slot_var == 14 || slot_var == 15 || slot_var == 16 || slot_var == 17
-                        || slot_var == 23 || slot_var == 24 || slot_var == 25 || slot_var == 26)) {
+                if (!(slot_var == 5 || slot_var == 6 || slot_var == 7 || slot_var == 8 || slot_var == 14
+                        || slot_var == 15 || slot_var == 16 || slot_var == 17 || slot_var == 23 || slot_var == 24
+                        || slot_var == 25 || slot_var == 26)) {
                     continue;
                 }
                 ItemStack i = tradeInv.getItem(slot_var);
-                if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i) || i.getType() == Material.BONE) {
+                if (i == null || i.getType() == Material.AIR || MerchantMechanics.isTradeButton(i)
+                        || i.getType() == Material.BONE) {
                     continue;
                 }
                 if (i.getType() == Material.EMERALD) {
@@ -819,12 +908,14 @@ public class DuelMechanics implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerDeath(PlayerDeathEvent e) {
         Player p = (Player) e.getEntity();
-        // if(in_duel_window.contains(p)) {
-        // p.closeInventory();
-        // }
+        if (in_duel_window.contains(p)) {
+            p.closeInventory();
+        }
         if (in_duel.contains(p)) {
-            // They were in a duel, this shouldn't be possible. Save all their items.
-            // p.setLevel(50); // Give them a level value so it reconginizes illegit death.
+            // They were in a duel, this shouldn't be possible. Save all their
+            // items.
+            p.setLevel(50); // Give them a level value so it reconginizes
+                            // illegit death.
 
             final Player attacker = Bukkit.getPlayer(duel_map.get(p.getName()));
             Player attacked = p;
@@ -848,8 +939,9 @@ public class DuelMechanics implements Listener {
             ChatColor attacked_color = ChatMechanics.getPlayerColor(attacked, attacked);
             String attacked_prefix = ChatMechanics.getPlayerPrefix(attacked);
 
-            attacker.sendMessage(attacker_color + attacker_prefix + attacker.getName() + ChatColor.GREEN + " has " + ChatColor.UNDERLINE + "KNOCKED OUT" + " "
-                    + attacked_color + attacked_prefix + attacked.getName() + ChatColor.GREEN + " in a duel.");
+            attacker.sendMessage(attacker_color + attacker_prefix + attacker.getName() + ChatColor.GREEN + " has "
+                    + ChatColor.UNDERLINE + "KNOCKED OUT" + " " + attacked_color + attacked_prefix + attacked.getName()
+                    + ChatColor.GREEN + " in a duel.");
 
             for (Entity ent : attacker.getNearbyEntities(48, 48, 48)) {
                 if (ent instanceof Player) {
@@ -861,19 +953,20 @@ public class DuelMechanics implements Listener {
                     ChatColor pl_attacked_color = ChatMechanics.getPlayerColor(attacked, pl);
                     String pl_attacked_prefix = ChatMechanics.getPlayerPrefix(attacked);
 
-                    pl.sendMessage(pl_attacker_color + pl_attacker_prefix + attacker.getName() + ChatColor.GREEN + " has " + ChatColor.UNDERLINE
-                            + "KNOCKED OUT" + " " + ChatColor.WHITE + pl_attacked_color + pl_attacked_prefix + attacked.getName() + ChatColor.GREEN
-                            + " in a duel.");
+                    pl.sendMessage(pl_attacker_color + pl_attacker_prefix + attacker.getName() + ChatColor.GREEN
+                            + " has " + ChatColor.UNDERLINE + "KNOCKED OUT" + " " + ChatColor.WHITE + pl_attacked_color
+                            + pl_attacked_prefix + attacked.getName() + ChatColor.GREEN + " in a duel.");
                 }
             }
-            /*
-             * if(duel_stake.containsKey(attacker.getName())) { //rewardLoot(attacker, attacked); }
-             */
+
+            if (duel_stake.containsKey(attacker.getName())) {
+                rewardLoot(attacker, attacked);
+            }
+
         }
     }
 
-    @SuppressWarnings("unused")
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerInventoryClick(InventoryClickEvent e) {
         if (!(e.getWhoClicked().getType() == EntityType.PLAYER)) {
             return;
@@ -882,9 +975,9 @@ public class DuelMechanics implements Listener {
         if (!(duel_map.containsKey(clicker.getName()))) {
             return;
         }
-        // if(!(in_duel_window.contains(clicker.getName()))) { return; }
-        if (true)
+        if (!(in_duel_window.contains(clicker.getName()))) {
             return;
+        }
         Inventory tradeWin = e.getInventory();
 
         if (e.getCurrentItem() == null) {
@@ -894,8 +987,8 @@ public class DuelMechanics implements Listener {
         Material cursor = e.getCursor().getType();
         boolean left_side = false;
 
-        if (e.getRawSlot() == 4 || e.getRawSlot() == 13 || e.getRawSlot() == 22 || e.getCurrentItem().getType() == Material.THIN_GLASS
-                || e.getCurrentItem().getType() == Material.BONE) {
+        if (e.getRawSlot() == 4 || e.getRawSlot() == 13 || e.getRawSlot() == 22
+                || e.getCurrentItem().getType() == Material.THIN_GLASS || e.getCurrentItem().getType() == Material.BONE) {
             e.setCancelled(true);
             // clicker.sendMessage(ChatColor.RED + "You can't do that.");
             // TODO: Remove Debug message ^
@@ -903,7 +996,8 @@ public class DuelMechanics implements Listener {
         }
 
         if (e.getCurrentItem().getType() == Material.NETHER_STAR || e.getCurrentItem().getType() == Material.QUARTZ
-                || CommunityMechanics.isSocialBook(e.getCurrentItem()) || !(RealmMechanics.isItemTradeable(e.getCursor()))
+                || CommunityMechanics.isSocialBook(e.getCurrentItem())
+                || !(RealmMechanics.isItemTradeable(e.getCursor()))
                 || !(RealmMechanics.isItemTradeable(e.getCurrentItem()))) {
             e.setCancelled(true);
             clicker.sendMessage(ChatColor.RED + "Untradeable Item.");
@@ -919,13 +1013,14 @@ public class DuelMechanics implements Listener {
             if (duel_secure.containsKey(clicker)) {
                 duel_secure.remove(clicker);
                 duel_secure.remove(duel_map.get(clicker.getName()));
-                // tradeWin.getItem(0).setDurability((short)8);
-                // tradeWin.getItem(8).setDurability((short)8);
+                tradeWin.getItem(0).setDurability((short) 8);
+                tradeWin.getItem(8).setDurability((short) 8);
                 tradeWin.setItem(0, gray_button);
                 tradeWin.setItem(8, gray_button);
                 clicker.sendMessage(ChatColor.RED + "Duel rules modified, unaccepted.");
-                Bukkit.getPlayer(duel_map.get(clicker.getName())).sendMessage(ChatColor.RED + "Duel rules modified by " + clicker.getName() + ", unaccepted.");
-                // duel_map.get(clicker).updateInventory();
+                Bukkit.getPlayer(duel_map.get(clicker.getName())).sendMessage(
+                        ChatColor.RED + "Duel rules modified by " + clicker.getName() + ", unaccepted.");
+                Bukkit.getPlayer(duel_map.get(clicker)).updateInventory();
                 clicker.updateInventory();
                 Bukkit.getPlayer(duel_map.get(clicker.getName())).updateInventory();
             }
@@ -936,17 +1031,19 @@ public class DuelMechanics implements Listener {
             e.setCancelled(true); // Cancel inventory event.
             // Cycle through the possible armor / weapons.
             ItemStack previous = e.getCurrentItem();
-            e.setCurrentItem(cycleWeaponIcon(previous)); // Cycle the armor icon.
+            e.setCurrentItem(cycleWeaponIcon(previous)); // Cycle the armor
+                                                         // icon.
             if (duel_secure.containsKey(clicker)) {
                 duel_secure.remove(clicker);
                 duel_secure.remove(duel_map.get(clicker.getName()));
-                // tradeWin.getItem(0).setDurability((short)8);
-                // tradeWin.getItem(8).setDurability((short)8);
+                tradeWin.getItem(0).setDurability((short)8);
+                tradeWin.getItem(8).setDurability((short)8);
                 tradeWin.setItem(0, gray_button);
                 tradeWin.setItem(8, gray_button);
                 clicker.sendMessage(ChatColor.RED + "Duel rules modified, unaccepted.");
-                Bukkit.getPlayer(duel_map.get(clicker.getName())).sendMessage(ChatColor.RED + "Duel rules modified by " + clicker.getName() + ", unaccepted.");
-                // duel_map.get(clicker).updateInventory();
+                Bukkit.getPlayer(duel_map.get(clicker.getName())).sendMessage(
+                        ChatColor.RED + "Duel rules modified by " + clicker.getName() + ", unaccepted.");
+                Bukkit.getPlayer(duel_map.get(clicker)).updateInventory();
                 clicker.updateInventory();
                 Bukkit.getPlayer(duel_map.get(clicker.getName())).updateInventory();
             }
@@ -965,17 +1062,20 @@ public class DuelMechanics implements Listener {
                 if (e.getInventory().getType() == InventoryType.PLAYER) {
                     return;
                 }
-                // if(e.getInventory() != clicker.getOpenInventory().getTopInventory()){return;}
+                if (e.getInventory() != clicker.getOpenInventory().getTopInventory()) {
+                    return;
+                }
                 if (slot_num >= 27) {
                     return;
                 }
-                if (!(slot_num == 0 || slot_num == 1 || slot_num == 2 || slot_num == 3 || slot_num == 9 || slot_num == 10 || slot_num == 11 || slot_num == 12
-                        || slot_num == 18 || slot_num == 19 || slot_num == 20 || slot_num == 21)
+                if (!(slot_num == 0 || slot_num == 1 || slot_num == 2 || slot_num == 3 || slot_num == 9
+                        || slot_num == 10 || slot_num == 11 || slot_num == 12 || slot_num == 18 || slot_num == 19
+                        || slot_num == 20 || slot_num == 21)
                         && !(slot_num > 27)) {
                     e.setCancelled(true);
                     tradeWin.setItem(slot_num, tradeWin.getItem(slot_num));
                     clicker.updateInventory();
-                    // clicker.sendMessage(ChatColor.RED + "That item isn't yours!");
+                    clicker.sendMessage(ChatColor.RED + "That item isn't yours!");
                     return;
                 }
             }
@@ -993,21 +1093,27 @@ public class DuelMechanics implements Listener {
                 if (e.getInventory().getItem(0) == null || e.getInventory().getItem(0).getType() != Material.INK_SACK) {
                     return;
                 }
-                // if(e.getInventory() != clicker.getOpenInventory().getTopInventory()){return;}
+                if (e.getInventory() != clicker.getOpenInventory().getTopInventory()) {
+                    return;
+                }
                 if (slot_num >= 27) {
                     return;
                 }
-                // if(e.getInventory().getViewers().size() <= 1){return;}
-                if (!(slot_num == 5 || slot_num == 6 || slot_num == 7 || slot_num == 8 || slot_num == 14 || slot_num == 15 || slot_num == 16 || slot_num == 17
-                        || slot_num == 23 || slot_num == 24 || slot_num == 25 || slot_num == 26)
+                if (e.getInventory().getViewers().size() <= 1) {
+                    return;
+                }
+                if (!(slot_num == 5 || slot_num == 6 || slot_num == 7 || slot_num == 8 || slot_num == 14
+                        || slot_num == 15 || slot_num == 16 || slot_num == 17 || slot_num == 23 || slot_num == 24
+                        || slot_num == 25 || slot_num == 26)
                         && !(slot_num > 27)) {
                     e.setCancelled(true);
                     tradeWin.setItem(slot_num, tradeWin.getItem(slot_num));
                     clicker.updateInventory();
                     if (MerchantMechanics.isTradeButton(e.getCurrentItem())) {
                         clicker.sendMessage(ChatColor.RED + "Wrong button.");
-                    } else {
-                        // clicker.sendMessage(ChatColor.RED + "That item isn't yours!");
+                    }
+                    else {
+                        clicker.sendMessage(ChatColor.RED + "That item isn't yours!");
                     }
                     return;
                 }
@@ -1018,13 +1124,14 @@ public class DuelMechanics implements Listener {
             if (duel_secure.containsKey(clicker)) {
                 duel_secure.remove(clicker);
                 duel_secure.remove(duel_map.get(clicker.getName()));
-                // tradeWin.getItem(0).setDurability((short)8);
-                // tradeWin.getItem(8).setDurability((short)8);
+                tradeWin.getItem(0).setDurability((short) 8);
+                tradeWin.getItem(8).setDurability((short) 8);
                 tradeWin.setItem(0, gray_button);
                 tradeWin.setItem(8, gray_button);
                 clicker.sendMessage(ChatColor.RED + "Duel stake modified, unaccepted.");
-                Bukkit.getPlayer(duel_map.get(clicker.getName())).sendMessage(ChatColor.RED + "Duel stake modified by " + clicker.getName() + ", unaccepted.");
-                // duel_map.get(clicker).updateInventory();
+                Bukkit.getPlayer(duel_map.get(clicker.getName())).sendMessage(
+                        ChatColor.RED + "Duel stake modified by " + clicker.getName() + ", unaccepted.");
+                Bukkit.getPlayer(duel_map.get(clicker)).updateInventory();
                 clicker.updateInventory();
             }
         }
@@ -1037,7 +1144,8 @@ public class DuelMechanics implements Listener {
             if (left_side == true) {
                 while (x <= 27) {
                     x++;
-                    if (!(x == 0 || x == 1 || x == 2 || x == 3 || x == 9 || x == 10 || x == 11 || x == 12 || x == 18 || x == 19 || x == 20 || x == 21)) {
+                    if (!(x == 0 || x == 1 || x == 2 || x == 3 || x == 9 || x == 10 || x == 11 || x == 12 || x == 18
+                            || x == 19 || x == 20 || x == 21)) {
                         continue;
                     }
                     ItemStack i = tradeWin.getItem(x);
@@ -1046,8 +1154,8 @@ public class DuelMechanics implements Listener {
                     }
                     // log.info("derp");
                     tradeWin.setItem(x, to_move);
-                    // e.getCurrentItem().setType(Material.AIR);
-                    // e.getCursor().setType(Material.AIR);
+                    e.getCurrentItem().setType(Material.AIR);
+                    e.getCursor().setType(Material.AIR);
                     clicker.getInventory().remove(local_to_move_slot);
                     clicker.getInventory().setItem(local_to_move_slot, new ItemStack(Material.AIR));
                     clicker.updateInventory();
@@ -1057,7 +1165,8 @@ public class DuelMechanics implements Listener {
             if (left_side == false) {
                 while (x <= 27) {
                     x++;
-                    if (!(x == 5 || x == 6 || x == 7 || x == 8 || x == 14 || x == 15 || x == 16 || x == 17 || x == 23 || x == 24 || x == 25 || x == 26)) {
+                    if (!(x == 5 || x == 6 || x == 7 || x == 8 || x == 14 || x == 15 || x == 16 || x == 17 || x == 23
+                            || x == 24 || x == 25 || x == 26)) {
                         continue;
                     }
                     ItemStack i = tradeWin.getItem(x);
@@ -1066,8 +1175,8 @@ public class DuelMechanics implements Listener {
                     }
                     // log.info("derp2");
                     tradeWin.setItem(x, to_move);
-                    // e.getCurrentItem().setType(Material.AIR);
-                    // e.getCursor().setType(Material.AIR);
+                    e.getCurrentItem().setType(Material.AIR);
+                    e.getCursor().setType(Material.AIR);
                     clicker.getInventory().remove(local_to_move_slot);
                     clicker.getInventory().setItem(local_to_move_slot, new ItemStack(Material.AIR));
                     clicker.updateInventory();
@@ -1083,10 +1192,11 @@ public class DuelMechanics implements Listener {
                 return;
             }
             if (e.getCurrentItem().getDurability() == 8) { // Gray button
-                // e.getCurrentItem().setDurability((short) 10);
+                e.getCurrentItem().setDurability((short) 10);
                 clicker.playSound(clicker.getLocation(), Sound.BLAZE_HIT, 1F, 2.0F);
                 e.setCurrentItem(green_button);
-                if (tradeWin.getItem(0).getDurability() == (short) 10 && tradeWin.getItem(8).getDurability() == (short) 10) {
+                if (tradeWin.getItem(0).getDurability() == (short) 10
+                        && tradeWin.getItem(8).getDurability() == (short) 10) {
                     final Player tradie = Bukkit.getPlayer(duel_map.get(clicker.getName()));
                     clicker.playSound(clicker.getLocation(), Sound.BLAZE_HIT, 1F, 1.5F);
                     tradie.playSound(tradie.getLocation(), Sound.BLAZE_HIT, 1F, 1.5F);
@@ -1113,16 +1223,19 @@ public class DuelMechanics implements Listener {
 
                     if (clicker_good && tradie_good) {
                         startDuel(clicker, tradie);
-                    } else {
+                    }
+                    else {
                         if (!clicker_good) {
                             clicker.sendMessage(ChatColor.RED + "You do " + ChatColor.UNDERLINE + "NOT" + ChatColor.RED
                                     + " have enough space in your inventory to disequip your restricted armor.");
-                            tradie.sendMessage(ChatColor.RED + "Your opponent does not have enough space in their inventory.");
+                            tradie.sendMessage(ChatColor.RED
+                                    + "Your opponent does not have enough space in their inventory.");
                         }
                         if (!tradie_good) {
                             tradie.sendMessage(ChatColor.RED + "You do " + ChatColor.UNDERLINE + "NOT" + ChatColor.RED
                                     + " have enough space in your inventory to disequip your restricted armor.");
-                            clicker.sendMessage(ChatColor.RED + "Your opponent does not have enough space in their inventory.");
+                            clicker.sendMessage(ChatColor.RED
+                                    + "Your opponent does not have enough space in their inventory.");
                         }
 
                         e.setCurrentItem(gray_button);
@@ -1144,20 +1257,23 @@ public class DuelMechanics implements Listener {
                         if (i == null) {
                             continue;
                         }
-                        if (!(i.getType() == Material.AIR) && !(i.getType() == Material.BONE) && (!(MerchantMechanics.isTradeButton(i)))
-                                && !(i.getDurability() == 8 || i.getDurability() == 10) && !(isArmorIcon(i)) && !(isWeaponIcon(i))) {
+                        if (!(i.getType() == Material.AIR) && !(i.getType() == Material.BONE)
+                                && (!(MerchantMechanics.isTradeButton(i)))
+                                && !(i.getDurability() == 8 || i.getDurability() == 10) && !(isArmorIcon(i))
+                                && !(isWeaponIcon(i))) {
                             loot.setItem(loot.firstEmpty(), i);
                         }
                     }
 
-                    /*
-                     * if(loot.getSize() > 0) { duel_stake.put(tradie.getName(), loot); duel_stake.put(clicker.getName(), loot); }
-                     */
+                    if (loot.getSize() > 0) {
+                        duel_stake.put(tradie.getName(), loot);
+                        duel_stake.put(clicker.getName(), loot);
+                    }
 
                     duel_secure.remove(clicker);
                     duel_secure.remove(tradie);
-                    // in_duel_window.remove(clicker.getName());
-                    // in_duel_window.remove(tradie.getName());
+                    in_duel_window.remove(clicker.getName());
+                    in_duel_window.remove(tradie.getName());
 
                     Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                         public void run() {
@@ -1168,14 +1284,17 @@ public class DuelMechanics implements Listener {
                         }
                     }, 1L);
 
-                    // tradeWin.clear();
-                } else {
+                    tradeWin.clear();
+                }
+                else {
                     duel_secure.put(clicker, tradeWin);
                     duel_secure.put(Bukkit.getPlayer(duel_map.get(clicker.getName())), tradeWin);
-                    clicker.sendMessage(ChatColor.YELLOW + "Duel accepted, waiting for " + ChatColor.BOLD + duel_map.get(clicker.getName()) + ChatColor.YELLOW
-                            + "...");
-                    Bukkit.getPlayer(duel_map.get(clicker.getName())).sendMessage(ChatColor.GREEN + clicker.getName() + " has accepted the duel stake.");
-                    Bukkit.getPlayer(duel_map.get(clicker.getName())).sendMessage(ChatColor.GRAY + "Click the gray button (dye) to confirm.");
+                    clicker.sendMessage(ChatColor.YELLOW + "Duel accepted, waiting for " + ChatColor.BOLD
+                            + duel_map.get(clicker.getName()) + ChatColor.YELLOW + "...");
+                    Bukkit.getPlayer(duel_map.get(clicker.getName())).sendMessage(
+                            ChatColor.GREEN + clicker.getName() + " has accepted the duel stake.");
+                    Bukkit.getPlayer(duel_map.get(clicker.getName())).sendMessage(
+                            ChatColor.GRAY + "Click the gray button (dye) to confirm.");
                 }
 
             }
@@ -1186,18 +1305,18 @@ public class DuelMechanics implements Listener {
     public void onPlayerQuit(PlayerQuitEvent e) {
         Player quitter = e.getPlayer();
         // So they are both offline..
-        if (duel_countdown.containsKey(quitter) && Bukkit.getPlayer(duel_map.get(quitter)) == null) {
+        if (duel_countdown.containsKey(quitter) && duel_map.containsKey(quitter) && Bukkit.getPlayer(duel_map.get(quitter)) == null) {
             String opponent = duel_map.get(quitter.getName());
             duel_countdown.remove(quitter);
             duel_map.remove(quitter.getName());
             duel_map.remove(opponent);
             in_duel.remove(quitter);
             in_duel.remove(opponent);
-            // duel_stake.remove(quitter.getName());
+            duel_stake.remove(quitter.getName());
             duel_countdown.remove(opponent);
             duel_countdown.remove(quitter.getName());
-            // in_duel_window.remove(quitter.getName());
-            // in_duel_window.remove(opponent);
+            in_duel_window.remove(quitter.getName());
+            in_duel_window.remove(opponent);
             return;
         }
 
@@ -1209,20 +1328,21 @@ public class DuelMechanics implements Listener {
 
         if (duel_map.containsKey(quitter.getName())) {
             final Player opponent = Bukkit.getPlayer(duel_map.get(quitter.getName()));
-            opponent.sendMessage(ChatColor.RED + quitter.getName() + " has quit the game, and therefor forfeited the duel.");
+            opponent.sendMessage(ChatColor.RED + quitter.getName()
+                    + " has quit the game and therefore has forfeited the duel.");
             duel_map.remove(quitter.getName());
             duel_map.remove(opponent.getName());
             in_duel.remove(quitter);
             in_duel.remove(opponent);
-            // duel_stake.remove(quitter.getName());
+            duel_stake.remove(quitter.getName());
             duel_countdown.remove(opponent.getName());
             duel_countdown.remove(quitter.getName());
-            // in_duel_window.remove(quitter.getName());
-            // in_duel_window.remove(opponent.getName());
+            in_duel_window.remove(quitter.getName());
+            in_duel_window.remove(opponent.getName());
 
-            /*
-             * if(duel_stake.containsKey(opponent.getName())) { //rewardLoot(opponent, quitter); }
-             */
+            if (duel_stake.containsKey(opponent.getName())) {
+                rewardLoot(opponent, quitter);
+            }
 
             restoreColors(opponent, quitter);
         }
@@ -1231,7 +1351,8 @@ public class DuelMechanics implements Listener {
             String challenged_name = duel_request.get(quitter.getName());
             Player challenged = Bukkit.getPlayer(challenged_name);
             if (challenged != null) {
-                challenged.sendMessage(ChatColor.RED + quitter.getName() + " has quit the game, and therefor cancelled his duel request.");
+                challenged.sendMessage(ChatColor.RED + quitter.getName()
+                        + " has quit the game and therefore has cancelled his duel request.");
             }
             duel_request.remove(quitter.getName());
             duel_request.remove(challenged_name);
@@ -1261,7 +1382,8 @@ public class DuelMechanics implements Listener {
         } // Duel hasn't started yet here.
 
         e.setCancelled(false);
-        // Cancel any previously made event cancels... if this doesn't work, just do direct damage lool.
+        // Cancel any previously made event cancels... if this doesn't work,
+        // just do direct damage lool.
     }
 
     @EventHandler
@@ -1273,29 +1395,41 @@ public class DuelMechanics implements Listener {
         Location l = e.getTo();
         Location duel_start_area = duel_start_location.get(p.getName());
 
-        /*
-         * if(!isDamageDisabled(l)){ // Entering a chaotic zone -- stop them! p.sendMessage(ChatColor.RED + "You cannot enter " + ChatColor.UNDERLINE +
-         * "damage enabled" + ChatColor.RED + " zones while in a duel."); if(l.getWorld().getName().equalsIgnoreCase(duel_start_area.getWorld().getName())){
-         * e.setCancelled(true); p.teleport(safe_loc); } return; }
-         */
+        if (!isDamageDisabled(l)) { // Entering a chaotic zone -- stop them!
+            p.sendMessage(ChatColor.RED + "You cannot enter " + ChatColor.UNDERLINE + "damage enabled" + ChatColor.RED
+                    + " zones while in a duel.");
+            if (l.getWorld().getName().equalsIgnoreCase(duel_start_area.getWorld().getName())) {
+                e.setCancelled(true);
+//                p.teleport(safe_loc);
+            }
+            return;
+        }
 
         if (!l.getWorld().getName().equalsIgnoreCase(duel_start_area.getWorld().getName())
-                || ((l.distanceSquared(duel_start_area) >= 2500) && !(p.getLocation().subtract(0, 1, 0).getBlock().getType() == Material.AIR))) { // 50 blocks.
+                || ((l.distanceSquared(duel_start_area) >= 2500) && !(p.getLocation().subtract(0, 1, 0).getBlock()
+                        .getType() == Material.AIR))) { // 50 blocks.
             if (!warned_players.contains(p.getName())) {
                 p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "WARNING:" + ChatColor.RED
-                        + " You are too far from the DUEL START POINT, please turn back or you will " + ChatColor.UNDERLINE + "FORFEIT.");
+                        + " You are too far from the DUEL START POINT, please turn back or you will "
+                        + ChatColor.UNDERLINE + "FORFEIT.");
                 warned_players.add(p.getName());
             }
-            /*
-             * if(l.getWorld().getName().equalsIgnoreCase(duel_start_area.getWorld().getName())){ e.setCancelled(true); p.teleport(safe_loc); }
-             */
+
+            if (l.getWorld().getName().equalsIgnoreCase(duel_start_area.getWorld().getName())) {
+                e.setCancelled(true);
+//                p.teleport(safe_loc);
+            }
+
         }
-        if (!l.getWorld().getName().equalsIgnoreCase(duel_start_area.getWorld().getName()) || l.distanceSquared(duel_start_area) >= 3600
-                || !DuelMechanics.isDamageDisabled(l)) {
-            if (DuelMechanics.isDamageDisabled(l)) {
-                p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You have FORFEITED the duel due to entering a wilderness / chaotic zone.");
-            } else {
-                p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You have FORFEITED the duel due to moving too far from the starting point.");
+        if (!l.getWorld().getName().equalsIgnoreCase(duel_start_area.getWorld().getName())
+                || l.distanceSquared(duel_start_area) >= 3600 || !DuelMechanics.isDamageDisabled(l)) {
+            if (!DuelMechanics.isDamageDisabled(l)) {
+                p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD
+                        + "You have FORFEITED the duel due to entering a wilderness / chaotic zone.");
+            }
+            else {
+                p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD
+                        + "You have FORFEITED the duel due to moving too far from the starting point.");
             }
             Player attacked = p;
             Player attacker = Bukkit.getPlayer(duel_map.get(p.getName()));
@@ -1316,8 +1450,9 @@ public class DuelMechanics implements Listener {
             RecordMechanics.incrementDuelStats(attacker.getName(), true);
             RecordMechanics.incrementDuelStats(attacked.getName(), true);
 
-            attacker.sendMessage(attacker_color + attacker_prefix + attacker.getName() + ChatColor.GREEN + " has " + ChatColor.UNDERLINE + "DEFEATED"
-                    + ChatColor.RESET + " " + attacked_color + attacked_prefix + attacked.getName() + ChatColor.GREEN + " in a duel.");
+            attacker.sendMessage(attacker_color + attacker_prefix + attacker.getName() + ChatColor.GREEN + " has "
+                    + ChatColor.UNDERLINE + "DEFEATED" + ChatColor.RESET + " " + attacked_color + attacked_prefix
+                    + attacked.getName() + ChatColor.GREEN + " in a duel.");
             for (Entity ent : attacker.getNearbyEntities(48, 48, 48)) {
                 if (ent instanceof Player) {
                     Player pl = (Player) ent;
@@ -1328,17 +1463,19 @@ public class DuelMechanics implements Listener {
                     ChatColor pl_attacked_color = ChatMechanics.getPlayerColor(attacked, pl);
                     String pl_attacked_prefix = ChatMechanics.getPlayerPrefix(attacked);
 
-                    pl.sendMessage(pl_attacker_color + pl_attacker_prefix + attacker.getName() + ChatColor.GREEN + " has " + ChatColor.UNDERLINE + "DEFEATED"
-                            + ChatColor.RESET + " " + pl_attacked_color + pl_attacked_prefix + attacked.getName() + ChatColor.GREEN + " in a duel.");
+                    pl.sendMessage(pl_attacker_color + pl_attacker_prefix + attacker.getName() + ChatColor.GREEN
+                            + " has " + ChatColor.UNDERLINE + "DEFEATED" + ChatColor.RESET + " " + pl_attacked_color
+                            + pl_attacked_prefix + attacked.getName() + ChatColor.GREEN + " in a duel.");
                 }
             }
 
             attacked.closeInventory();
             attacker.closeInventory();
 
-            /*
-             * if(duel_stake.containsKey(attacker.getName())) { //rewardLoot(attacker, attacked); }
-             */
+            if (duel_stake.containsKey(attacker.getName())) {
+                rewardLoot(attacker, attacked);
+            }
+
         }
     }
 
@@ -1356,7 +1493,8 @@ public class DuelMechanics implements Listener {
                 if (weapon_tier > max_weapon_tier) {
                     e.setDamage(0);
                     e.setCancelled(true);
-                    pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " use this weapon in this duel.");
+                    pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED
+                            + " use this weapon in this duel.");
                 }
             }
         }
@@ -1374,7 +1512,8 @@ public class DuelMechanics implements Listener {
                     if (weapon_tier > max_weapon_tier) {
                         e.setDamage(0);
                         e.setCancelled(true);
-                        pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " use this weapon in this duel.");
+                        pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED
+                                + " use this weapon in this duel.");
                     }
                 }
             }
@@ -1390,7 +1529,8 @@ public class DuelMechanics implements Listener {
                 int max_weapon_tier = duel_max_weapon_tier.get(pl.getName());
                 if (weapon_tier > max_weapon_tier) {
                     e.setCancelled(true);
-                    pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED + " use this weapon in this duel.");
+                    pl.sendMessage(ChatColor.RED + "You " + ChatColor.UNDERLINE + "cannot" + ChatColor.RED
+                            + " use this weapon in this duel.");
                 }
             }
         }
@@ -1425,21 +1565,47 @@ public class DuelMechanics implements Listener {
 
         final Player attacker = (Player) ent_attacker;
 
-        /*
-         * if(in_duel_window.contains(attacked.getName())) { Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() { public void
-         * run() { attacked.updateInventory(); attacked.closeInventory(); in_duel_window.remove(attacked.getName()); } }, 1L); String partner = null;
-         * if(duel_map.containsKey(attacked.getName())) { partner = duel_map.get(attacked.getName()); duel_map.remove(partner);
-         * duel_map.remove(attacked.getName()); restoreColors(attacker, attacked); } if(duel_start_location.containsKey(attacked.getName())) {
-         * duel_start_location.remove(attacked.getName()); if(partner != null) { duel_start_location.remove(partner); } }
-         * 
-         * attacked.sendMessage(ChatColor.RED + "Damage taken before duel was accepted - " + ChatColor.BOLD + "DUEL CANCELLED"); if(partner != null &&
-         * Bukkit.getPlayer(partner) != null) { final Player p_partner = Bukkit.getPlayer(partner); p_partner.sendMessage(ChatColor.RED +
-         * "Your opponent took damage before the duel was accepted - " + ChatColor.BOLD + "DUEL CANCELLED");
-         * Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() { public void run() { p_partner.closeInventory();
-         * p_partner.updateInventory(); in_duel_window.remove(p_partner.getName()); } }, 1L); }
-         * 
-         * e.setCancelled(true); e.setDamage(0); return; }
-         */
+        if (in_duel_window.contains(attacked.getName())) {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                public void run() {
+                    attacked.updateInventory();
+                    attacked.closeInventory();
+                    in_duel_window.remove(attacked.getName());
+                }
+            }, 1L);
+            String partner = null;
+            if (duel_map.containsKey(attacked.getName())) {
+                partner = duel_map.get(attacked.getName());
+                duel_map.remove(partner);
+                duel_map.remove(attacked.getName());
+                restoreColors(attacker, attacked);
+            }
+            if (duel_start_location.containsKey(attacked.getName())) {
+                duel_start_location.remove(attacked.getName());
+                if (partner != null) {
+                    duel_start_location.remove(partner);
+                }
+            }
+
+            attacked.sendMessage(ChatColor.RED + "Damage taken before duel was accepted - " + ChatColor.BOLD
+                    + "DUEL CANCELLED");
+            if (partner != null && Bukkit.getPlayer(partner) != null) {
+                final Player p_partner = Bukkit.getPlayer(partner);
+                p_partner.sendMessage(ChatColor.RED + "Your opponent took damage before the duel was accepted - "
+                        + ChatColor.BOLD + "DUEL CANCELLED");
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                    public void run() {
+                        p_partner.closeInventory();
+                        p_partner.updateInventory();
+                        in_duel_window.remove(p_partner.getName());
+                    }
+                }, 1L);
+            }
+
+            e.setCancelled(true);
+            e.setDamage(0);
+            return;
+        }
 
         if (!(e.getCause() == DamageCause.ENTITY_ATTACK) && !(e.getCause() == DamageCause.PROJECTILE)) {
             // Fire, fall, etc damage.
@@ -1484,12 +1650,14 @@ public class DuelMechanics implements Listener {
                     RecordMechanics.incrementDuelStats(attacker.getName(), true);
                     RecordMechanics.incrementDuelStats(attacked.getName(), true);
 
-                    attacker.sendMessage(attacker_color + attacker_prefix + attacker.getName() + ChatColor.GREEN + " has " + ChatColor.UNDERLINE + "DEFEATED"
-                            + ChatColor.RESET + " " + attacked_color + attacked_prefix + attacked.getName() + ChatColor.GREEN + " in a duel.");
+                    attacker.sendMessage(attacker_color + attacker_prefix + attacker.getName() + ChatColor.GREEN
+                            + " has " + ChatColor.UNDERLINE + "DEFEATED" + ChatColor.RESET + " " + attacked_color
+                            + attacked_prefix + attacked.getName() + ChatColor.GREEN + " in a duel.");
 
-                    /*
-                     * if(duel_stake.containsKey(attacker.getName())) { //rewardLoot(attacker, attacked); }
-                     */
+                    if (duel_stake.containsKey(attacker.getName())) {
+                        rewardLoot(attacker, attacked);
+                    }
+
                 }
 
                 duel_request_cooldown.put(attacked, 10);
@@ -1508,8 +1676,9 @@ public class DuelMechanics implements Listener {
                         ChatColor pl_attacked_color = ChatMechanics.getPlayerColor(attacked, pl);
                         String pl_attacked_prefix = ChatMechanics.getPlayerPrefix(attacked);
 
-                        pl.sendMessage(pl_attacker_color + pl_attacker_prefix + attacker.getName() + ChatColor.GREEN + " has " + ChatColor.UNDERLINE
-                                + "DEFEATED" + ChatColor.RESET + " " + pl_attacked_color + pl_attacked_prefix + attacked.getName() + ChatColor.GREEN
+                        pl.sendMessage(pl_attacker_color + pl_attacker_prefix + attacker.getName() + ChatColor.GREEN
+                                + " has " + ChatColor.UNDERLINE + "DEFEATED" + ChatColor.RESET + " "
+                                + pl_attacked_color + pl_attacked_prefix + attacked.getName() + ChatColor.GREEN
                                 + " in a duel.");
                     }
                 }
@@ -1573,8 +1742,9 @@ public class DuelMechanics implements Listener {
                 // They lost
                 RecordMechanics.incrementDuelStats(attacked.getName(), false);
 
-                attacker.sendMessage(attacker_color + attacker_prefix + attacker.getName() + ChatColor.GREEN + " has " + ChatColor.UNDERLINE + "DEFEATED"
-                        + ChatColor.RESET + " " + attacked_color + attacked_prefix + attacked.getName() + ChatColor.GREEN + " in a duel.");
+                attacker.sendMessage(attacker_color + attacker_prefix + attacker.getName() + ChatColor.GREEN + " has "
+                        + ChatColor.UNDERLINE + "DEFEATED" + ChatColor.RESET + " " + attacked_color + attacked_prefix
+                        + attacked.getName() + ChatColor.GREEN + " in a duel.");
                 for (Entity ent : attacker.getNearbyEntities(48, 48, 48)) {
                     if (ent instanceof Player) {
                         Player pl = (Player) ent;
@@ -1585,18 +1755,21 @@ public class DuelMechanics implements Listener {
                         ChatColor pl_attacked_color = ChatMechanics.getPlayerColor(attacked, pl);
                         String pl_attacked_prefix = ChatMechanics.getPlayerPrefix(attacked);
 
-                        pl.sendMessage(pl_attacker_color + pl_attacker_prefix + attacker.getName() + ChatColor.GREEN + " has " + ChatColor.UNDERLINE
-                                + "DEFEATED" + ChatColor.RESET + " " + pl_attacked_color + pl_attacked_prefix + attacked.getName() + ChatColor.GREEN
+                        pl.sendMessage(pl_attacker_color + pl_attacker_prefix + attacker.getName() + ChatColor.GREEN
+                                + " has " + ChatColor.UNDERLINE + "DEFEATED" + ChatColor.RESET + " "
+                                + pl_attacked_color + pl_attacked_prefix + attacked.getName() + ChatColor.GREEN
                                 + " in a duel.");
                     }
                 }
 
-                /*
-                 * if(duel_stake.containsKey(attacker.getName())) { //rewardLoot(attacker, attacked); }
-                 */
+                if (duel_stake.containsKey(attacker.getName())) {
+                    rewardLoot(attacker, attacked);
+                }
+
                 e.setCancelled(true);
-                System.out.print("DUEL > DMG: " + e.getDamage() + " Winner: " + attacker.getName() + " Loser: " + attacked.getName() + " Losers HP:"
-                        + attacked.getHealth() + " HP: " + HealthMechanics.getPlayerHP(attacked.getName()));
+                System.out.print("DUEL > DMG: " + e.getDamage() + " Winner: " + attacker.getName() + " Loser: "
+                        + attacked.getName() + " Losers HP:" + attacked.getHealth() + " HP: "
+                        + HealthMechanics.getPlayerHP(attacked.getName()));
                 e.setDamage(0);
                 return;
             }
@@ -1605,25 +1778,42 @@ public class DuelMechanics implements Listener {
             attacked.damage(e.getDamage());
             HealthMechanics.setOverheadHP(attacked, HealthMechanics.getPlayerHP(attacked.getName()));
             return;
-            // Cancel any previously made event cancels... if this doesn't work, just do direct damage lool.
+            // Cancel any previously made event cancels... if this doesn't work,
+            // just do direct damage lool.
         }
 
         e.setCancelled(true);
         e.setDamage(0);
     }
 
-    /*
-     * public void rewardLoot(final Player winner, Player looser) { Inventory loot = duel_stake.get(winner.getName());
-     * 
-     * for(ItemStack is : loot.getContents()) { if(is == null) { continue; } if(PetMechanics.isPermUntradeable(is) || !(RealmMechanics.isItemTradeable(is)) ||
-     * ItemMechanics.isSoulbound(is)) { loot.remove(is); } }
-     * 
-     * Player new_winner = Bukkit.getPlayer(winner.getName()); if(new_winner == null || !new_winner.isOnline()){ //the winner is offline as well so destroy the
-     * loot.. duel_stake.remove(winner.getName()); duel_stake.remove(looser.getName()); return; } new_winner.openInventory(loot);
-     * new_winner.sendMessage(ChatColor.YELLOW + "Loot menu opened."); duel_stake.remove(winner.getName()); duel_stake.remove(looser.getName());
-     * 
-     * }
-     */
+    public void rewardLoot(final Player winner, Player looser) {
+        Inventory loot = duel_stake.get(winner.getName());
+
+        for (ItemStack is : loot.getContents()) {
+            if (is == null) {
+                continue;
+            }
+            if (PetMechanics.isPermUntradeable(is) || !(RealmMechanics.isItemTradeable(is))
+                    || ItemMechanics.isSoulbound(is)) {
+                loot.remove(is);
+            }
+        }
+
+        Player new_winner = Bukkit.getPlayer(winner.getName());
+        if (new_winner == null || !new_winner.isOnline()) {
+            // the winner is offline as well so destroy the loot..
+            duel_stake.remove(winner.getName());
+            duel_stake.remove(looser.getName());
+            return;
+        }
+
+        new_winner.openInventory(loot);
+
+        new_winner.sendMessage(ChatColor.YELLOW + "Loot menu opened.");
+        duel_stake.remove(winner.getName());
+        duel_stake.remove(looser.getName());
+
+    }
 
     public boolean InWGRegion(Player p) {
         try {
@@ -1633,7 +1823,8 @@ public class DuelMechanics implements Listener {
 
             List<String> regionSet = wg.getGlobalRegionManager().get(p.getWorld()).getApplicableRegionsIDs(blockVector);
             return regionSet.size() > 0;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
         }
         return false;
     }
@@ -1651,16 +1842,20 @@ public class DuelMechanics implements Listener {
             }
 
             for (String region : regionSet) {
-                if (wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getFlags().containsKey(DefaultFlag.ENTRY)) {
-                    State entry_flag = (State) wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getFlags().get(DefaultFlag.ENTRY);
+                if (wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getFlags()
+                        .containsKey(DefaultFlag.ENTRY)) {
+                    State entry_flag = (State) wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region)
+                            .getFlags().get(DefaultFlag.ENTRY);
                     if (entry_flag != State.ALLOW) {
                         return true;
                     }
-                } else {
+                }
+                else {
                     continue;
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
 
         }
         return false;
@@ -1682,8 +1877,10 @@ public class DuelMechanics implements Listener {
             int return_priority = -1;
 
             for (String region : regionSet) {
-                if (wg.getGlobalRegionManager().get(p.getWorld()).getRegion(region).getFlags().containsKey(DefaultFlag.PVP)) {
-                    State pvp_flag = (State) wg.getGlobalRegionManager().get(p.getWorld()).getRegion(region).getFlags().get(DefaultFlag.PVP);
+                if (wg.getGlobalRegionManager().get(p.getWorld()).getRegion(region).getFlags()
+                        .containsKey(DefaultFlag.PVP)) {
+                    State pvp_flag = (State) wg.getGlobalRegionManager().get(p.getWorld()).getRegion(region).getFlags()
+                            .get(DefaultFlag.PVP);
                     int region_priority = wg.getGlobalRegionManager().get(p.getWorld()).getRegion(region).getPriority();
 
                     if (return_priority == -1) {
@@ -1695,13 +1892,15 @@ public class DuelMechanics implements Listener {
                         return_flag = (pvp_flag != State.ALLOW);
                         return_priority = region_priority;
                     }
-                } else {
+                }
+                else {
                     continue;
                 }
             }
 
             return return_flag;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
 
         }
         return false;
@@ -1750,8 +1949,10 @@ public class DuelMechanics implements Listener {
             int return_priority = -1;
 
             for (String region : regionSet) {
-                if (wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getFlags().containsKey(DefaultFlag.MOB_DAMAGE)) {
-                    State mob_dmg_flag = (State) wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getFlags().get(DefaultFlag.MOB_DAMAGE);
+                if (wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getFlags()
+                        .containsKey(DefaultFlag.MOB_DAMAGE)) {
+                    State mob_dmg_flag = (State) wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region)
+                            .getFlags().get(DefaultFlag.MOB_DAMAGE);
                     int region_priority = wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getPriority();
 
                     if (return_priority == -1) {
@@ -1763,13 +1964,15 @@ public class DuelMechanics implements Listener {
                         return_flag = (mob_dmg_flag != State.ALLOW);
                         return_priority = region_priority;
                     }
-                } else {
+                }
+                else {
                     continue;
                 }
             }
 
             return return_flag;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
 
         }
         return false;
@@ -1795,8 +1998,10 @@ public class DuelMechanics implements Listener {
             int return_priority = -1;
 
             for (String region : regionSet) {
-                if (wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getFlags().containsKey(DefaultFlag.PVP)) {
-                    State pvp_flag = (State) wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getFlags().get(DefaultFlag.PVP);
+                if (wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getFlags()
+                        .containsKey(DefaultFlag.PVP)) {
+                    State pvp_flag = (State) wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getFlags()
+                            .get(DefaultFlag.PVP);
                     int region_priority = wg.getGlobalRegionManager().get(l.getWorld()).getRegion(region).getPriority();
 
                     if (return_priority == -1) {
@@ -1808,14 +2013,16 @@ public class DuelMechanics implements Listener {
                         return_flag = (pvp_flag != State.ALLOW);
                         return_priority = region_priority;
                     }
-                } else {
+                }
+                else {
                     continue;
                 }
             }
 
             return return_flag;
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
 
         }
         return false;
@@ -1841,7 +2048,8 @@ public class DuelMechanics implements Listener {
 
             return returning;
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Main.d("Region error!", CC.RED);
         }
         return "";
@@ -1875,7 +2083,8 @@ public class DuelMechanics implements Listener {
         }
 
         /*
-         * if(HealthMechanics.in_combat.containsKey(attacker.getName())){ return; }
+         * if(HealthMechanics.in_combat.containsKey(attacker.getName())){
+         * return; }
          */
 
         if (e.getEntity().hasMetadata("NPC")) {
@@ -1890,7 +2099,8 @@ public class DuelMechanics implements Listener {
             return;
         }
 
-        if (attacker.getItemInHand().getType() == Material.NETHER_STAR || attacker.getItemInHand().getType() == Material.QUARTZ) {
+        if (attacker.getItemInHand().getType() == Material.NETHER_STAR
+                || attacker.getItemInHand().getType() == Material.QUARTZ) {
             return;
         }
 
@@ -1909,11 +2119,13 @@ public class DuelMechanics implements Listener {
 
         if (duel_request_cooldown.containsKey(attacker)) {
             if (!(duel_request.containsKey(attacked.getName()))) {
-                attacker.sendMessage(ChatColor.YELLOW + "Please wait " + ChatColor.BOLD + duel_request_cooldown.get(attacker) + "s" + ChatColor.YELLOW
+                attacker.sendMessage(ChatColor.YELLOW + "Please wait " + ChatColor.BOLD
+                        + duel_request_cooldown.get(attacker) + "s" + ChatColor.YELLOW
                         + " before issuing another duel request.");
             }
             if (duel_request.containsKey(attacker.getName())) {
-                attacker.sendMessage(ChatColor.GRAY + "You have a Pending Challenge vs. " + ChatColor.BOLD + duel_request.get(attacker.getName()) + "");
+                attacker.sendMessage(ChatColor.GRAY + "You have a Pending Challenge vs. " + ChatColor.BOLD
+                        + duel_request.get(attacker.getName()) + "");
             }
             return;
         }
@@ -1927,13 +2139,15 @@ public class DuelMechanics implements Listener {
                         || attacked.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("Loot Chest")
                         || attacked.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("Collection Bin")
                         || attacked.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("Chest")
-                        || attacked.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("Realm Material Store")
+                        || attacked.getOpenInventory().getTopInventory().getName()
+                                .equalsIgnoreCase("Realm Material Store")
                         || attacked.getOpenInventory().getTopInventory().getName().contains("     ")
                         || attacked.getOpenInventory().getTopInventory().getName().contains("container.chest")
                         || attacked.getOpenInventory().getTopInventory().getName().contains("container.bigchest")
                         || ShopMechanics.current_item_being_bought.containsKey(attacked.getName())
                         || ShopMechanics.current_item_being_stocked.containsKey(attacked.getName())
-                        || RealmMechanics.current_item_being_bought.containsKey(attacked.getName()) || MoneyMechanics.split_map.containsKey(attacked)
+                        || RealmMechanics.current_item_being_bought.containsKey(attacked.getName())
+                        || MoneyMechanics.split_map.containsKey(attacked)
                         || RestrictionMechanics.in_inventory.contains(attacked.getName())) {
                     attacker.sendMessage(ChatColor.YELLOW + attacked.getName() + " is currently busy.");
                     e.setCancelled(true);
@@ -1943,42 +2157,52 @@ public class DuelMechanics implements Listener {
                 // TODO: Start duel.
                 e.setCancelled(true);
                 e.setDamage(0);
-                // loadDuelMenu(attacker, attacked);
-                startDuel(attacker, attacked);
+                loadDuelMenu(attacker, attacked);
+//                startDuel(attacker, attacked);
                 return;
-            } else {
-                attacker.sendMessage(ChatColor.YELLOW + attacked.getName() + " already has a pending duel request from another user.");
+            }
+            else {
+                attacker.sendMessage(ChatColor.YELLOW + attacked.getName()
+                        + " already has a pending duel request from another user.");
                 return;
                 // duel_request.remove(attacker.getName());
-                // TODO: Do nothing, let it get to end of function to send new request.
+                // TODO: Do nothing, let it get to end of function to send new
+                // request.
             }
         }
 
         /*
-         * if(duel_request.containsKey(attacker.getName())){ // TODO: Cancel previous request, make a new one with new opponent.
-         * attacker.sendMessage(ChatColor.YELLOW + "You have a pending duel request against " + duel_request.get(attacker.getName()) + ".");
-         * //attacker.sendMessage(ChatColor.GRAY + "Wait ~30 seconds for this request to expire."); return; }
+         * if(duel_request.containsKey(attacker.getName())){ // TODO: Cancel
+         * previous request, make a new one with new opponent.
+         * attacker.sendMessage(ChatColor.YELLOW +
+         * "You have a pending duel request against " +
+         * duel_request.get(attacker.getName()) + ".");
+         * //attacker.sendMessage(ChatColor.GRAY +
+         * "Wait ~30 seconds for this request to expire."); return; }
          */
 
-        if (PlayerManager.getPlayerModel(attacker).getToggleList().contains("duel") || PlayerManager.getPlayerModel(attacked).getToggleList().contains("duel")
+        if (PlayerManager.getPlayerModel(attacker).getToggleList().contains("duel")
+                || PlayerManager.getPlayerModel(attacked).getToggleList().contains("duel")
                 || CommunityMechanics.isPlayerOnIgnoreList(attacked, attacker.getName())
                 || CommunityMechanics.isPlayerOnIgnoreList(attacker, attacked.getName())) {
             if (PlayerManager.getPlayerModel(attacker).getToggleList().contains("duel")) {
-                attacker.sendMessage(ChatColor.RED + "You currently have dueling requests " + ChatColor.UNDERLINE + "DISABLED." + ChatColor.RED
-                        + " To re-enable dueling, type '/toggleduel'");
+                attacker.sendMessage(ChatColor.RED + "You currently have dueling requests " + ChatColor.UNDERLINE
+                        + "DISABLED." + ChatColor.RED + " To re-enable dueling, type '/toggleduel'");
                 return;
             }
             if (PlayerManager.getPlayerModel(attacked).getToggleList().contains("duel")) {
-                attacker.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + attacked.getName() + ChatColor.RED + " has dueling " + ChatColor.UNDERLINE
-                        + "DISABLED.");
+                attacker.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + attacked.getName() + ChatColor.RED
+                        + " has dueling " + ChatColor.UNDERLINE + "DISABLED.");
                 return;
             }
             // At this point, the attacked or attacker is on ignore.
-            attacker.sendMessage(ChatColor.YELLOW + attacked.getName() + " has dueling " + ChatColor.UNDERLINE + "DISABLED.");
+            attacker.sendMessage(ChatColor.YELLOW + attacked.getName() + " has dueling " + ChatColor.UNDERLINE
+                    + "DISABLED.");
             return;
         }
 
-        if (DuelMechanics.isPvPDisabled(attacked.getLocation()) && !DuelMechanics.isDamageDisabled(attacked.getLocation())) {
+        if (DuelMechanics.isPvPDisabled(attacked.getLocation())
+                && !DuelMechanics.isDamageDisabled(attacked.getLocation())) {
             // if(!(attacker.isSneaking())){
             return;
             // }
@@ -1987,9 +2211,10 @@ public class DuelMechanics implements Listener {
         duel_request.put(attacker.getName(), attacked.getName());
         duel_request_cooldown.put(attacker, 5);
 
-        attacker.sendMessage(ChatColor.YELLOW + "Duel request sent to " + ChatColor.BOLD + attacked.getName() + ChatColor.YELLOW + ".");
-        attacked.sendMessage(ChatColor.YELLOW + "Duel request recieved from " + ChatColor.BOLD + attacker.getName() + ChatColor.YELLOW
-                + ", to accept, hit them back.");
+        attacker.sendMessage(ChatColor.YELLOW + "Duel request sent to " + ChatColor.BOLD + attacked.getName()
+                + ChatColor.YELLOW + ".");
+        attacked.sendMessage(ChatColor.YELLOW + "Duel request recieved from " + ChatColor.BOLD + attacker.getName()
+                + ChatColor.YELLOW + ", to accept, hit them back.");
 
     }
 }

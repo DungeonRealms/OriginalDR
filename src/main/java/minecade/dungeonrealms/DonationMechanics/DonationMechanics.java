@@ -29,7 +29,7 @@ import minecade.dungeonrealms.DonationMechanics.commands.CommandRemoveSub;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandRemoveSubPlus;
 import minecade.dungeonrealms.DonationMechanics.commands.CommandRewardSubLife;
 import minecade.dungeonrealms.config.Config;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;

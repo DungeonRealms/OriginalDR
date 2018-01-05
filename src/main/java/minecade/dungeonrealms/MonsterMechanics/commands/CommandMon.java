@@ -1,5 +1,6 @@
 package minecade.dungeonrealms.MonsterMechanics.commands;
 
+import java.util.HashSet;
 import java.util.Random;
 
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
@@ -23,7 +24,7 @@ public class CommandMon implements CommandExecutor {
 		
 		if(!(p.isOp())) { return true; }
 		
-		Location l = p.getTargetBlock(null, 128).getLocation().add(0, 1, 0);
+		Location l = p.getTargetBlock((HashSet<Byte>)null, 128).getLocation().add(0, 1, 0);
 		
 		if(args.length == 2) {
 			p.getInventory().addItem(new ItemStack(Material.MOB_SPAWNER, 10));

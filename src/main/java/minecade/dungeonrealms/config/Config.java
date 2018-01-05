@@ -123,18 +123,22 @@ public class Config {
 
     
     public static int transfer_port = 6427;
-    public static String Hive_IP = "72.20.40.38";
+    //public static String Hive_IP = "72.20.40.38";
+    public static String Hive_IP = "localhost";
 
-    public static int SQL_port = 7447;
-    public static String sql_user = "slave_3XNZvi";
-    public static String sql_password = "SgUmxYSJSFmOdro3";
+    //public static int SQL_port = 7447;
+    public static int SQL_port = 3306;
+    //public static String sql_user = "slave_3XNZvi";
+    public static String sql_user = "dungeonrealms";
+    //public static String sql_password = "SgUmxYSJSFmOdro3";
+    public static String sql_password = "qcHqKGVdLXNXXN5j";
     public static String sql_url = "jdbc:mysql://" + Hive_IP + ":" + SQL_port + "/dungeonrealms";
 
     public static int FTP_port = 21;
     public static String ftp_user = "agent";
     public static String ftp_pass = "9bgsMKsknkJ6OY"; 
     
-    public static String version = "1.9 BETA";
+    public static String version = "1.9.1";
     
     public static String local_IP = Bukkit.getIp();
     

@@ -1,5 +1,7 @@
 package minecade.dungeonrealms.BossMechanics.commands;
 
+import java.util.HashSet;
+
 import minecade.dungeonrealms.BossMechanics.BossMechanics;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
 
@@ -24,7 +26,7 @@ public class CommandSpawnBoss implements CommandExecutor {
 		if(sender instanceof Player) {
 			p = (Player) sender;
 			if(!(p.isOp())) { return true; }
-			loc = p.getTargetBlock(null, 16).getLocation();
+			loc = p.getTargetBlock((HashSet<Byte>)null, 16).getLocation();
 		}
 		
 		if(sender instanceof BlockCommandSender) {

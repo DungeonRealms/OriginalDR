@@ -1,6 +1,6 @@
 package minecade.dungeonrealms.models;
 
-import net.minecraft.util.com.google.gson.JsonObject;
+import org.bukkit.craftbukkit.libs.com.google.gson.JsonObject;
 import minecade.dungeonrealms.Utils;
 import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.enums.LogType;

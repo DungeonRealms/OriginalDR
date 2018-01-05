@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
+import net.minecraft.server.v1_8_R1.EnumParticle;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,52 +16,58 @@ import org.bukkit.entity.Player;
 
 public enum ParticleEffect {
 	
-	HUGE_EXPLOSION("hugeexplosion", 0),
-	LARGE_EXPLODE("largeexplode", 1),
-	FIREWORKS_SPARK("fireworksSpark", 2),
-	BUBBLE("bubble", 3),
-	SUSPEND("suspend", 4),
-	DEPTH_SUSPEND("depthSuspend", 5),
-	TOWN_AURA("townaura", 6),
-	CRIT("crit", 7),
-	MAGIC_CRIT("magicCrit", 8),
-	MOB_SPELL("mobSpell", 9),
-	MOB_SPELL_AMBIENT("mobSpellAmbient", 10),
-	SPELL("spell", 11),
-	INSTANT_SPELL("instantSpell", 12),
-	WITCH_MAGIC("witchMagic", 13),
-	NOTE("note", 14),
-	PORTAL("portal", 15),
-	ENCHANTMENT_TABLE("enchantmenttable", 16),
-	EXPLODE("explode", 17),
-	FLAME("flame", 18),
-	LAVA("lava", 19),
-	FOOTSTEP("footstep", 20),
-	SPLASH("splash", 21),
-	LARGE_SMOKE("largesmoke", 22),
-	CLOUD("cloud", 23),
-	RED_DUST("reddust", 24),
-	SNOWBALL_POOF("snowballpoof", 25),
-	DRIP_WATER("dripWater", 26),
-	DRIP_LAVA("dripLava", 27),
-	SNOW_SHOVEL("snowshovel", 28),
-	SLIME("slime", 29),
-	HEART("heart", 30),
-	ANGRY_VILLAGER("angryVillager", 31),
-	HAPPY_VILLAGER("happyVillager", 32),
-	ICONCRACK("iconcrack", 33),
-	TILECRACK("tilecrack", 34);
+	HUGE_EXPLOSION("hugeexplosion", 0, EnumParticle.EXPLOSION_HUGE),
+	LARGE_EXPLODE("largeexplode", 1, EnumParticle.EXPLOSION_LARGE),
+	FIREWORKS_SPARK("fireworksSpark", 2, EnumParticle.FIREWORKS_SPARK),
+	BUBBLE("bubble", 3, EnumParticle.WATER_BUBBLE),
+	SUSPEND("suspend", 4, EnumParticle.SUSPENDED),
+	DEPTH_SUSPEND("depthSuspend", 5, EnumParticle.SUSPENDED_DEPTH),
+	TOWN_AURA("townaura", 6, EnumParticle.TOWN_AURA),
+	CRIT("crit", 7, EnumParticle.CRIT),
+	MAGIC_CRIT("magicCrit", 8, EnumParticle.CRIT_MAGIC),
+	MOB_SPELL("mobSpell", 9, EnumParticle.SPELL_MOB),
+	MOB_SPELL_AMBIENT("mobSpellAmbient", 10, EnumParticle.SPELL_MOB_AMBIENT),
+	SPELL("spell", 11, EnumParticle.SPELL),
+	INSTANT_SPELL("instantSpell", 12, EnumParticle.SPELL_INSTANT),
+	WITCH_MAGIC("witchMagic", 13, EnumParticle.SPELL_WITCH),
+	NOTE("note", 14, EnumParticle.NOTE),
+	PORTAL("portal", 15, EnumParticle.PORTAL),
+	ENCHANTMENT_TABLE("enchantmenttable", 16, EnumParticle.ENCHANTMENT_TABLE),
+	EXPLODE("explode", 17, EnumParticle.EXPLOSION_NORMAL),
+	FLAME("flame", 18, EnumParticle.FLAME),
+	LAVA("lava", 19, EnumParticle.LAVA),
+	FOOTSTEP("footstep", 20, EnumParticle.FOOTSTEP),
+	SPLASH("splash", 21, EnumParticle.WATER_SPLASH),
+	LARGE_SMOKE("largesmoke", 22, EnumParticle.SMOKE_LARGE),
+	CLOUD("cloud", 23, EnumParticle.CLOUD),
+	RED_DUST("reddust", 24, EnumParticle.REDSTONE),
+	SNOWBALL_POOF("snowballpoof", 25, EnumParticle.SNOWBALL),
+	DRIP_WATER("dripWater", 26, EnumParticle.DRIP_WATER),
+	DRIP_LAVA("dripLava", 27, EnumParticle.DRIP_LAVA),
+	SNOW_SHOVEL("snowshovel", 28, EnumParticle.SNOW_SHOVEL),
+	SLIME("slime", 29, EnumParticle.SLIME),
+	HEART("heart", 30, EnumParticle.HEART),
+	ANGRY_VILLAGER("angryVillager", 31, EnumParticle.VILLAGER_ANGRY),
+	HAPPY_VILLAGER("happyVillager", 32, EnumParticle.VILLAGER_HAPPY),
+	ICONCRACK("iconcrack", 33, EnumParticle.BLOCK_CRACK),
+	TILECRACK("tilecrack", 34, EnumParticle.ITEM_CRACK);
 	
 	private String name;
 	private int id;
+	private EnumParticle particle;
 	
-	ParticleEffect(String name, int id) {
+	ParticleEffect(String name, int id, EnumParticle particle) {
 		this.name = name;
 		this.id = id;
+		this.particle = particle;
 	}
 	
 	public String getName() {
 		return name;
+	}
+	
+	public EnumParticle getParticle() {
+		return particle;
 	}
 	
 	public int getId() {
@@ -132,7 +139,7 @@ public enum ParticleEffect {
 	public static Object createPacket(ParticleEffect effect, Location location, float offsetX, float offsetY, float offsetZ, float speed, int count) throws Exception {
 		if(count <= 0) count = 1;
 		Object packet = getPacket63WorldParticles();
-		setValue(packet, "a", effect.name);
+		setValue(packet, "a", effect.getParticle());
 		setValue(packet, "b", (float) location.getX());
 		setValue(packet, "c", (float) location.getY());
 		setValue(packet, "d", (float) location.getZ());

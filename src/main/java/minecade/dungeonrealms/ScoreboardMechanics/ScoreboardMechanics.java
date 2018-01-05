@@ -144,7 +144,7 @@ public class ScoreboardMechanics implements Listener {
 		return sb.getTeam(target.getName());
 	}
 	
-	public static void setPlayerColor(ChatColor color, OfflinePlayer pl){
+/*	public static void setPlayerColor(ChatColor color, OfflinePlayer pl){  deprecated methods, only updates one each instead of both level and color
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			Team t = new TeamBuild(getTeam(ScoreboardMechanics.getBoard(p), pl)).setColor(color).getTeam();
 			if(!t.hasPlayer(pl)) t.addPlayer(pl);
@@ -155,11 +155,20 @@ public class ScoreboardMechanics implements Listener {
 	
 	public static void setPlayerLevel(int level, OfflinePlayer pl){
 		for(Player p : Bukkit.getOnlinePlayers()) {
-			Team t = new TeamBuild(getTeam(ScoreboardMechanics.getBoard(p), pl)).setLevel(level).getTeam();
+			Team t = new TeamBuild(getTeam(ScoreboardMechanics.getBoard(p), pl)).setLevel(level).setColor(KarmaMechanics.getNameplateAlignColor(pl.getName())).getTeam();
 			if(!t.hasPlayer(pl)) t.addPlayer(pl);
 		}
-		Team t = new TeamBuild(getTeam(main, pl)).setLevel(level).getTeam();
+		Team t = new TeamBuild(getTeam(main, pl)).setLevel(level).setColor(KarmaMechanics.getNameplateAlignColor(pl.getName())).getTeam();
 		if(!t.hasPlayer(pl)) t.addPlayer(pl);
+	}*/
+	
+	public static void setPlayerLevelAndColor(ChatColor color, int level, OfflinePlayer pl) {
+	    for(Player p : Bukkit.getOnlinePlayers()) {
+            Team t = new TeamBuild(getTeam(ScoreboardMechanics.getBoard(p), pl)).setLevel(level).setColor(color).getTeam();
+            if(!t.hasPlayer(pl)) t.addPlayer(pl);
+        }
+        Team t = new TeamBuild(getTeam(main, pl)).setLevel(level).setColor(color).getTeam();
+        if(!t.hasPlayer(pl)) t.addPlayer(pl);
 	}
 	
 }

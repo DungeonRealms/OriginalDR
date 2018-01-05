@@ -22,7 +22,7 @@ public class SpawnArrows implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		MenuModel.menus.get(ArrowMenu.class).getMenu().showToPlayer(plr);
+		MenuModel.getAllMenus().get(ArrowMenu.class).getMenu().showToPlayer(plr);
 	}
 
 	@Override

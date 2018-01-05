@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +49,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -72,7 +73,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.material.Dye;
-import org.mcsg.double0negative.tabapi.TabAPI;
+//import org.mcsg.double0negative.tabapi.TabAPI;
 
 @SuppressWarnings("deprecation")
 public class GuildMechanics implements Listener {
@@ -1412,6 +1413,8 @@ public class GuildMechanics implements Listener {
 		int x = 0;
 		int y = 0;
 
+		//TODO: TabAPI is broken, update this
+		/*
 		while(x < TabAPI.getVertSize()) {
 			TabAPI.setTabString(Main.plugin, pl, x, y, "" + TabAPI.nextNull());
 			x++;
@@ -1431,335 +1434,358 @@ public class GuildMechanics implements Listener {
 
 		if(update) {
 			TabAPI.updatePlayer(pl);
-		}
+		}*/
 	}
 
 	public static void updateGuildTabList(final Player pl) {
-	    // 1.8 RIP in peace TabAPI
-/*		if(pl == null) { return; }
-		String g_name = getGuild(pl.getName());
-		if(pl == null || !(inGuild(pl.getName())) || g_name == null) {
-			TabAPI.setTabString(Main.plugin, pl, 0, 0, ChatColor.GRAY + "*------------");
-			TabAPI.setTabString(Main.plugin, pl, 0, 1, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "    Guild UI");
-			TabAPI.setTabString(Main.plugin, pl, 0, 2, ChatColor.GRAY + "  ----------*");
+        if (pl == null) {
+            return;
+        }
+        
+        //TODO: Fix TabAPI
+        /*
+        String g_name = getGuild(pl.getName());
+        if (pl == null || !(inGuild(pl.getName())) || g_name == null) {
+            TabAPI.setTabString(Main.plugin, pl, 0, 0, ChatColor.GRAY + "*------------");
+            TabAPI.setTabString(Main.plugin, pl, 0, 1, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "    Guild UI");
+            TabAPI.setTabString(Main.plugin, pl, 0, 2, ChatColor.GRAY + "  ----------*");
 
-			TabAPI.setTabString(Main.plugin, pl, 2, 1, ChatColor.DARK_AQUA + "" + "Guild Name");
-			TabAPI.setTabString(Main.plugin, pl, 3, 1, ChatColor.GRAY + "N/A");
+            TabAPI.setTabString(Main.plugin, pl, 2, 1, ChatColor.DARK_AQUA + "" + "Guild Name");
+            TabAPI.setTabString(Main.plugin, pl, 3, 1, ChatColor.GRAY + "N/A");
 
-			TabAPI.setTabString(Main.plugin, pl, 17, 1, ChatColor.DARK_AQUA + "Shard " + ChatColor.GRAY.toString() + getLocalServerName(), 0);
+            TabAPI.setTabString(Main.plugin, pl, 17, 1, ChatColor.DARK_AQUA + "Shard " + ChatColor.GRAY.toString()
+                    + getLocalServerName(), 0);
 
-			int online_players = Bukkit.getOnlinePlayers().size();
-			int max_players = Bukkit.getMaxPlayers();
+            int online_players = Bukkit.getOnlinePlayers().size();
+            int max_players = Bukkit.getMaxPlayers();
 
-			online_players = (int) Math.round(online_players * 2.5D);
+            online_players = (int) Math.round(online_players * 2.5D);
 
-			if(online_players > max_players) {
-				// So if  the spoofed amount is > the maximum, we're going to take away 5-15 of the online count so more players can join.
-				online_players = max_players - (new Random().nextInt(15 - 5) + 5);
-			}
+            if (online_players > max_players) {
+                // So if the spoofed amount is > the maximum, we're going to
+                // take away 5-15 of the online count so more players can join.
+                online_players = max_players - (new Random().nextInt(15 - 5) + 5);
+            }
 
-			if(Bukkit.getOnlinePlayers().size() + 10 >= max_players) {
-				// Ok, now if the actual length+10 more is > maximum, we're full for real, so no more spoofing is needed.
-				online_players = Bukkit.getOnlinePlayers().size();
-			}
+            if (Bukkit.getOnlinePlayers().size() + 10 >= max_players) {
+                // Ok, now if the actual length+10 more is > maximum, we're full
+                // for real, so no more spoofing is needed.
+                online_players = Bukkit.getOnlinePlayers().size();
+            }
 
-			if(Bukkit.getOnlinePlayers().size() <= 5) {
-				// Less than 5 people on, don't spoof. 5 -> 6 / 13
-				online_players = Bukkit.getOnlinePlayers().size();
-			}
+            if (Bukkit.getOnlinePlayers().size() <= 5) {
+                // Less than 5 people on, don't spoof. 5 -> 6 / 13
+                online_players = Bukkit.getOnlinePlayers().size();
+            }
 
-			TabAPI.setTabString(Main.plugin, pl, 18, 1, ChatColor.GRAY.toString() + online_players + " / " + max_players, 0);
-			TabAPI.updatePlayer(pl);
+            TabAPI.setTabString(Main.plugin, pl, 18, 1, ChatColor.GRAY.toString() + online_players + " / "
+                    + max_players, 0);
+            TabAPI.updatePlayer(pl);
 
-			return; // Not in a guild, yikes.
-		}
+            return; // Not in a guild, yikes.
+        }
 
-		clearGuildTabList(pl, false);
-		String guild_owner = getGuildOwner(g_name);
+        clearGuildTabList(pl, false);
+        String guild_owner = getGuildOwner(g_name);
 
-		TabAPI.setPriority(Main.plugin, pl, 1);
+        TabAPI.setPriority(Main.plugin, pl, 1);
 
-		TabAPI.setTabString(Main.plugin, pl, 0, 0, TabAPI.nextNull() + ChatColor.GRAY + "*-------------");
-		TabAPI.setTabString(Main.plugin, pl, 0, 1, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "    Guild UI");
-		TabAPI.setTabString(Main.plugin, pl, 0, 2, ChatColor.GRAY + "  ---------*");
+        TabAPI.setTabString(Main.plugin, pl, 0, 0, TabAPI.nextNull() + ChatColor.GRAY + "*-------------");
+        TabAPI.setTabString(Main.plugin, pl, 0, 1, ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "    Guild UI");
+        TabAPI.setTabString(Main.plugin, pl, 0, 2, ChatColor.GRAY + "  ---------*");
 
-		TabAPI.setTabString(Main.plugin, pl, 2, 1, ChatColor.DARK_AQUA + "" + "Guild Name");
-		TabAPI.setTabString(Main.plugin, pl, 3, 1, ChatColor.GRAY + g_name);
+        TabAPI.setTabString(Main.plugin, pl, 2, 1, ChatColor.DARK_AQUA + "" + "Guild Name");
+        TabAPI.setTabString(Main.plugin, pl, 3, 1, ChatColor.GRAY + g_name);
 
-		TabAPI.setTabString(Main.plugin, pl, 5, 1, ChatColor.DARK_AQUA + "" + "Guild Owner", 0);
+        TabAPI.setTabString(Main.plugin, pl, 5, 1, ChatColor.DARK_AQUA + "" + "Guild Owner", 0);
 
-		if(guild_owner.contains(ChatColor.GREEN.toString()) || guild_owner.contains(ChatColor.YELLOW.toString())) {
-			if(guild_owner.contains(ChatColor.YELLOW.toString())) {
-				// Change to (gray) US-0 (green) Username
-				guild_owner = ChatColor.stripColor(guild_owner);
-				guild_owner.replaceAll(ChatColor.YELLOW.toString(), "");
-				guild_owner = ChatColor.GRAY.toString() + guild_owner.substring(0, guild_owner.indexOf(" ")) + " " + ChatColor.GREEN.toString() + guild_owner.substring(guild_owner.indexOf(" ") + 1, guild_owner.length());
-			}
-			TabAPI.setTabString(Main.plugin, pl, 6, 1, guild_owner, 0);
-		} else {
-			TabAPI.setTabString(Main.plugin, pl, 6, 1, guild_owner, 9999999);
-		}
+        if (guild_owner.contains(ChatColor.GREEN.toString()) || guild_owner.contains(ChatColor.YELLOW.toString())) {
+            if (guild_owner.contains(ChatColor.YELLOW.toString())) {
+                // Change to (gray) US-0 (green) Username
+                guild_owner = ChatColor.stripColor(guild_owner);
+                guild_owner.replaceAll(ChatColor.YELLOW.toString(), "");
+                guild_owner = ChatColor.GRAY.toString() + guild_owner.substring(0, guild_owner.indexOf(" ")) + " "
+                        + ChatColor.GREEN.toString()
+                        + guild_owner.substring(guild_owner.indexOf(" ") + 1, guild_owner.length());
+            }
+            TabAPI.setTabString(Main.plugin, pl, 6, 1, guild_owner, 0);
+        }
+        else {
+            TabAPI.setTabString(Main.plugin, pl, 6, 1, guild_owner, 9999999);
+        }
 
-		TabAPI.setTabString(Main.plugin, pl, 17, 1, ChatColor.DARK_AQUA + "Shard " + ChatColor.GRAY.toString() + getLocalServerName(), 0);
+        TabAPI.setTabString(Main.plugin, pl, 17, 1, ChatColor.DARK_AQUA + "Shard " + ChatColor.GRAY.toString()
+                + getLocalServerName(), 0);
 
-		int online_players = Bukkit.getOnlinePlayers().size();
-		int max_players = Bukkit.getMaxPlayers();
+        int online_players = Bukkit.getOnlinePlayers().size();
+        int max_players = Bukkit.getMaxPlayers();
 
-		online_players = (int) Math.round(online_players * 2.5D);
+        online_players = (int) Math.round(online_players * 2.5D);
 
-		if(online_players > max_players) {
-			// So if  the spoofed amount is > the maximum, we're going to take away 5-15 of the online count so more players can join.
-			online_players = max_players - (new Random().nextInt(15 - 5) + 5);
-		}
+        if (online_players > max_players) {
+            // So if the spoofed amount is > the maximum, we're going to take
+            // away 5-15 of the online count so more players can join.
+            online_players = max_players - (new Random().nextInt(15 - 5) + 5);
+        }
 
-		if(Bukkit.getOnlinePlayers().size() + 10 >= max_players) {
-			// Ok, now if the actual length+10 more is > maximum, we're full for real, so no more spoofing is needed.
-			online_players = Bukkit.getOnlinePlayers().size();
-		}
+        if (Bukkit.getOnlinePlayers().size() + 10 >= max_players) {
+            // Ok, now if the actual length+10 more is > maximum, we're full for
+            // real, so no more spoofing is needed.
+            online_players = Bukkit.getOnlinePlayers().size();
+        }
 
-		if(Bukkit.getOnlinePlayers().size() <= 5) {
-			// Less than 5 people on, don't spoof. 5 -> 6 / 13
-			online_players = Bukkit.getOnlinePlayers().size();
-		}
+        if (Bukkit.getOnlinePlayers().size() <= 5) {
+            // Less than 5 people on, don't spoof. 5 -> 6 / 13
+            online_players = Bukkit.getOnlinePlayers().size();
+        }
 
-		TabAPI.setTabString(Main.plugin, pl, 18, 1, ChatColor.GRAY.toString() + online_players + " / " + max_players, 0);
+        TabAPI.setTabString(Main.plugin, pl, 18, 1, ChatColor.GRAY.toString() + online_players + " / " + max_players, 0);
 
-		TabAPI.setTabString(Main.plugin, pl, 2, 0, ChatColor.DARK_AQUA + "" + "Officers [" + getOnlineOfficerCount(g_name) + "/" + getTotalOfficerCount(g_name) + "]", 0);
+        TabAPI.setTabString(Main.plugin, pl, 2, 0, ChatColor.DARK_AQUA + "" + "Officers ["
+                + getOnlineOfficerCount(g_name) + "/" + getTotalOfficerCount(g_name) + "]", 0);
 
-		TabAPI.setTabString(Main.plugin, pl, 2, 2, ChatColor.DARK_AQUA + "" + "Members [" + getOnlineGuildCount(g_name) + "/" + getGuildMemberCount(g_name) + "]", 0);
+        TabAPI.setTabString(Main.plugin, pl, 2, 2, ChatColor.DARK_AQUA + "" + "Members [" + getOnlineGuildCount(g_name)
+                + "/" + getGuildMemberCount(g_name) + "]", 0);
 
-		TabAPI.setTabString(Main.plugin, pl, 8, 1, ChatColor.DARK_AQUA + "" + "Co-Owners", 0);
-		TabAPI.setTabString(Main.plugin, pl, 9, 1, ChatColor.DARK_AQUA + "[" + getOnlineCoOwnersCount(g_name) + "/" + getTotalCoOwnersCount(g_name) + "]", 0);
+        TabAPI.setTabString(Main.plugin, pl, 8, 1, ChatColor.DARK_AQUA + "" + "Co-Owners", 0);
+        TabAPI.setTabString(Main.plugin, pl, 9, 1, ChatColor.DARK_AQUA + "[" + getOnlineCoOwnersCount(g_name) + "/"
+                + getTotalCoOwnersCount(g_name) + "]", 0);
 
-		List<String> members = getOnlineGuildMembers(g_name);
-		List<String> pruned_members = new ArrayList<String>();
-		List<String> to_remove_mem = new ArrayList<String>();
-		// pruned_members = a list of 10 members, prioritizing online first.
+        List<String> members = getOnlineGuildMembers(g_name);
+        List<String> pruned_members = new ArrayList<String>();
+        List<String> to_remove_mem = new ArrayList<String>();
+        // pruned_members = a list of 10 members, prioritizing online first.
 
-		for(String s : members) {
-			String s_copy = s;
-			if(pruned_members.size() >= 16) {
-				break;
-			}
-			if(s_copy.contains(" ")) {
-				// THey're on another server.
-				s_copy = s.substring(s.indexOf(" ") + 1, s.length());
-			}
-			if(getGuildRank(ChatColor.stripColor(s_copy), g_name) != 1) {
-				continue;
-			}
-			if(s.contains(ChatColor.GREEN.toString())) {
-				to_remove_mem.add(s);
-				pruned_members.add(s);
-			}
-		}
+        for (String s : members) {
+            String s_copy = s;
+            if (pruned_members.size() >= 16) {
+                break;
+            }
+            if (s_copy.contains(" ")) {
+                // THey're on another server.
+                s_copy = s.substring(s.indexOf(" ") + 1, s.length());
+            }
+            if (getGuildRank(ChatColor.stripColor(s_copy), g_name) != 1) {
+                continue;
+            }
+            if (s.contains(ChatColor.GREEN.toString())) {
+                to_remove_mem.add(s);
+                pruned_members.add(s);
+            }
+        }
 
-		for(String s : to_remove_mem) {
-			members.remove(s);
-		}
+        for (String s : to_remove_mem) {
+            members.remove(s);
+        }
 
-		for(String s : members) {
-			String s_copy = s;
-			if(pruned_members.size() >= 16) {
-				break;
-			}
-			if(s_copy.contains(" ")) {
-				// THey're on another server.
-				s_copy = s.substring(s.indexOf(" ") + 1, s.length());
-			}
-			if(getGuildRank(ChatColor.stripColor(s_copy), g_name) != 1) {
-				continue;
-			}
-			if(s.contains(ChatColor.YELLOW.toString())) {
-				to_remove_mem.add(s);
-				pruned_members.add(s);
-			}
-		}
+        for (String s : members) {
+            String s_copy = s;
+            if (pruned_members.size() >= 16) {
+                break;
+            }
+            if (s_copy.contains(" ")) {
+                // THey're on another server.
+                s_copy = s.substring(s.indexOf(" ") + 1, s.length());
+            }
+            if (getGuildRank(ChatColor.stripColor(s_copy), g_name) != 1) {
+                continue;
+            }
+            if (s.contains(ChatColor.YELLOW.toString())) {
+                to_remove_mem.add(s);
+                pruned_members.add(s);
+            }
+        }
 
-		for(String s : to_remove_mem) {
-			members.remove(s);
-		}
+        for (String s : to_remove_mem) {
+            members.remove(s);
+        }
 
-		if(pruned_members.size() < 16) {
-			for(String s : members) {
-				if(pruned_members.size() >= 16) {
-					break;
-				}
-				if(getGuildRank(ChatColor.stripColor(s), g_name) != 1) {
-					continue;
-				}
-				pruned_members.add(s);
-			}
-		}
+        if (pruned_members.size() < 16) {
+            for (String s : members) {
+                if (pruned_members.size() >= 16) {
+                    break;
+                }
+                if (getGuildRank(ChatColor.stripColor(s), g_name) != 1) {
+                    continue;
+                }
+                pruned_members.add(s);
+            }
+        }
 
-		int x = 2;
-		for(String s : pruned_members) {
-			x++;
-			if(x >= 20) {
-				break;
-			}
-			if(s.contains(ChatColor.GREEN.toString()) || s.contains(ChatColor.YELLOW.toString())) {
-				if(s.contains(ChatColor.YELLOW.toString())) {
-					// Change to (gray) US-0 (green) Username
-					s = ChatColor.stripColor(s);
-					s.replaceAll(ChatColor.YELLOW.toString(), "");
-					s = ChatColor.GRAY.toString() + s.substring(0, s.indexOf(" ")) + " " + ChatColor.GREEN.toString() + s.substring(s.indexOf(" ") + 1, s.length());
-				}
-				TabAPI.setTabString(Main.plugin, pl, x, 2, s, 50);
-			} else {
-				TabAPI.setTabString(Main.plugin, pl, x, 2, s, 9999999);
-			}
-		}
+        int x = 2;
+        for (String s : pruned_members) {
+            x++;
+            if (x >= 20) {
+                break;
+            }
+            if (s.contains(ChatColor.GREEN.toString()) || s.contains(ChatColor.YELLOW.toString())) {
+                if (s.contains(ChatColor.YELLOW.toString())) {
+                    // Change to (gray) US-0 (green) Username
+                    s = ChatColor.stripColor(s);
+                    s.replaceAll(ChatColor.YELLOW.toString(), "");
+                    s = ChatColor.GRAY.toString() + s.substring(0, s.indexOf(" ")) + " " + ChatColor.GREEN.toString()
+                            + s.substring(s.indexOf(" ") + 1, s.length());
+                }
+                TabAPI.setTabString(Main.plugin, pl, x, 2, s, 50);
+            }
+            else {
+                TabAPI.setTabString(Main.plugin, pl, x, 2, s, 9999999);
+            }
+        }
 
-		if(pruned_members.size() == 0) {
-			TabAPI.setTabString(Main.plugin, pl, 3, 2, ChatColor.GRAY.toString() + "N/A" + TabAPI.nextNull());
-		}
+        if (pruned_members.size() == 0) {
+            TabAPI.setTabString(Main.plugin, pl, 3, 2, ChatColor.GRAY.toString() + "N/A" + TabAPI.nextNull());
+        }
 
-		x = 2; // Reset X for parsing.
-		List<String> officers = getGuildOfficers(g_name);
-		List<String> pruned_officers = new ArrayList<String>();
-		List<String> to_remove_office = new ArrayList<String>();
+        x = 2; // Reset X for parsing.
+        List<String> officers = getGuildOfficers(g_name);
+        List<String> pruned_officers = new ArrayList<String>();
+        List<String> to_remove_office = new ArrayList<String>();
 
-		for(String s : officers) {
-			if(pruned_officers.size() > 16) {
-				break;
-			}
-			if(s.contains(ChatColor.GREEN.toString())) {
-				to_remove_office.add(s);
-				pruned_officers.add(s);
-			}
-		}
+        for (String s : officers) {
+            if (pruned_officers.size() > 16) {
+                break;
+            }
+            if (s.contains(ChatColor.GREEN.toString())) {
+                to_remove_office.add(s);
+                pruned_officers.add(s);
+            }
+        }
 
-		for(String s : to_remove_office) {
-			officers.remove(s);
-		}
+        for (String s : to_remove_office) {
+            officers.remove(s);
+        }
 
-		if(pruned_officers.size() < 16) {
-			for(String s : officers) {
-				if(pruned_officers.size() > 16) {
-					break;
-				}
-				String s_copy = s;
-				if(s_copy.contains(" ")) {
-					// THey're on another server.
-					s_copy = s.substring(s.indexOf(" ") + 1, s.length());
-				}
-				if(s.contains(ChatColor.YELLOW.toString())) {
-					pruned_officers.add(s);
-					to_remove_office.add(s);
-				}
-			}
-		}
+        if (pruned_officers.size() < 16) {
+            for (String s : officers) {
+                if (pruned_officers.size() > 16) {
+                    break;
+                }
+                String s_copy = s;
+                if (s_copy.contains(" ")) {
+                    // THey're on another server.
+                    s_copy = s.substring(s.indexOf(" ") + 1, s.length());
+                }
+                if (s.contains(ChatColor.YELLOW.toString())) {
+                    pruned_officers.add(s);
+                    to_remove_office.add(s);
+                }
+            }
+        }
 
-		for(String s : to_remove_office) {
-			officers.remove(s);
-		}
+        for (String s : to_remove_office) {
+            officers.remove(s);
+        }
 
-		if(pruned_officers.size() < 16) {
-			for(String s : officers) {
-				if(pruned_officers.size() > 16) {
-					break;
-				}
-				pruned_officers.add(s);
-			}
-		}
+        if (pruned_officers.size() < 16) {
+            for (String s : officers) {
+                if (pruned_officers.size() > 16) {
+                    break;
+                }
+                pruned_officers.add(s);
+            }
+        }
 
-		// pruned_officers = a list of 10 officers, prioritizing online first.
-		for(String s : pruned_officers) {
-			x++;
-			if(x >= 20) {
-				break;
-			}
-			if(s.contains(ChatColor.GREEN.toString()) || s.contains(ChatColor.YELLOW.toString())) {
-				if(s.contains(ChatColor.YELLOW.toString())) {
-					// Change to (gray) US-0 (green) Username
-					s = ChatColor.stripColor(s);
-					s.replaceAll(ChatColor.YELLOW.toString(), "");
-					s = ChatColor.GRAY.toString() + s.substring(0, s.indexOf(" ")) + " " + ChatColor.GREEN.toString() + s.substring(s.indexOf(" ") + 1, s.length());
-				}
-				TabAPI.setTabString(Main.plugin, pl, x, 0, s, 50);
-			} else {
-				TabAPI.setTabString(Main.plugin, pl, x, 0, s, 9999999);
-			}
-		}
+        // pruned_officers = a list of 10 officers, prioritizing online first.
+        for (String s : pruned_officers) {
+            x++;
+            if (x >= 20) {
+                break;
+            }
+            if (s.contains(ChatColor.GREEN.toString()) || s.contains(ChatColor.YELLOW.toString())) {
+                if (s.contains(ChatColor.YELLOW.toString())) {
+                    // Change to (gray) US-0 (green) Username
+                    s = ChatColor.stripColor(s);
+                    s.replaceAll(ChatColor.YELLOW.toString(), "");
+                    s = ChatColor.GRAY.toString() + s.substring(0, s.indexOf(" ")) + " " + ChatColor.GREEN.toString()
+                            + s.substring(s.indexOf(" ") + 1, s.length());
+                }
+                TabAPI.setTabString(Main.plugin, pl, x, 0, s, 50);
+            }
+            else {
+                TabAPI.setTabString(Main.plugin, pl, x, 0, s, 9999999);
+            }
+        }
 
-		if(pruned_officers.size() == 0) {
-			// Yuck. No officers.
-			TabAPI.setTabString(Main.plugin, pl, 3, 0, ChatColor.GRAY + "N/A" + TabAPI.nextNull());
-		}
+        if (pruned_officers.size() == 0) {
+            // Yuck. No officers.
+            TabAPI.setTabString(Main.plugin, pl, 3, 0, ChatColor.GRAY + "N/A" + TabAPI.nextNull());
+        }
 
-		x = 9; // Reset X for parsing.
-		List<String> coowners = getGuildCoOwners(g_name);
-		List<String> pruned_coowner = new ArrayList<String>();
-		List<String> to_remove_coowner = new ArrayList<String>();
+        x = 9; // Reset X for parsing.
+        List<String> coowners = getGuildCoOwners(g_name);
+        List<String> pruned_coowner = new ArrayList<String>();
+        List<String> to_remove_coowner = new ArrayList<String>();
 
-		for(String s : coowners) {
-			if(pruned_coowner.size() > 2) {
-				break;
-			}
-			if(s.contains(ChatColor.GREEN.toString())) {
-				to_remove_coowner.add(s);
-				pruned_coowner.add(s);
-			}
-		}
+        for (String s : coowners) {
+            if (pruned_coowner.size() > 2) {
+                break;
+            }
+            if (s.contains(ChatColor.GREEN.toString())) {
+                to_remove_coowner.add(s);
+                pruned_coowner.add(s);
+            }
+        }
 
-		for(String s : to_remove_coowner) {
-			coowners.remove(s);
-		}
+        for (String s : to_remove_coowner) {
+            coowners.remove(s);
+        }
 
-		if(pruned_coowner.size() < 2) {
-			for(String s : coowners) {
-				if(pruned_coowner.size() > 2) {
-					break;
-				}
-				String s_copy = s;
-				if(s_copy.contains(" ")) {
-					// They're on another server.
-					s_copy = s.substring(s.indexOf(" ") + 1, s.length());
-				}
-				if(s.contains(ChatColor.YELLOW.toString())) {
-					pruned_coowner.add(s);
-					to_remove_coowner.add(s);
-				}
-			}
-		}
+        if (pruned_coowner.size() < 2) {
+            for (String s : coowners) {
+                if (pruned_coowner.size() > 2) {
+                    break;
+                }
+                String s_copy = s;
+                if (s_copy.contains(" ")) {
+                    // They're on another server.
+                    s_copy = s.substring(s.indexOf(" ") + 1, s.length());
+                }
+                if (s.contains(ChatColor.YELLOW.toString())) {
+                    pruned_coowner.add(s);
+                    to_remove_coowner.add(s);
+                }
+            }
+        }
 
-		for(String s : to_remove_coowner) {
-			officers.remove(s);
-		}
+        for (String s : to_remove_coowner) {
+            officers.remove(s);
+        }
 
-		if(pruned_coowner.size() < 2) {
-			for(String s : coowners) {
-				if(pruned_coowner.size() > 2) {
-					break;
-				}
-				pruned_coowner.add(s);
-			}
-		}
+        if (pruned_coowner.size() < 2) {
+            for (String s : coowners) {
+                if (pruned_coowner.size() > 2) {
+                    break;
+                }
+                pruned_coowner.add(s);
+            }
+        }
 
-		for(String s : pruned_coowner) {
-			x++;
-			if(x >= 12) {
-				break;
-			}
-			if(s.contains(ChatColor.GREEN.toString()) || s.contains(ChatColor.YELLOW.toString())) {
-				if(s.contains(ChatColor.YELLOW.toString())) {
-					// Change to (gray) US-0 (green) Username
-					s = ChatColor.stripColor(s);
-					s.replaceAll(ChatColor.YELLOW.toString(), "");
-					s = ChatColor.GRAY.toString() + s.substring(0, s.indexOf(" ")) + " " + ChatColor.GREEN.toString() + s.substring(s.indexOf(" ") + 1, s.length());
-				}
-				TabAPI.setTabString(Main.plugin, pl, x, 1, s, 50);
-			} else {
-				TabAPI.setTabString(Main.plugin, pl, x, 1, s, 9999999);
-			}
-		}
+        for (String s : pruned_coowner) {
+            x++;
+            if (x >= 12) {
+                break;
+            }
+            if (s.contains(ChatColor.GREEN.toString()) || s.contains(ChatColor.YELLOW.toString())) {
+                if (s.contains(ChatColor.YELLOW.toString())) {
+                    // Change to (gray) US-0 (green) Username
+                    s = ChatColor.stripColor(s);
+                    s.replaceAll(ChatColor.YELLOW.toString(), "");
+                    s = ChatColor.GRAY.toString() + s.substring(0, s.indexOf(" ")) + " " + ChatColor.GREEN.toString()
+                            + s.substring(s.indexOf(" ") + 1, s.length());
+                }
+                TabAPI.setTabString(Main.plugin, pl, x, 1, s, 50);
+            }
+            else {
+                TabAPI.setTabString(Main.plugin, pl, x, 1, s, 9999999);
+            }
+        }
 
-		if(pruned_coowner.size() == 0) {
-			TabAPI.setTabString(Main.plugin, pl, 10, 1, ChatColor.GRAY + "N/A" + TabAPI.nextNull());
-		}
+        if (pruned_coowner.size() == 0) {
+            TabAPI.setTabString(Main.plugin, pl, 10, 1, ChatColor.GRAY + "N/A" + TabAPI.nextNull());
+        }
 
-		TabAPI.updatePlayer(pl);*/
+        TabAPI.updatePlayer(pl);*/
 	}
 
 	public static void setupGuildTeam(String g_name) {

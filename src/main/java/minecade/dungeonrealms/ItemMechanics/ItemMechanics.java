@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -41,10 +42,11 @@ import minecade.dungeonrealms.TeleportationMechanics.TeleportationMechanics;
 import minecade.dungeonrealms.enums.ItemTier;
 import minecade.dungeonrealms.enums.ItemType;
 import minecade.dungeonrealms.managers.PlayerManager;
-import net.minecraft.server.v1_7_R4.EntityLiving;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.EntityLiving;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.Packet;
+import net.minecraft.server.v1_8_R1.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -57,11 +59,11 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftSkeleton;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EnderPearl;
@@ -113,6 +115,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+
+import sun.security.action.GetLongAction;
 
 public class ItemMechanics implements Listener {
 
@@ -601,11 +605,16 @@ public class ItemMechanics implements Listener {
         int count = 0;
 
         for (File f : new File("plugins/ItemMechanics/custom_items/").listFiles()) {
-            if (f.getName().contains(".item")) {
-                String template_name = f.getName().replaceAll(".item", "");
-                custom_item_table.put(template_name, ItemGenerators.customGenerator(template_name));
-                count++;
-            }
+        	try {
+                if (f.getName().contains(".item")) {
+                    String template_name = f.getName().replaceAll(".item", "");
+                    custom_item_table.put(template_name, ItemGenerators.customGenerator(template_name));
+                    count++;
+                }
+        	}catch (Exception e) {
+        		Main.getLog().severe("Unable to load custom item from file: " + f.getName());
+        		e.printStackTrace();
+        	}
         }
 
         log.info("[ItemMechanics] Loaded " + count + " custom item templates into memory.");
@@ -2774,7 +2783,7 @@ public class ItemMechanics implements Listener {
         if (is == null) {
             return;
         }
-        net.minecraft.server.v1_7_R4.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_8_R1.ItemStack nms = CraftItemStack.asNMSCopy(is);
         try {
             if (pl != null && nms != null && is != null && nms.hasTag() && is.getMaxStackSize() == 1) {
                 pl.setItemInHand(removeAttributes(is));
@@ -2793,7 +2802,7 @@ public class ItemMechanics implements Listener {
                 continue;
             }
 
-            final net.minecraft.server.v1_7_R4.ItemStack nms = CraftItemStack.asNMSCopy(is);
+            final net.minecraft.server.v1_8_R1.ItemStack nms = CraftItemStack.asNMSCopy(is);
 
             if (nms != null && nms.hasTag() && is.getMaxStackSize() == 1) {
                 Attributes attributes = new Attributes(is);
@@ -2814,7 +2823,7 @@ public class ItemMechanics implements Listener {
             return null;
         }
 
-        final net.minecraft.server.v1_7_R4.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        final net.minecraft.server.v1_8_R1.ItemStack nms = CraftItemStack.asNMSCopy(is);
 
         if (nms != null && nms.hasTag() && is.getMaxStackSize() == 1) { // && nms.getTag().hasKey("AttributeName")
             Attributes attributes = new Attributes(is);
@@ -3488,8 +3497,8 @@ public class ItemMechanics implements Listener {
             } // Always at least 1 DMG reflect.
 
             if (thorn_damage_to_return > 0) {
-                Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(p.getLocation().getBlockX()), (int) Math.round(p.getLocation()
-                        .getBlockY() + 1), (int) Math.round(p.getLocation().getBlockZ()), 18, false);
+                Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(p.getLocation().getBlockX()), (int) Math.round(p.getLocation()
+                        .getBlockY() + 1), (int) Math.round(p.getLocation().getBlockZ())), 18, false);
                 ((CraftServer) Main.plugin.getServer())
                         .getServer()
                         .getPlayerList()
@@ -4482,8 +4491,8 @@ public class ItemMechanics implements Listener {
                     double new_health_display = health_percent * 20.0D;
                     p.setHealth((int) new_health_display);
                 }
-                Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(p.getLocation().getX()), (int) Math.round(p.getLocation().getY() + 1),
-                        (int) Math.round(p.getLocation().getZ()), 152, false);
+                Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(p.getLocation().getX()), (int) Math.round(p.getLocation().getY() + 1),
+                        (int) Math.round(p.getLocation().getZ())), 152, false);
                 ((CraftServer) Main.plugin.getServer())
                         .getServer()
                         .getPlayerList()
@@ -4931,7 +4940,7 @@ public class ItemMechanics implements Listener {
                     double ypt = le.getLocation().getY(); // (p_attacker.getLocation().getY() + le.getLocation().getY()) / 2;
                     double zpt = le.getLocation().getZ(); // (p_attacker.getLocation().getZ() + le.getLocation().getZ()) / 2;
 
-                    Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(xpt), (int) Math.round(ypt) + 1, (int) Math.round(zpt), 152, false);
+                    Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(xpt), (int) Math.round(ypt) + 1, (int) Math.round(zpt)), 152, false);
                     ((CraftServer) Main.plugin.getServer())
                             .getServer()
                             .getPlayerList()
@@ -5165,7 +5174,7 @@ public class ItemMechanics implements Listener {
                 double ypt = le.getLocation().getY(); // (p_attacker.getLocation().getY() + le.getLocation().getY()) / 2;
                 double zpt = le.getLocation().getZ(); // (p_attacker.getLocation().getZ() + le.getLocation().getZ()) / 2;
 
-                Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(xpt), (int) Math.round(ypt) + 1, (int) Math.round(zpt), 152, false);
+                Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(xpt), (int) Math.round(ypt) + 1, (int) Math.round(zpt)), 152, false);
                 ((CraftServer) Main.plugin.getServer())
                         .getServer()
                         .getPlayerList()
@@ -5398,7 +5407,7 @@ public class ItemMechanics implements Listener {
                 double ypt = le.getLocation().getY(); // (p_attacker.getLocation().getY() + le.getLocation().getY()) / 2;
                 double zpt = le.getLocation().getZ(); // (p_attacker.getLocation().getZ() + le.getLocation().getZ()) / 2;
 
-                Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(xpt), (int) Math.round(ypt) + 1, (int) Math.round(zpt), 152, false);
+                Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(xpt), (int) Math.round(ypt) + 1, (int) Math.round(zpt)), 152, false);
                 ((CraftServer) Main.plugin.getServer())
                         .getServer()
                         .getPlayerList()
@@ -5674,7 +5683,7 @@ public class ItemMechanics implements Listener {
                 double ypt = le.getLocation().getY(); // (p_attacker.getLocation().getY() + le.getLocation().getY()) / 2;
                 double zpt = le.getLocation().getZ(); // (p_attacker.getLocation().getZ() + le.getLocation().getZ()) / 2;
 
-                Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(xpt), (int) Math.round(ypt) + 1, (int) Math.round(zpt), 152, false);
+                Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(xpt), (int) Math.round(ypt) + 1, (int) Math.round(zpt)), 152, false);
                 ((CraftServer) Main.plugin.getServer())
                         .getServer()
                         .getPlayerList()
@@ -6296,7 +6305,7 @@ public class ItemMechanics implements Listener {
                     || (DuelMechanics.isDamageDisabled(pl.getLocation()) && !DuelMechanics.duel_map.containsKey(pl.getName()))) {
                 // pl.getWorld().spawnParticle(pl.getTargetBlock(null, 2).getLocation(), Particle.MAGIC_CRIT, 0.50F, 20);
                 try {
-                    ParticleEffect.sendToLocation(ParticleEffect.MAGIC_CRIT, pl.getTargetBlock(null, 2).getLocation(), new Random().nextFloat(),
+                    ParticleEffect.sendToLocation(ParticleEffect.MAGIC_CRIT, pl.getTargetBlock((HashSet<Byte>)null, 2).getLocation(), new Random().nextFloat(),
                             new Random().nextFloat(), new Random().nextFloat(), 0.5F, 20);
                 } catch (Exception e1) {
                     e1.printStackTrace();
@@ -6384,18 +6393,20 @@ public class ItemMechanics implements Listener {
         }
     }
 
-    public static ItemStack setToHealingPotion(net.minecraft.server.v1_7_R4.ItemStack i) {
+    public static ItemStack setToHealingPotion(net.minecraft.server.v1_8_R1.ItemStack i) {
         if (i == null) {
             log.info("[ItemMechanics] NULL itemStack on setToHealingPotion()");
             return CraftItemStack.asBukkitCopy(i);
         }
         try {
-            net.minecraft.server.v1_7_R4.NBTTagList cpe = new net.minecraft.server.v1_7_R4.NBTTagList();
+            net.minecraft.server.v1_8_R1.NBTTagList cpe = new net.minecraft.server.v1_8_R1.NBTTagList();
             NBTTagCompound tag = new NBTTagCompound();
             tag.setByte("Id", (byte) 6);
             // ((NBTTagList)i.tag.getList("CustomPotionEffects", 0)).add(tag);
             cpe.add(tag);
-            i.tag.set("CustomPotionEffects", cpe);
+            NBTTagCompound itags = i.getTag();
+            itags.set("CustomPotionEffects", cpe);
+            i.setTag(itags);
         } catch (NullPointerException npe) {
             return CraftItemStack.asBukkitCopy(i);
         }

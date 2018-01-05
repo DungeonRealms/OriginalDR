@@ -28,7 +28,7 @@ import org.bukkit.Material;
 import org.bukkit.Rotation;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -82,6 +82,64 @@ public class TutorialMechanics implements Listener {
 	
 	public static List<String> onIsland = new ArrayList<String>();
 	
+    // NPC dialogue lists TODO: finish this so tut island is streamlined
+//    private static final HashMap<String, List<String>> npcDialogue = new HashMap<String, List<String>>() {
+//        private static final long serialVersionUID = -1482368308843479700L;
+//        {
+//            put("Island Greeter", Arrays.asList("\"Welcome to the Grand World of Andalucia!\"",
+//                    "\"I am an island local, here to assist you on this island.\"",
+//                    "\"Andalucia is plagued with Gorgath's evil minions, so be careful out there!\"",
+//                    "\"You can choose to skip this tutorial by speaking to the man up ahead.\"",
+//                    "\"If you choose to complete the tutorial you will be rewarded with a set of tier one armor.\"",
+//                    "\"Other guides and trainers will hand you materials and useful resources.\"",
+//                    "\"What are you waiting for? Continue your journey and speak to the other guides on the island.\""));
+//            put("Interface Guide", Arrays.asList("\"The hearts above fellow players represent their total health.\"",
+//                    "\"The purple number says 50/50 at the top of your screen is your HP.\"",
+//                    "\"Your 'level' in normal Minecraft is actually your stamina in Dungeon Realms.\"",
+//                    "\"The hearts you have on your bar are the percentage of total health.\"",
+//                    "\"Your EXP Bar is actually your stamina. You can't deal damage or heal when it runs low.\"",
+//                    "\"Your stamina bar does regenerate in Combat, and if you sprint it also goes down.\"",
+//                    "\"The hearts above personal shops represent the times the shop has been opened.\"",
+//                    "\"Personal shops can be created by sneak left clicking the ground with your journal.\"",
+//                    "\"The Equipment Master will explain the rest of your items of note.\"",
+//                    "\"Good luck, adventurer!\"", "\"Speak to the Equipment Master Next!\""));
+//            put("Equipment Master",
+//                    Arrays.asList(
+//                            "\"Hello there adventurer. You have two items of note.\"",
+//                            "\"The character journal and the realm star!\"",
+//                            "\"Your character journal has a lot of useful functions and information.\"",
+//                            "\"Right click your realm star on the ground to open your realm.\"",
+//                            "\"Your realm is your personal building space, where you can build and reside.\"",
+//                            "\"You can add players to the realm build list by shift left clicking them with the book in hand.\"",
+//                            "\"Open the realm shop by left clicking with your realm star inside your realm.\"",
+//                            "\"No one can build inside your realm unless you add them to the list.\"",
+//                            "\"You can make your realm a safezone by purchasing an orb of peace from the item Vendor.\"",
+//                            "\"An orb of peace makes your realm a safezone for one hour.\"",
+//                            "\"You can fly in your realm by purchasing an orb of flight from the item vendor.\"",
+//                            "\"To use the orb of flight you must have an active orb of peace.\"",
+//                            "\"Traps are permitted inside realms, but do not lure others!\"",
+//                            "\"You may place blocks on realm chests to secure the contents.\"",
+//                            "\"Speak to the Master Miner next!\""));
+//            put("Master Miner",
+//                    Arrays.asList(
+//                            "\"Hello there adventurer. You have two items of note.\"",
+//                            "\"The character journal and the realm star!\"",
+//                            "\"Your character journal has a lot of useful functions and information.\"",
+//                            "\"Right click your realm star on the ground to open your realm.\"",
+//                            "\"Your realm is your personal building space, where you can build and reside.\"",
+//                            "\"You can add players to the realm build list by shift left clicking them with the book in hand.\"",
+//                            "\"Open the realm shop by left clicking with your realm star inside your realm.\"",
+//                            "\"No one can build inside your realm unless you add them to the list.\"",
+//                            "\"You can make your realm a safezone by purchasing an orb of peace from the item Vendor.\"",
+//                            "\"An orb of peace makes your realm a safezone for one hour.\"",
+//                            "\"You can fly in your realm by purchasing an orb of flight from the item vendor.\"",
+//                            "\"To use the orb of flight you must have an active orb of peace.\"",
+//                            "\"Traps are permitted inside realms, but do not lure others!\"",
+//                            "\"You may place blocks on realm chests to secure the contents.\"",
+//                            "\"Speak to the Master Miner next!\""));
+//        }
+//    };
+
 	@SuppressWarnings("deprecation")
 	public void onEnable() {
 		Main.plugin.getServer().getPluginManager().registerEvents(this, Main.plugin);
@@ -359,13 +417,13 @@ public class TutorialMechanics implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerInteractNPC(PlayerInteractEntityEvent e) {
 		final Player pl = e.getPlayer();
-		if(!(onTutorialIsland(pl))) { return; // Don't care.
-		}
+		if(!(onTutorialIsland(pl))) return; // Don't care.
 		
 		Entity e_npc = e.getRightClicked();
 		if(!(e_npc instanceof Player)) { return; }
 		Player npc = (Player) e_npc;
 		if(!(npc.hasMetadata("NPC"))) { return; } // Only NPC's matter.
+		
 		if(npc.getName().equalsIgnoreCase("Ship Sailor")) {
 			e.setCancelled(true);
 			pl.performCommand("skip");

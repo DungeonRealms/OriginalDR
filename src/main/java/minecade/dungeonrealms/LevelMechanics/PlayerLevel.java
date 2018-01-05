@@ -8,6 +8,7 @@ import minecade.dungeonrealms.Main;
 import minecade.dungeonrealms.AchievementMechanics.AchievementMechanics;
 import minecade.dungeonrealms.CommunityMechanics.CommunityMechanics;
 import minecade.dungeonrealms.HealthMechanics.HealthMechanics;
+import minecade.dungeonrealms.KarmaMechanics.KarmaMechanics;
 import minecade.dungeonrealms.ScoreboardMechanics.ScoreboardMechanics;
 import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.enums.LogType;
@@ -146,7 +147,7 @@ public class PlayerLevel {
 
     public void saveData(boolean remove) {
         final String name = p_name;
-        Main.d("SAVED " + p_name + "'s DATA! Level: " + getLevel() + " XP: " + getXP());
+        Main.d("SAVED " + p_name + "'s level DATA! Level: " + getLevel() + " XP: " + getXP());
         final int level = getLevel();
         final int xp = getXP();
         if (level == 0) {
@@ -175,6 +176,40 @@ public class PlayerLevel {
                 }
             }
         }.runTaskAsynchronously(Main.plugin);
+        if (remove) {
+            PlayerManager.getPlayerModel(p_name).setPlayerLevel(null);
+            return;
+        }
+    }
+    
+    public void saveDataOnShutdown(boolean remove) {
+        final String name = p_name;
+        Main.d("SAVED " + p_name + "'s level DATA! Level: " + getLevel() + " XP: " + getXP());
+        final int level = getLevel();
+        final int xp = getXP();
+        if (level == 0) {
+            //Its bugged so dont save?
+            //TODO: See why its saving twice?
+            return;
+        }
+        try (PreparedStatement prest = ConnectionPool
+                .getConnection()
+                .prepareStatement(
+                        "UPDATE player_database SET player_level = ?, player_xp = ?, allocated_str = ?, allocated_dex = ?, allocated_int = ?, allocated_vit = ?, resets = ? WHERE p_name = ?")) {
+            prest.setInt(1, level);
+            prest.setInt(2, xp);
+            prest.setInt(3, strPoints);
+            prest.setInt(4, dexPoints);
+            prest.setInt(5, intPoints);
+            prest.setInt(6, vitPoints);
+            prest.setInt(7, numResets);
+            prest.setString(8, name);
+            prest.executeUpdate();
+            prest.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         if (remove) {
             PlayerManager.getPlayerModel(p_name).setPlayerLevel(null);
             return;
@@ -223,7 +258,7 @@ public class PlayerLevel {
     public void updateScoreboardLevel() {
         if (p == null)
             return;
-        ScoreboardMechanics.setPlayerLevel(getLevel(), p);
+        ScoreboardMechanics.setPlayerLevelAndColor(KarmaMechanics.getNameplateAlignColor(p_name), getLevel(), p);
     }
 
     public void checkPlayer() {
@@ -314,7 +349,7 @@ public class PlayerLevel {
         this.level = level;
         this.freePoints = level * POINTS_PER_LEVEL - (strPoints + dexPoints + intPoints + vitPoints);
         if (p != null) {
-            ScoreboardMechanics.setPlayerLevel(getLevel(), p);
+            ScoreboardMechanics.setPlayerLevelAndColor(KarmaMechanics.getNameplateAlignColor(p_name), getLevel(), p);
             if (freePoints > 0) {
             	sendStatNoticeToPlayer(p);
             }

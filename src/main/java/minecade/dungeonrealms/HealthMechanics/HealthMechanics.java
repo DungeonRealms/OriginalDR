@@ -36,7 +36,7 @@ import minecade.dungeonrealms.SpawnMechanics.SpawnMechanics;
 import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.managers.PlayerManager;
 import net.citizensnpcs.api.npc.NPC;
-import net.minecraft.server.v1_7_R4.EntityLiving;
+import net.minecraft.server.v1_8_R1.EntityLiving;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,8 +44,8 @@ import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -77,6 +77,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -832,9 +833,9 @@ public class HealthMechanics implements Listener {
 
 	public static int generateMaxHP(Entity e) {
 		EntityLiving ent = ((CraftLivingEntity) e).getHandle();
-		net.minecraft.server.v1_7_R4.ItemStack[] armor_contents = ent.getEquipment();
+		net.minecraft.server.v1_8_R1.ItemStack[] armor_contents = ent.getEquipment();
 		double total_health = 0;
-		for(net.minecraft.server.v1_7_R4.ItemStack i : armor_contents) {
+		for(net.minecraft.server.v1_8_R1.ItemStack i : armor_contents) {
 			ItemStack is = CraftItemStack.asBukkitCopy(i);
 			if(is.getType() == Material.AIR) {
 				continue;
@@ -1607,18 +1608,28 @@ public class HealthMechanics implements Listener {
 			//combat_logger.add(p.getName());
 
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
-				public void run() { // Delay due to delay on HP set.
+				@SuppressWarnings("deprecation")
+                public void run() { // Delay due to delay on HP set.
 					//p.setLevel(0);
 					//setPlayerHP(p.getName(), 0);
 					if(Bukkit.getPlayer(p.getName()) != null) {
 						Player p_updated = Bukkit.getPlayer(p.getName());
 						if(p_updated.getHealth() > 0) {
-							p_updated.setHealth(0); // Kill that bitch.
+						    HealthMechanics.setPlayerHP(p_updated.getName(), 0);
+						    p_updated.setHealth(0);
+                            p_updated.setMetadata("hp", new FixedMetadataValue(Main.plugin, 0));
+                            
+                            KarmaMechanics.plast_hit.remove(p_updated.getName());
+                            KarmaMechanics.last_hit_time.remove(p_updated.getName());
+        
+                            p_updated.setLastDamageCause(new EntityDamageEvent(p_updated, DamageCause.CUSTOM, 0));
 							p_updated.setExp(0.0F);
+							
+							combat_logger.remove(p.getName());
 						}
 					}
 				}
-			}, 10L);
+			}, 20L);
 
 			// Remove mule items I suppose.
 			if(p.getInventory().contains(Material.LEASH)) {
@@ -1633,8 +1644,7 @@ public class HealthMechanics implements Listener {
 			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "* YOU LOGGED OUT IN COMBAT, AND YOU WERE KILLED *");
 			return;
 		}
-
-		if(!combat_log) {
+		else {
 			// They did not combat log. We'll give them 3 seconds of invinsibility on login.
 			p.setFireTicks(0);
 			p.setFallDistance(0.0F);

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -35,9 +36,10 @@ import minecade.dungeonrealms.PetMechanics.PetMechanics;
 import minecade.dungeonrealms.ProfessionMechanics.ProfessionMechanics;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
 import minecade.dungeonrealms.config.Config;
-import net.minecraft.server.v1_7_R4.EntityLiving;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.EntityLiving;
+import net.minecraft.server.v1_8_R1.Packet;
+import net.minecraft.server.v1_8_R1.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -49,11 +51,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.block.CraftJukebox;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.block.CraftJukebox;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -224,8 +226,8 @@ public class EcashMechanics implements Listener {
                             }
                         }.runTask(Main.plugin);
 
-                        Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(b.getLocation().getX()),
-                                (int) Math.round(b.getLocation().getY()), (int) Math.round(b.getLocation().getZ()), 84, false);
+                        Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(b.getLocation().getX()),
+                                (int) Math.round(b.getLocation().getY()), (int) Math.round(b.getLocation().getZ())), 84, false);
                         ((CraftServer) Bukkit.getServer())
                                 .getServer()
                                 .getPlayerList()
@@ -1607,8 +1609,8 @@ public class EcashMechanics implements Listener {
                         final Block fb = b;
                         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
                             public void run() {
-                                Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(fb.getLocation().getX()), (int) Math.round(fb
-                                        .getLocation().getY()), (int) Math.round(fb.getLocation().getZ()), 84, false);
+                                Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(fb.getLocation().getX()), (int) Math.round(fb
+                                        .getLocation().getY()), (int) Math.round(fb.getLocation().getZ())), 84, false);
                                 ((CraftServer) Bukkit.getServer())
                                         .getServer()
                                         .getPlayerList()
@@ -1908,7 +1910,7 @@ public class EcashMechanics implements Listener {
                     t = Type.STAR;
                 }
 
-                Firework fw = (Firework) pl.getWorld().spawnEntity(pl.getTargetBlock(null, 2).getLocation(), EntityType.FIREWORK);
+                Firework fw = (Firework) pl.getWorld().spawnEntity(pl.getTargetBlock((HashSet<Byte>)null, 2).getLocation(), EntityType.FIREWORK);
                 FireworkMeta fwm = fw.getFireworkMeta();
                 FireworkEffect effect = FireworkEffect.builder().flicker(true).withColor(c1).withFade(c2).with(t).trail(true).build();
                 fwm.addEffect(effect);
@@ -1957,7 +1959,7 @@ public class EcashMechanics implements Listener {
                 }
 
                 if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-                    Location target_loc = pl.getTargetBlock(null, 8).getLocation();
+                    Location target_loc = pl.getTargetBlock((HashSet<Byte>)null, 8).getLocation();
                     try {
                         ParticleEffect.sendToLocation(ParticleEffect.HUGE_EXPLOSION, target_loc.add(0.50, 0.95, 0.50), new Random().nextFloat(),
                                 new Random().nextFloat(), new Random().nextFloat(), 0.5F, 40);

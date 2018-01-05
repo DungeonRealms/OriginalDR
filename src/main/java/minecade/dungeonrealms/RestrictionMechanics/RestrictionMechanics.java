@@ -2,6 +2,7 @@ package minecade.dungeonrealms.RestrictionMechanics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -35,7 +36,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -676,7 +677,7 @@ public class RestrictionMechanics implements Listener {
         try {
             Player pl = e.getPlayer();
 
-            if (pl.getTargetBlock(null, 6).getType() == Material.ITEM_FRAME && !pl.isOp() && !PermissionMechanics.isStaff(pl)) {
+            if (pl.getTargetBlock((HashSet<Byte>)null, 6).getType() == Material.ITEM_FRAME && !pl.isOp() && !PermissionMechanics.isStaff(pl)) {
                 e.setCancelled(true);
             }
         } catch (Exception err) {

@@ -63,10 +63,11 @@ import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.config.Config;
 import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.holograms.Hologram;
-import net.minecraft.server.v1_7_R4.DataWatcher;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityMetadata;
-import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.DataWatcher;
+import net.minecraft.server.v1_8_R1.Packet;
+import net.minecraft.server.v1_8_R1.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_8_R1.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -83,12 +84,12 @@ import org.bukkit.WorldType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -2083,8 +2084,8 @@ public class RealmMechanics implements Listener {
 			loot.setTypeId(356);
 		}
 
-		Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(b.getLocation().getX()), (int) Math.round(b.getLocation().getY()),
-				(int) Math.round(b.getLocation().getZ()), b.getTypeId(), false);
+		Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(b.getLocation().getX()), (int) Math.round(b.getLocation().getY()),
+				(int) Math.round(b.getLocation().getZ())), b.getTypeId(), false);
 		((CraftServer) Main.plugin.getServer())
 		.getServer()
 		.getPlayerList()
@@ -2347,8 +2348,8 @@ public class RealmMechanics implements Listener {
 
 			if (portal_l == null || !portal.getWorld().getName().equalsIgnoreCase(portal_l.getWorld().getName())
 					|| portal.getLocation().distanceSquared(portal_l) > 4) {
-				Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(portal.getLocation().getX()), (int) Math.round(portal.getLocation()
-						.getY()), (int) Math.round(portal.getLocation().getZ()), 90, false);
+				Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(portal.getLocation().getX()), (int) Math.round(portal.getLocation()
+						.getY()), (int) Math.round(portal.getLocation().getZ())), 90, false);
 				((CraftServer) Main.plugin.getServer())
 				.getServer()
 				.getPlayerList()
@@ -3363,7 +3364,7 @@ public class RealmMechanics implements Listener {
 	public static void disableAllEffects(Player player, final LivingEntity entity) {
 		CraftEntity ce = (CraftEntity) ((Entity) entity);
 
-		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R4.Entity) ce.getHandle());
+		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_8_R1.Entity) ce.getHandle());
 		dw.a(8, Byte.valueOf((byte) 0));
 		dw.watch(8, Byte.valueOf((byte) 0x00FF00));
 
@@ -3379,7 +3380,7 @@ public class RealmMechanics implements Listener {
 	public static void playPotionEffect(final Player player, final LivingEntity entity, int color, int duration) {
 		CraftEntity ce = (CraftEntity) ((Entity) entity);
 
-		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R4.Entity) ce.getHandle());
+		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_8_R1.Entity) ce.getHandle());
 		dw.a(8, Byte.valueOf((byte) 0));
 		dw.watch(8, Byte.valueOf((byte) color));
 

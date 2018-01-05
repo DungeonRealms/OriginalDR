@@ -39,6 +39,9 @@ commands:
     description: Send a message locally
     usage: /<command>
     aliases: [local]
+  rules: 
+    description: Links the DungeonRealms server rules.
+    usage: /<command>
   add:
     description: Adds PLAYER to buddy list.
     usage: /<command>

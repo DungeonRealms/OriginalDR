@@ -22,7 +22,7 @@ public class SpawnScrolls implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		MenuModel.menus.get(ScrollMenu.class).getMenu().showToPlayer(plr);
+		MenuModel.getAllMenus().get(ScrollMenu.class).getMenu().showToPlayer(plr);
 	}
 
 	@Override

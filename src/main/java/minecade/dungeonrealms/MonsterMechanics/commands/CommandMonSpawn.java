@@ -1,5 +1,7 @@
 package minecade.dungeonrealms.MonsterMechanics.commands;
 
+import java.util.HashSet;
+
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
 
 import org.bukkit.ChatColor;
@@ -179,7 +181,7 @@ public class CommandMonSpawn implements CommandExecutor {
 			
 			// /monspawn mob_type tier elite meta_data name
 			
-			Location l = p.getTargetBlock(null, 128).getLocation().add(0, 1, 0);
+			Location l = p.getTargetBlock((HashSet<Byte>)null, 128).getLocation().add(0, 1, 0);
 			/*public static boolean spawnTierMob(Location l, EntityType et, int tier, int mob_num,
 				Location mob_spawner_loc, boolean elite, String meta_data, String custom_name) {*/
 			

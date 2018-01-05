@@ -3,24 +3,24 @@ package minecade.dungeonrealms.MonsterMechanics;
 import java.lang.reflect.Field;
 import java.util.Random;
 
-import net.minecraft.server.v1_7_R4.EntityArrow;
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.EntityLiving;
-import net.minecraft.server.v1_7_R4.EntityZombie;
-import net.minecraft.server.v1_7_R4.IRangedEntity;
-import net.minecraft.server.v1_7_R4.ItemStack;
-import net.minecraft.server.v1_7_R4.Items;
-import net.minecraft.server.v1_7_R4.PathfinderGoal;
-import net.minecraft.server.v1_7_R4.PathfinderGoalArrowAttack;
-import net.minecraft.server.v1_7_R4.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_7_R4.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_7_R4.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_7_R4.PathfinderGoalRandomStroll;
-import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.EntityArrow;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.EntityLiving;
+import net.minecraft.server.v1_8_R1.EntityZombie;
+import net.minecraft.server.v1_8_R1.IRangedEntity;
+import net.minecraft.server.v1_8_R1.ItemStack;
+import net.minecraft.server.v1_8_R1.Items;
+import net.minecraft.server.v1_8_R1.PathfinderGoal;
+import net.minecraft.server.v1_8_R1.PathfinderGoalArrowAttack;
+import net.minecraft.server.v1_8_R1.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_8_R1.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_8_R1.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_8_R1.PathfinderGoalRandomStroll;
+import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
+import net.minecraft.server.v1_8_R1.World;
 
-import org.bukkit.craftbukkit.v1_7_R4.event.CraftEventFactory;
-import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_8_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_8_R1.util.UnsafeList;
 
 public class ZombieArcher extends EntityZombie implements IRangedEntity {
 	
@@ -58,7 +58,7 @@ public class ZombieArcher extends EntityZombie implements IRangedEntity {
 		this.bZ();
 	}
 	
-	public boolean bZ() {
+	public boolean cl() {
 		this.goalSelector.a((PathfinderGoal) this.bq);
 		this.goalSelector.a((PathfinderGoal) this.bp);
 		ItemStack itemstack = this.getEquipment(0);
@@ -73,11 +73,11 @@ public class ZombieArcher extends EntityZombie implements IRangedEntity {
 	
 	@Override
 	public void a(EntityLiving entityliving, float f) {
-		EntityArrow entityarrow = new EntityArrow(this.world, this, entityliving, 1.6F, (float) (14 - this.world.difficulty.a() * 4));
+		EntityArrow entityarrow = new EntityArrow(this.world, this, entityliving, 1.6F, (float) (14 - this.world.getDifficulty().a() * 4));
 		// int i = EnchantmentManager.getEnchantmentLevel(Enchantment.ARROW_DAMAGE.id, this.bd());
 		// int j = EnchantmentManager.getEnchantmentLevel(Enchantment.ARROW_KNOCKBACK.id, this.bd());
 		
-		entityarrow.b((double) (f * 2.0F) + this.random.nextGaussian() * 0.25D + (double) ((float) this.world.difficulty.a() * 0.11F));
+		entityarrow.b((double) (f * 2.0F) + this.random.nextGaussian() * 0.25D + (double) ((float) this.world.getDifficulty().a() * 0.11F));
 		
 		// CraftBukkit start
 		org.bukkit.event.entity.EntityShootBowEvent event = CraftEventFactory.callEntityShootBowEvent(this, this.getEquipment(0), entityarrow, 0.8F);

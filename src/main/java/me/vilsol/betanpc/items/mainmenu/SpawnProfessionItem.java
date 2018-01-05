@@ -22,7 +22,7 @@ public class SpawnProfessionItem implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		MenuModel.menus.get(ProfessionMenu.class).getMenu().showToPlayer(plr);
+		MenuModel.getAllMenus().get(ProfessionMenu.class).getMenu().showToPlayer(plr);
 	}
 
 	@Override

@@ -2,20 +2,20 @@ package minecade.dungeonrealms.MonsterMechanics;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.EntityIronGolem;
-import net.minecraft.server.v1_7_R4.PathfinderGoalHurtByTarget;
-import net.minecraft.server.v1_7_R4.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_7_R4.PathfinderGoalMeleeAttack;
-import net.minecraft.server.v1_7_R4.PathfinderGoalMoveTowardsTarget;
-import net.minecraft.server.v1_7_R4.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.server.v1_7_R4.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_7_R4.PathfinderGoalRandomStroll;
-import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
-import net.minecraft.server.v1_7_R4.PathfinderGoalTarget;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.EntityIronGolem;
+import net.minecraft.server.v1_8_R1.PathfinderGoalHurtByTarget;
+import net.minecraft.server.v1_8_R1.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_8_R1.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_8_R1.PathfinderGoalMoveTowardsTarget;
+import net.minecraft.server.v1_8_R1.PathfinderGoalNearestAttackableTarget;
+import net.minecraft.server.v1_8_R1.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_8_R1.PathfinderGoalRandomStroll;
+import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
+import net.minecraft.server.v1_8_R1.PathfinderGoalTarget;
+import net.minecraft.server.v1_8_R1.World;
 
-import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_8_R1.util.UnsafeList;
 
 public class Golem extends EntityIronGolem {
 	
@@ -28,7 +28,7 @@ public class Golem extends EntityIronGolem {
 		this.goalSelector.a(3, new PathfinderGoalRandomLookaround(this));
 		this.goalSelector.a(4, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 6.0F));
 		this.targetSelector.a(0, new PathfinderGoalHurtByTarget(this, false));
-		this.targetSelector.a(1, new PathfinderGoalNearestAttackableTarget(this, EntityHuman.class, 0, true));
+		this.targetSelector.a(1, new PathfinderGoalNearestAttackableTarget(this, EntityHuman.class, true));
 	}
 	
 	@SuppressWarnings("rawtypes")

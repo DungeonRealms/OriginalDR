@@ -22,7 +22,7 @@ public class SpawnTeleportBooks implements MenuItem {
 
 	@Override
 	public void execute(Player plr, ClickType click) {
-		MenuModel.menus.get(TeleportMenu.class).getMenu().showToPlayer(plr);
+		MenuModel.getAllMenus().get(TeleportMenu.class).getMenu().showToPlayer(plr);
 	}
 
 	@Override

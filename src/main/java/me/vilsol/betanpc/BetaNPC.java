@@ -212,7 +212,7 @@ public class BetaNPC implements Listener {
 		if (!(ChatColor.stripColor(trader.getName()).equalsIgnoreCase("Beta Vendor"))) return;
 		if(Utils.isBeta() || Bukkit.getMotd().contains("US-99")){
 			e.setCancelled(true);
-			MenuModel.menus.get(MainMenu.class).getMenu().showToPlayer(e.getPlayer());
+			MenuModel.getAllMenus().get(MainMenu.class).getMenu().showToPlayer(e.getPlayer());
 		}else{
 			e.getPlayer().sendMessage(me.vilsol.betanpc.utils.Utils.NPC + "HOW DID YOU FIND ME?");
 		}

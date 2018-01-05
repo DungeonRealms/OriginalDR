@@ -30,8 +30,9 @@ import minecade.dungeonrealms.PowerupMechanics.PowerupMechanics;
 import minecade.dungeonrealms.ShopMechanics.ShopMechanics;
 import minecade.dungeonrealms.TeleportationMechanics.TeleportationMechanics;
 import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.Packet;
+import net.minecraft.server.v1_8_R1.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,9 +40,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -1030,7 +1031,7 @@ public class LootMechanics implements Listener {
 					p.playSound(p.getLocation(), Sound.ZOMBIE_WOODBREAK, 0.5F, 1.2F);
 					Main.plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Main.plugin, new Runnable() {
 						public void run() {
-							Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ()), 54, false);
+							Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ())), 54, false);
 							((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(chest.getLocation().getX(), chest.getLocation().getY(), chest.getLocation().getZ(), 24, ((CraftWorld) chest.getWorld()).getHandle().dimension, particles);
 							
 						}
@@ -1091,7 +1092,7 @@ public class LootMechanics implements Listener {
 				if(loot == null) {
 					p.playSound(p.getLocation(), Sound.ZOMBIE_WOODBREAK, 0.5F, 1.2F);
 					chest.setType(Material.AIR);
-					Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ()), 54, false);
+					Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ())), 54, false);
 					((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(chest.getLocation().getX(), chest.getLocation().getY(), chest.getLocation().getZ(), 24, ((CraftWorld) chest.getWorld()).getHandle().dimension, particles);
 					return;
 				}
@@ -1112,7 +1113,7 @@ public class LootMechanics implements Listener {
 				
 				p.playSound(p.getLocation(), Sound.ZOMBIE_WOODBREAK, 0.5F, 1.2F);
 				chest.setType(Material.AIR);
-				Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ()), 54, false);
+				Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ())), 54, false);
 				((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(chest.getLocation().getX(), chest.getLocation().getY(), chest.getLocation().getZ(), 24, ((CraftWorld) chest.getWorld()).getHandle().dimension, particles);
 				last_loot_spawn_tick.put(chest.getLocation(), (System.currentTimeMillis()));
 				loot_chests_to_spawn.put(chest.getLocation(), loot_spawns.get(chest.getLocation()));
@@ -1141,7 +1142,7 @@ public class LootMechanics implements Listener {
 				if(loot == null) {
 					p.playSound(p.getLocation(), Sound.ZOMBIE_WOODBREAK, 0.5F, 1.2F);
 					chest.setType(Material.AIR);
-					Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ()), 54, false);
+					Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ())), 54, false);
 					((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(chest.getLocation().getX(), chest.getLocation().getY(), chest.getLocation().getZ(), 24, ((CraftWorld) chest.getWorld()).getHandle().dimension, particles);
 					return;
 				}
@@ -1156,7 +1157,7 @@ public class LootMechanics implements Listener {
 				}
 				p.playSound(p.getLocation(), Sound.ZOMBIE_WOODBREAK, 0.5F, 1.2F);
 				chest.setType(Material.AIR);
-				Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ()), 54, false);
+				Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(chest.getLocation().getX()), (int) Math.round(chest.getLocation().getY()), (int) Math.round(chest.getLocation().getZ())), 54, false);
 				((CraftServer) Main.plugin.getServer()).getServer().getPlayerList().sendPacketNearby(chest.getLocation().getX(), chest.getLocation().getY(), chest.getLocation().getZ(), 24, ((CraftWorld) chest.getWorld()).getHandle().dimension, particles);
 				InstanceMechanics.instance_loot_inv.get(p.getWorld().getName()).remove(chest.getLocation());
 				

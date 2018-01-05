@@ -935,6 +935,16 @@ public class KarmaMechanics implements Listener {
 			}
 		}
 	}
+	
+	public static ChatColor getNameplateAlignColor(String p_name) {
+	    if (!align_map.containsKey(p_name)) return ChatColor.WHITE;
+	    
+	    if (align_map.get(p_name).equalsIgnoreCase("good")) return ChatColor.WHITE;
+	    else if (align_map.get(p_name).equalsIgnoreCase("neutral")) return ChatColor.YELLOW;
+	    else if (align_map.get(p_name).equalsIgnoreCase("evil")) return ChatColor.RED;
+	    
+	    return null;
+	}
 
 	public static String getRawAlignment(String p_name) {
 		if(!(align_map.containsKey(p_name))) {

@@ -32,7 +32,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -145,6 +145,10 @@ public class MerchantMechanics implements Listener {
             ChatColor.GOLD.toString() + "Duration: " + ChatColor.GRAY + "30 minutes" + "," + ChatColor.GOLD.toString() + "Uses: " + ChatColor.GRAY + "1" + ","
                     + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Increases all loot drop chances for everyone" + "," + ChatColor.GRAY.toString()
                     + ChatColor.ITALIC + "by 20% across " + ChatColor.UNDERLINE + "ALL SHARDS." + "," + ChatColor.GRAY + "Permanent Untradeable");
+    public static ItemStack increased_exp = ItemMechanics.signNewCustomItem(Material.EXP_BOTTLE, (short) 1, ChatColor.GOLD.toString() + "Global EXP Buff",
+            ChatColor.GOLD.toString() + "Duration: " + ChatColor.GRAY + "30 minutes" + "," + ChatColor.GOLD.toString() + "Uses: " + ChatColor.GRAY + "1" + ","
+                    + ChatColor.GRAY.toString() + ChatColor.ITALIC + "Increases all experience gained from mobs for everyone" + "," + ChatColor.GRAY.toString()
+                    + ChatColor.ITALIC + "by 100% across " + ChatColor.UNDERLINE + "ALL SHARDS." + "," + ChatColor.GRAY + "Permanent Untradeable");
 
     public static ItemStack skeleton_horse = ItemMechanics.signNewCustomItem(Material.BONE, (short) 3, ChatColor.GOLD.toString() + "Skeleton Horse Skin",
             ChatColor.GRAY.toString() + ChatColor.ITALIC + "Transforms your horse into a conjured skeletal beast." + "," + ChatColor.GRAY
@@ -237,7 +241,8 @@ public class MerchantMechanics implements Listener {
         eCashVendor.setItem(11, Hive.setECASHPrice(CraftItemStack.asCraftCopy(item_ownership_tag), 199));
         eCashVendor.setItem(12, Hive.setECASHPrice(CraftItemStack.asCraftCopy(profession_exp_boost), 3999));
         eCashVendor.setItem(13, Hive.setECASHPrice(CraftItemStack.asCraftCopy(lore_remover), 299));
-        eCashVendor.setItem(14, Hive.setECASHPrice(CraftItemStack.asCraftCopy(demonic_aura), 666));
+        //eCashVendor.setItem(14, Hive.setECASHPrice(CraftItemStack.asCraftCopy(demonic_aura), 666));
+        //TODO: Fix Demonic Aura
         eCashVendor.setItem(15, Hive.setECASHPrice(CraftItemStack.asCraftCopy(personal_clone), 1499));
         eCashVendor.setItem(16, Hive.setECASHPrice(CraftItemStack.asCraftCopy(golden_curse), 899));
         eCashVendor.setItem(17, Hive.setECASHPrice(CraftItemStack.asCraftCopy(destruction_wand), 999));

@@ -35,8 +35,9 @@ import minecade.dungeonrealms.ProfessionMechanics.commands.CommandShowFish;
 import minecade.dungeonrealms.RealmMechanics.RealmMechanics;
 import minecade.dungeonrealms.RepairMechanics.RepairMechanics;
 import minecade.dungeonrealms.managers.PlayerManager;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.Packet;
+import net.minecraft.server.v1_8_R1.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -48,9 +49,9 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.Furnace;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.LivingEntity;
@@ -865,6 +866,7 @@ public class ProfessionMechanics implements Listener {
     }
 
     public static boolean isSkillItem(ItemStack is) {
+        if (is == null) return false;
         if (is.getType() == Material.WOOD_PICKAXE || is.getType() == Material.STONE_PICKAXE || is.getType() == Material.IRON_PICKAXE
                 || is.getType() == Material.DIAMOND_PICKAXE || is.getType() == Material.GOLD_PICKAXE) {
             if (is.hasItemMeta() && is.getItemMeta().hasDisplayName()) {
@@ -2869,7 +2871,7 @@ public class ProfessionMechanics implements Listener {
                 // Do not allow fishing with incorrect types of fishing rods.
             }
 
-            Location target_loc = pl.getTargetBlock(null, 8).getLocation();
+            Location target_loc = pl.getTargetBlock((HashSet<Byte>)null, 8).getLocation();
 
             int spot_tier = getFishingSpotTier(target_loc);
             if (spot_tier == -1) {
@@ -3242,7 +3244,7 @@ public class ProfessionMechanics implements Listener {
     public void onPlayerUseFire(PlayerInteractEvent e) {
         Player pl = e.getPlayer();
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.hasItem() && e.getItem().getType() == Material.RAW_FISH) {
-            Block b = pl.getTargetBlock(null, 8);
+            Block b = pl.getTargetBlock((HashSet<Byte>)null, 8);
 
             if (b.getType() == Material.FIRE || b.getType() == Material.LAVA || b.getType() == Material.STATIONARY_LAVA || b.getType() == Material.FURNACE
                     || b.getType() == Material.BURNING_FURNACE) {
@@ -3595,8 +3597,8 @@ public class ProfessionMechanics implements Listener {
 
                         pl.playSound(pl.getLocation(), Sound.DIG_STONE, 1F, 0.75F);
 
-                        Packet particles = new PacketPlayOutWorldEvent(2001, (int) Math.round(b.getLocation().getBlockX()), (int) Math.round(b.getLocation()
-                                .getBlockY()), (int) Math.round(b.getLocation().getBlockZ()), 1, false);
+                        Packet particles = new PacketPlayOutWorldEvent(2001, new BlockPosition((int) Math.round(b.getLocation().getBlockX()), (int) Math.round(b.getLocation()
+                                .getBlockY()), (int) Math.round(b.getLocation().getBlockZ())), 1, false);
                         ((CraftServer) Main.plugin.getServer())
                                 .getServer()
                                 .getPlayerList()

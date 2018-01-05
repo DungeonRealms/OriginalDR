@@ -55,6 +55,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class LevelMechanics implements Listener {
 	
     private JSONMessage freePointsNotice;
+    public static volatile long xp_buff_timeout = 0L;
+    public static volatile boolean xp_buff = false;
 
     // Player name, PlayerLevel data
     public LevelMechanics(){
@@ -119,6 +121,20 @@ public class LevelMechanics implements Listener {
         
         // register menu for stats GUI
         new StatsGUI();
+        
+        // double exp
+        Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
+            public void run() {
+                if (xp_buff == true) {
+                    if ((System.currentTimeMillis() - xp_buff_timeout) > 0) {
+                        // Time to stop the fun.
+                        xp_buff = false;
+                        Bukkit.broadcastMessage(ChatColor.GOLD + "" + ChatColor.BOLD + ">> " + ChatColor.GOLD + "The " + ChatColor.UNDERLINE
+                                + "+20% Global Drop Rates" + ChatColor.GOLD + " has expired.");
+                    }
+                }
+            }
+        }, 15 * 20L, 1 * 20L);
     }
     
     @EventHandler
@@ -495,6 +511,7 @@ public class LevelMechanics implements Listener {
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent e) {
     	final PlayerLevel PLAYER_LEVEL = PlayerManager.getPlayerModel(e.getPlayer()).getPlayerLevel();
+    	final Player p = e.getPlayer();
         PLAYER_LEVEL.setPlayer(e.getPlayer());
         new BukkitRunnable() {
             public void run() {
@@ -509,6 +526,19 @@ public class LevelMechanics implements Listener {
 				}
 			}
         }, 15L); // 15 ticks so the notice comes after motd, sub days, etc.
+        Main.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+            public void run() {
+                if (xp_buff == true) {
+                    int minutes_left = (int) (((xp_buff_timeout - System.currentTimeMillis()) / 1000.0D) / 60.0D);
+                    if (p != null) {
+                        p.sendMessage("");
+                        p.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + ">> " + ChatColor.UNDERLINE + "Double EXP Rates" + ChatColor.GOLD
+                                + " is active for " + ChatColor.UNDERLINE + minutes_left + ChatColor.RESET + ChatColor.GOLD + " more minute(s)!");
+                        p.sendMessage("");
+                    }
+                }
+            }
+        }, 40L);
     }
     
     @EventHandler
@@ -525,6 +555,9 @@ public class LevelMechanics implements Listener {
         		int newXP = (int) Math.round((xp * (1 - (0.1D * (PartyMechanics.party_map.get(p.getName()).getPartyMembers().size() - 1)))));
         		xp = newXP;
         	}
+        }
+        if (xp_buff) {
+            xp *= 2;
         }
 
         getPlayerData(p).addXP(xp);

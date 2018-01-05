@@ -185,6 +185,13 @@ public class HearthstoneMechanics implements Listener {
         hearthstone_map.remove(p_name);
         hearthstone_timer.remove(p_name);
     }
+    
+    public static void saveDataOnShutdown(String p_name) {
+        getHearthStone(p_name).saveDataSync();
+        hearthstone_location.remove(p_name);
+        hearthstone_map.remove(p_name);
+        hearthstone_timer.remove(p_name);
+    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void Prelogin(AsyncPlayerPreLoginEvent e) {

@@ -17,6 +17,7 @@ import minecade.dungeonrealms.EcashMechanics.EcashMechanics;
 import minecade.dungeonrealms.GuildMechanics.GuildMechanics;
 import minecade.dungeonrealms.Hive.Hive;
 import minecade.dungeonrealms.InstanceMechanics.InstanceMechanics;
+import minecade.dungeonrealms.LevelMechanics.LevelMechanics;
 import minecade.dungeonrealms.MoneyMechanics.MoneyMechanics;
 import minecade.dungeonrealms.MonsterMechanics.MonsterMechanics;
 import minecade.dungeonrealms.PermissionMechanics.PermissionMechanics;
@@ -29,7 +30,7 @@ import minecade.dungeonrealms.enums.LogType;
 import minecade.dungeonrealms.jsonlib.JsonBuilder;
 import minecade.dungeonrealms.managers.PlayerManager;
 import minecade.dungeonrealms.models.LogModel;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -436,6 +437,22 @@ public class ConnectProtocol implements Runnable {
 					MonsterMechanics.loot_buff_timeout = System.currentTimeMillis() + (1800 * 1000); // 30
 					// minutes.
 					MonsterMechanics.loot_buff = true;
+				}
+				
+				if (inputLine.startsWith("[xpbuff]")) {
+				 // [lootbuff]p_name@from_server
+                    String player_string = inputLine.substring(inputLine.indexOf("]") + 1, inputLine.indexOf("@"));
+                    String from_server = inputLine.substring(inputLine.indexOf("@") + 1, inputLine.length());
+
+                    Bukkit.getServer().broadcastMessage("");
+                    Bukkit.getServer().broadcastMessage(
+                            ChatColor.GOLD + "" + ChatColor.BOLD + ">> " + "(" + from_server + ") " + ChatColor.RESET + player_string + ChatColor.GOLD
+                            + " has just activated " + ChatColor.UNDERLINE + "Double EXP Rates" + ChatColor.GOLD
+                            + " for 30 minutes by using 'Global EXP Buff' from the E-CASH store!");
+                    Bukkit.getServer().broadcastMessage("");
+                    
+                    LevelMechanics.xp_buff = true;
+                    LevelMechanics.xp_buff_timeout = System.currentTimeMillis() + (18000 * 1000);
 				}
 
 				if (inputLine.startsWith("[globalmessage]")) {

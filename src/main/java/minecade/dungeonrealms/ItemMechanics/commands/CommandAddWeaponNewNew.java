@@ -6,7 +6,7 @@ import me.vilsol.menuengine.engine.MenuModel;
 import minecade.dungeonrealms.enums.ItemRarity;
 import minecade.dungeonrealms.enums.ItemTier;
 import minecade.dungeonrealms.enums.ItemType;
-import net.minecraft.util.org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -25,7 +25,7 @@ public class CommandAddWeaponNewNew implements CommandExecutor {
 		
 		// show GUI
 		if(args.length == 0) {
-		    MenuModel.menus.get(TierCommandMenu.class).getMenu().showToPlayer(p);
+		    MenuModel.getAllMenus().get(TierCommandMenu.class).getMenu().showToPlayer(p);
 		    return true;
 		}
 

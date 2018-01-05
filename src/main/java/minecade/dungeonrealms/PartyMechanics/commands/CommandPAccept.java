@@ -28,7 +28,7 @@ public class CommandPAccept implements CommandExecutor {
 		
 		String party_name = PartyMechanics.party_invite.get(p.getName());
 		
-		if(Bukkit.getPlayer(party_name) == null) {
+		if(Bukkit.getPlayer(party_name) == null || PartyMechanics.party_invite.get(p.getName()) == null) {
 			p.sendMessage(ChatColor.RED + "This party invite is no longer available.");
 			PartyMechanics.party_invite.remove(p.getName());
 			PartyMechanics.party_invite_time.remove(p.getName());
