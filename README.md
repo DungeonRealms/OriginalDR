@@ -1,7 +1,7 @@
 # DungeonRealms Original Code (Era #1)
 
 ## Era #1:
-Versions: 1.5 -> 1.7  
+Versions: 1.5 -> 1.8  
 Timeframe: June 2012 -> June 2015  
 Ownerships: Availer, Minecade  
 Notable Developers: Vaquxine, Vilsol, iFamasssxD, Tux2  
@@ -27,3 +27,5 @@ However, we want to make it clear, we are releasing this under the Attribution-N
 This means you may not use this code for commercial purposes, included but not limited to for-profit practice servers.
 
 © DungeonRealms 2017 All rights reserved
+
+NOTE: If you have any other versions of the code that are on on this repository, please send them to a DungeonRealms developer.
