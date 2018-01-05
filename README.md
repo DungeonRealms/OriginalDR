@@ -1,7 +1,7 @@
 # DungeonRealms Original Code (Era #1)
 
 ## Era #1:
-Versions: 1.5 -> 1.8  
+Versions: 1.4.7 -> 1.8  
 Timeframe: June 2012 -> June 2015  
 Ownerships: Availer, Minecade  
 Notable Developers: Vaquxine, Vilsol, iFamasssxD, Tux2  
