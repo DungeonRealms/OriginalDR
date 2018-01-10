@@ -1,5 +1,4 @@
 *.class
-*.jar
 *.war
 *.ear
 */bin/
@@ -11,3 +10,5 @@
 DungeonRealms.iml
 /target
 /bin
+/.idea
+/out

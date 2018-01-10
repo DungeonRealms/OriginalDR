@@ -4,7 +4,7 @@
 Versions: 1.4.7 -> 1.8  
 Timeframe: June 2012 -> June 2015  
 Ownerships: Availer, Minecade  
-Notable Developers: Vaquxine, Vilsol, iFamasssxD, Tux2  
+Notable Developers: Vaquxine, EtherealTemplar, Vilsol, iFamasssxD, Tux2
 
 This is repository spans from January 26, 2014 (When Minecade Purchased DungeonRealms) to June 2015 when Minecade shuts down DungeonRealms.   
 Commit history is kept from January 26, 2014 to November 2014. The final Minecade code was merged into this repository by Kneesnap, so there is a single repository with both commit history and the final code.
@@ -15,7 +15,13 @@ Vilsol helped to cleanup Vaqxine's code drastically, and combined it into one si
 It is a miracle this code even ran, it's that bad.
 
 ## Build Instructions (How To Use)
-We will provide instructions for how to set this up after we figure it out ourselves.
+This assumes you are using IntelliJ IDEA.
+1. Clone this from git. File > New > Project From Version Control > Github.
+2. Mark src/main/java as the source root.
+3. Mark src/main/resources as the resources root.
+4. File > Project Settings > Libraries Add all of the jars in libs.
+5. Create an artifact that exports the entry: "DROriginal Compile Output".
+6. You can now create the plugin with Build > Build Artifacts... > OriginalDR > Build.
 
 ## This is an official DungeonRealms code release, released for these reasons:
  - We want to preserve the history of DungeonRealms. It has been very useful during development to have access to these code backups, it has allowed us to figure out how the game used to work, since no staff members from back then remain.
