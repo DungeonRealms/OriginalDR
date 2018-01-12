@@ -29,9 +29,9 @@ This assumes you are using IntelliJ IDEA.
  - We want to encourage players experimenting. If players are able to create and test their own ideas, these ideas could be implemented into DungeonRealms, and we may find future developers.
 
 ## Licensing
-However, we want to make it clear, we are releasing this under the Attribution-NonCommercial-ShareAlike 4.0 International license.
-This means you may not use this code for commercial purposes, included but not limited to for-profit practice servers.
+However, we are releasing this under the Attribution-NonCommercial-ShareAlike 4.0 International license.
+This means you may use this code for anything except commercial purposes, such as for-profit practice servers.
 
-© DungeonRealms 2017 All rights reserved
+© DungeonRealms 2018 All rights reserved
 
-NOTE: If you have any other versions of the code that are on on this repository, please send them to a DungeonRealms developer.
+NOTE: If you have any other versions of the code that are not on this repository, please send them to a DungeonRealms developer.
