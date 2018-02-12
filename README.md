@@ -1,4 +1,10 @@
-# DungeonRealms Original Code (Era #1)
+<p align="center"> 
+<img src="http://i.imgur.com/HSCayEW.png">
+</p>
+<p align="center">
+<b>DungeonRealms Official Source Code (Era #1)</b>
+</p>
+
 
 ## Era #1:
 Versions: 1.4.7 -> 1.8  
@@ -24,14 +30,11 @@ This assumes you are using IntelliJ IDEA.
 6. You can now create the plugin with Build > Build Artifacts... > OriginalDR > Build.
 
 ## This is an official DungeonRealms code release, released for these reasons:
- - We want to preserve the history of DungeonRealms. It has been very useful during development to have access to these code backups, it has allowed us to figure out how the game used to work, since no staff members from back then remain.
- - We want the players to have an accurate history of DungeonRealms, how the game used to work.
- - We want to encourage players experimenting. If players are able to create and test their own ideas, these ideas could be implemented into DungeonRealms, and we may find future developers.
+ - We want the players to have an accurate history of DungeonRealms, and how the game used to work.
+ - Minecraft is a platform for tinkering. We want to let players tinker with DungeonRealms, make their own ideas, learn to code, and potentially even become future DungeonRealms developers.
 
 ## Licensing
 However, we are releasing this under the Attribution-NonCommercial-ShareAlike 4.0 International license.
-This means you may use this code for anything except commercial purposes, such as for-profit practice servers.
+This means you may use this code for anything except commercial purposes, such as <b>for-profit</b> practice servers.
 
 © DungeonRealms 2018 All rights reserved
-
-NOTE: If you have any other versions of the code that are not on this repository, please send them to a DungeonRealms developer.
