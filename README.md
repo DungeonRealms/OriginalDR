@@ -38,3 +38,12 @@ However, we are releasing this under the Attribution-NonCommercial-ShareAlike 4.
 This means you may use this code for anything except commercial purposes, such as <b>for-profit</b> practice servers.
 
 © DungeonRealms 2018 All rights reserved
+
+
+
+Special Thanks to YourKit:  
+<img src="https://www.yourkit.com/images/yklogo.png">  
+YourKit supports open source projects with its full-featured Java Profiler.
+YourKit, LLC is the creator of <a href="https://www.yourkit.com/java/profiler/">YourKit Java Profiler</a>
+and <a href="https://www.yourkit.com/.net/profiler/">YourKit .NET Profiler</a>,
+innovative and intelligent tools for profiling Java and .NET applications.
