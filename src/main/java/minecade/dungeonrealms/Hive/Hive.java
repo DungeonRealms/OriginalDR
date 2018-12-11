@@ -3073,15 +3073,7 @@ public class Hive implements Listener {
 					e.printStackTrace();
 				}
 			} else {
-				long delay = rst.getLong("login_delay");
-				if (delay == 0) {
-					return true;
-				}
-				if (delay <= System.currentTimeMillis()) {
-					return true;
-				} else {
-					return false;
-				}
+				return rst.getLong("login_delay") <= System.currentTimeMillis();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
