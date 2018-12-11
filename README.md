@@ -7,19 +7,19 @@
 
 
 ## Era #1:
-Versions: 1.3.1 -> 1.8
-Timeframe: August 2012 -> June 2015
+Versions: 1.3.1 -> 1.8  
+Timeframe: August 2012 -> June 2015  
 Ownerships: Availer, Minecade  
 Notable Developers: Vaquxine, EtherealTemplar, Vilsol, iFamasssxD, Tux2
 
 This is repository spans from January 26, 2014 (When Minecade Purchased DungeonRealms) to June 2015 when Minecade shuts down DungeonRealms.   
 Commit history is kept from January 26, 2014 to Tux2's final changes. Version Control was not used prior to commit history.
 
-If you go back in time, you will get original Vaquxine code, back when each mechanic was a separate plugin, a very poor design choice.
-Vilsol helped to cleanup Vaquxine's code drastically, and combined it into one singular plugin, and tried to improve the code from there.
+Originally, when this was pushed, each mechanic was a seperate plugin, a couple dozen in total.  
+Vilsol cleaned up parts of this code drastically, and combined it into one single plugin.
 
-This code is extremely bad. There's no getting around that.
-It demands respect that it was used for so long, and that it was the code that sustained thousands of players in its peak.
+This code is extremely bad. There's no getting around that.  
+It demands respect that it was used for so long, and that it was the code that sustained thousands of players in its peak.  
 But, it has been retired. Thank you everyone who worked on this beast.
 
 ## Build Instructions (How To Use)
@@ -36,7 +36,7 @@ This assumes you are using IntelliJ IDEA.
  - Minecraft is a platform for tinkering. We want to let players tinker with DungeonRealms, make their own ideas, learn to code, and potentially even become future DungeonRealms developers.
 
 ## Licensing
-However, we are releasing this under the Attribution-NonCommercial-ShareAlike 4.0 International license.
+However, we are releasing this under the Attribution-NonCommercial-ShareAlike 4.0 International license.  
 This means you may use this code for anything except commercial purposes, such as <b>for-profit</b> practice servers.
 
 © DungeonRealms 2018 All rights reserved
