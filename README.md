@@ -20,7 +20,7 @@ Vilsol helped to cleanup Vaquxine's code drastically, and combined it into one s
 
 This code is extremely bad. There's no getting around that.
 It demands respect that it was used for so long, and that it was the code that sustained thousands of players in its peak.
-But, it has been retired for good reason. Thank you everyone who worked on this beast.
+But, it has been retired. Thank you everyone who worked on this beast.
 
 ## Build Instructions (How To Use)
 This assumes you are using IntelliJ IDEA.
