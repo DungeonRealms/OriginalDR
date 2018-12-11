@@ -7,18 +7,20 @@
 
 
 ## Era #1:
-Versions: 1.4.7 -> 1.8  
-Timeframe: June 2012 -> June 2015  
+Versions: 1.3.1 -> 1.8
+Timeframe: August 2012 -> June 2015
 Ownerships: Availer, Minecade  
 Notable Developers: Vaquxine, EtherealTemplar, Vilsol, iFamasssxD, Tux2
 
 This is repository spans from January 26, 2014 (When Minecade Purchased DungeonRealms) to June 2015 when Minecade shuts down DungeonRealms.   
-Commit history is kept from January 26, 2014 to November 2014. The final Minecade code was merged into this repository by Kneesnap, so there is a single repository with both commit history and the final code.
+Commit history is kept from January 26, 2014 to Tux2's final changes. Version Control was not used prior to commit history.
 
-If you go back in time, you will get original Vaquxine code, back when each mechanic was a seperate plugin, a very poor design choice.
-Vilsol helped to cleanup Vaqxine's code drastically, and combined it into one singuler plugin, and tried to improve the code from there.
+If you go back in time, you will get original Vaquxine code, back when each mechanic was a separate plugin, a very poor design choice.
+Vilsol helped to cleanup Vaquxine's code drastically, and combined it into one singular plugin, and tried to improve the code from there.
 
-It is a miracle this code even ran, it's that bad.
+This code is extremely bad. There's no getting around that.
+It demands respect that it was used for so long, and that it was the code that sustained thousands of players in its peak.
+But, it has been retired for good reason. Thank you everyone who worked on this beast.
 
 ## Build Instructions (How To Use)
 This assumes you are using IntelliJ IDEA.
@@ -29,7 +31,7 @@ This assumes you are using IntelliJ IDEA.
 5. Create an artifact that exports the entry: "DROriginal Compile Output".
 6. You can now create the plugin with Build > Build Artifacts... > OriginalDR > Build.
 
-## This is an official DungeonRealms code release, released for these reasons:
+## This is an official DungeonRealms code release:
  - We want the players to have an accurate history of DungeonRealms, and how the game used to work.
  - Minecraft is a platform for tinkering. We want to let players tinker with DungeonRealms, make their own ideas, learn to code, and potentially even become future DungeonRealms developers.
 
