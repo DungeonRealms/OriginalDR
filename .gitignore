@@ -7,7 +7,6 @@
 *.classpath
 *.settings
 *.MF
-*.idea
-DungeonRealms.iml
 /target
 /bin
+/out

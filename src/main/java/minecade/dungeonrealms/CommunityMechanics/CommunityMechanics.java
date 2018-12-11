@@ -62,10 +62,10 @@ import minecade.dungeonrealms.TradeMechanics.TradeMechanics;
 import minecade.dungeonrealms.config.Config;
 import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.managers.PlayerManager;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
-import net.minecraft.server.v1_7_R4.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_7_R2.EntityPlayer;
+import net.minecraft.server.v1_7_R2.Packet;
+import net.minecraft.server.v1_7_R2.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_7_R2.PacketPlayOutNamedEntitySpawn;
 import net.minecraft.util.org.apache.commons.lang3.StringUtils;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -74,8 +74,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -1839,7 +1839,7 @@ public class CommunityMechanics implements Listener {
 				// test = (CraftPlayer)e_test.getBukkitEntity();
 
 				EntityPlayer ent_p_edited = ((CraftPlayer) p_edited).getHandle();
-				net.minecraft.server.v1_7_R4.ItemStack boots = null, legs = null, chest = null, head = null;
+				net.minecraft.server.v1_7_R2.ItemStack boots = null, legs = null, chest = null, head = null;
 
 				if (ent_p_edited.getEquipment(1) != null) {
 					boots = ent_p_edited.getEquipment(1);

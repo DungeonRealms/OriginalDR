@@ -20,15 +20,15 @@ import minecade.dungeonrealms.PartyMechanics.commands.CommandPKick;
 import minecade.dungeonrealms.PartyMechanics.commands.CommandPLoot;
 import minecade.dungeonrealms.PartyMechanics.commands.CommandPQuit;
 import minecade.dungeonrealms.PartyMechanics.commands.CommandParty;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
-import net.minecraft.server.v1_7_R4.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_7_R2.EntityPlayer;
+import net.minecraft.server.v1_7_R2.Packet;
+import net.minecraft.server.v1_7_R2.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_7_R2.PacketPlayOutNamedEntitySpawn;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -228,7 +228,7 @@ public class PartyMechanics implements Listener {
 		String r_name = p_to_send.getName();
 		
 		EntityPlayer ent_p_edited = ((CraftPlayer) p_to_send).getHandle();
-		net.minecraft.server.v1_7_R4.ItemStack boots = null, legs = null, chest = null, head = null;
+		net.minecraft.server.v1_7_R2.ItemStack boots = null, legs = null, chest = null, head = null;
 		
 		try {
 			if(ent_p_edited.getEquipment(1) != null) {

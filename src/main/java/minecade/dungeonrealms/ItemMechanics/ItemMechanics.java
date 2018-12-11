@@ -41,10 +41,10 @@ import minecade.dungeonrealms.TeleportationMechanics.TeleportationMechanics;
 import minecade.dungeonrealms.enums.ItemTier;
 import minecade.dungeonrealms.enums.ItemType;
 import minecade.dungeonrealms.managers.PlayerManager;
-import net.minecraft.server.v1_7_R4.EntityLiving;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_7_R2.EntityLiving;
+import net.minecraft.server.v1_7_R2.NBTTagCompound;
+import net.minecraft.server.v1_7_R2.Packet;
+import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -57,11 +57,11 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftSkeleton;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EnderPearl;
@@ -2775,7 +2775,7 @@ public class ItemMechanics implements Listener {
         if (is == null) {
             return;
         }
-        net.minecraft.server.v1_7_R4.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_7_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
         try {
             if (pl != null && nms != null && is != null && nms.hasTag() && is.getMaxStackSize() == 1) {
                 pl.setItemInHand(removeAttributes(is));
@@ -2794,7 +2794,7 @@ public class ItemMechanics implements Listener {
                 continue;
             }
 
-            final net.minecraft.server.v1_7_R4.ItemStack nms = CraftItemStack.asNMSCopy(is);
+            final net.minecraft.server.v1_7_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
 
             if (nms != null && nms.hasTag() && is.getMaxStackSize() == 1) {
                 Attributes attributes = new Attributes(is);
@@ -2815,7 +2815,7 @@ public class ItemMechanics implements Listener {
             return null;
         }
 
-        final net.minecraft.server.v1_7_R4.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        final net.minecraft.server.v1_7_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
 
         if (nms != null && nms.hasTag() && is.getMaxStackSize() == 1) { // && nms.getTag().hasKey("AttributeName")
             Attributes attributes = new Attributes(is);
@@ -6360,13 +6360,13 @@ public class ItemMechanics implements Listener {
         }
     }
 
-    public static ItemStack setToHealingPotion(net.minecraft.server.v1_7_R4.ItemStack i) {
+    public static ItemStack setToHealingPotion(net.minecraft.server.v1_7_R2.ItemStack i) {
         if (i == null) {
             log.info("[ItemMechanics] NULL itemStack on setToHealingPotion()");
             return CraftItemStack.asBukkitCopy(i);
         }
         try {
-            net.minecraft.server.v1_7_R4.NBTTagList cpe = new net.minecraft.server.v1_7_R4.NBTTagList();
+            net.minecraft.server.v1_7_R2.NBTTagList cpe = new net.minecraft.server.v1_7_R2.NBTTagList();
             NBTTagCompound tag = new NBTTagCompound();
             tag.setByte("Id", (byte) 6);
             // ((NBTTagList)i.tag.getList("CustomPotionEffects", 0)).add(tag);

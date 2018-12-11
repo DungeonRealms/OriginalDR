@@ -36,7 +36,7 @@ import minecade.dungeonrealms.SpawnMechanics.SpawnMechanics;
 import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.managers.PlayerManager;
 import net.citizensnpcs.api.npc.NPC;
-import net.minecraft.server.v1_7_R4.EntityLiving;
+import net.minecraft.server.v1_7_R2.EntityLiving;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,8 +44,8 @@ import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -833,9 +833,9 @@ public class HealthMechanics implements Listener {
 
 	public static int generateMaxHP(Entity e) {
 		EntityLiving ent = ((CraftLivingEntity) e).getHandle();
-		net.minecraft.server.v1_7_R4.ItemStack[] armor_contents = ent.getEquipment();
+		net.minecraft.server.v1_7_R2.ItemStack[] armor_contents = ent.getEquipment();
 		double total_health = 0;
-		for(net.minecraft.server.v1_7_R4.ItemStack i : armor_contents) {
+		for(net.minecraft.server.v1_7_R2.ItemStack i : armor_contents) {
 			ItemStack is = CraftItemStack.asBukkitCopy(i);
 			if(is.getType() == Material.AIR) {
 				continue;

@@ -49,7 +49,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -1385,7 +1385,7 @@ public class GuildMechanics implements Listener {
 	}
 	
 	/*public static int getAdjustedPlayerCount(){
-		double real_player_count = (double)Bukkit.getOnlinePlayers().size();
+		double real_player_count = (double)Bukkit.getOnlinePlayers().length;
 		double fake_player_count = 0;
 		
 		if(real_player_count <= 20){
@@ -1442,7 +1442,7 @@ public class GuildMechanics implements Listener {
 
 			TabAPI.setTabString(Main.plugin, pl, 17, 1, ChatColor.DARK_AQUA + "Shard " + ChatColor.GRAY.toString() + getLocalServerName(), 0);
 
-			int online_players = Bukkit.getOnlinePlayers().size();
+			int online_players = Bukkit.getOnlinePlayers().length;
 			int max_players = Bukkit.getMaxPlayers();
 
 			online_players = (int) Math.round(online_players * 2.5D);
@@ -1452,14 +1452,14 @@ public class GuildMechanics implements Listener {
 				online_players = max_players - (new Random().nextInt(15 - 5) + 5);
 			}
 
-			if(Bukkit.getOnlinePlayers().size() + 10 >= max_players) {
+			if(Bukkit.getOnlinePlayers().length + 10 >= max_players) {
 				// Ok, now if the actual length+10 more is > maximum, we're full for real, so no more spoofing is needed.
-				online_players = Bukkit.getOnlinePlayers().size();
+				online_players = Bukkit.getOnlinePlayers().length;
 			}
 
-			if(Bukkit.getOnlinePlayers().size() <= 5) {
+			if(Bukkit.getOnlinePlayers().length <= 5) {
 				// Less than 5 people on, don't spoof. 5 -> 6 / 13
-				online_players = Bukkit.getOnlinePlayers().size();
+				online_players = Bukkit.getOnlinePlayers().length;
 			}
 
 			TabAPI.setTabString(Main.plugin, pl, 18, 1, ChatColor.GRAY.toString() + online_players + " / " + max_players, 0);
@@ -1496,7 +1496,7 @@ public class GuildMechanics implements Listener {
 
 		TabAPI.setTabString(Main.plugin, pl, 17, 1, ChatColor.DARK_AQUA + "Shard " + ChatColor.GRAY.toString() + getLocalServerName(), 0);
 
-		int online_players = Bukkit.getOnlinePlayers().size();
+		int online_players = Bukkit.getOnlinePlayers().length;
 		int max_players = Bukkit.getMaxPlayers();
 
 		online_players = (int) Math.round(online_players * 2.5D);
@@ -1506,14 +1506,14 @@ public class GuildMechanics implements Listener {
 			online_players = max_players - (new Random().nextInt(15 - 5) + 5);
 		}
 
-		if(Bukkit.getOnlinePlayers().size() + 10 >= max_players) {
+		if(Bukkit.getOnlinePlayers().length + 10 >= max_players) {
 			// Ok, now if the actual length+10 more is > maximum, we're full for real, so no more spoofing is needed.
-			online_players = Bukkit.getOnlinePlayers().size();
+			online_players = Bukkit.getOnlinePlayers().length;
 		}
 
-		if(Bukkit.getOnlinePlayers().size() <= 5) {
+		if(Bukkit.getOnlinePlayers().length <= 5) {
 			// Less than 5 people on, don't spoof. 5 -> 6 / 13
-			online_players = Bukkit.getOnlinePlayers().size();
+			online_players = Bukkit.getOnlinePlayers().length;
 		}
 
 		TabAPI.setTabString(Main.plugin, pl, 18, 1, ChatColor.GRAY.toString() + online_players + " / " + max_players, 0);

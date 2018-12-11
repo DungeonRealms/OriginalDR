@@ -46,12 +46,12 @@ import minecade.dungeonrealms.holograms.Hologram;
 import minecade.dungeonrealms.jsonlib.JsonBuilder;
 import minecade.dungeonrealms.models.LogModel;
 import net.citizensnpcs.api.CitizensAPI;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.EntityTracker;
-import net.minecraft.server.v1_7_R4.EntityTrackerEntry;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
-import net.minecraft.server.v1_7_R4.WorldServer;
+import net.minecraft.server.v1_7_R2.EntityPlayer;
+import net.minecraft.server.v1_7_R2.EntityTracker;
+import net.minecraft.server.v1_7_R2.EntityTrackerEntry;
+import net.minecraft.server.v1_7_R2.Packet;
+import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_7_R2.WorldServer;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.Bukkit;
@@ -64,10 +64,10 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -261,7 +261,7 @@ public class ShopMechanics implements Listener {
 				if (openclose_cooldown.size() <= 0) {
 					return;
 				}
-				if (Bukkit.getServer().getOnlinePlayers().size() <= 0) return;
+				if (Bukkit.getServer().getOnlinePlayers().length <= 0) return;
 				for (Player pl : Bukkit.getOnlinePlayers()) {
 					if (pl == null) return; // Just in case.
 					if (openclose_cooldown.containsKey(pl.getName())) {

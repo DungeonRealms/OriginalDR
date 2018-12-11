@@ -81,9 +81,9 @@ import minecade.dungeonrealms.models.LogModel;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_7_R2.EntityPlayer;
+import net.minecraft.server.v1_7_R2.Packet;
+import net.minecraft.server.v1_7_R2.PacketPlayOutEntityEquipment;
 import net.minecraft.util.io.netty.util.internal.ConcurrentSet;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -96,9 +96,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -514,7 +514,7 @@ public class Hive implements Listener {
 
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
-				player_count = Bukkit.getServer().getOnlinePlayers().size();
+				player_count = Bukkit.getServer().getOnlinePlayers().length;
 			}
 		}, 10 * 20L, 5 * 20L);
 
@@ -618,7 +618,7 @@ public class Hive implements Listener {
 		Main.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Main.plugin, new Runnable() {
 			public void run() {
 				if (server_lock == true && (force_kick == true || get_payload == true || get_payload_spoof == true)
-						&& Main.plugin.getServer().getOnlinePlayers().size() > 0) {
+						&& Main.plugin.getServer().getOnlinePlayers().length > 0) {
 					for (Player p : Main.plugin.getServer().getOnlinePlayers()) {
 						if (p.isOp() && get_payload == false && get_payload_spoof == false) {
 							continue; // Don't kick the OP's.
@@ -833,7 +833,7 @@ public class Hive implements Listener {
 
 		/*
 		 * int count = 0; while(pending_upload.size() > 0 && count <= 200){ count++; log.info("[HIVE (SLAVE Edition)] ONLINE PLAYERS: " +
-		 * Bukkit.getOnlinePlayers().size()); log.info("[HIVE (SLAVE Edition)] PENDING UPLOAD: " + pending_upload.size()); try { Thread.sleep(100); // Let all
+		 * Bukkit.getOnlinePlayers().length); log.info("[HIVE (SLAVE Edition)] PENDING UPLOAD: " + pending_upload.size()); try { Thread.sleep(100); // Let all
 		 * pending multi-thread uploads finish. } catch (InterruptedException e) { e.printStackTrace(); } }
 		 */
 
@@ -843,7 +843,7 @@ public class Hive implements Listener {
 	}
 
 	public void updateServerPlayers() {
-		final int playerCount = Bukkit.getOnlinePlayers().size();
+		final int playerCount = Bukkit.getOnlinePlayers().length;
 		if (playerCount == last_player_count) {
 			return;
 		}
@@ -1014,7 +1014,7 @@ public class Hive implements Listener {
 
 		// if(prefix.equalsIgnoreCase("US-0") || prefix.equalsIgnoreCase("US-99")) { return; }
 
-		int players_on = Main.plugin.getServer().getOnlinePlayers().size();
+		int players_on = Main.plugin.getServer().getOnlinePlayers().length;
 		int players_max = Main.plugin.getServer().getMaxPlayers();
 
 		if (Hive.shutting_down || Hive.server_frozen || Hive.server_lock || Hive.force_kick || Hive.restart_inc) {
@@ -2874,7 +2874,7 @@ public class Hive implements Listener {
 		 * return; }
 		 */
 
-		int players_online = Main.plugin.getServer().getOnlinePlayers().size();
+		int players_online = Main.plugin.getServer().getOnlinePlayers().length;
 		if (players_online >= Bukkit.getMaxPlayers()) {
 			if (VIP == false) {
 				e.setKickMessage(ChatColor.RED.toString() + "This Dungeon Realms server is currently FULL." + "\n" + ChatColor.GRAY.toString()
@@ -3718,7 +3718,7 @@ public class Hive implements Listener {
 					Player playerNPC = ((Player) ent);
 
 					EntityPlayer origin_p = ((CraftPlayer) p).getHandle();
-					net.minecraft.server.v1_7_R4.ItemStack weapon = null, boots = null, legs = null, chest = null, head = null;
+					net.minecraft.server.v1_7_R2.ItemStack weapon = null, boots = null, legs = null, chest = null, head = null;
 
 					if (origin_p.getEquipment(0) != null) {
 						weapon = origin_p.getEquipment(0);
@@ -4072,7 +4072,7 @@ public class Hive implements Listener {
 		// This is the server they're on. Green dye to show they're connected.
 		icon = new ItemStack(Material.WOOL, 1, (short) 5);
 		cc = ChatColor.GREEN;
-		online_players = (int) Math.round((double) Bukkit.getOnlinePlayers().size());
+		online_players = (int) Math.round((double) Bukkit.getOnlinePlayers().length);
 		max_players = Bukkit.getMaxPlayers();
 	} else {
 		boolean server_open = true; // BungeeCord.getInstance().getServerInfo(server_prefix).canAccess((net.md_5.bungee.api.CommandSender) pl);

@@ -63,10 +63,10 @@ import minecade.dungeonrealms.TutorialMechanics.TutorialMechanics;
 import minecade.dungeonrealms.config.Config;
 import minecade.dungeonrealms.database.ConnectionPool;
 import minecade.dungeonrealms.holograms.Hologram;
-import net.minecraft.server.v1_7_R4.DataWatcher;
-import net.minecraft.server.v1_7_R4.Packet;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityMetadata;
-import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_7_R2.DataWatcher;
+import net.minecraft.server.v1_7_R2.Packet;
+import net.minecraft.server.v1_7_R2.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_7_R2.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -83,12 +83,12 @@ import org.bukkit.WorldType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -643,7 +643,7 @@ public class RealmMechanics implements Listener {
 		Main.plugin.getServer().getScheduler().runTaskTimer(Main.plugin, new Runnable() {
 
 			public void run() {
-				if (Bukkit.getOnlinePlayers().size() <= 0) return;
+				if (Bukkit.getOnlinePlayers().length <= 0) return;
 				for (Player pl : Bukkit.getOnlinePlayers()) {
 					if (pl == null) continue; // If somehow they went offline
 					if (inRealm(pl)) {
@@ -3369,7 +3369,7 @@ public class RealmMechanics implements Listener {
 	public static void disableAllEffects(Player player, final LivingEntity entity) {
 		CraftEntity ce = (CraftEntity) ((Entity) entity);
 
-		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R4.Entity) ce.getHandle());
+		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R2.Entity) ce.getHandle());
 		dw.a(8, Byte.valueOf((byte) 0));
 		dw.watch(8, Byte.valueOf((byte) 0x00FF00));
 
@@ -3385,7 +3385,7 @@ public class RealmMechanics implements Listener {
 	public static void playPotionEffect(final Player player, final LivingEntity entity, int color, int duration) {
 		CraftEntity ce = (CraftEntity) ((Entity) entity);
 
-		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R4.Entity) ce.getHandle());
+		final DataWatcher dw = new DataWatcher((net.minecraft.server.v1_7_R2.Entity) ce.getHandle());
 		dw.a(8, Byte.valueOf((byte) 0));
 		dw.watch(8, Byte.valueOf((byte) color));
 

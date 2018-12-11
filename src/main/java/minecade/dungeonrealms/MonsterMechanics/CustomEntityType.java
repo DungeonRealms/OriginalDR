@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import minecade.dungeonrealms.PetMechanics.MountSpider;
-import net.minecraft.server.v1_7_R4.BiomeBase;
-import net.minecraft.server.v1_7_R4.BiomeMeta;
-import net.minecraft.server.v1_7_R4.EntityInsentient;
-import net.minecraft.server.v1_7_R4.EntityIronGolem;
-import net.minecraft.server.v1_7_R4.EntitySpider;
-import net.minecraft.server.v1_7_R4.EntityTypes;
-import net.minecraft.server.v1_7_R4.EntityWolf;
-import net.minecraft.server.v1_7_R4.EntityZombie;
+import net.minecraft.server.v1_7_R2.BiomeBase;
+import net.minecraft.server.v1_7_R2.BiomeMeta;
+import net.minecraft.server.v1_7_R2.EntityInsentient;
+import net.minecraft.server.v1_7_R2.EntityIronGolem;
+import net.minecraft.server.v1_7_R2.EntitySpider;
+import net.minecraft.server.v1_7_R2.EntityTypes;
+import net.minecraft.server.v1_7_R2.EntityWolf;
+import net.minecraft.server.v1_7_R2.EntityZombie;
 
 import org.bukkit.entity.EntityType;
 
